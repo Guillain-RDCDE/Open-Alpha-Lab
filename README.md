@@ -1,4 +1,4 @@
-# Overnight Anomaly — verify it, then trade it honestly
+# Overnight Alpha — verify the night-trade edge, then stress-test it honestly
 
 [![python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
