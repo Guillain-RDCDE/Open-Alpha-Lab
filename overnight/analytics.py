@@ -191,3 +191,45 @@ def capacity_estimate(
         "capacity_shares": q_shares,
         "capacity_usd": capacity_usd,
     }
+
+
+def capacity_curve(
+    dec: pd.DataFrame,
+    ohlc: pd.DataFrame,
+    sizes_usd=(1e6, 1e7, 1e8, 1e9, 1e10),
+    impact_coef: float = 1.0,
+    lookback: int = TRADING_DAYS_PER_YEAR,
+) -> pd.DataFrame:
+    """Net overnight edge as a function of deployed capital (order size).
+
+    For each notional in ``sizes_usd``, the participation rate is
+    ``(size/price)/ADV``; one-way square-root impact is
+    ``impact_coef * daily_vol * sqrt(participation)``; the strategy pays it on
+    both legs each night. The net edge is the gross overnight return minus that
+    round-trip impact. Where net <= 0, the size is uneconomic.
+
+    Returns a DataFrame indexed by ``size_usd`` with the participation rate,
+    round-trip impact (bps) and net edge (bps). Makes the scale argument
+    concrete: the edge is gone long before a "market-moving" book is reached.
+    """
+    edge_bps = dec["r_overnight"].mean() * 1e4
+    daily_vol_bps = dec["r_close_close"].std(ddof=1) * 1e4
+    cols = {str(c).lower(): c for c in ohlc.columns}
+    if "volume" not in cols:
+        raise KeyError("capacity_curve needs a 'Volume' column on ohlc.")
+    adv = float(ohlc[cols["volume"]].tail(lookback).mean())
+    price = float(ohlc[cols["close"]].tail(lookback).mean())
+    adv_usd = adv * price
+
+    rows = {}
+    for size in sizes_usd:
+        participation = size / adv_usd
+        impact_rt = 2.0 * impact_coef * daily_vol_bps * np.sqrt(participation)
+        rows[float(size)] = {
+            "participation_rate": participation,
+            "impact_roundtrip_bps": impact_rt,
+            "net_edge_bps": edge_bps - impact_rt,
+        }
+    out = pd.DataFrame(rows).T
+    out.index.name = "size_usd"
+    return out

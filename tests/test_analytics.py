@@ -73,3 +73,15 @@ def test_capacity_positive_for_positive_edge():
     cap = analytics.capacity_estimate(dec, ohlc)
     assert cap["capacity_usd"] > 0
     assert 0 < cap["participation_rate"] < 1
+
+
+def test_capacity_curve_monotonic_and_crosses_zero():
+    ohlc = diagnostics.synthetic_ohlc(overnight_bias_bps=5, intraday_bias_bps=0, seed=4)
+    ohlc["Volume"] = 1_000_000.0
+    dec = decompose.decompose(ohlc)
+    cc = analytics.capacity_curve(dec, ohlc, sizes_usd=(1e5, 1e6, 1e7, 1e8, 1e9))
+    # bigger size -> more impact -> lower net edge (strictly decreasing)
+    net = cc["net_edge_bps"].values
+    assert all(net[i] > net[i + 1] for i in range(len(net) - 1))
+    # smallest size keeps most of the edge; largest destroys it
+    assert net[0] > 0 > net[-1]

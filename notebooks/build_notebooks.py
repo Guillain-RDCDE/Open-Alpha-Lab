@@ -416,6 +416,28 @@ def build_quants():
             "impact of trading at that size would dwarf the premium. The alleged mechanism "
             "is self-defeating at the scale required to matter."
         ),
+        code(
+            "sizes = [1e6, 1e7, 1e8, 1e9, 1e10]\n"
+            "cc = analytics.capacity_curve(decs['SPY'], spy_ohlc, sizes_usd=sizes)\n"
+            "lab = [f'${s/1e6:,.0f}M' if s < 1e9 else f'${s/1e9:,.0f}B' for s in cc.index]\n"
+            "show = cc.copy(); show.index = lab\n"
+            "show.columns = ['participation', 'round-trip impact (bps)', 'net edge (bps)']\n"
+            "display(show.round(2))\n"
+            "ax = plt.subplot()\n"
+            "ax.plot([s for s in sizes], cc['net_edge_bps'].values, marker='o', color='#2c7fb8')\n"
+            "ax.axhline(0, color='r', lw=.9, ls='--')\n"
+            "ax.set_xscale('log'); ax.set_xlabel('Capital deployed (USD, log scale)')\n"
+            "ax.set_ylabel('Net overnight edge (bps/night)')\n"
+            "ax.set_title('SPY overnight: net edge vs order size (square-root impact)')\n"
+            "ax.grid(alpha=.3); plt.show()"
+        ),
+        md(
+            "The edge is **break-even by ~\\$10M and deeply negative beyond \\$100M**. A "
+            "fund deploying billions — the scale required to *move world markets* — would "
+            "face round-trip impact an order of magnitude larger than the 3-bps premium it "
+            "is trying to harvest. The alleged mechanism doesn't just fail to scale; **it "
+            "inverts**: at size, you *pay* the spread you're accused of capturing."
+        ),
         md(
             "## 8. Does any of this prove manipulation? A likelihood argument\n\n"
             "Knuteson's thesis: a large quant firm expands its book when the market is "

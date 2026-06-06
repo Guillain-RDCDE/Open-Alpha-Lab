@@ -40,6 +40,9 @@ See [`papers/README.md`](papers/README.md) for the full reading list and the
 supporting literature; [`docs/references.md`](docs/references.md) maps which
 explanation each paper argues.
 
+**→ Our structured reply, claim by claim, is in [`RESPONSE.md`](RESPONSE.md)** —
+each of Knuteson's assertions mapped to a quantified counter-measure.
+
 ---
 
 ## TL;DR — our response in three numbers (offline, one command)
