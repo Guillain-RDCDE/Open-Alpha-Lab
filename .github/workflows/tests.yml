@@ -33,4 +33,4 @@ jobs:
         run: pytest -q
 
       - name: Smoke-run the offline demo
-        run: python examples/run_synthetic_demo.py
+        run: python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

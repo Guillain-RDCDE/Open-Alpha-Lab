@@ -45,7 +45,7 @@ while regarding the manipulation *attribution* as unproven.
 
 The statistical and microstructure machinery used in
 [`02_for_the_quants.ipynb`](../notebooks/02_for_the_quants.ipynb) and
-[`overnight/analytics.py`](../overnight/analytics.py):
+[`quantlab/analytics.py`](../../../quantlab/analytics.py):
 
 Almgren, Robert, Chee Thum, Emmanuel Hauptmann, and Hong Li. 2005. "Direct
 Estimation of Equity Market Impact." *Risk* 18 (7). *(square-root impact law —

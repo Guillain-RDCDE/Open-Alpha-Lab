@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from overnight import decompose, diagnostics, stats
+from quantlab import decompose, diagnostics, stats
 
 
 def test_bootstrap_ci_brackets_point_estimate():

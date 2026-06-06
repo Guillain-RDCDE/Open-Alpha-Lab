@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from overnight import backtest, decompose, diagnostics
+from quantlab import backtest, decompose, diagnostics
 
 
 def _toy_ohlc() -> pd.DataFrame:

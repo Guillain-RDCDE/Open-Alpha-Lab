@@ -6,7 +6,7 @@ work (*Celebrating Three Decades of Worldwide Stock Market Manipulation*, 2019;
 Haven't Told You*, 2022; *Nothing to See Here*, 2023). Every counter-measure
 below is **computed in this repository** on the same kind of public data, and is
 reproducible — see [`notebooks/02_for_the_quants.ipynb`](notebooks/02_for_the_quants.ipynb)
-and [`overnight/`](overnight/).
+and the engine [`quantlab/`](../../quantlab/).
 
 **Our stance in one line:** the empirical fact is real and Knuteson deserves
 credit for surfacing it; but the *magnitude* is oversold, what survives is
@@ -23,7 +23,7 @@ Legend: 🟢 we agree · 🟡 we partly agree / it's overstated · 🔴 we disag
 +3.25 bps/day with a **Newey-West (HAC) t ≈ 4.9**; the intraday mean is
 insignificant (t ≈ 0.9). The Lo (2002) Sharpe t-stat is ≈ 4.5. The fact is
 statistically robust, not a fluke of i.i.d. assumptions.
-→ *§2 of the quant notebook;* [`overnight/analytics.py`](overnight/analytics.py)
+→ *§2 of the quant notebook;* [`quantlab/analytics.py`](../../quantlab/analytics.py)
 `mean_tstat_hac`, `sharpe_with_se`.
 
 ---

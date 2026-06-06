@@ -16,9 +16,9 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
 
-from overnight import analytics, bayes, data, decompose, simulate, universe  # noqa: E402
+from quantlab import analytics, bayes, data, decompose, simulate, universe  # noqa: E402
 
 FIG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "figures")
 os.makedirs(FIG, exist_ok=True)

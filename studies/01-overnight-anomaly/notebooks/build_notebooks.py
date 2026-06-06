@@ -25,7 +25,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 BOOT = """\
 import sys, os
-sys.path.insert(0, os.path.abspath(".."))
+sys.path.insert(0, os.path.abspath("../../.."))  # repo root (quantlab/ lives there)
 %matplotlib inline
 import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (10, 5.5)
@@ -108,7 +108,7 @@ def build_curious():
             "night/day decomposition show?"
         ),
         code(
-            "from overnight import decompose, diagnostics\n\n"
+            "from quantlab import decompose, diagnostics\n\n"
             "ohlc = diagnostics.synthetic_ohlc(overnight_bias_bps=3, intraday_bias_bps=-1, seed=0)\n"
             "dec = decompose.decompose(ohlc)\n\n"
             "ax = plt.subplot()\n"
@@ -170,7 +170,7 @@ def build_curious():
             "year**. What's left after realistic costs?"
         ),
         code(
-            "from overnight import backtest\n"
+            "from quantlab import backtest\n"
             "sweep = backtest.cost_sweep(dec, roundtrip_bps=(0,1,2,3,5,8))\n"
             "view = sweep.copy()\n"
             "view['cagr_net'] = (view['cagr_net']*100).map('{:+.2f}%'.format)\n"
@@ -232,7 +232,7 @@ def build_quants():
             "[`docs/references.md`](../docs/references.md)."
         ),
         code(
-            BOOT + "\nfrom overnight import data, decompose, diagnostics, backtest, stats, analytics\n"
+            BOOT + "\nfrom quantlab import data, decompose, diagnostics, backtest, stats, analytics\n"
         ),
         md(
             "## 1. The pattern on 10 world indices (ETFs)\n\n"
@@ -446,7 +446,7 @@ def build_quants():
             "survivorship bias — stated, not hidden. First run downloads ~500 tickers.)*"
         ),
         code(
-            "from overnight import universe\n"
+            "from quantlab import universe\n"
             "syms = universe.sp500_symbols()\n"
             "panel = universe.download_panel(syms, start='2010-01-01')  # cached after first run\n"
             "cs = universe.cross_section_decompose(panel, min_days=750)\n"
@@ -479,7 +479,7 @@ def build_quants():
             "Gatheral 2010). Can it profit at the scale required to *move world markets*?"
         ),
         code(
-            "from overnight import simulate\n"
+            "from quantlab import simulate\n"
             "drift = decs['SPY']['r_overnight'].mean()*1e4\n"
             "vol   = decs['SPY']['r_close_close'].std(ddof=1)*1e4\n"
             "adv_usd = float(spy_ohlc['Volume'].tail(252).mean())*float(spy_ohlc['Close'].tail(252).mean())\n"
@@ -506,7 +506,7 @@ def build_quants():
             "many noise series would produce — a multiplicity-aware p-value."
         ),
         code(
-            "from overnight import bayes\n"
+            "from quantlab import bayes\n"
             "panel_idx = pd.DataFrame({tk: d['r_overnight'] for tk, d in decs.items()})\n"
             "rc = bayes.reality_check(panel_idx, n_boot=2000, seed=0)\n"
             "print(f\"Universe of {rc['n_series']} indices | best overnight Sharpe = {rc['observed_max_sharpe']:.2f}\")\n"

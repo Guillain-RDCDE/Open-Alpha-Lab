@@ -21,13 +21,13 @@ try:
 except (AttributeError, ValueError):
     pass
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
 
 import matplotlib  # noqa: E402
 
 matplotlib.use("Agg")  # headless: never pop a window from a script
 
-from overnight import backtest, data, decompose, diagnostics, plots  # noqa: E402
+from quantlab import backtest, data, decompose, diagnostics, plots  # noqa: E402
 
 MODE = "split_only"  # document this choice in any published figure!
 

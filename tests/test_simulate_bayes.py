@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from overnight import bayes, decompose, diagnostics, simulate, universe
+from quantlab import bayes, decompose, diagnostics, simulate, universe
 
 
 # --- simulate ---------------------------------------------------------------

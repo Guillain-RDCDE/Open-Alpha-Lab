@@ -48,6 +48,6 @@ secrets.*
 .tools/
 
 # Commit the working paper and its figures (override the global *.pdf ignore)
-!paper/overnight_alpha.pdf
-!paper/figures/
-!paper/figures/*.pdf
+!studies/01-overnight-anomaly/paper/overnight_alpha.pdf
+!studies/01-overnight-anomaly/paper/figures/
+!studies/01-overnight-anomaly/paper/figures/*.pdf

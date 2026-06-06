@@ -1,12 +1,11 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
-title: "Overnight Alpha: verifying and stress-testing the overnight return anomaly"
+title: "Open-Alpha-Lab: an open quant research desk"
 abstract: >-
-  A reproducible toolkit that decomposes daily returns into overnight and
-  intraday legs, stress-tests the headline magnitudes (compounding, data
-  artefacts, selection), and backtests the buy-at-close/sell-at-open strategy
-  net of realistic costs. An independent, reproducible response to Knuteson's
-  market-manipulation claim.
+  An open quant research desk: a reusable engine (quantlab) plus rigorous,
+  reproducible audits of trading ideas, each judged on whether the signal is real
+  and whether it survives real execution costs and scale. Study 01 audits the
+  overnight return anomaly and the market-manipulation claim.
 type: software
 authors:
   - family-names: "d'Erceville"
@@ -14,8 +13,8 @@ authors:
 version: 0.1.0
 date-released: "2026-06-06"
 license: MIT
-url: "https://github.com/Guillain-RDCDE/Overnight-Alpha"
-repository-code: "https://github.com/Guillain-RDCDE/Overnight-Alpha"
+url: "https://github.com/Guillain-RDCDE/Open-Alpha-Lab"
+repository-code: "https://github.com/Guillain-RDCDE/Open-Alpha-Lab"
 keywords:
   - quantitative-finance
   - market-microstructure

@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from overnight import analytics, decompose, diagnostics
+from quantlab import analytics, decompose, diagnostics
 
 
 def _strong_overnight(seed=0, n=252 * 20):

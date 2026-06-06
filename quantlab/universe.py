@@ -13,6 +13,7 @@ qualitative breadth result is robust to this; precise magnitudes are not.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import numpy as np
@@ -20,7 +21,7 @@ import pandas as pd
 
 from .decompose import decompose, summary
 
-_CACHE = Path("_cache")
+_CACHE = Path(os.environ.get("OVERNIGHT_CACHE", "_cache"))
 _WIKI = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
 
 
