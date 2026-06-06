@@ -6,7 +6,7 @@ For each index ETF it prints the overnight vs intraday split, runs the artefact
 detector, and saves a grid figure. Two things to look for, straight from the
 critique:
   * the CHINA test (FXI): Knuteson's pattern should look weak/inverted vs the
-    West, consistent with the T+1 microstructure explanation (Qiao & Dam 2020);
+    West, consistent with the T+1 microstructure explanation (Qiao and Dam 2020);
   * the INDIA counter (INDA): how many days the artefact detector flags — a
     proxy for the data-quality problems behind Figure 8.
 """

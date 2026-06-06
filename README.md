@@ -21,19 +21,24 @@
 
 ## 📄 Read the article first
 
-This repo is a *response*, so start with the source. One command fetches the
-openly available papers straight from arXiv (we don't redistribute the PDFs —
-[here's why](papers/README.md)):
+This repo is a *response*, so start with the source. One command fetches every
+openly available paper straight from its official source (we don't redistribute
+the PDFs — [here's why](papers/README.md)):
 
 ```bash
 python papers/download_papers.py
 ```
 
-- **Nothing to See Here** (2023) — [SSRN 4619084](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4619084) *(login wall)*
-- **Celebrating Three Decades of Worldwide Stock Market Manipulation** (2019) — [arXiv 1912.01708](https://arxiv.org/abs/1912.01708) · the figures we reproduce
-- **They Still Haven't Told You** (2022) — [arXiv 2201.00223](https://arxiv.org/abs/2201.00223)
+Knuteson's articles:
 
-See [`papers/README.md`](papers/README.md) for the full reading list and licences.
+- **Celebrating Three Decades of Worldwide Stock Market Manipulation** (2019) — [arXiv:1912.01708](https://arxiv.org/abs/1912.01708) · the figures we reproduce
+- **Strikingly Suspicious Overnight and Intraday Returns** (2020) — [arXiv:2010.01727](https://arxiv.org/abs/2010.01727) · the data paper
+- **They Still Haven't Told You** (2022) — [arXiv:2201.00223](https://arxiv.org/abs/2201.00223)
+- **Nothing to See Here: How to Say It When You Need to** (2023) — [SSRN 4619084](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4619084) *(login wall)*
+
+See [`papers/README.md`](papers/README.md) for the full reading list and the
+supporting literature; [`docs/references.md`](docs/references.md) maps which
+explanation each paper argues.
 
 ---
 
@@ -136,15 +141,16 @@ python -c "from overnight import decompose, data; print('ok')"   # smoke test
 
 Keep three levels apart — the pamphlet tends to blur them:
 
-1. **The empirical fact is REAL** and well documented (Lou–Polk–Skouras 2019,
-   Cooper–Cliff–Gulen 2008, NY Fed). Credit to Knuteson for publishing data + code.
+1. **The empirical fact is REAL** and well documented (Cooper, Cliff, and Gulen
+   2008; Berkman et al. 2012; Lou, Polk, and Skouras 2019; Boyarchenko, Larsen,
+   and Whelan 2023). Credit to Knuteson for publishing data and code.
 2. **The magnitudes are INFLATED** by (a) 30-year compounding on a log scale,
    (b) split/dividend artefacts in free data, (c) selection/survivorship
    ("the 25 most problematic").
-3. **The fraud attribution is NOT proven.** The China test shows an *inverted*
-   pattern, cleanly explained by the **T+1** rule (Qiao & Dam 2020) — awkward for
-   a single global manipulator. And the SEC's 2023 D.E. Shaw action concerned
-   whistleblower-agreement language (Rule 21F-17), **not** manipulation.
+3. **The fraud attribution is NOT proven.** The Chinese market shows an
+   *inverted* pattern, cleanly explained by the **T+1** rule (Qiao and Dam 2020)
+   — awkward for a single global manipulator. And the SEC's 2023 D.E. Shaw action
+   concerned whistleblower-agreement language (Rule 21F-17), **not** manipulation.
 
 **Reality check:** the NSPY / NIWM night-effect ETFs launched June 2022 and were
 liquidated August 2023 after heavy underperformance. A beautiful paper strategy
@@ -172,11 +178,54 @@ is worth no more than the paper until it pays real execution costs.
 - [ ] Capacity / slippage study by order size; market-neutral (long/short) variant
 - [ ] Reproduce the India (Figure 8) artefacts on raw emerging *spot* data
 
+## Citing this repository
+
+A [`CITATION.cff`](CITATION.cff) is provided — use GitHub's **"Cite this
+repository"** button, or:
+
+> d'Erceville, Guillain. 2026. *Overnight Alpha: verifying and stress-testing the
+> overnight return anomaly.* https://github.com/Guillain-RDCDE/Overnight-Alpha
+
 ## References
 
-Knuteson, *Celebrating Three Decades of Worldwide Stock Market Manipulation*
-(arXiv [1912.01708](https://arxiv.org/abs/1912.01708)); *They Still Haven't Told
-You* (arXiv [2201.00223](https://arxiv.org/abs/2201.00223)); *Nothing to See
-Here* (SSRN 4619084). Lou, Polk, Skouras (2019); Cooper, Cliff, Gulen (2008);
-Haghani et al. / Elm Wealth, *Night Moves* (2022); Qiao & Dam (2020, T+1).
-See [PROJECT_BRIEF.md](PROJECT_BRIEF.md) for the full handoff notes.
+Citation style: author–date (Chicago / *JFE*). A literature map (which
+explanation each paper argues) and machine-readable entries are in
+[`docs/references.md`](docs/references.md) and [`references.bib`](references.bib).
+Get the PDFs with `python papers/download_papers.py` (see [`papers/`](papers/README.md)).
+
+Berkman, Henk, Paul D. Koch, Laura Tuttle, and Ying Jenny Zhang. 2012. "Paying
+Attention: Overnight Returns and the Hidden Cost of Buying at the Open." *Journal
+of Financial and Quantitative Analysis* 47 (4): 715–741.
+
+Boyarchenko, Nina, Lars C. Larsen, and Paul Whelan. 2023. "The Overnight Drift."
+*The Review of Financial Studies* 36 (9): 3502–3547.
+[doi:10.1093/rfs/hhad020](https://doi.org/10.1093/rfs/hhad020). Working paper:
+Federal Reserve Bank of New York Staff Reports, no. 917 (2020).
+
+Cooper, Michael J., Michael T. Cliff, and Huseyin Gulen. 2008. "Return
+Differences between Trading and Non-Trading Hours: Like Night and Day." Working
+paper. [SSRN 1004081](https://ssrn.com/abstract=1004081).
+
+Haghani, Victor, Vladimir Ragulin, and Richard Dewey. 2024. "Night Moves: Is the
+Overnight Drift the Grandmother of All Market Anomalies?" *Journal of Investment
+Management* 22 (2). Working paper (2022): [SSRN 4139328](https://ssrn.com/abstract=4139328).
+
+Knuteson, Bruce. 2019. "Celebrating Three Decades of Worldwide Stock Market
+Manipulation." [arXiv:1912.01708](https://arxiv.org/abs/1912.01708).
+
+Knuteson, Bruce. 2020. "Strikingly Suspicious Overnight and Intraday Returns."
+[arXiv:2010.01727](https://arxiv.org/abs/2010.01727).
+
+Knuteson, Bruce. 2022. "They Still Haven't Told You."
+[arXiv:2201.00223](https://arxiv.org/abs/2201.00223).
+
+Knuteson, Bruce. 2023. "Nothing to See Here: How to Say It When You Need to."
+[SSRN Working Paper 4619084](https://ssrn.com/abstract=4619084).
+
+Lou, Dong, Christopher Polk, and Spyros Skouras. 2019. "A Tug of War: Overnight
+Versus Intraday Expected Returns." *Journal of Financial Economics* 134 (1):
+192–213. [doi:10.1016/j.jfineco.2019.03.011](https://doi.org/10.1016/j.jfineco.2019.03.011).
+
+Qiao, Kenan, and Lammertjan Dam. 2020. "The Overnight Return Puzzle and the
+'T+1' Trading Rule in Chinese Stock Markets." *Journal of Financial Markets* 50:
+100534. [doi:10.1016/j.finmar.2020.100534](https://doi.org/10.1016/j.finmar.2020.100534).

@@ -49,7 +49,7 @@ OPEN_PAPERS = [
     (
         "Qiao-Dam_2020_Overnight-Return-Puzzle-and-T+1-Trading-Rule-China.pdf",
         "https://pure.rug.nl/ws/files/132141807/1_s2.0_S1386418120300033_main.pdf",
-        "Qiao & Dam (2020), the Chinese T+1 case [U. Groningen open repo]",
+        "Qiao and Dam (2020), the Chinese T+1 case [U. Groningen open repo]",
     ),
     (
         "Boyarchenko-Larsen-Whelan_2020_The-Overnight-Drift_FedNY-SR917.pdf",

@@ -35,10 +35,17 @@ Author's data/code thread: <https://bruceknuteson.github.io/spy-day-and-night/>
 |---|---|---|---|---|
 | Lou, Polk, Skouras, *A Tug of War: Overnight vs Intraday Expected Returns* | 2019 | [LSE PDF](https://personal.lse.ac.uk/polk/research/TugOfWar.pdf) · [JFE](https://www.sciencedirect.com/science/article/abs/pii/S0304405X19300650) | ✅ | investor-clientele explanation; the canonical academic treatment |
 | Haghani, Ragulin, Dewey, *Night Moves: Is the Overnight Drift the Grandmother of All Market Anomalies?* | 2022 | [Elm Wealth PDF](https://elmwealth.com/night-moves-overnight-drift/) · [SSRN 4139328](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4139328) | ✅ | balanced quant discussion; retail-trading explanation |
-| Qiao & Dam, *The Overnight Return Puzzle and the "T+1" Trading Rule in Chinese Stock Markets* | 2020 | [U. Groningen PDF](https://pure.rug.nl/ws/files/132141807/1_s2.0_S1386418120300033_main.pdf) · [JFM](https://www.sciencedirect.com/science/article/abs/pii/S1386418120300033) | ✅ | the Chinese T+1 case that *inverts* the pattern |
-| Boyarchenko, Larsen, Whelan, *The Overnight Drift* | 2020 | [NY Fed Staff Report 917](https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr917.pdf) | ✅ | funding/microstructure mechanism for the drift |
+| Qiao and Dam, *The Overnight Return Puzzle and the "T+1" Trading Rule in Chinese Stock Markets* | 2020 | [U. Groningen PDF](https://pure.rug.nl/ws/files/132141807/1_s2.0_S1386418120300033_main.pdf) · [JFM](https://www.sciencedirect.com/science/article/abs/pii/S1386418120300033) | ✅ | the Chinese T+1 case that *inverts* the pattern |
+| Boyarchenko, Larsen, and Whelan, *The Overnight Drift* | 2023 | [NY Fed Staff Report 917](https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr917.pdf) (2020 wp) · [RFS](https://doi.org/10.1093/rfs/hhad020) | ✅ | funding/microstructure mechanism for the drift |
 | Cooper, Cliff, Gulen, *Return Differences between Trading and Non-Trading Hours: Like Night and Day* | 2008 | [Purdue copy (Wayback)](https://web.archive.org/web/20210530111718/https://www.krannert.purdue.edu/faculty/hgulen/Day_and_Night.pdf) · [SSRN 1004081](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1004081) | ✅ | early documentation of the night/day split |
 
 > Downloaded PDFs stay local (git-ignored). Copyright remains with the authors.
 > Only **Nothing to See Here** (✋) is unobtainable without SSRN access — no free
 > copy exists anywhere, and its content is covered by the 2019/2020 Knuteson papers.
+
+---
+
+For formatted, author–date citations of all of the above — plus a **literature
+map** of which explanation each paper argues — see
+[`../docs/references.md`](../docs/references.md). Machine-readable BibTeX entries
+are in [`../references.bib`](../references.bib).

@@ -163,7 +163,10 @@ def build_curious():
             "The night/day anomaly is a beautiful case study: **real, fascinating, but to "
             "be handled with rigour**. For the numbers-on-real-data version — China test, "
             "artefacts, statistics, beta vs alpha — see "
-            "[`02_for_the_quants.ipynb`](02_for_the_quants.ipynb)."
+            "[`02_for_the_quants.ipynb`](02_for_the_quants.ipynb).\n\n"
+            "*Further reading:* the original articles and the academic literature (with a "
+            "map of who argues what) are listed in [`docs/references.md`](../docs/references.md); "
+            "grab the PDFs with `python papers/download_papers.py`."
         ),
     ]
     nb = new_notebook(cells=cells, metadata=_meta())
@@ -250,7 +253,7 @@ def build_quants():
         ),
         md(
             "### 2.2 The China test and the T+1 rule\n\n"
-            "For Chinese stocks, the literature (Qiao & Dam, 2020) documents an "
+            "For Chinese stocks, the literature (Qiao and Dam 2020) documents an "
             "**inverted** pattern (positive day, negative night), cleanly explained by the "
             "**T+1** rule (shares bought one day cannot be sold before the next). Our ETF "
             "proxy (FXI, US-listed) doesn't directly test A-shares, but we note a much "
@@ -369,16 +372,36 @@ def build_quants():
         md(
             "## 6. Honest verdict\n\n"
             "Three levels never to be conflated:\n\n"
-            "1. **The empirical fact is REAL** and well documented (Lou-Polk-Skouras 2019, "
-            "Cooper-Cliff-Gulen 2008, NY Fed). Credit to Knuteson for publishing data and code.\n"
+            "1. **The empirical fact is REAL** and well documented (Cooper, Cliff, and "
+            "Gulen 2008; Berkman et al. 2012; Lou, Polk, and Skouras 2019; Boyarchenko, "
+            "Larsen, and Whelan 2023). Credit to Knuteson for publishing data and code.\n"
             "2. **The magnitudes are INFLATED** — 30-year compounding + log scale, data "
             "artefacts, selection/survivorship bias.\n"
             "3. **The attribution to orchestrated fraud is NOT proven** — the foreign-ETF "
-            "inversion (time zone) and the Chinese case (T+1) favour **microstructure** "
-            "explanations, and most of the \"overnight return\" is **gap beta**, not alpha.\n\n"
+            "inversion (time zone) and the Chinese case (T+1; Qiao and Dam 2020) favour "
+            "**microstructure** explanations, and most of the \"overnight return\" is "
+            "**gap beta**, not alpha.\n\n"
             "And even assuming the edge is real: **it does not survive real execution "
             "costs** — as the 2023 liquidation of the NSPY / NIWM ETFs showed. A beautiful "
             "anomaly for understanding microstructure; a poor retail trading strategy."
+        ),
+        md(
+            "## References\n\n"
+            "Author–date (Chicago / *JFE*). Full list, a literature map and BibTeX in the "
+            "repo: [`docs/references.md`](../docs/references.md), "
+            "[`references.bib`](../references.bib).\n\n"
+            "- Berkman, H., P. D. Koch, L. Tuttle, and Y. J. Zhang. 2012. \"Paying Attention: "
+            "Overnight Returns and the Hidden Cost of Buying at the Open.\" *JFQA* 47 (4): 715–741.\n"
+            "- Boyarchenko, N., L. C. Larsen, and P. Whelan. 2023. \"The Overnight Drift.\" "
+            "*Review of Financial Studies* 36 (9): 3502–3547.\n"
+            "- Cooper, M. J., M. T. Cliff, and H. Gulen. 2008. \"Return Differences between "
+            "Trading and Non-Trading Hours: Like Night and Day.\" Working paper, SSRN 1004081.\n"
+            "- Knuteson, B. 2019, 2020, 2022, 2023. Overnight/intraday return series "
+            "(arXiv:1912.01708, 2010.01727, 2201.00223; SSRN 4619084).\n"
+            "- Lou, D., C. Polk, and S. Skouras. 2019. \"A Tug of War: Overnight Versus "
+            "Intraday Expected Returns.\" *JFE* 134 (1): 192–213.\n"
+            "- Qiao, K., and L. Dam. 2020. \"The Overnight Return Puzzle and the 'T+1' "
+            "Trading Rule in Chinese Stock Markets.\" *Journal of Financial Markets* 50: 100534."
         ),
     ]
     nb = new_notebook(cells=cells, metadata=_meta())

@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Overnight Alpha: verifying and stress-testing the overnight return anomaly"
+abstract: >-
+  A reproducible toolkit that decomposes daily returns into overnight and
+  intraday legs, stress-tests the headline magnitudes (compounding, data
+  artefacts, selection), and backtests the buy-at-close/sell-at-open strategy
+  net of realistic costs. An independent, reproducible response to Knuteson's
+  market-manipulation claim.
+type: software
+authors:
+  - family-names: "d'Erceville"
+    given-names: "Guillain"
+version: 0.1.0
+date-released: "2026-06-06"
+license: MIT
+url: "https://github.com/Guillain-RDCDE/Overnight-Alpha"
+repository-code: "https://github.com/Guillain-RDCDE/Overnight-Alpha"
+keywords:
+  - quantitative-finance
+  - market-microstructure
+  - overnight-returns
+  - backtesting
+  - reproducible-research
+references:
+  - type: article
+    authors:
+      - family-names: Knuteson
+        given-names: Bruce
+    title: "Celebrating Three Decades of Worldwide Stock Market Manipulation"
+    year: 2019
+    notes: "arXiv:1912.01708"
+    url: "https://arxiv.org/abs/1912.01708"
+  - type: article
+    authors:
+      - family-names: Lou
+        given-names: Dong
+      - family-names: Polk
+        given-names: Christopher
+      - family-names: Skouras
+        given-names: Spyros
+    title: "A Tug of War: Overnight Versus Intraday Expected Returns"
+    journal: "Journal of Financial Economics"
+    volume: 134
+    issue: 1
+    start: 192
+    end: 213
+    year: 2019
+    doi: "10.1016/j.jfineco.2019.03.011"
