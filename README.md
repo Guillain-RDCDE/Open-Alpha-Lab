@@ -1,9 +1,8 @@
 # Overnight Alpha — verify the night-trade edge, then stress-test it honestly
 
+[![tests](https://github.com/Guillain-RDCDE/overnight-alpha/actions/workflows/tests.yml/badge.svg)](https://github.com/Guillain-RDCDE/overnight-alpha/actions/workflows/tests.yml)
 [![python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![tests](https://img.shields.io/badge/tests-16%20passing-brightgreen)](tests/)
-[![CI](https://img.shields.io/badge/CI-GitHub%20Actions-informational)](.github/workflows/tests.yml)
 
 > Almost all the long-run gain in the world's stock indices accrues **overnight**
 > (yesterday's close → today's open). The **intraday** session (open → close) is
