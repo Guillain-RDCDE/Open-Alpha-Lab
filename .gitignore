@@ -24,6 +24,9 @@ out_*.png
 # (the papers/ folder itself is tracked for its README + downloader script)
 *.pdf
 
+# Internal handoff/planning doc — kept local, not part of the public repo.
+PROJECT_BRIEF.md
+
 # Notebooks
 .ipynb_checkpoints/
 
