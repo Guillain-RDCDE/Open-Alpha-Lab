@@ -1,0 +1,223 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+
+\title{\textbf{Overnight, or Overhyped?}\\[2pt]
+\large A Reproducible Audit of the Overnight Return Anomaly\\ and the Market-Manipulation Hypothesis}
+\author{Guillain d'Erceville\\
+\small\href{https://github.com/Guillain-RDCDE/Overnight-Alpha}{github.com/Guillain-RDCDE/Overnight-Alpha}}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent Across world equity markets, close-to-open (``overnight'') returns have
+historically dwarfed open-to-close (``intraday'') returns. Knuteson~\cite{knuteson2019,knuteson2023}
+reads this as the signature of deliberate manipulation by a large quantitative
+fund. We take the empirical fact seriously---and confirm it with
+autocorrelation-robust inference and at the individual-firm level---then audit
+the inference. We show that (i)~the headline magnitudes are inflated by
+compounding, data artefacts, and above all a \emph{calendar-time} confound: the
+overnight window spans $\sim$28 hours versus the 6.5-hour day, so per hour the
+edge is $\sim$1.3$\times$, not $\sim$4$\times$; (ii)~what survives is largely a
+gap-risk premium (beta), sits below realistic trading costs, and has decayed from
+a 5-year Sharpe near 2 to near 0.5; (iii)~the strategy is uninvestable at scale,
+with square-root market-impact capacity in the single-digit millions of dollars;
+and (iv)~the alleged manipulation mechanism is economically self-defeating---a
+steelman simulation shows a firm large enough to ``move world markets'' would lose
+tens of billions per year running it. A transparent Bayesian analysis returns a
+low posterior probability of manipulation that is robust across priors. Every
+number is reproducible from the accompanying open-source toolkit.
+\end{abstract}
+
+\section{Introduction}
+The observation is real and old: U.S.\ equity index returns accrue
+overwhelmingly while the market is closed, with the trading day flat to negative
+\cite{cooper2008,berkman2012,lou2019}. Knuteson extends it across world markets
+and three decades and advances a striking interpretation: a single large
+quantitative fund expands its book when the market is illiquid (near the open,
+moving prices up) and contracts it when liquid, harvesting the overnight drift it
+helps create \cite{knuteson2019,knuteson2023}.
+
+This paper neither dismisses the fact nor accepts the interpretation. We grant
+the empirical pattern its fairest hearing, then ask what it actually implies. Our
+contribution is an end-to-end, fully reproducible audit that separates three
+levels routinely conflated in the popular framing: the \emph{fact} (real), the
+\emph{magnitude} (oversold), and the \emph{attribution} (unproven). All results
+come from a public toolkit (\texttt{overnight/}) with a deterministic test suite.
+
+\section{Data and decomposition}
+For each trading day $t$ with open/close auction prices, the close-to-close return
+splits \emph{exactly} into overnight and intraday legs:
+\begin{equation}
+(1+r^{\text{on}}_t)(1+r^{\text{id}}_t)=(1+r^{\text{cc}}_t),\qquad
+r^{\text{on}}_t=\tfrac{O_t}{C_{t-1}}-1,\;\; r^{\text{id}}_t=\tfrac{C_t}{O_t}-1.
+\end{equation}
+There is no free parameter. Data are daily OHLC from Yahoo!\ Finance; the
+dividend-adjustment mode is treated as a modelling choice (ex-dividend occurs at
+the open), with \texttt{split\_only} the default. The test suite verifies the
+identity to machine precision ($\sim 10^{-16}$).
+
+\section{The fact is real}
+On SPY the overnight mean is $+3.25$ bps/day with a Newey--West (HAC)
+$t\approx 4.9$ \cite{neweywest1987}; the intraday mean is insignificant
+($t\approx 0.9$). The Lo~\cite{lo2002} Sharpe-ratio $t$-statistic is $\approx 4.5$.
+The effect is not an artefact of assuming i.i.d.\ returns.
+
+It is also not a handful of cherry-picked indices. At the \emph{firm} level
+across S\&P~500 members ($N\approx 441$ with clean post-2010 history),
+$\sim$69\% of stocks have a higher overnight than intraday Sharpe; the median
+overnight Sharpe ($\approx 0.56$) exceeds the median intraday Sharpe
+($\approx 0.34$); and an equal-weight cross-section earns $+372\%$ overnight
+versus $+233\%$ intraday (HAC $t\approx 3.8$), echoing \cite{lou2019}
+(Figure~\ref{fig:xs}). Finally, a White~\cite{white2000} Reality
+Check over a universe of major indices rejects the null that the best overnight
+Sharpe is a product of multiplicity ($p\approx 0$): on liquid indices the effect
+survives a data-snooping correction. We therefore concede the fact without
+reservation. The interesting questions are about magnitude, cause, and
+exploitability.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.8\linewidth]{figures/cross_section.pdf}
+\caption{Firm-level overnight vs intraday annualised Sharpe across S\&P~500
+members. The overnight distribution is shifted right of the intraday one; dashed
+lines mark medians. The effect is a broad cross-sectional fact, not a few-index
+fluke. \emph{Caveat:} current membership, hence survivorship bias.}
+\label{fig:xs}
+\end{figure}
+
+\section{The magnitude is oversold}
+Three multipliers inflate the headline.
+
+\paragraph{Compounding on a log axis.} A \emph{constant, innocent} 1 bps/night
+drift compounds to $+124\%$ over 32 years; 30 bps/night to trillions of percent.
+The explosion is the exponent, not a mechanism.
+
+\paragraph{The clock illusion.} The overnight window is not 6.5 hours like the
+day: it runs from the 16:00 close to the 09:30 open (17.5h on weeknights) and
+across weekends and holidays (65h$+$), averaging $\sim$28 calendar hours. Placing
+both legs on a per-hour footing collapses SPY's overnight advantage from
+$\sim$4.1$\times$ \emph{per session} to $\sim$1.3$\times$ \emph{per calendar
+hour}. Most of the famous gap is a unit error; a modest genuine premium remains.
+
+\paragraph{Data artefacts.} A few mis-adjusted split/dividend prints mechanically
+shovel return from the day into the night; an automatic detector flags them.
+These drive the most extreme emerging-market figures, and selecting ``the 25 most
+problematic'' from a large universe guarantees significance by construction.
+
+\section{What survives is beta, untradable, and decaying}
+Holding the market every night is bearing gap risk continuously. Regressing the
+overnight leg on the market (close-to-close) gives $\beta\approx 0.33$: roughly
+40\% of SPY's overnight return is a gap-risk premium, not distinct alpha. The
+residual alpha ($\approx 1.9$ bps/day) sits \emph{below} the break-even
+round-trip cost ($\approx 3.3$ bps): even the non-beta part does not survive
+execution. A cost sweep turns a positive gross Sharpe negative at a realistic
+5~bps round trip---precisely the fate of the NSPY/NIWM ``night effect'' ETFs
+(2022--2023). And the edge is fading: the trailing 5-year overnight Sharpe has
+fallen from $\sim$2 (1998) to $\sim$0.5 (2026), the textbook post-publication
+decay of \cite{mclean2016} (Figure~\ref{fig:decay}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.8\linewidth]{figures/alpha_decay.pdf}
+\caption{Trailing 5-year annualised Sharpe of the SPY overnight leg. An effect
+that fades as it becomes documented is the opposite of an ongoing, deliberate
+scheme.}
+\label{fig:decay}
+\end{figure}
+
+\section{Capacity and the steelman manipulator}
+Even a real, free edge is worthless if it cannot hold capital. Under the
+square-root market-impact law \cite{almgren2005}, round-trip impact equals SPY's
+gross overnight edge at only $\sim\$10$M of capital. We then \emph{steelman} the
+manipulation thesis: grant a firm the \emph{entire} overnight drift on its
+capital and charge it only round-trip temporary impact (permanent impact nets to
+zero over a symmetric round trip, the no-dynamic-arbitrage condition of
+\cite{huberman2004,gatheral2010}). Net profit is
+\begin{equation}
+\Pi(K)=K\Big(r^{\text{on}} - 2\,c\,\sigma\sqrt{K/\text{ADV}\$}\Big),
+\end{equation}
+positive only for small $K$. The break-even is $\sim\$10$M; at \$1B the firm
+loses $\sim\$0.75$B/year, at \$10B $\sim\$25$B/year (Figure~\ref{fig:manip}). A
+firm large enough to move world markets could not profit from an edge this thin:
+the mechanism is self-defeating at the scale the accusation requires.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.8\linewidth]{figures/manipulator_pnl.pdf}
+\caption{Net edge (bps on capital) of the alleged round-trip overnight harvester
+versus deployed capital. Profitable only at trivial scale; deeply negative at the
+sizes a ``world-moving'' actor would require.}
+\label{fig:manip}
+\end{figure}
+
+\section{Is it manipulation? A Bayesian reading}
+Write the posterior odds for the manipulation hypothesis $M$ against
+``risk premium $+$ microstructure'' $S$ given evidence $E_i$:
+\begin{equation}
+\frac{P(M\mid E)}{P(S\mid E)}=\frac{P(M)}{P(S)}\prod_i \frac{P(E_i\mid M)}{P(E_i\mid S)}.
+\end{equation}
+The basic night~$>$~day pattern is near-equally likely under both hypotheses, so
+it barely discriminates ($\text{LR}\approx 1$). The \emph{discriminating}
+evidence---foreign-ETF sign inversions driven by the listing clock, the Chinese
+T+1 inversion \cite{qiao2020}, the clock illusion, the negative net P\&L at scale,
+and the post-publication decay---all favour $S$. With deliberately moderate,
+stated likelihood ratios and a prior of $0.5$, the posterior probability of
+manipulation is $\approx 2.4\%$, and it remains low across a wide range of priors
+and evidence strengths (Figure~\ref{fig:post}); only a strong prior combined with
+deliberately weakened evidence keeps it elevated. The likelihood ratios are
+subjective and combined under a generous independence assumption---stated openly,
+not hidden---so the robust conclusion is directional: the evidence moves a
+reasonable observer \emph{toward} microstructure, not toward fraud.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.8\linewidth]{figures/posterior.pdf}
+\caption{Posterior probability of manipulation versus prior, for three evidence
+strengths (LR raised to powers $0.5/1/2$). The diagonal is ``posterior = prior''.
+Discriminating evidence pulls every curve below the diagonal.}
+\label{fig:post}
+\end{figure}
+
+\section{Conclusion}
+The overnight anomaly is real, broad, and genuinely interesting---and largely
+\emph{explained} by ordinary risk premia and market microstructure. Its magnitude
+is inflated by compounding and a calendar-time confound; what remains is mostly
+beta, is below trading costs, has decayed, and cannot scale. The manipulation
+attribution is not supported: the pattern is weak evidence, the discriminating
+evidence points the other way, and the alleged mechanism is economically
+self-defeating. A beautiful feature of microstructure was dressed up as both a
+free lunch and a global fraud; the honest, reproducible answer is more
+interesting than either.
+
+\paragraph{Reproducibility.} All figures, tables and numbers are produced by the
+open-source toolkit at the URL on the title page: a deterministic, tested
+Python package with continuous integration, executed notebooks, and this paper's
+figure script (\texttt{paper/make\_figures.py}). \emph{Not investment advice.}
+
+\begin{thebibliography}{99}
+\small
+\bibitem{almgren2005} Almgren, R., C.\ Thum, E.\ Hauptmann, and H.\ Li. 2005. Direct Estimation of Equity Market Impact. \emph{Risk} 18(7).
+\bibitem{berkman2012} Berkman, H., P.\ D.\ Koch, L.\ Tuttle, and Y.\ J.\ Zhang. 2012. Paying Attention: Overnight Returns and the Hidden Cost of Buying at the Open. \emph{JFQA} 47(4): 715--741.
+\bibitem{cooper2008} Cooper, M.\ J., M.\ T.\ Cliff, and H.\ Gulen. 2008. Return Differences between Trading and Non-Trading Hours: Like Night and Day. Working paper.
+\bibitem{gatheral2010} Gatheral, J. 2010. No-Dynamic-Arbitrage and Market Impact. \emph{Quantitative Finance} 10(7): 749--759.
+\bibitem{huberman2004} Huberman, G., and W.\ Stanzl. 2004. Price Manipulation and Quasi-Arbitrage. \emph{Econometrica} 72(4): 1247--1275.
+\bibitem{knuteson2019} Knuteson, B. 2019. Celebrating Three Decades of Worldwide Stock Market Manipulation. arXiv:1912.01708.
+\bibitem{knuteson2023} Knuteson, B. 2023. Nothing to See Here: How to Say It When You Need to. SSRN 4619084.
+\bibitem{lo2002} Lo, A.\ W. 2002. The Statistics of Sharpe Ratios. \emph{Financial Analysts Journal} 58(4): 36--52.
+\bibitem{lou2019} Lou, D., C.\ Polk, and S.\ Skouras. 2019. A Tug of War: Overnight versus Intraday Expected Returns. \emph{JFE} 134(1): 192--213.
+\bibitem{mclean2016} McLean, R.\ D., and J.\ Pontiff. 2016. Does Academic Research Destroy Stock Return Predictability? \emph{Journal of Finance} 71(1): 5--32.
+\bibitem{neweywest1987} Newey, W.\ K., and K.\ D.\ West. 1987. A Simple, Positive Semi-Definite, HAC Covariance Matrix. \emph{Econometrica} 55(3): 703--708.
+\bibitem{qiao2020} Qiao, K., and L.\ Dam. 2020. The Overnight Return Puzzle and the ``T+1'' Trading Rule in Chinese Stock Markets. \emph{Journal of Financial Markets} 50: 100534.
+\bibitem{white2000} White, H. 2000. A Reality Check for Data Snooping. \emph{Econometrica} 68(5): 1097--1126.
+\end{thebibliography}
+
+\end{document}

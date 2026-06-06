@@ -45,3 +45,9 @@ htmlcov/
 *.env
 .env
 secrets.*
+.tools/
+
+# Commit the working paper and its figures (override the global *.pdf ignore)
+!paper/overnight_alpha.pdf
+!paper/figures/
+!paper/figures/*.pdf
