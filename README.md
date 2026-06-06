@@ -46,7 +46,7 @@ The protocol each idea goes through:
 | # | Study | Question | Signal | Tradability |
 |---|---|---|---|---|
 | **[01](studies/01-overnight-anomaly/)** | **Overnight Anomaly** | Do stocks really make their money overnight — and is it manipulation? | `REAL` (HAC *t*≈5) | `MIRAGE` (mostly beta, dies after costs, capacity ~\$10M, decaying) |
-| 02 | *(in the queue)* | — | — | — |
+| **[02](studies/02-falling-knife/)** | **Falling-Knife** | Does buying the Nasdaq-100 / S&P 500 after a −3% drop beat buying a random day? | `NONE` at −3% · `WEAK` in deep panic | `MIRAGE` (tiny crash-clustered capacity, fails out-of-sample) |
 
 > **Study 01 in one line:** the overnight effect is *real and broad* (confirmed
 > across ~441 S&P 500 stocks), but its magnitude is inflated by a calendar-time
@@ -55,9 +55,17 @@ The protocol each idea goes through:
 > posterior ≈ 2–3%). Full audit, two narrative notebooks, a point-by-point
 > rebuttal, and a working paper: **[studies/01-overnight-anomaly/](studies/01-overnight-anomaly/)**.
 
+> **Study 02 in one line:** the famous "−3% dip" is folklore — buying it is
+> statistically indistinguishable from buying a random day, on both the Nasdaq-100
+> and the S&P 500, and the prettiest backtests collapse out-of-sample (data-mining).
+> Genuine *panic* (−5% to −7%) does leave a real fingerprint of a bounce, but it
+> fails the tests that matter for trading it: the clustering-aware bootstrap
+> straddles zero, capacity is ~3 events a decade dominated by 2000/2008/2020, and a
+> fixed deep-dip rule flips from positive to negative Sharpe out-of-sample. Method,
+> figures and reproducible code: **[studies/02-falling-knife/](studies/02-falling-knife/)**.
+
 Ideas in the queue: momentum vs the overnight/intraday split, the weekend effect,
-post-earnings drift, pairs/cointegration decay, "buy-the-dip" at horizon.
-Suggestions welcome via issues.
+post-earnings drift, pairs/cointegration decay. Suggestions welcome via issues.
 
 ---
 
@@ -84,7 +92,8 @@ Open-Alpha-Lab/
 ├── quantlab/                     # the reusable research engine
 ├── tests/                        # deterministic test-suite (CI on 3.10–3.12)
 ├── studies/
-│   └── 01-overnight-anomaly/     # study #1: notebooks, paper, RESPONSE, docs, data
+│   ├── 01-overnight-anomaly/     # study #1: notebooks, paper, RESPONSE, docs, data
+│   └── 02-falling-knife/         # study #2: buy-the-dip — self-contained package + examples + tests
 └── pyproject.toml · CITATION.cff · LICENSE
 ```
 
