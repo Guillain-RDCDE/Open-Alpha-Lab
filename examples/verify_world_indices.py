@@ -16,6 +16,11 @@ from __future__ import annotations
 import os
 import sys
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except (AttributeError, ValueError):
+    pass
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from overnight import backtest, data, decompose, diagnostics, plots  # noqa: E402

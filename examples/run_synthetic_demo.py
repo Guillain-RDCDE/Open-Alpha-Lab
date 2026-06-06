@@ -14,6 +14,12 @@ from __future__ import annotations
 import os
 import sys
 
+# Windows consoles default to cp1252 and mangle the em-dashes below.
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except (AttributeError, ValueError):
+    pass
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from overnight import backtest, decompose, diagnostics, plots  # noqa: E402

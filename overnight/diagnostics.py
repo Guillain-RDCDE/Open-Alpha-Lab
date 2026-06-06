@@ -100,15 +100,16 @@ def format_compounding(table: pd.DataFrame) -> pd.DataFrame:
 
     def fmt(x):
         pct = x * 100.0
-        if pct < 1e4:
+        if pct < 1e6:
             return f"+{pct:,.0f}%"
         if pct < 1e9:
             return f"+{pct/1e6:,.0f}M%"
         if pct < 1e12:
             return f"+{pct/1e9:,.0f}bn%"
-        return f"+{pct/1e12:,.0f}tn%"
+        return f"+{pct/1e12:,.1f}tn%"
 
-    return table.applymap(fmt)
+    # pandas >=2.1: DataFrame.map (applymap was removed). Fallback for older.
+    return table.map(fmt) if hasattr(table, "map") else table.applymap(fmt)
 
 
 # ---------------------------------------------------------------------------
@@ -119,20 +120,26 @@ def inject_split_artifact(
     rows=(0.25, 0.5, 0.75),
     factor: float = 1.5,
 ) -> pd.DataFrame:
-    """Corrupt a few closes (un-adjusted split/dividend style) and return a copy.
+    """Corrupt a few opens (un-adjusted split/dividend style) and return a copy.
 
-    A split or dividend that is applied to the close but not carried into the
-    *next* open mechanically dumps return from the intraday leg into the
-    overnight leg — exactly the kind of Yahoo artefact that drives Knuteson's
-    wildest emerging-market figures. ``rows`` are fractional positions in the
-    sample; ``factor`` multiplies the close on those days.
+    Free data sources retroactively adjust the *close* for a split/dividend but
+    can leave the recorded *open* on the mismatch day un-adjusted. That bumps
+    the open relative to the prior close, so the overnight leg (open/prev_close)
+    spikes up while the intraday leg (close/open) spikes down: return is
+    mechanically dumped from the day INTO the night — exactly the Yahoo artefact
+    behind Knuteson's wildest emerging-market figures, and large enough to trip
+    the >40% detector. ``rows`` are fractional positions; ``factor`` multiplies
+    the open (and high, to keep OHLC self-consistent) on those days.
     """
     df = ohlc.copy()
     n = len(df)
     idx = sorted({int(p * n) for p in rows if 0 < p < 1})
-    col = "Close"
+    oi = df.columns.get_loc("Open")
     for i in idx:
-        df.iloc[i, df.columns.get_loc(col)] *= factor
+        df.iloc[i, oi] *= factor
+        if "High" in df.columns:
+            hi = df.columns.get_loc("High")
+            df.iloc[i, hi] = max(df.iloc[i, hi], df.iloc[i, oi])
     return df
 
 
