@@ -41,7 +41,30 @@ while regarding the manipulation *attribution* as unproven.
 
 ---
 
-## References
+## Methodology
+
+The statistical and microstructure machinery used in
+[`02_for_the_quants.ipynb`](../notebooks/02_for_the_quants.ipynb) and
+[`overnight/analytics.py`](../overnight/analytics.py):
+
+Almgren, Robert, Chee Thum, Emmanuel Hauptmann, and Hong Li. 2005. "Direct
+Estimation of Equity Market Impact." *Risk* 18 (7). *(square-root impact law —
+capacity analysis)*
+
+Lo, Andrew W. 2002. "The Statistics of Sharpe Ratios." *Financial Analysts
+Journal* 58 (4): 36–52. https://doi.org/10.2469/faj.v58.n4.2453. *(Sharpe-ratio
+standard errors)*
+
+McLean, R. David, and Jeffrey Pontiff. 2016. "Does Academic Research Destroy
+Stock Return Predictability?" *The Journal of Finance* 71 (1): 5–32.
+https://doi.org/10.1111/jofi.12365. *(post-publication alpha decay)*
+
+Newey, Whitney K., and Kenneth D. West. 1987. "A Simple, Positive Semi-Definite,
+Heteroskedasticity and Autocorrelation Consistent Covariance Matrix."
+*Econometrica* 55 (3): 703–708. https://doi.org/10.2307/1913610. *(HAC
+standard errors)*
+
+## Subject-matter references
 
 Berkman, Henk, Paul D. Koch, Laura Tuttle, and Ying Jenny Zhang. 2012. "Paying
 Attention: Overnight Returns and the Hidden Cost of Buying at the Open."

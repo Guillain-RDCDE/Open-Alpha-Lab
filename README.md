@@ -72,22 +72,32 @@ outputs are pre-executed — you don't have to run anything to read them):
 | | For whom | What's inside |
 |---|---|---|
 | **[`notebooks/01_for_the_curious.ipynb`](notebooks/01_for_the_curious.ipynb)** | the curious | the story in plain language: the night/day pattern, then the three traps (compounding, dirty data, fees) that explain why it's subtler than it looks |
-| **[`notebooks/02_for_the_quants.ipynb`](notebooks/02_for_the_quants.ipynb)** | quants / practitioners | real Yahoo data on 10 world indices, the critique with numbers, bootstrap Sharpe CIs, alpha-vs-beta decomposition, dividend-adjustment sensitivity, and a cost-aware backtest |
+| **[`notebooks/02_for_the_quants.ipynb`](notebooks/02_for_the_quants.ipynb)** | quants / practitioners | real-data teardown: HAC/Lo significance, the **clock illusion** (per-hour normalization), foreign-ETF & China inversions, alpha-vs-beta, **post-publication alpha decay**, **market-impact capacity**, and a likelihood-ratio argument on the manipulation claim |
 
 > Notebooks are *generated* from [`notebooks/build_notebooks.py`](notebooks/build_notebooks.py)
 > then executed with `nbconvert` — so the figures you read are reproducible outputs, not screenshots.
 
-### One real-data finding worth flagging
+### Findings worth flagging (all reproduced on real data)
 
-Run the world-index decomposition and the pattern is **not universal**. The US
-(SPY, QQQ) and Brazil show the classic huge-overnight shape (overnight Sharpe
-≈ 0.7, bootstrap 95% CI excludes zero). But the UK / Germany / France / Japan
-ETFs are **inverted** — because they trade in New York while their underlying
-markets trade *overnight* US-time, so the "overnight" window simply *contains
-the home session*. The night/day split is relative to the listing clock, not a
-universal anomaly. And China (FXI) overnight Sharpe ≈ 0.26 is **not statistically
-distinguishable from zero** (bootstrap P(Sharpe<0) ≈ 9%), consistent with the
-T+1 microstructure explanation rather than one global manipulator.
+We take the fact seriously, then dismantle the framing:
+
+- **It's real.** SPY's overnight mean carries a Newey-West (HAC) **t ≈ 5**; the
+  intraday mean is insignificant (t ≈ 1). We concede the empirical fact outright.
+- **The clock illusion.** The overnight window averages **~28 calendar hours**
+  (weekends/holidays) vs the 6.5-hour day. Per *session* the night beats the day
+  ~4×; **per calendar hour, only ~1.3×**. Most of the famous gap is a unit error.
+- **Mostly beta, and fading.** ~40% of SPY's overnight return is gap-risk beta;
+  the residual alpha (~1.9 bps) is **below** the break-even cost (~3.3 bps); and
+  the trailing 5-year overnight Sharpe has **decayed from ~2 (1998) to ~0.5
+  (2026)** — textbook post-publication decay.
+- **Unscalable.** Square-root market-impact capacity is **single-digit millions**
+  of dollars — too thin for retail *and* for any firm large enough to "manipulate
+  world markets".
+- **The cross-section betrays the story.** UK/Germany/France/Japan ETFs are
+  **inverted** (they trade in New York while their home market trades overnight
+  US-time → the "overnight" window contains the home session), and China (FXI) is
+  **not statistically distinguishable from zero** — both predicted by
+  microstructure, awkward for a single global manipulator.
 
 ---
 
@@ -110,6 +120,7 @@ what's actually left (usually: not much).
 | [`overnight/diagnostics.py`](overnight/diagnostics.py) | Critique layer (offline): compounding table, split-artefact injector + detector, weighting/selection effects, synthetic market. |
 | [`overnight/backtest.py`](overnight/backtest.py) | Cost-aware backtest, break-even cost, cost sweep. |
 | [`overnight/stats.py`](overnight/stats.py) | Bootstrap Sharpe confidence intervals, alpha-vs-beta (gap-risk) decomposition. |
+| [`overnight/analytics.py`](overnight/analytics.py) | Research-grade tools: Newey-West (HAC) & Lo (2002) Sharpe inference, calendar-time normalization (the "clock illusion"), rolling-Sharpe alpha decay, square-root market-impact capacity. |
 | [`overnight/plots.py`](overnight/plots.py) | Knuteson Figure-1(c) style (log) with magnitudes in plain text + `linear` toggle. |
 | [`overnight/brokers/`](overnight/brokers/) | Swappable `BrokerBase` + MT5 template (`dry_run=True`). |
 
@@ -145,12 +156,18 @@ Keep three levels apart — the pamphlet tends to blur them:
    2008; Berkman et al. 2012; Lou, Polk, and Skouras 2019; Boyarchenko, Larsen,
    and Whelan 2023). Credit to Knuteson for publishing data and code.
 2. **The magnitudes are INFLATED** by (a) 30-year compounding on a log scale,
-   (b) split/dividend artefacts in free data, (c) selection/survivorship
-   ("the 25 most problematic").
-3. **The fraud attribution is NOT proven.** The Chinese market shows an
-   *inverted* pattern, cleanly explained by the **T+1** rule (Qiao and Dam 2020)
-   — awkward for a single global manipulator. And the SEC's 2023 D.E. Shaw action
-   concerned whistleblower-agreement language (Rule 21F-17), **not** manipulation.
+   (b) split/dividend artefacts in free data, (c) selection/survivorship ("the 25
+   most problematic"), and above all (d) the **clock illusion** — the night spans
+   ~28 calendar hours vs the 6.5-hour day, so per-hour the edge is ~1.3×, not 4×.
+   What survives is **mostly gap beta**, sits below trading costs, and has
+   **decayed** (5-year overnight Sharpe ~2 → ~0.5).
+3. **The fraud attribution is NOT proven.** Framed as a likelihood ratio, the
+   headline pattern is ~equally probable under "risk premium + microstructure" as
+   under manipulation, so it discriminates little; the *discriminating* evidence
+   (the foreign-ETF and Chinese **T+1** inversions, Qiao and Dam 2020; and a
+   single-digit-million capacity) points away from a global manipulator. The
+   SEC's 2023 D.E. Shaw action concerned whistleblower-agreement language (Rule
+   21F-17), **not** manipulation.
 
 **Reality check:** the NSPY / NIWM night-effect ETFs launched June 2022 and were
 liquidated August 2023 after heavy underperformance. A beautiful paper strategy
@@ -170,7 +187,7 @@ is worth no more than the paper until it pays real execution costs.
 
 ## Roadmap
 
-- [x] Core decomposition + offline critique demo + tests (16 passing) + CI
+- [x] Core decomposition + offline critique demo + tests (23 passing) + CI
 - [x] Live world-index verification (the foreign-ETF inversion + China T+1 finding)
 - [x] Two narrative notebooks (curious / quant), executed and reproducible
 - [x] Statistics layer: bootstrap Sharpe CIs + alpha-vs-beta decomposition

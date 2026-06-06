@@ -9,7 +9,7 @@ why the gross edge rarely survives.
 Not investment advice. See LICENSE.
 """
 
-from . import backtest, data, decompose, diagnostics, plots, stats
+from . import analytics, backtest, data, decompose, diagnostics, plots, stats
 
-__all__ = ["decompose", "data", "plots", "diagnostics", "backtest", "stats"]
+__all__ = ["decompose", "data", "plots", "diagnostics", "backtest", "stats", "analytics"]
 __version__ = "0.1.0"
