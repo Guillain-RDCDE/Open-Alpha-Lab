@@ -4,17 +4,40 @@
 [![python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
+> **An independent, reproducible response to Bruce Knuteson's claim that the
+> overnight stock-market return pattern is the fingerprint of large-scale market
+> manipulation.**
+>
 > Almost all the long-run gain in the world's stock indices accrues **overnight**
-> (yesterday's close → today's open). The **intraday** session (open → close) is
-> flat to negative. Bruce Knuteson calls this the signature of market
-> manipulation. This repo lets you **check that claim yourself** — and shows,
-> with numbers, why the gross edge rarely survives real trading costs.
+> (yesterday's close → today's open); the **intraday** session (open → close) is
+> flat to negative. That fact is real. Knuteson reads it as orchestrated fraud.
+> This repository gives you the **code to check every figure yourself**, an
+> honest **two-track write-up** (one for the curious, one for quants), and a
+> measured **verdict** — separating what the data supports from what it doesn't.
 >
 > **Not investment advice.** Research & education only. See [LICENSE](LICENSE).
 
 ---
 
-## TL;DR (the three things this repo proves, offline, in one command)
+## 📄 Read the article first
+
+This repo is a *response*, so start with the source. One command fetches the
+openly available papers straight from arXiv (we don't redistribute the PDFs —
+[here's why](papers/README.md)):
+
+```bash
+python papers/download_papers.py
+```
+
+- **Nothing to See Here** (2023) — [SSRN 4619084](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4619084) *(login wall)*
+- **Celebrating Three Decades of Worldwide Stock Market Manipulation** (2019) — [arXiv 1912.01708](https://arxiv.org/abs/1912.01708) · the figures we reproduce
+- **They Still Haven't Told You** (2022) — [arXiv 2201.00223](https://arxiv.org/abs/2201.00223)
+
+See [`papers/README.md`](papers/README.md) for the full reading list and licences.
+
+---
+
+## TL;DR — our response in three numbers (offline, one command)
 
 ```bash
 pip install -r requirements.txt

@@ -21,7 +21,7 @@ out_*.png
 !docs/**/*.png
 
 # Papers — do NOT redistribute copyrighted PDFs; keep them local only.
-papers/
+# (the papers/ folder itself is tracked for its README + downloader script)
 *.pdf
 
 # Notebooks
