@@ -27,6 +27,11 @@ OPEN_PAPERS = [
         "Knuteson (2019) — the figures we reproduce [arXiv 1912.01708]",
     ),
     (
+        "Knuteson_2020_Strikingly-Suspicious-Overnight-and-Intraday-Returns.pdf",
+        "https://arxiv.org/pdf/2010.01727",
+        "Knuteson (2020) — the substantive overnight/intraday data paper [arXiv 2010.01727]",
+    ),
+    (
         "Knuteson_2022_They-Still-Havent-Told-You.pdf",
         "https://arxiv.org/pdf/2201.00223",
         "Knuteson (2022) — the attribution follow-up [arXiv 2201.00223]",
@@ -51,17 +56,20 @@ OPEN_PAPERS = [
         "https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr917.pdf",
         "Boyarchenko, Larsen, Whelan (2020), 'The Overnight Drift' [NY Fed SR 917]",
     ),
+    (
+        "Cooper-Cliff-Gulen_2008_Return-Differences-Trading-vs-Non-Trading-Hours.pdf",
+        "https://web.archive.org/web/20210530111718if_/https://www.krannert.purdue.edu/faculty/hgulen/Day_and_Night.pdf",
+        "Cooper, Cliff, Gulen (2008), 'Like Night and Day' [Purdue copy via Wayback Machine]",
+    ),
 ]
 
-# Login-walled; cannot be automated.
+# Login-walled (SSRN bot wall); cannot be automated. No free copy exists
+# anywhere — not on arXiv, the author's site, or any repository. Its data and
+# figures are, however, fully covered by Knuteson's 2019 + 2020 papers above.
 GATED = [
     (
         "Knuteson (2023), 'Nothing to See Here' — the central pamphlet",
         "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4619084",
-    ),
-    (
-        "Cooper, Cliff, Gulen (2008), 'Like Night and Day'",
-        "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1004081",
     ),
 ]
 
@@ -95,7 +103,7 @@ def main() -> int:
             ok += 1
 
     print(f"\n{ok}/{len(OPEN_PAPERS)} open papers downloaded into {HERE}\n")
-    print("Behind a login wall — please download these two manually:")
+    print("Behind a login wall (SSRN) — no free copy exists; download manually:")
     for desc, url in GATED:
         print(f"  - {desc}\n      {url}")
     return 0 if ok else 1
