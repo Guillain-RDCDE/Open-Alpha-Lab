@@ -8,10 +8,11 @@ text and offer a ``linear`` toggle so a beginner isn't misled by the log scale.
 
 from __future__ import annotations
 
-import matplotlib
-
-matplotlib.use("Agg")  # headless-safe; callers can override before importing
-import matplotlib.pyplot as plt  # noqa: E402
+# NB: we deliberately do NOT force a backend here. Scripts that need a headless
+# backend call ``matplotlib.use("Agg")`` themselves *before* importing this
+# module; notebooks use the inline backend. matplotlib auto-selects Agg when no
+# display is available (e.g. CI), so savefig() works everywhere regardless.
+import matplotlib.pyplot as plt
 
 
 def plot_decomposition(dec, title: str = "Overnight vs Intraday", linear: bool = False, ax=None):

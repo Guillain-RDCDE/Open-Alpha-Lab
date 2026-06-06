@@ -2,7 +2,8 @@
 
 [![python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![tests](https://img.shields.io/badge/tests-pytest-informational)](tests/)
+[![tests](https://img.shields.io/badge/tests-16%20passing-brightgreen)](tests/)
+[![CI](https://img.shields.io/badge/CI-GitHub%20Actions-informational)](.github/workflows/tests.yml)
 
 > Almost all the long-run gain in the world's stock indices accrues **overnight**
 > (yesterday's close → today's open). The **intraday** session (open → close) is
@@ -36,6 +37,33 @@ python examples/run_synthetic_demo.py
 
 ---
 
+## 📓 Two notebooks, two audiences
+
+The repo is built to be read two ways. Both render inline on GitHub (figures and
+outputs are pre-executed — you don't have to run anything to read them):
+
+| | For whom | What's inside |
+|---|---|---|
+| **[`notebooks/01_pour_les_curieux.ipynb`](notebooks/01_pour_les_curieux.ipynb)** | the curious | the story in plain language: the night/day pattern, then the three traps (compounding, dirty data, fees) that explain why it's subtler than it looks |
+| **[`notebooks/02_pour_les_quants.ipynb`](notebooks/02_pour_les_quants.ipynb)** | quants / practitioners | real Yahoo data on 10 world indices, the critique with numbers, bootstrap Sharpe CIs, alpha-vs-beta decomposition, dividend-adjustment sensitivity, and a cost-aware backtest |
+
+> Notebooks are *generated* from [`notebooks/build_notebooks.py`](notebooks/build_notebooks.py)
+> then executed with `nbconvert` — so the figures you read are reproducible outputs, not screenshots.
+
+### One real-data finding worth flagging
+
+Run the world-index decomposition and the pattern is **not universal**. The US
+(SPY, QQQ) and Brazil show the classic huge-overnight shape (overnight Sharpe
+≈ 0.7, bootstrap 95% CI excludes zero). But the UK / Germany / France / Japan
+ETFs are **inverted** — because they trade in New York while their underlying
+markets trade *overnight* US-time, so the "overnight" window simply *contains
+the home session*. The night/day split is relative to the listing clock, not a
+universal anomaly. And China (FXI) overnight Sharpe ≈ 0.26 is **not statistically
+distinguishable from zero** (bootstrap P(Sharpe<0) ≈ 9%), consistent with the
+T+1 microstructure explanation rather than one global manipulator.
+
+---
+
 ## For beginners — what's the idea?
 
 Imagine a stock that, on average, drifts up a tiny bit while the market is
@@ -54,6 +82,7 @@ what's actually left (usually: not much).
 | [`overnight/data.py`](overnight/data.py) | Yahoo fetch + parquet cache. Adjustment modes `split_only` / `total_return` / `raw`. |
 | [`overnight/diagnostics.py`](overnight/diagnostics.py) | Critique layer (offline): compounding table, split-artefact injector + detector, weighting/selection effects, synthetic market. |
 | [`overnight/backtest.py`](overnight/backtest.py) | Cost-aware backtest, break-even cost, cost sweep. |
+| [`overnight/stats.py`](overnight/stats.py) | Bootstrap Sharpe confidence intervals, alpha-vs-beta (gap-risk) decomposition. |
 | [`overnight/plots.py`](overnight/plots.py) | Knuteson Figure-1(c) style (log) with magnitudes in plain text + `linear` toggle. |
 | [`overnight/brokers/`](overnight/brokers/) | Swappable `BrokerBase` + MT5 template (`dry_run=True`). |
 
@@ -62,8 +91,9 @@ overnight/        the package          examples/   runnable demos
   decompose.py      <- core              run_synthetic_demo.py   (offline, validated)
   data.py                                verify_world_indices.py (needs Internet)
   diagnostics.py
-  backtest.py     tests/   pytest on the decomposition identity & cost model
-  plots.py
+  backtest.py     tests/      pytest: decomposition identity, cost model, stats
+  stats.py        notebooks/  01_pour_les_curieux / 02_pour_les_quants (executed)
+  plots.py        .github/    CI: tests + offline demo on Python 3.10–3.12
   brokers/{base,mt5_connector}.py
 ```
 
@@ -112,11 +142,13 @@ is worth no more than the paper until it pays real execution costs.
 
 ## Roadmap
 
-- [x] Core decomposition + offline critique demo + tests
-- [ ] Run `verify_world_indices.py` on live data (China test, India artefact count)
-- [ ] Narrative Jupyter notebook (the A/B/C story, for write-ups)
+- [x] Core decomposition + offline critique demo + tests (16 passing) + CI
+- [x] Live world-index verification (the foreign-ETF inversion + China T+1 finding)
+- [x] Two narrative notebooks (curious / quant), executed and reproducible
+- [x] Statistics layer: bootstrap Sharpe CIs + alpha-vs-beta decomposition
 - [ ] Alpaca paper-trading connector (`BrokerBase`) alongside MT5
 - [ ] Capacity / slippage study by order size; market-neutral (long/short) variant
+- [ ] Reproduce the India (Figure 8) artefacts on raw emerging *spot* data
 
 ## References
 

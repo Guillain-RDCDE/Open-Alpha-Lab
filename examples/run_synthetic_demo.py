@@ -22,6 +22,10 @@ except (AttributeError, ValueError):
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import matplotlib  # noqa: E402
+
+matplotlib.use("Agg")  # headless: never pop a window from a script
+
 from overnight import backtest, decompose, diagnostics, plots  # noqa: E402
 
 OUT_PNG = "out_synthetic_decomposition.png"

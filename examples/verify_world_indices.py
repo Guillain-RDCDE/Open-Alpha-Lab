@@ -23,6 +23,10 @@ except (AttributeError, ValueError):
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import matplotlib  # noqa: E402
+
+matplotlib.use("Agg")  # headless: never pop a window from a script
+
 from overnight import backtest, data, decompose, diagnostics, plots  # noqa: E402
 
 MODE = "split_only"  # document this choice in any published figure!
