@@ -35,7 +35,7 @@ dependencies = [
 dev = ["pytest>=8.0", "nbformat", "nbconvert", "ipykernel", "jupyter"]
 
 [project.urls]
-Repository = "https://github.com/Guillain-RDCDE/overnight-alpha"
+Repository = "https://github.com/Guillain-RDCDE/Overnight-Alpha"
 
 [tool.setuptools]
 packages = ["overnight", "overnight.brokers"]

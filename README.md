@@ -1,6 +1,6 @@
 # Overnight Alpha — verify the night-trade edge, then stress-test it honestly
 
-[![tests](https://github.com/Guillain-RDCDE/overnight-alpha/actions/workflows/tests.yml/badge.svg)](https://github.com/Guillain-RDCDE/overnight-alpha/actions/workflows/tests.yml)
+[![tests](https://github.com/Guillain-RDCDE/Overnight-Alpha/actions/workflows/tests.yml/badge.svg)](https://github.com/Guillain-RDCDE/Overnight-Alpha/actions/workflows/tests.yml)
 [![python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
