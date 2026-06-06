@@ -66,8 +66,8 @@ outputs are pre-executed — you don't have to run anything to read them):
 
 | | For whom | What's inside |
 |---|---|---|
-| **[`notebooks/01_pour_les_curieux.ipynb`](notebooks/01_pour_les_curieux.ipynb)** | the curious | the story in plain language: the night/day pattern, then the three traps (compounding, dirty data, fees) that explain why it's subtler than it looks |
-| **[`notebooks/02_pour_les_quants.ipynb`](notebooks/02_pour_les_quants.ipynb)** | quants / practitioners | real Yahoo data on 10 world indices, the critique with numbers, bootstrap Sharpe CIs, alpha-vs-beta decomposition, dividend-adjustment sensitivity, and a cost-aware backtest |
+| **[`notebooks/01_for_the_curious.ipynb`](notebooks/01_for_the_curious.ipynb)** | the curious | the story in plain language: the night/day pattern, then the three traps (compounding, dirty data, fees) that explain why it's subtler than it looks |
+| **[`notebooks/02_for_the_quants.ipynb`](notebooks/02_for_the_quants.ipynb)** | quants / practitioners | real Yahoo data on 10 world indices, the critique with numbers, bootstrap Sharpe CIs, alpha-vs-beta decomposition, dividend-adjustment sensitivity, and a cost-aware backtest |
 
 > Notebooks are *generated* from [`notebooks/build_notebooks.py`](notebooks/build_notebooks.py)
 > then executed with `nbconvert` — so the figures you read are reproducible outputs, not screenshots.
@@ -114,7 +114,7 @@ overnight/        the package          examples/   runnable demos
   data.py                                verify_world_indices.py (needs Internet)
   diagnostics.py
   backtest.py     tests/      pytest: decomposition identity, cost model, stats
-  stats.py        notebooks/  01_pour_les_curieux / 02_pour_les_quants (executed)
+  stats.py        notebooks/  01_for_the_curious / 02_for_the_quants (executed)
   plots.py        .github/    CI: tests + offline demo on Python 3.10–3.12
   brokers/{base,mt5_connector}.py
 ```

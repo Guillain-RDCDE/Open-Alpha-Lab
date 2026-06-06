@@ -7,11 +7,11 @@ with nbconvert to embed the figures/outputs:
 
     python notebooks/build_notebooks.py
     jupyter nbconvert --to notebook --execute --inplace \
-        notebooks/01_pour_les_curieux.ipynb notebooks/02_pour_les_quants.ipynb
+        notebooks/01_for_the_curious.ipynb notebooks/02_for_the_quants.ipynb
 
 Two audiences, two files:
-  01_pour_les_curieux  — plain-language story, no jargon (the "for the curious")
-  02_pour_les_quants   — real data, critique, statistics, execution realism
+  01_for_the_curious  — plain-language story, no jargon
+  02_for_the_quants   — real data, critique, statistics, execution realism
 """
 
 from __future__ import annotations
@@ -44,155 +44,154 @@ def code(text):
 
 
 # ===========================================================================
-# 01 — POUR LES CURIEUX
+# 01 — FOR THE CURIOUS
 # ===========================================================================
-def build_curieux():
+def build_curious():
     cells = [
         md(
-            "# Pourquoi les marchés gagnent-ils *la nuit* ? 🌙\n"
-            "### Une anomalie boursière réelle — et pourquoi elle est plus subtile qu'elle n'en a l'air\n\n"
-            "Sur 30 ans, l'essentiel de la hausse des grandes bourses mondiales s'est "
-            "accumulé **pendant que le marché était fermé** (de la clôture d'un jour à "
-            "l'ouverture du lendemain). La **séance de journée** (ouverture → clôture), "
-            "elle, est quasiment plate. Étrange, non ?\n\n"
-            "Ce notebook raconte l'histoire **sans jargon**. Si vous voulez la version "
-            "rigoureuse (données réelles, statistiques, frais), filez vers "
-            "[`02_pour_les_quants.ipynb`](02_pour_les_quants.ipynb).\n\n"
-            "> ⚠️ **Ceci n'est pas un conseil en investissement.** Outil de pédagogie et de recherche."
+            "# Why do stock markets make their money *overnight*? 🌙\n"
+            "### A real market anomaly — and why it's subtler than it looks\n\n"
+            "Over the last 30 years, almost all the gains of the world's big stock "
+            "markets piled up **while the market was closed** (from one day's close to "
+            "the next morning's open). The **daytime session** (open → close) is nearly "
+            "flat. Strange, isn't it?\n\n"
+            "This notebook tells the story **without jargon**. For the rigorous version "
+            "(real data, statistics, costs), head to "
+            "[`02_for_the_quants.ipynb`](02_for_the_quants.ipynb).\n\n"
+            "> ⚠️ **This is not investment advice.** Educational and research tool."
         ),
         code(BOOT),
         md(
-            "## 1. Le constat : la nuit monte, le jour stagne\n\n"
-            "Construisons un marché *jouet*, totalement honnête : chaque nuit il dérive "
-            "d'un cheveu vers le haut (+3 points de base, soit +0,03 %), chaque jour d'un "
-            "cheveu vers le bas, et **tout le reste est du bruit pur — aucune fraude, aucun "
-            "complot**. Que donne la décomposition nuit / jour ?"
+            "## 1. The pattern: the night rises, the day stalls\n\n"
+            "Let's build a *toy* market that is completely honest: each night it drifts a "
+            "hair upward (+3 basis points, i.e. +0.03%), each day a hair downward, and "
+            "**everything else is pure noise — no fraud, no conspiracy**. What does the "
+            "night/day decomposition show?"
         ),
         code(
             "from overnight import decompose, diagnostics\n\n"
             "ohlc = diagnostics.synthetic_ohlc(overnight_bias_bps=3, intraday_bias_bps=-1, seed=0)\n"
             "dec = decompose.decompose(ohlc)\n\n"
             "ax = plt.subplot()\n"
-            "ax.plot(dec.index, dec['cum_overnight']*100, label='Nuit (clôture→ouverture)', lw=2)\n"
-            "ax.plot(dec.index, dec['cum_intraday']*100, label='Jour (ouverture→clôture)', lw=2)\n"
-            "ax.plot(dec.index, dec['cum_close_close']*100, label='Acheter & conserver', color='grey', lw=1.2)\n"
-            "ax.set_title('Marché jouet — aucune fraude, juste un biais de 3 pdb la nuit')\n"
-            "ax.set_ylabel('Rendement cumulé (%)'); ax.legend(); ax.grid(alpha=.3)\n"
+            "ax.plot(dec.index, dec['cum_overnight']*100, label='Overnight (close→open)', lw=2)\n"
+            "ax.plot(dec.index, dec['cum_intraday']*100, label='Intraday (open→close)', lw=2)\n"
+            "ax.plot(dec.index, dec['cum_close_close']*100, label='Buy & hold', color='grey', lw=1.2)\n"
+            "ax.set_title('Toy market — no fraud, just a 3 bps overnight bias')\n"
+            "ax.set_ylabel('Cumulative return (%)'); ax.legend(); ax.grid(alpha=.3)\n"
             "plt.show()\n"
             "s = decompose.summary(dec)\n"
-            "print(f\"Nuit cumulée : {s.loc['overnight','cum_return']*100:+.0f}%   \"\n"
-            "      f\"Jour cumulé : {s.loc['intraday','cum_return']*100:+.0f}%\")"
+            "print(f\"Overnight cumulative: {s.loc['overnight','cum_return']*100:+.0f}%   \"\n"
+            "      f\"Intraday cumulative: {s.loc['intraday','cum_return']*100:+.0f}%\")"
         ),
         md(
-            "**On a reproduit le motif de Knuteson sans la moindre manipulation.** Un "
-            "minuscule biais constant, répété ~250 nuits par an pendant 32 ans, suffit. "
-            "La nuit *semble* magique. Gardez cette idée : un tout petit décalage, "
-            "répété des milliers de fois, devient énorme. C'est notre premier piège."
+            "**We just reproduced Knuteson's pattern with zero manipulation.** A tiny "
+            "constant bias, repeated ~250 nights a year for 32 years, is enough. The "
+            "night *looks* magical. Hold that thought: a very small edge, repeated "
+            "thousands of times, becomes huge. That's our first trap."
         ),
         md(
-            "## 2. Piège n°1 — l'échelle ment (la magie des intérêts composés)\n\n"
-            "Les graphiques de l'article sont en **échelle logarithmique**, où l'on voit "
-            "vite « des milliards de % ». Mais d'où vient ce chiffre vertigineux ? Pas "
-            "d'une fraude : de la **composition**. Regardez ce que devient un simple biais "
-            "constant selon sa taille et l'horizon :"
+            "## 2. Trap #1 — the scale lies (the magic of compounding)\n\n"
+            "The article's charts use a **logarithmic** scale, where you quickly read "
+            "\"billions of %\". But where does that dizzying number come from? Not from "
+            "fraud: from **compounding**. Look at what a simple constant bias becomes, by "
+            "size and horizon:"
         ),
         code(
             "table = diagnostics.compounding_table()\n"
             "diagnostics.format_compounding(table)"
         ),
         md(
-            "Un biais de **1 point de base par nuit** — totalement innocent, indétectable — "
-            "compose à trois chiffres sur 30 ans. À 30 pdb, on atteint des *billions* de "
-            "pourcents. **L'explosion vient de l'exposant, pas d'un complot.** Toute "
-            "magnitude spectaculaire affichée en log doit d'abord passer ce test de bon sens."
+            "A bias of **1 basis point per night** — totally innocent, undetectable — "
+            "compounds to three digits over 30 years. At 30 bps, you reach *trillions* of "
+            "percent. **The explosion comes from the exponent, not from a conspiracy.** "
+            "Any spectacular magnitude shown on a log axis must pass this sanity check first."
         ),
         md(
-            "## 3. Piège n°2 — des données sales fabriquent le signal\n\n"
-            "Les données gratuites (Yahoo) ajustent mal certains *splits* et dividendes, "
-            "surtout sur les marchés émergents. Une poignée de prix corrompus suffit à "
-            "**déplacer mécaniquement du rendement du jour vers la nuit**. Démonstration "
-            "sur un marché totalement plat (zéro biais) où l'on salit 3 cours :"
+            "## 3. Trap #2 — dirty data manufactures the signal\n\n"
+            "Free data (Yahoo) mis-handles some *splits* and dividends, especially in "
+            "emerging markets. A handful of corrupted prices is enough to **mechanically "
+            "shift return from the day into the night**. Demonstration on a perfectly flat "
+            "market (zero bias) where we dirty 3 prices:"
         ),
         code(
             "flat = diagnostics.synthetic_ohlc(overnight_bias_bps=0, intraday_bias_bps=0, seed=1)\n"
-            "propre = decompose.decompose(flat)\n"
-            "sale = decompose.decompose(diagnostics.inject_split_artifact(flat, factor=1.5))\n"
-            "print(f\"Nuit cumulée  AVANT : {propre['cum_overnight'].iloc[-1]*100:+.1f}%\")\n"
-            "print(f\"Nuit cumulée  APRÈS : {sale['cum_overnight'].iloc[-1]*100:+.1f}%   (3 cours salis)\")\n"
-            "flags = diagnostics.flag_suspicious_returns(sale)\n"
-            "print(f\"\\nLe détecteur automatique repère {len(flags)} jour(s) suspect(s) :\")\n"
+            "clean = decompose.decompose(flat)\n"
+            "dirty = decompose.decompose(diagnostics.inject_split_artifact(flat, factor=1.5))\n"
+            "print(f\"Overnight cumulative  BEFORE: {clean['cum_overnight'].iloc[-1]*100:+.1f}%\")\n"
+            "print(f\"Overnight cumulative  AFTER : {dirty['cum_overnight'].iloc[-1]*100:+.1f}%   (3 dirtied prices)\")\n"
+            "flags = diagnostics.flag_suspicious_returns(dirty)\n"
+            "print(f\"\\nThe automatic detector flags {len(flags)} suspicious day(s):\")\n"
             "flags[['r_overnight','r_intraday']]"
         ),
         md(
-            "Trois erreurs de données, et la « performance nuit » passe du rouge au vert "
-            "vif. C'est exactement le mécanisme derrière les chiffres délirants de "
-            "certains marchés émergents dans l'article. **Avant de crier au scandale, "
-            "vérifiez vos données.**"
+            "Three data errors, and the \"overnight performance\" flips from red to bright "
+            "green. This is exactly the mechanism behind the wild numbers of certain "
+            "emerging markets in the article. **Before crying scandal, check your data.**"
         ),
         md(
-            "## 4. Piège n°3 — les frais effacent le gain\n\n"
-            "Admettons que l'effet nuit soit réel (il l'est en partie). Peut-on le "
-            "*trader* ? La stratégie « acheter à la clôture, vendre à l'ouverture » paie "
-            "l'écart achat/vente **deux fois par jour, ~250 jours par an**. Regardons ce "
-            "qu'il reste quand on soustrait des frais réalistes :"
+            "## 4. Trap #3 — fees erase the gain\n\n"
+            "Suppose the night effect is real (it partly is). Can you *trade* it? The "
+            "\"buy at the close, sell at the open\" strategy pays the bid/ask spread "
+            "**twice a day, ~250 days a year**. Let's see what's left once we subtract "
+            "realistic costs:"
         ),
         code(
             "from overnight import backtest\n"
             "sweep = backtest.cost_sweep(dec, roundtrip_bps=(0,1,2,3,5,8))\n"
-            "vue = sweep.copy()\n"
-            "vue['cagr_net'] = (vue['cagr_net']*100).map('{:+.2f}%'.format)\n"
-            "vue['sharpe_net'] = vue['sharpe_net'].map('{:+.2f}'.format)\n"
-            "vue['max_drawdown'] = (vue['max_drawdown']*100).map('{:.0f}%'.format)\n"
-            "vue.columns = ['Rendement annuel net', 'Sharpe net', 'Pire perte']\n"
-            "vue.index.name = 'Coût aller-retour (pdb)'\n"
-            "vue"
+            "view = sweep.copy()\n"
+            "view['cagr_net'] = (view['cagr_net']*100).map('{:+.2f}%'.format)\n"
+            "view['sharpe_net'] = view['sharpe_net'].map('{:+.2f}'.format)\n"
+            "view['max_drawdown'] = (view['max_drawdown']*100).map('{:.0f}%'.format)\n"
+            "view.columns = ['Net annual return', 'Net Sharpe', 'Worst drawdown']\n"
+            "view.index.name = 'Round-trip cost (bps)'\n"
+            "view"
         ),
         md(
-            "À **0 frais**, le Sharpe est correct (~0,7). À un coût réaliste de **5 points "
-            "de base** l'aller-retour, le gain devient **négatif**. C'est précisément le "
-            "sort des ETF « night effect » NSPY et NIWM : lancés en juin 2022, "
-            "**liquidés en août 2023** après une forte sous-performance.\n\n"
-            "> *Une stratégie magnifique sur le papier ne vaut pas plus que le papier "
-            "tant qu'elle n'a pas payé les coûts réels d'exécution.*"
+            "At **0 fees**, the Sharpe is decent (~0.7). At a realistic **5 basis points** "
+            "round-trip, the gain turns **negative**. This is precisely the fate of the "
+            "\"night effect\" ETFs NSPY and NIWM: launched June 2022, **liquidated August "
+            "2023** after heavy underperformance.\n\n"
+            "> *A strategy that's beautiful on paper is worth no more than the paper until "
+            "it has paid the real costs of execution.*"
         ),
         md(
-            "## En résumé\n\n"
+            "## In a nutshell\n\n"
             "| | |\n|---|---|\n"
-            "| ✅ **Le fait est réel** | la nuit a bien sur-performé le jour, sur des décennies |\n"
-            "| ⚠️ **Mais les chiffres sont gonflés** | composition + échelle log + données sales |\n"
-            "| ❌ **Et difficilement exploitable** | les frais effacent l'avantage |\n\n"
-            "L'anomalie nuit/jour est un superbe cas d'école : **réelle, fascinante, mais "
-            "à manier avec rigueur**. Pour la version chiffrée sur données réelles — test "
-            "Chine, artefacts, statistiques, bêta vs alpha — voir "
-            "[`02_pour_les_quants.ipynb`](02_pour_les_quants.ipynb)."
+            "| ✅ **The fact is real** | the night did outperform the day, over decades |\n"
+            "| ⚠️ **But the numbers are inflated** | compounding + log scale + dirty data |\n"
+            "| ❌ **And hard to exploit** | fees erase the edge |\n\n"
+            "The night/day anomaly is a beautiful case study: **real, fascinating, but to "
+            "be handled with rigour**. For the numbers-on-real-data version — China test, "
+            "artefacts, statistics, beta vs alpha — see "
+            "[`02_for_the_quants.ipynb`](02_for_the_quants.ipynb)."
         ),
     ]
     nb = new_notebook(cells=cells, metadata=_meta())
-    _write(nb, "01_pour_les_curieux.ipynb")
+    _write(nb, "01_for_the_curious.ipynb")
 
 
 # ===========================================================================
-# 02 — POUR LES QUANTS
+# 02 — FOR THE QUANTS
 # ===========================================================================
 def build_quants():
     cells = [
         md(
-            "# L'anomalie overnight — analyse quantitative\n"
-            "### Données réelles, démontage critique, statistiques, réalisme d'exécution\n\n"
-            "Version rigoureuse du [notebook pour curieux](01_pour_les_curieux.ipynb). On "
-            "y traite quatre questions qu'un quant sceptique pose immédiatement :\n\n"
-            "1. **Le motif tient-il sur données réelles, partout ?** (spoiler : non — et c'est instructif)\n"
-            "2. **Le Sharpe overnight est-il distinguable de zéro ? Est-ce de l'alpha ou du bêta déguisé ?**\n"
-            "3. **Survit-il aux coûts d'exécution réels ?**\n"
-            "4. **Le tout est-il reproductible ?**\n\n"
-            "> ⚠️ **Pas un conseil en investissement.** Données : Yahoo! Finance via `yfinance`, "
-            "mode d'ajustement `split_only` (choix documenté en §3.3). Première exécution = accès réseau."
+            "# The overnight anomaly — quantitative analysis\n"
+            "### Real data, critical teardown, statistics, execution realism\n\n"
+            "Rigorous version of the [notebook for the curious](01_for_the_curious.ipynb). "
+            "It tackles four questions a sceptical quant asks immediately:\n\n"
+            "1. **Does the pattern hold on real data, everywhere?** (spoiler: no — and that's instructive)\n"
+            "2. **Is the overnight Sharpe distinguishable from zero? Is it alpha or disguised beta?**\n"
+            "3. **Does it survive real execution costs?**\n"
+            "4. **Is the whole thing reproducible?**\n\n"
+            "> ⚠️ **Not investment advice.** Data: Yahoo! Finance via `yfinance`, adjustment "
+            "mode `split_only` (choice documented in §3.3). First run hits the network."
         ),
         code(BOOT + "\nfrom overnight import data, decompose, diagnostics, backtest, stats\n"),
         md(
-            "## 1. Le motif sur 10 indices mondiaux (ETF)\n\n"
-            "On décompose chaque ETF en nuit / jour et on lit le Sharpe **annualisé de la "
-            "jambe overnight** — le seul chiffre qui compte pour juger d'un *edge*."
+            "## 1. The pattern on 10 world indices (ETFs)\n\n"
+            "We decompose each ETF into night / day and read the **annualised Sharpe of "
+            "the overnight leg** — the only number that matters to judge an *edge*."
         ),
         code(
             "rows, decs = {}, {}\n"
@@ -204,189 +203,186 @@ def build_quants():
             "    decs[tk] = dec\n"
             "    s = decompose.summary(dec)\n"
             "    rows[tk] = {\n"
-            "        'pays': label,\n"
-            "        'nuit cum %': s.loc['overnight','cum_return']*100,\n"
-            "        'jour cum %': s.loc['intraday','cum_return']*100,\n"
-            "        'Sharpe nuit': s.loc['overnight','sharpe'],\n"
-            "        'Sharpe jour': s.loc['intraday','sharpe'],\n"
-            "        'jours suspects': len(diagnostics.flag_suspicious_returns(dec)),\n"
+            "        'market': label,\n"
+            "        'night cum %': s.loc['overnight','cum_return']*100,\n"
+            "        'day cum %': s.loc['intraday','cum_return']*100,\n"
+            "        'Sharpe night': s.loc['overnight','sharpe'],\n"
+            "        'Sharpe day': s.loc['intraday','sharpe'],\n"
+            "        'suspicious days': len(diagnostics.flag_suspicious_returns(dec)),\n"
             "    }\n"
             "table = pd.DataFrame(rows).T\n"
             "table"
         ),
         md(
-            "Lecture rapide : **USA (SPY, QQQ)** et **Brésil** affichent le motif classique "
-            "(nuit énorme, jour faible ou négatif, Sharpe nuit ~0,7). Mais regardez "
-            "l'**Europe (UK, Allemagne, France)** et le **Japon** : le motif est **inversé**. "
-            "Ce n'est pas un détail — c'est le cœur du démontage."
+            "Quick read: the **US (SPY, QQQ)** and **Brazil** show the classic pattern "
+            "(huge night, weak or negative day, night Sharpe ~0.7). But look at **Europe "
+            "(UK, Germany, France)** and **Japan**: the pattern is **inverted**. That's "
+            "not a detail — it's the heart of the teardown."
         ),
         md(
-            "## 2. Démontage critique\n\n"
-            "### 2.1 L'inversion des ETF étrangers : on mesure le fuseau horaire, pas une anomalie\n\n"
-            "Visualisons le Sharpe nuit vs jour par marché :"
+            "## 2. Critical teardown\n\n"
+            "### 2.1 The foreign-ETF inversion: we're measuring the time zone, not an anomaly\n\n"
+            "Let's visualise night vs day Sharpe by market:"
         ),
         code(
-            "t = table.sort_values('Sharpe nuit')\n"
+            "t = table.sort_values('Sharpe night')\n"
             "x = np.arange(len(t)); w = 0.4\n"
             "fig, ax = plt.subplots(figsize=(11,5))\n"
-            "ax.bar(x-w/2, t['Sharpe nuit'].astype(float), w, label='Sharpe nuit', color='#2c7fb8')\n"
-            "ax.bar(x+w/2, t['Sharpe jour'].astype(float), w, label='Sharpe jour', color='#fdae61')\n"
+            "ax.bar(x-w/2, t['Sharpe night'].astype(float), w, label='Sharpe night', color='#2c7fb8')\n"
+            "ax.bar(x+w/2, t['Sharpe day'].astype(float), w, label='Sharpe day', color='#fdae61')\n"
             "ax.axhline(0, color='k', lw=.8); ax.set_xticks(x); ax.set_xticklabels(t.index)\n"
-            "ax.set_ylabel('Sharpe annualisé'); ax.set_title('Nuit vs jour par marché — le signe s\\'inverse pour les ETF étrangers')\n"
+            "ax.set_ylabel('Annualised Sharpe'); ax.set_title('Night vs day by market — the sign flips for foreign ETFs')\n"
             "ax.legend(); ax.grid(axis='y', alpha=.3); plt.show()"
         ),
         md(
-            "**Explication microstructure.** EWU, EWG, EWQ, EWJ sont des ETF cotés à New "
-            "York mais dont le sous-jacent (Londres, Francfort, Paris, Tokyo) **trade "
-            "pendant la nuit américaine**. Pour ces produits, la fenêtre « overnight » "
-            "(horloge US, clôture→ouverture) **contient la séance du marché domestique**, "
-            "tandis que la fenêtre « intraday » US correspond aux heures où le sous-jacent "
-            "est largement fermé (le prix ne bouge que par arbitrage sur le NAV).\n\n"
-            "Autrement dit : **la décomposition nuit/jour est relative à l'horloge de "
-            "cotation**. Appliquée à un instrument décalé de son marché, elle mesure "
-            "surtout le fuseau horaire — pas une « anomalie ». Un manipulateur mondial "
-            "unique expliquerait mal pourquoi le signe dépend du lieu de cotation de l'ETF. "
-            "C'est un argument de prudence majeur, et un rappel : **toujours vérifier ce "
-            "que la fenêtre temporelle capture réellement pour l'instrument choisi.**"
+            "**Microstructure explanation.** EWU, EWG, EWQ, EWJ are ETFs listed in New "
+            "York but whose underlying (London, Frankfurt, Paris, Tokyo) **trades during "
+            "the US night**. For these products, the \"overnight\" window (US clock, "
+            "close→open) **contains the home market's session**, while the US \"intraday\" "
+            "window falls when the underlying is largely closed (the price only moves via "
+            "NAV arbitrage).\n\n"
+            "In other words: **the night/day split is relative to the listing clock**. "
+            "Applied to an instrument offset from its market, it mostly measures the time "
+            "zone — not an \"anomaly\". A single global manipulator would struggle to "
+            "explain why the sign depends on where the ETF is *listed*. This is a major "
+            "caution, and a reminder: **always check what the time window actually "
+            "captures for the chosen instrument.**"
         ),
         md(
-            "### 2.2 Le test de la Chine et la règle T+1\n\n"
-            "Sur les actions chinoises, la littérature (Qiao & Dam, 2020) documente un "
-            "motif **inversé** (jour positif, nuit négative), proprement expliqué par la "
-            "règle **T+1** (titres achetés un jour invendables avant le lendemain). Notre "
-            "proxy ETF (FXI, coté US) ne teste pas directement les A-shares, mais on note "
-            "un signal nettement plus faible que pour les USA :"
+            "### 2.2 The China test and the T+1 rule\n\n"
+            "For Chinese stocks, the literature (Qiao & Dam, 2020) documents an "
+            "**inverted** pattern (positive day, negative night), cleanly explained by the "
+            "**T+1** rule (shares bought one day cannot be sold before the next). Our ETF "
+            "proxy (FXI, US-listed) doesn't directly test A-shares, but we note a much "
+            "weaker signal than for the US:"
         ),
         code(
             "if 'FXI' in decs:\n"
             "    s = decompose.summary(decs['FXI'])\n"
-            "    print('Chine (FXI) — Sharpe nuit : {:+.2f}  vs  USA (SPY) : {:+.2f}'.format(\n"
+            "    print('China (FXI) — night Sharpe: {:+.2f}  vs  US (SPY): {:+.2f}'.format(\n"
             "        s.loc['overnight','sharpe'], decompose.summary(decs['SPY']).loc['overnight','sharpe']))\n"
-            "    print('Un motif universel et orchestré devrait être plus homogène géographiquement.')"
+            "    print('A universal, orchestrated pattern should be more geographically homogeneous.')"
         ),
         md(
-            "### 2.3 Composition et sélection\n\n"
-            "Comme montré dans le notebook pour curieux, les magnitudes en log sont "
-            "dominées par la **composition** (un biais de 1 pdb → +124 % sur 32 ans) et "
-            "par la **sélection** (les figures les plus spectaculaires sont, de l'aveu "
-            "même de l'auteur, « les 25 plus problématiques »). Le **compteur de jours "
-            "suspects** (colonne de §1) reste faible ici car les ETF US sont propres — "
-            "les artefacts vivent surtout dans les **indices spot émergents bruts** "
-            "(ex. `^BSESN`), non dans ces ETF. Caveat à garder pour toute reproduction de "
-            "la fameuse Figure 8 (Inde)."
+            "### 2.3 Compounding and selection\n\n"
+            "As shown in the notebook for the curious, log-scale magnitudes are dominated "
+            "by **compounding** (a 1 bps bias → +124% over 32 years) and by **selection** "
+            "(the most spectacular figures are, by the author's own admission, \"the 25 "
+            "most problematic\"). The **suspicious-days counter** (column in §1) stays low "
+            "here because the US ETFs are clean — the artefacts live mostly in the **raw "
+            "emerging spot indices** (e.g. `^BSESN`), not these ETFs. A caveat to keep for "
+            "any reproduction of the famous India Figure 8."
         ),
         md(
-            "## 3. Rigueur statistique & risque\n\n"
-            "### 3.1 Le Sharpe overnight est-il distinguable de zéro ? (bootstrap)\n\n"
-            "Un Sharpe de 0,77 sur un échantillon fini peut-il être du bruit ? Intervalle "
-            "de confiance à 95 % par bootstrap (2000 rééchantillonnages) :"
+            "## 3. Statistical rigour & risk\n\n"
+            "### 3.1 Is the overnight Sharpe distinguishable from zero? (bootstrap)\n\n"
+            "Could a Sharpe of 0.77 on a finite sample be noise? 95% confidence interval "
+            "by bootstrap (2000 resamples):"
         ),
         code(
             "for tk in ['SPY','QQQ','EWZ','FXI']:\n"
             "    if tk not in decs: continue\n"
             "    r = stats.sharpe_ci_bootstrap(decs[tk]['r_overnight'], n_boot=2000, seed=0)\n"
-            "    print(f\"{tk:4s} Sharpe nuit = {r['sharpe']:+.2f}  \"\n"
-            "          f\"IC95% [{r['ci_low']:+.2f}, {r['ci_high']:+.2f}]  \"\n"
+            "    print(f\"{tk:4s} night Sharpe = {r['sharpe']:+.2f}  \"\n"
+            "          f\"95% CI [{r['ci_low']:+.2f}, {r['ci_high']:+.2f}]  \"\n"
             "          f\"P(Sharpe<0) = {r['frac_negative']:.1%}  (n={r['n_obs']})\")"
         ),
         md(
-            "Pour SPY/QQQ/Brésil l'intervalle exclut largement zéro : l'effet est "
-            "**statistiquement réel**. La question n'est donc pas *« existe-t-il ? »* mais "
-            "*« est-ce de l'alpha exploitable ? »* — d'où les deux sections suivantes."
+            "For SPY/QQQ/Brazil the interval clears zero by a wide margin: the effect is "
+            "**statistically real**. So the question is not *\"does it exist?\"* but *\"is "
+            "it exploitable alpha?\"* — hence the next two sections."
         ),
         md(
-            "### 3.2 Alpha, ou bêta déguisé ?\n\n"
-            "Détenir le marché *chaque nuit*, c'est porter le **risque de gap** en "
-            "permanence. Une partie de « l'alpha overnight » est donc une **prime de risque "
-            "de bêta**, pas un edge distinct. On régresse la jambe nuit sur le marché "
-            "(close-close) : `r_nuit = α + β·r_marché + ε`."
+            "### 3.2 Alpha, or disguised beta?\n\n"
+            "Holding the market *every night* means carrying **gap risk** permanently. So "
+            "part of the \"overnight alpha\" is a **beta risk premium**, not a distinct "
+            "edge. We regress the night leg on the market (close-close): "
+            "`r_night = α + β·r_market + ε`."
         ),
         code(
             "d = stats.beta_decomposition(decs['SPY'], leg='overnight')\n"
-            "print('SPY — jambe overnight régressée sur le marché (close-close) :')\n"
-            "print(f\"  bêta = {d['beta']:.2f}   R² = {d['r_squared']:.2f}\")\n"
-            "print(f\"  rendement nuit moyen = {d['mean_leg_bps']:.2f} pdb/jour\")\n"
-            "print(f\"     dont bêta×marché  = {d['beta_contrib_bps']:.2f} pdb   (prime de risque)\")\n"
-            "print(f\"     dont alpha résid. = {d['alpha_daily_bps']:.2f} pdb   ({d['alpha_ann_pct']:+.1f}%/an)\")"
+            "print('SPY — overnight leg regressed on the market (close-close):')\n"
+            "print(f\"  beta = {d['beta']:.2f}   R^2 = {d['r_squared']:.2f}\")\n"
+            "print(f\"  mean overnight return = {d['mean_leg_bps']:.2f} bps/day\")\n"
+            "print(f\"     of which beta*market = {d['beta_contrib_bps']:.2f} bps   (risk premium)\")\n"
+            "print(f\"     of which resid. alpha = {d['alpha_daily_bps']:.2f} bps   ({d['alpha_ann_pct']:+.1f}%/yr)\")"
         ),
         md(
-            "Deux lectures, toutes deux défavorables à la thèse de l'edge facile :\n\n"
-            "- **~40 % du rendement nocturne est du bêta** (bêta ≈ 0,33 sur SPY) : "
-            "détenir le marché la nuit est en partie une simple **prime de risque de gap**, "
-            "pas un alpha distinct.\n"
-            "- Surtout, l'**alpha résiduel (~1,9 pdb/jour) est *inférieur* au coût de point "
-            "mort (~3,25 pdb)** calculé en §4 : même la part « non-bêta » du rendement ne "
-            "survit pas aux frais d'exécution. C'est le clou du cercueil — il faut facturer "
-            "les coûts sur l'alpha, pas sur le rendement brut."
+            "Two readings, both unfavourable to the easy-edge thesis:\n\n"
+            "- **~40% of the overnight return is beta** (beta ≈ 0.33 on SPY): holding the "
+            "market overnight is partly a plain **gap-risk premium**, not distinct alpha.\n"
+            "- More importantly, the **residual alpha (~1.9 bps/day) is *below* the "
+            "break-even cost (~3.25 bps)** computed in §4: even the \"non-beta\" part of "
+            "the return does not survive execution fees. That's the nail in the coffin — "
+            "you must charge costs against the alpha, not the gross return."
         ),
         md(
-            "### 3.3 Sensibilité au mode d'ajustement des dividendes\n\n"
-            "Le mode d'ajustement n'est **pas un détail** : un titre passe ex-dividende à "
-            "l'**ouverture**, donc l'ajustement déplace du rendement entre nuit et jour. "
-            "Comparons `split_only` (défaut, garde le gap ex-div dans la nuit) vs "
-            "`total_return` (tout ajusté) sur SPY :"
+            "### 3.3 Sensitivity to the dividend-adjustment mode\n\n"
+            "The adjustment mode is **not a detail**: a stock goes ex-dividend at the "
+            "**open**, so adjustment shifts return between night and day. Compare "
+            "`split_only` (default, keeps the ex-div gap in the night) vs `total_return` "
+            "(fully adjusted) on SPY:"
         ),
         code(
             "spy_tr = decompose.decompose(data.fetch('SPY', mode='total_return'))\n"
             "spy_so = decs['SPY']\n"
-            "print('SPY — nuit cumulée :')\n"
+            "print('SPY — overnight cumulative:')\n"
             "print(f\"  split_only   : {spy_so['cum_overnight'].iloc[-1]*100:+,.0f}%\")\n"
             "print(f\"  total_return : {spy_tr['cum_overnight'].iloc[-1]*100:+,.0f}%\")\n"
-            "print('Le choix déplace le niveau de la jambe nuit -> à documenter dans toute figure publiée.')"
+            "print('The choice shifts the level of the night leg -> document it in any published figure.')"
         ),
         md(
-            "## 4. Réalisme d'exécution\n\n"
-            "Modèle de coût par nuit détenue :\n"
-            "`coût = 2×(½·spread + commission + slippage) + financement`. "
-            "Le **facteur 2** (on traverse la fourchette à l'achat *et* à la vente, "
-            "~252×/an) est le tueur. Point mort et balayage sur SPY :"
+            "## 4. Execution realism\n\n"
+            "Cost model per night held:\n"
+            "`cost = 2*(0.5*spread + commission + slippage) + financing`. "
+            "The **factor 2** (you cross the spread to buy *and* to sell, ~252×/yr) is the "
+            "killer. Break-even and sweep on SPY:"
         ),
         code(
             "be = backtest.breakeven_cost_bps(spy_so)\n"
-            "print(f'Coût aller-retour de point mort = {be:.2f} pdb/nuit')\n"
+            "print(f'Break-even round-trip cost = {be:.2f} bps/night')\n"
             "sweep = backtest.cost_sweep(spy_so, roundtrip_bps=(0,1,2,3,5,8))\n"
             "sweep.round(3)"
         ),
         md(
-            "L'edge brut survit à quelques points de base seulement. Trois facteurs "
-            "aggravants côté retail, non capturés par ce backtest *optimiste* :\n\n"
-            "- **Prix d'exécution ≠ prints académiques** : l'anomalie est mesurée sur les "
-            "enchères de clôture/ouverture, inaccessibles au particulier ; à T±5 min on "
-            "est en séance continue, avec un spread plus large.\n"
-            "- **Swap CFD / MT5** : le financement overnight prélevé chaque nuit peut "
-            "annuler l'edge à lui seul (vérifier `swap_long` avant tout trade — c'est "
-            "exactement le garde-fou implémenté dans le connecteur MT5 du repo).\n"
-            "- **Capacité / slippage** : l'impact marché croît avec la taille d'ordre, "
-            "surtout sur les enchères peu liquides."
+            "The gross edge survives only a few basis points. Three retail-side aggravating "
+            "factors, not captured by this *optimistic* backtest:\n\n"
+            "- **Execution price ≠ academic prints**: the anomaly is measured on the "
+            "close/open auctions, inaccessible to retail; at T±5 min you're in continuous "
+            "trading, with a wider spread.\n"
+            "- **CFD / MT5 swap**: the overnight financing charged each night can erase the "
+            "edge on its own (check `swap_long` before any trade — exactly the safeguard "
+            "implemented in the repo's MT5 connector).\n"
+            "- **Capacity / slippage**: market impact grows with order size, especially on "
+            "thin auctions."
         ),
         md(
-            "## 5. Reproductibilité\n\n"
-            "- **Déterminisme** : tout le synthétique et le bootstrap sont *seedés*.\n"
-            "- **Tests** : `pytest` vérifie l'identité de décomposition "
-            "`(1+r_nuit)(1+r_jour)=(1+r_cc)` (erreur ~1e-16) et la monotonie du coût.\n"
-            "- **CI** : GitHub Actions rejoue tests + démo offline sur Python 3.10–3.12.\n"
-            "- **Données** : cache parquet local (`_cache/`), mode d'ajustement explicite.\n"
-            "- **Notebooks générés** : `python notebooks/build_notebooks.py` puis "
-            "`nbconvert --execute` — la figure que vous lisez est l'output exécuté, pas une capture."
+            "## 5. Reproducibility\n\n"
+            "- **Determinism**: all synthetic data and the bootstrap are *seeded*.\n"
+            "- **Tests**: `pytest` verifies the decomposition identity "
+            "`(1+r_night)(1+r_day)=(1+r_cc)` (error ~1e-16) and cost monotonicity.\n"
+            "- **CI**: GitHub Actions reruns tests + the offline demo on Python 3.10–3.12.\n"
+            "- **Data**: local parquet cache (`_cache/`), explicit adjustment mode.\n"
+            "- **Generated notebooks**: `python notebooks/build_notebooks.py` then "
+            "`nbconvert --execute` — the figure you read is the executed output, not a screenshot."
         ),
         md(
-            "## 6. Verdict honnête\n\n"
-            "Trois niveaux à ne **jamais** confondre :\n\n"
-            "1. **Le fait empirique est RÉEL** et bien documenté (Lou-Polk-Skouras 2019, "
-            "Cooper-Cliff-Gulen 2008, Fed NY). Mérite à Knuteson d'avoir publié données et code.\n"
-            "2. **Les magnitudes sont GONFLÉES** — composition sur 30 ans + échelle log, "
-            "artefacts de données, biais de sélection/survie.\n"
-            "3. **L'attribution à une fraude orchestrée n'est PAS prouvée** — l'inversion "
-            "des ETF étrangers (fuseau horaire) et le cas chinois (T+1) favorisent des "
-            "explications **microstructurelles**, et la majeure partie du « rendement nuit » "
-            "est du **bêta de gap**, pas un alpha.\n\n"
-            "Et même en supposant l'edge réel : **il ne survit pas aux coûts d'exécution "
-            "réels** — comme l'ont montré la liquidation des ETF NSPY / NIWM en 2023. "
-            "Belle anomalie pour comprendre la microstructure ; piètre stratégie de trading retail."
+            "## 6. Honest verdict\n\n"
+            "Three levels never to be conflated:\n\n"
+            "1. **The empirical fact is REAL** and well documented (Lou-Polk-Skouras 2019, "
+            "Cooper-Cliff-Gulen 2008, NY Fed). Credit to Knuteson for publishing data and code.\n"
+            "2. **The magnitudes are INFLATED** — 30-year compounding + log scale, data "
+            "artefacts, selection/survivorship bias.\n"
+            "3. **The attribution to orchestrated fraud is NOT proven** — the foreign-ETF "
+            "inversion (time zone) and the Chinese case (T+1) favour **microstructure** "
+            "explanations, and most of the \"overnight return\" is **gap beta**, not alpha.\n\n"
+            "And even assuming the edge is real: **it does not survive real execution "
+            "costs** — as the 2023 liquidation of the NSPY / NIWM ETFs showed. A beautiful "
+            "anomaly for understanding microstructure; a poor retail trading strategy."
         ),
     ]
     nb = new_notebook(cells=cells, metadata=_meta())
-    _write(nb, "02_pour_les_quants.ipynb")
+    _write(nb, "02_for_the_quants.ipynb")
 
 
 def _meta():
@@ -404,5 +400,5 @@ def _write(nb, name):
 
 
 if __name__ == "__main__":
-    build_curieux()
+    build_curious()
     build_quants()
