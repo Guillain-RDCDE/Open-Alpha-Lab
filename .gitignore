@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Data cache (Yahoo parquet)
+_cache/
+*.parquet
+
+# Generated figures (keep the demo one if you want; ignored by default)
+out_*.png
+*.png
+!docs/**/*.png
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# MetaTrader / secrets — NEVER commit credentials
+*.env
+.env
+secrets.*

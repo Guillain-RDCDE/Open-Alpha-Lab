@@ -1,0 +1,128 @@
+# Overnight Anomaly — verify it, then trade it honestly
+
+[![python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
+[![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![tests](https://img.shields.io/badge/tests-pytest-informational)](tests/)
+
+> Almost all the long-run gain in the world's stock indices accrues **overnight**
+> (yesterday's close → today's open). The **intraday** session (open → close) is
+> flat to negative. Bruce Knuteson calls this the signature of market
+> manipulation. This repo lets you **check that claim yourself** — and shows,
+> with numbers, why the gross edge rarely survives real trading costs.
+>
+> **Not investment advice.** Research & education only. See [LICENSE](LICENSE).
+
+---
+
+## TL;DR (the three things this repo proves, offline, in one command)
+
+```bash
+pip install -r requirements.txt
+python examples/run_synthetic_demo.py
+```
+
+1. **(A) Compounding inflates the headlines.** A *completely innocent* 1–3 bps
+   per-night drift, compounded over 30 years on a log axis, becomes "hundreds of
+   percent" — even "billions of percent". The explosion is the **exponent**, not
+   fraud.
+2. **(B) Data artefacts manufacture the signal.** A handful of mis-adjusted
+   closes (splits/dividends) mechanically move return *out of* the day leg and
+   *into* the night leg — the engine behind the wildest emerging-market figures.
+   A built-in detector flags them.
+3. **(C) Costs kill the strategy.** Buying every close and selling every open is
+   ~252 round-trips/year. The honest backtest shows a positive *gross* Sharpe
+   going **negative net** at a realistic spread — exactly what liquidated the
+   NSPY / NIWM "night effect" ETFs in 2023.
+
+---
+
+## For beginners — what's the idea?
+
+Imagine a stock that, on average, drifts up a tiny bit while the market is
+*closed* (overnight) and drifts flat while it's *open* (intraday). Over decades
+that tiny overnight drift compounds into a huge-looking number. The strategy
+"buy at the close, sell at the next open" tries to harvest it. The catch: you'd
+pay the buy/sell spread **twice every day**, ~250 days a year. This repo
+measures the drift exactly, and then subtracts the real costs so you can see
+what's actually left (usually: not much).
+
+## For practitioners — what's inside
+
+| Module | Role |
+|---|---|
+| [`overnight/decompose.py`](overnight/decompose.py) | Exact night/day/close-close split. Identity `(1+r_on)(1+r_id)=(1+r_cc)`, `summary()` with **Sharpe**. |
+| [`overnight/data.py`](overnight/data.py) | Yahoo fetch + parquet cache. Adjustment modes `split_only` / `total_return` / `raw`. |
+| [`overnight/diagnostics.py`](overnight/diagnostics.py) | Critique layer (offline): compounding table, split-artefact injector + detector, weighting/selection effects, synthetic market. |
+| [`overnight/backtest.py`](overnight/backtest.py) | Cost-aware backtest, break-even cost, cost sweep. |
+| [`overnight/plots.py`](overnight/plots.py) | Knuteson Figure-1(c) style (log) with magnitudes in plain text + `linear` toggle. |
+| [`overnight/brokers/`](overnight/brokers/) | Swappable `BrokerBase` + MT5 template (`dry_run=True`). |
+
+```text
+overnight/        the package          examples/   runnable demos
+  decompose.py      <- core              run_synthetic_demo.py   (offline, validated)
+  data.py                                verify_world_indices.py (needs Internet)
+  diagnostics.py
+  backtest.py     tests/   pytest on the decomposition identity & cost model
+  plots.py
+  brokers/{base,mt5_connector}.py
+```
+
+## Install & run
+
+```bash
+python -m venv .venv
+# Windows:  .venv\Scripts\Activate.ps1     |  *nix:  source .venv/bin/activate
+pip install -r requirements.txt
+
+python examples/run_synthetic_demo.py      # offline — no network needed
+python examples/verify_world_indices.py    # real data — needs Yahoo/Internet
+pytest -q                                  # run the test-suite
+python -c "from overnight import decompose, data; print('ok')"   # smoke test
+```
+
+## The honest verdict (what the analysis actually supports)
+
+Keep three levels apart — the pamphlet tends to blur them:
+
+1. **The empirical fact is REAL** and well documented (Lou–Polk–Skouras 2019,
+   Cooper–Cliff–Gulen 2008, NY Fed). Credit to Knuteson for publishing data + code.
+2. **The magnitudes are INFLATED** by (a) 30-year compounding on a log scale,
+   (b) split/dividend artefacts in free data, (c) selection/survivorship
+   ("the 25 most problematic").
+3. **The fraud attribution is NOT proven.** The China test shows an *inverted*
+   pattern, cleanly explained by the **T+1** rule (Qiao & Dam 2020) — awkward for
+   a single global manipulator. And the SEC's 2023 D.E. Shaw action concerned
+   whistleblower-agreement language (Rule 21F-17), **not** manipulation.
+
+**Reality check:** the NSPY / NIWM night-effect ETFs launched June 2022 and were
+liquidated August 2023 after heavy underperformance. A beautiful paper strategy
+is worth no more than the paper until it pays real execution costs.
+
+## A few quant gotchas this repo is careful about
+
+- **Adjustment mode is a decision, not a detail** — it moves return between night
+  and day (ex-dividend happens at the open). Default `split_only`; document yours.
+- **Sharpe > raw return** — part of "overnight alpha" is a gap-risk premium
+  (disguised beta): you carry equity risk every night.
+- **The factor 2** — you cross the spread to buy *and* to sell, ~252×/year.
+- **CFD/MT5 swap** — the overnight financing alone can erase the edge. The MT5
+  loop refuses to trade if `swap_long` exceeds the expected edge.
+- **Execution ≠ academic prints** — the anomaly is measured on close/open
+  auctions retail can't touch; at T±5 min you're in continuous trading.
+
+## Roadmap
+
+- [x] Core decomposition + offline critique demo + tests
+- [ ] Run `verify_world_indices.py` on live data (China test, India artefact count)
+- [ ] Narrative Jupyter notebook (the A/B/C story, for write-ups)
+- [ ] Alpaca paper-trading connector (`BrokerBase`) alongside MT5
+- [ ] Capacity / slippage study by order size; market-neutral (long/short) variant
+
+## References
+
+Knuteson, *Celebrating Three Decades of Worldwide Stock Market Manipulation*
+(arXiv [1912.01708](https://arxiv.org/abs/1912.01708)); *They Still Haven't Told
+You* (arXiv [2201.00223](https://arxiv.org/abs/2201.00223)); *Nothing to See
+Here* (SSRN 4619084). Lou, Polk, Skouras (2019); Cooper, Cliff, Gulen (2008);
+Haghani et al. / Elm Wealth, *Night Moves* (2022); Qiao & Dam (2020, T+1).
+See [PROJECT_BRIEF.md](PROJECT_BRIEF.md) for the full handoff notes.
