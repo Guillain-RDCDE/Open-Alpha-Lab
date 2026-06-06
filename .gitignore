@@ -20,6 +20,10 @@ out_*.png
 *.png
 !docs/**/*.png
 
+# Papers — do NOT redistribute copyrighted PDFs; keep them local only.
+papers/
+*.pdf
+
 # Notebooks
 .ipynb_checkpoints/
 
