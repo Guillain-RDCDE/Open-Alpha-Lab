@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "overnight-alpha"
+version = "0.1.0"
+description = "Verify and honestly stress-test the overnight stock-market anomaly: night/day decomposition, a numbers-first critique, and a cost-aware backtest."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "Guillain Méjane", email = "guillain@poulpe.us" }]
+keywords = [
+  "quantitative-finance",
+  "market-microstructure",
+  "overnight-returns",
+  "backtesting",
+  "reproducible-research",
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Intended Audience :: Financial and Insurance Industry",
+  "Topic :: Office/Business :: Financial :: Investment",
+]
+dependencies = [
+  "numpy>=1.24",
+  "pandas>=2.0",
+  "matplotlib>=3.7",
+  "yfinance>=0.2.40",
+  "pyarrow>=14.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "nbformat", "nbconvert", "ipykernel", "jupyter"]
+
+[project.urls]
+Repository = "https://github.com/Guillain-RDCDE/overnight-alpha"
+
+[tool.setuptools]
+packages = ["overnight", "overnight.brokers"]
+
+[tool.pytest.ini_options]
+# Make the repo root importable so `import overnight` works whether tests are
+# run via `pytest` (console script) or `python -m pytest`.
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"
