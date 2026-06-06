@@ -9,7 +9,7 @@ description = "Verify and honestly stress-test the overnight stock-market anomal
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
-authors = [{ name = "Guillain Méjane", email = "guillain@poulpe.us" }]
+authors = [{ name = "Guillain d'Erceville", email = "167749917+Guillain-RDCDE@users.noreply.github.com" }]
 keywords = [
   "quantitative-finance",
   "market-microstructure",
