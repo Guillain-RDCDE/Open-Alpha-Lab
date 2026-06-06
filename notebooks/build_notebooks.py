@@ -439,7 +439,87 @@ def build_quants():
             "inverts**: at size, you *pay* the spread you're accused of capturing."
         ),
         md(
-            "## 8. Does any of this prove manipulation? A likelihood argument\n\n"
+            "## 8. Firm-level breadth — 10 ETFs, or the whole market?\n\n"
+            "The decisive credibility test is the **firm level** (cf. Lou, Polk, and "
+            "Skouras 2019): does the split hold across hundreds of individual stocks? "
+            "We decompose the S&P 500 constituents. *(Caveat: current membership, hence "
+            "survivorship bias — stated, not hidden. First run downloads ~500 tickers.)*"
+        ),
+        code(
+            "from overnight import universe\n"
+            "syms = universe.sp500_symbols()\n"
+            "panel = universe.download_panel(syms, start='2010-01-01')  # cached after first run\n"
+            "cs = universe.cross_section_decompose(panel, min_days=750)\n"
+            "per = cs['per_symbol']; N = cs['n_stocks']\n"
+            "frac = cs['frac_overnight_wins']\n"
+            "mon = per['overnight_sharpe'].median(); mid = per['intraday_sharpe'].median()\n"
+            "ew_on = (1+cs['ew_overnight']).prod()-1; ew_id = (1+cs['ew_intraday']).prod()-1\n"
+            "print(f'N = {N} S&P 500 members with clean post-2010 history')\n"
+            "print(f'overnight Sharpe > intraday Sharpe in {frac:.0%} of stocks')\n"
+            "print(f'median Sharpe  overnight {mon:.2f}  vs  intraday {mid:.2f}')\n"
+            "print(f'equal-weight cumulative  overnight {ew_on*100:+.0f}%   intraday {ew_id*100:+.0f}%')\n"
+            "ax = plt.subplot(); bins = np.linspace(-1.5, 1.5, 41)\n"
+            "ax.hist(per['overnight_sharpe'].astype(float), bins=bins, alpha=.6, label='overnight', color='#2c7fb8')\n"
+            "ax.hist(per['intraday_sharpe'].astype(float), bins=bins, alpha=.6, label='intraday', color='#fdae61')\n"
+            "ax.axvline(mon, color='#2c7fb8', ls='--', lw=1.4); ax.axvline(mid, color='#d95f02', ls='--', lw=1.4)\n"
+            "ax.set_title(f'Firm-level night vs day Sharpe across the S&P 500 (N={N})')\n"
+            "ax.set_xlabel('Annualised Sharpe'); ax.set_ylabel('# stocks'); ax.legend(); ax.grid(alpha=.3); plt.show()"
+        ),
+        md(
+            "About **two-thirds of individual S&P 500 stocks** show a higher overnight than "
+            "intraday Sharpe, and the equal-weight cross-section's overnight leg dominates. "
+            "The effect is a broad, firm-level fact — not a 10-ETF or single-index artefact."
+        ),
+        md(
+            "## 9. The steelman manipulator — granting the thesis, then pricing it\n\n"
+            "Now we *steelman* Knuteson: build the alleged firm that round-trips to harvest "
+            "the overnight, **grant it the entire drift on its capital**, and charge it only "
+            "round-trip temporary impact (permanent impact nets to zero over a symmetric "
+            "round trip — the no-dynamic-arbitrage condition of Huberman & Stanzl 2004; "
+            "Gatheral 2010). Can it profit at the scale required to *move world markets*?"
+        ),
+        code(
+            "from overnight import simulate\n"
+            "drift = decs['SPY']['r_overnight'].mean()*1e4\n"
+            "vol   = decs['SPY']['r_close_close'].std(ddof=1)*1e4\n"
+            "adv_usd = float(spy_ohlc['Volume'].tail(252).mean())*float(spy_ohlc['Close'].tail(252).mean())\n"
+            "sizes = [10**e for e in range(6, 12)]\n"
+            "sw = simulate.pnl_vs_capital(drift, adv_usd, vol, sizes_usd=sizes)\n"
+            "be = simulate.breakeven_capital(drift, adv_usd, vol)\n"
+            "disp = sw.copy(); disp.index = [f'${k/1e6:,.0f}M' if k < 1e9 else f'${k/1e9:,.0f}B' for k in sw.index]\n"
+            "display(disp[['participation','net_bps_on_capital','net_usd_per_year']].round(2))\n"
+            "print(f'break-even capital ~ ${be/1e6:,.1f}M')\n"
+            "ax = plt.subplot(); ax.plot(sizes, sw['net_bps_on_capital'].values, marker='o', color='#b2182b')\n"
+            "ax.axhline(0, color='k', ls='--', lw=.8); ax.set_xscale('log')\n"
+            "ax.set_xlabel('Capital deployed (USD, log scale)'); ax.set_ylabel('Net edge (bps on capital)')\n"
+            "ax.set_title('The steelman manipulator: P&L collapses with scale'); ax.grid(alpha=.3); plt.show()"
+        ),
+        md(
+            "Profitable only at trivial scale; at \\$1B it loses hundreds of millions a "
+            "year, at \\$10B tens of billions. **The accused mechanism is economically "
+            "self-defeating at the size the accusation requires.**"
+        ),
+        md(
+            "## 10. Data-snooping: White's Reality Check\n\n"
+            "\"The 25 most problematic markets\" is selection. White's (2000) Reality Check "
+            "asks whether the *best* overnight Sharpe in a universe beats what searching that "
+            "many noise series would produce — a multiplicity-aware p-value."
+        ),
+        code(
+            "from overnight import bayes\n"
+            "panel_idx = pd.DataFrame({tk: d['r_overnight'] for tk, d in decs.items()})\n"
+            "rc = bayes.reality_check(panel_idx, n_boot=2000, seed=0)\n"
+            "print(f\"Universe of {rc['n_series']} indices | best overnight Sharpe = {rc['observed_max_sharpe']:.2f}\")\n"
+            "print(f\"Reality-Check p-value (searching {rc['n_series']} series): {rc['reality_check_pvalue']:.3f}\")"
+        ),
+        md(
+            "On liquid major indices the best overnight Sharpe **survives** the data-snooping "
+            "correction — it is not pure selection. (The selection critique bites specifically "
+            "on cherry-picked emerging-market extremes, where artefacts also dominate.) "
+            "Honest result: the effect is real; the debate is about cause, not existence.\n"
+        ),
+        md(
+            "## 11. Does any of this prove manipulation? A likelihood argument\n\n"
             "Knuteson's thesis: a large quant firm expands its book when the market is "
             "illiquid (near the open, moving prices up) and contracts it when liquid. The "
             "pattern is certainly *consistent* with that. But consistency is not evidence. "
@@ -458,10 +538,33 @@ def build_quants():
             "systematic open-auction imbalances from one book, characteristic intraday "
             "reversals, or a cross-sectional signature tied to a specific firm. Knuteson "
             "doesn't have it; neither do we. Absent discriminating data, **parsimony "
-            "favours risk premium + microstructure over a secret world-spanning fraud.**"
+            "favours risk premium + microstructure over a secret world-spanning fraud.**\n\n"
+            "We can make this concrete with an explicit (and explicitly *subjective*) "
+            "Bayesian update — likelihood ratios stated with reasons, then a sensitivity sweep:"
+        ),
+        code(
+            "post = bayes.manipulation_posterior(prior_manip=0.5)\n"
+            "print(f\"Posterior P(manipulation), prior 0.5 = {post['posterior_manip']:.1%}   (combined LR {post['combined_LR']:.3f})\")\n"
+            "display(post['steps'].round(3))\n"
+            "grid = bayes.posterior_sensitivity(priors=(0.1,0.3,0.5,0.7,0.9), lr_scales=(0.5,1.0,2.0))\n"
+            "ax = plt.subplot()\n"
+            "for col in grid.columns:\n"
+            "    ax.plot(grid.index, grid[col].values, marker='o', label=col)\n"
+            "ax.plot(grid.index, grid.index, color='grey', ls=':', lw=.8, label='posterior = prior')\n"
+            "ax.set_xlabel('Prior P(manipulation)'); ax.set_ylabel('Posterior P(manipulation)')\n"
+            "ax.legend(fontsize=8); ax.grid(alpha=.3)\n"
+            "ax.set_title('Manipulation posterior vs prior, by evidence strength'); plt.show()"
         ),
         md(
-            "## 9. Reproducibility\n\n"
+            "With moderate, defensible likelihood ratios and a 50/50 prior, the posterior "
+            "probability of manipulation is **~2–3%**, and it stays low across a wide range "
+            "of priors; only a strong prior *combined with* deliberately weakened evidence "
+            "keeps it elevated. The ratios are subjective and combined under a generous "
+            "independence assumption — stated openly — so the robust claim is directional: "
+            "**the evidence moves a reasonable observer toward microstructure, not fraud.**"
+        ),
+        md(
+            "## 12. Reproducibility\n\n"
             "- **Determinism**: synthetic data, bootstrap and all seeds are fixed.\n"
             "- **Tests**: `pytest` checks the decomposition identity "
             "`(1+r_night)(1+r_day)=(1+r_cc)` (~1e-16), the cost model, the stats and the "
@@ -471,7 +574,7 @@ def build_quants():
             "`nbconvert --execute` — every figure here is an executed output, not a screenshot."
         ),
         md(
-            "## 10. Verdict\n\n"
+            "## 13. Verdict\n\n"
             "A disciplined reading of the same data the pamphlet uses:\n\n"
             "1. **The fact is REAL.** Overnight returns dominate intraday with HAC "
             "t-stats around 5. Full credit to Knuteson for publishing data and code.\n"

@@ -43,6 +43,12 @@ explanation each paper argues.
 **→ Our structured reply, claim by claim, is in [`RESPONSE.md`](RESPONSE.md)** —
 each of Knuteson's assertions mapped to a quantified counter-measure.
 
+**→ The full write-up is a working paper:
+[`paper/overnight_alpha.pdf`](paper/overnight_alpha.pdf)** — *"Overnight, or
+Overhyped? A Reproducible Audit of the Overnight Return Anomaly and the
+Market-Manipulation Hypothesis"* (LaTeX source + reproducible figure script in
+[`paper/`](paper/)).
+
 ---
 
 ## TL;DR — our response in three numbers (offline, one command)
@@ -124,6 +130,9 @@ what's actually left (usually: not much).
 | [`overnight/backtest.py`](overnight/backtest.py) | Cost-aware backtest, break-even cost, cost sweep. |
 | [`overnight/stats.py`](overnight/stats.py) | Bootstrap Sharpe confidence intervals, alpha-vs-beta (gap-risk) decomposition. |
 | [`overnight/analytics.py`](overnight/analytics.py) | Research-grade tools: Newey-West (HAC) & Lo (2002) Sharpe inference, calendar-time normalization (the "clock illusion"), rolling-Sharpe alpha decay, square-root market-impact capacity. |
+| [`overnight/universe.py`](overnight/universe.py) | Firm-level cross-section: S&P 500 breadth of the overnight effect (~441 stocks). |
+| [`overnight/simulate.py`](overnight/simulate.py) | Steelman of the alleged manipulator: P&L vs deployed capital under permanent+temporary impact. |
+| [`overnight/bayes.py`](overnight/bayes.py) | Bayesian posterior P(manipulation \| evidence) with sensitivity, and a White (2000) Reality Check for data-snooping. |
 | [`overnight/plots.py`](overnight/plots.py) | Knuteson Figure-1(c) style (log) with magnitudes in plain text + `linear` toggle. |
 | [`overnight/brokers/`](overnight/brokers/) | Swappable `BrokerBase` + MT5 template (`dry_run=True`). |
 
