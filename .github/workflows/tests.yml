@@ -29,8 +29,16 @@ jobs:
           # Core only — no network/yfinance needed for the test-suite.
           pip install numpy pandas matplotlib pyarrow pytest
 
-      - name: Run test-suite (offline, deterministic)
+      - name: Core engine test-suite (quantlab, offline, deterministic)
         run: pytest -q
 
-      - name: Smoke-run the offline demo
-        run: python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
+      - name: Study 02 — Falling-Knife test-suite
+        run: pytest -q studies/02-falling-knife/tests
+
+      - name: Study 03 — Fear-Gauge test-suite
+        run: pytest -q studies/03-fear-gauge/tests
+
+      - name: Smoke-run the offline demos
+        run: |
+          python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
+          python studies/03-fear-gauge/examples/run_synthetic_demo.py
