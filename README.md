@@ -54,6 +54,7 @@ two-readers-one-page convention, the rubric — is written up in
 |---|---|---|---|---|
 | **[01](studies/01-overnight-anomaly/)** | **Overnight Anomaly** | Do stocks really make their money overnight — and is it manipulation? | `REAL` (HAC *t*≈5) | `MIRAGE` (mostly beta, dies after costs, capacity ~\$10M, decaying) |
 | **[02](studies/02-falling-knife/)** | **Falling-Knife** | Does buying the Nasdaq-100 / S&P 500 after a −3% drop beat buying a random day? | `NONE` at −3% · `WEAK` in deep panic | `MIRAGE` (tiny crash-clustered capacity, fails out-of-sample) |
+| **[03](studies/03-fear-gauge/)** | **Fear-Gauge** | Does buying the VIX spike / "VIX ≥ 30, double down at 50" beat buying a random day? | `REAL` for the level (VIX≥30) · `NONE` for the spike | `MIRAGE` (barely beats a −3% day, underperforms buy-and-hold, martingale draws down −33%) |
 
 > **Study 01 in one line:** the overnight effect is *real and broad* (confirmed
 > across ~441 S&P 500 stocks), but its magnitude is inflated by a calendar-time
@@ -70,6 +71,16 @@ two-readers-one-page convention, the rubric — is written up in
 > straddles zero, capacity is ~3 events a decade dominated by 2000/2008/2020, and a
 > fixed deep-dip rule flips from positive to negative Sharpe out-of-sample. Method,
 > figures and reproducible code: **[studies/02-falling-knife/](studies/02-falling-knife/)**.
+
+> **Study 03 in one line:** the twin of 02 in **volatility space**. A high VIX
+> *is* followed by a real S&P rebound — VIX≥30 beats a random day by ~1% a week and
+> ~1.3% a month (p≈0.00 / 0.01) — but that's the trap: it's the **variance risk
+> premium**, it doesn't significantly beat just buying a −3% day, and the famous
+> *+30% spike* has no monthly edge at all once you leave its 2016–2026 window
+> (excess +0.5% in-window → −0.02% full sample). Traded, it underperforms
+> buy-and-hold (in cash ~88% of the time), and "double down at 50" is a martingale
+> whose −33% worst drawdown the no-2008 window hides. Method, two notebooks and
+> reproducible code: **[studies/03-fear-gauge/](studies/03-fear-gauge/)**.
 
 Ideas in the queue: momentum vs the overnight/intraday split, the weekend effect,
 post-earnings drift, pairs/cointegration decay. Suggestions welcome via issues.
@@ -100,7 +111,8 @@ Open-Alpha-Lab/
 ├── tests/                        # deterministic test-suite (CI on 3.10–3.12)
 ├── studies/
 │   ├── 01-overnight-anomaly/     # study #1: notebooks, paper, RESPONSE, docs, data
-│   └── 02-falling-knife/         # study #2: buy-the-dip — package + notebooks + examples + tests
+│   ├── 02-falling-knife/         # study #2: buy-the-dip — package + notebooks + examples + tests
+│   └── 03-fear-gauge/            # study #3: buy-the-VIX-spike — twin of #2 in vol space
 └── pyproject.toml · CITATION.cff · LICENSE
 ```
 
