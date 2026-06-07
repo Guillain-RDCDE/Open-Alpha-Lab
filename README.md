@@ -100,7 +100,7 @@ Open-Alpha-Lab/
 ├── tests/                        # deterministic test-suite (CI on 3.10–3.12)
 ├── studies/
 │   ├── 01-overnight-anomaly/     # study #1: notebooks, paper, RESPONSE, docs, data
-│   └── 02-falling-knife/         # study #2: buy-the-dip — self-contained package + examples + tests
+│   └── 02-falling-knife/         # study #2: buy-the-dip — package + notebooks + examples + tests
 └── pyproject.toml · CITATION.cff · LICENSE
 ```
 
