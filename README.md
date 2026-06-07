@@ -39,6 +39,13 @@ The protocol each idea goes through:
    which the edge dies. *Is it investable?*
 6. **Verdict** — the two stamps above, with the numbers behind them.
 
+Every study's front page also follows the **same seven narrative beats** (claim →
+stakes → how we'd know → teardown → verdict → could you trade it? → going further),
+so a reader always lands in the same place. The full house style — the beats, the
+two-readers-one-page convention, the rubric — is written up in
+**[METHODOLOGY.md](METHODOLOGY.md)**, and the drop-in scaffold lives at
+[`studies/_TEMPLATE/`](studies/_TEMPLATE/).
+
 ---
 
 ## Studies
