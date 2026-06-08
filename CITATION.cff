@@ -46,3 +46,33 @@ references:
     end: 213
     year: 2019
     doi: "10.1016/j.jfineco.2019.03.011"
+  - type: article
+    authors:
+      - family-names: Gatev
+        given-names: Evan
+      - family-names: Goetzmann
+        given-names: "William N."
+      - family-names: Rouwenhorst
+        given-names: "K. Geert"
+    title: "Pairs Trading: Performance of a Relative-Value Arbitrage Rule"
+    journal: "Review of Financial Studies"
+    volume: 19
+    issue: 3
+    start: 797
+    end: 827
+    year: 2006
+    doi: "10.1093/rfs/hhj020"
+  - type: article
+    authors:
+      - family-names: Do
+        given-names: Binh
+      - family-names: Faff
+        given-names: Robert
+    title: "Does Simple Pairs Trading Still Work?"
+    journal: "Financial Analysts Journal"
+    volume: 66
+    issue: 4
+    start: 83
+    end: 95
+    year: 2010
+    doi: "10.2469/faj.v66.n4.1"

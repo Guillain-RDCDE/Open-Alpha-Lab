@@ -41,8 +41,12 @@ jobs:
       - name: Study 04 — Social-Oracle test-suite
         run: pytest -q studies/04-social-oracle/tests
 
+      - name: Study 05 — Twin-Spread test-suite
+        run: pytest -q studies/05-twin-spread/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
           python studies/03-fear-gauge/examples/run_synthetic_demo.py
           python studies/04-social-oracle/examples/run_synthetic_demo.py
+          python studies/05-twin-spread/examples/run_synthetic_demo.py

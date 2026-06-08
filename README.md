@@ -56,6 +56,7 @@ two-readers-one-page convention, the rubric — is written up in
 | **[02](studies/02-falling-knife/)** | **Falling-Knife** | Does buying the Nasdaq-100 / S&P 500 after a −3% drop beat buying a random day? | `NONE` at −3% · `WEAK` in deep panic | `MIRAGE` (tiny crash-clustered capacity, fails out-of-sample) |
 | **[03](studies/03-fear-gauge/)** | **Fear-Gauge** | Does buying the VIX spike / "VIX ≥ 30, double down at 50" beat buying a random day? | `REAL` for the level (VIX≥30) · `NONE` for the spike | `MIRAGE` (barely beats a −3% day, underperforms buy-and-hold, martingale draws down −33%) |
 | **[04](studies/04-social-oracle/)** | **Social-Oracle** | Does following a viral social-media crowd's cashtag surges actually pay? | `NONE` (no abnormal edge; −0.66% vs random by 1mo) | `MIRAGE` (gross is pure beta, median trade −1.3%, sleeve −44%) |
+| **[05](studies/05-twin-spread/)** | **Twin-Spread** | Does textbook pairs trading (GGR 1999) still pay after the world copied it? | `NONE` (no convergence edge; −0.37%/mo gross in the modern era, Sharpe CI [−0.81, −0.04]) | `MIRAGE` (negative before costs, −77% drawdown, β≈0; **Decay** `CONFIRMED`) |
 
 > **Study 01 in one line:** the overnight effect is *real and broad* (confirmed
 > across ~441 S&P 500 stocks), but its magnitude is inflated by a calendar-time
@@ -97,8 +98,25 @@ two-readers-one-page convention, the rubric — is written up in
 > (Serenity) is the motivating anecdote; the reproducible crowd is the measurable
 > instance. Method, real run and code: **[studies/04-social-oracle/](studies/04-social-oracle/)**.
 
+> **Study 05 in one line:** the desk's first **cross-sectional** study — the bet isn't on
+> one name moving but on two moving back *together*. We run the textbook **GGR (1999)**
+> minimum-distance rule (the one a [viral thread](https://x.com/MatiasScalbi/status/2063042609816252666)
+> resurfaced: ~1.4%/mo, Sharpe ~0.6, near-zero beta, "still paying after publication") over
+> a cached liquid 174-name universe, 1962–2026. The machinery is sound — on a synthetic
+> universe with real cointegrated twins it recovers ~85–100% of them and harvests a
+> +0.95%/mo. On **real** pairs it doesn't pay: the modern era (2005–2026, the only stretch
+> with enough names for tight pairs) earns **−0.37%/mo gross** (Sharpe −0.44, bootstrap CI
+> [−0.81, −0.04], **negative even at a zero spread** — so it isn't a cost artefact),
+> **−0.43%/mo net** with a **−77% drawdown**, cleanly market-neutral (β≈0) so there's no
+> beta to bank. Win rate 55.7% — *more winners than losers* — and still a loss: the
+> short-gamma tail of pairs that break and never reconverge. The good years cluster in
+> 1983–2003; the modern era is mostly red, green only in dislocations (2008 +0.9%/mo). A
+> textbook the market arbitraged past. Method, reproducible run and two notebooks:
+> **[studies/05-twin-spread/](studies/05-twin-spread/)**.
+
 Ideas in the queue: momentum vs the overnight/intraday split, the weekend effect,
-post-earnings drift, pairs/cointegration decay. Suggestions welcome via issues.
+post-earnings drift, a cointegration-gated / stop-loss pairs variant (the beat-7 forks of
+Study 05). Suggestions welcome via issues.
 
 ---
 
@@ -129,7 +147,8 @@ Open-Alpha-Lab/
 │   ├── 01-overnight-anomaly/     # study #1: notebooks, paper, RESPONSE, docs, data
 │   ├── 02-falling-knife/         # study #2: buy-the-dip — package + notebooks + examples + tests
 │   ├── 03-fear-gauge/            # study #3: buy-the-VIX-spike — twin of #2 in vol space
-│   └── 04-social-oracle/         # study #4: follow-the-guru — event study in attention space
+│   ├── 04-social-oracle/         # study #4: follow-the-guru — event study in attention space
+│   └── 05-twin-spread/           # study #5: pairs-trading decay — relative-value in the cross-section
 └── pyproject.toml · CITATION.cff · LICENSE
 ```
 
