@@ -159,6 +159,11 @@ A few non-negotiables that keep the desk honest:
   construction. Correct for it (Reality Check) or don't claim it.
 - **No silent caps.** If a study samples, truncates, or skips, it says so in the
   open. A hidden limitation reads as "we covered everything" when we didn't.
+- **Pin the as-of, publish the fingerprint.** Live data drifts and extends, so a
+  number with no provenance isn't reproducible. Freeze every headline run to an
+  explicit as-of date and print a content fingerprint of the inputs
+  (`quantlab/repro.py`). A reader who reruns and matches the fingerprint holds your
+  exact data; a mismatch flags drift *loudly*, instead of a silently different number.
 - **Friendly, human, and honest.** We write like a person explaining something they
   find genuinely cool — not like a textbook, and never like a sales deck.
 

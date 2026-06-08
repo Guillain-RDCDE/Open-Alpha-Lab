@@ -28,6 +28,7 @@ import matplotlib  # noqa: E402
 matplotlib.use("Agg")  # headless: never pop a window from a script
 
 from quantlab import backtest, data, decompose, diagnostics, plots  # noqa: E402
+from quantlab.repro import DEFAULT_AS_OF, as_of, data_stamp  # noqa: E402
 
 MODE = "split_only"  # document this choice in any published figure!
 
@@ -37,10 +38,11 @@ def main() -> None:
     decs = {}
     for ticker, label in data.WORLD_INDICES.items():
         try:
-            ohlc = data.fetch(ticker, mode=MODE)
+            ohlc = as_of(data.fetch(ticker, mode=MODE), DEFAULT_AS_OF)
         except Exception as exc:  # network / ticker issues shouldn't kill the run
             print(f"  {ticker:5s} {label:28s}  FAILED: {exc}")
             continue
+        print("   " + data_stamp(ticker, ohlc, cols=["Close"]))
         dec = decompose.decompose(ohlc)
         s = decompose.summary(dec)
         flags = diagnostics.flag_suspicious_returns(dec, threshold=0.40)

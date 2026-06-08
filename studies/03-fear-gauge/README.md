@@ -208,6 +208,16 @@ until the one regime the selling window omits.
 
 ## 7 · Going Further
 
+> **The door this leaves ajar.** The rebound is real because the **variance risk
+> premium** is real — one of the most reliably *paid* premia in all of markets. The
+> catch the folklore gets backwards: you don't *buy* the fear, you *sell* it — you're
+> the one compensated for carrying the tail everyone else is desperate to offload.
+> Harvested from that side, with discipline and a hedge on the left tail, this stops
+> being a mirage and becomes a premium institutions have farmed for decades. The
+> recipe isn't here — but the proof that one exists is. *(That premium is the
+> variance risk premium — Carr & Wu 2009; Bollerslev, Tauchen & Zhou 2009; see
+> [`docs/references.md`](docs/references.md).)*
+
 - **Is the rebound just the VRP?** Replace the raw S&P return with a VRP-hedged
   return and see whether any excess survives. If not, the case is closed: pure premium.
 - **Term structure.** Does VIX *backwardation* (front > back) at the spike predict

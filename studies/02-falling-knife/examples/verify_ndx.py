@@ -20,9 +20,12 @@ import sys
 
 import pandas as pd
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+_STUDY_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _STUDY_DIR)
+sys.path.insert(0, os.path.abspath(os.path.join(_STUDY_DIR, "..", "..")))  # repo root, for quantlab
 
 from falling_knife import data, triggers, exits, eventstudy, benchmark, backtest, robustness, plots
+from quantlab.repro import DEFAULT_AS_OF, as_of, data_stamp
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 pd.set_option("display.width", 140)
@@ -31,6 +34,7 @@ pd.set_option("display.width", 140)
 def study(label, ohlc):
     print(f"\n{'#'*72}\n#  {label}   ({ohlc.index[0].date()} -> {ohlc.index[-1].date()}, "
           f"{len(ohlc)} days)\n{'#'*72}")
+    print(data_stamp(label.split()[0], ohlc, cols=["Close"]))
     ret = data.daily_returns(ohlc)
 
     # Event study on the classic close-to-close -3% trigger.
@@ -85,8 +89,8 @@ def study(label, ohlc):
 def main():
     print("FALLING-KNIFE — live Nasdaq-100 study (Yahoo! Finance)")
     # Deep history on the spot index; tradeable face on the ETF.
-    ndx = data.fetch("^NDX", mode="split_only")
-    qqq = data.fetch("QQQ", mode="split_only")
+    ndx = as_of(data.fetch("^NDX", mode="split_only"), DEFAULT_AS_OF)
+    qqq = as_of(data.fetch("QQQ", mode="split_only"), DEFAULT_AS_OF)
 
     es_ndx, bench_ndx, scan_ndx, res_ndx, sweep_ndx = study("^NDX (spot, deep history)", ndx)
     es_qqq, bench_qqq, scan_qqq, res_qqq, sweep_qqq = study("QQQ (tradeable ETF)", qqq)

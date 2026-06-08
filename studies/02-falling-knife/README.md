@@ -189,6 +189,16 @@ over plain beta to begin with.**
 
 ## 7 · Going Further
 
+> **The door this leaves ajar.** A real bounce in *real* panic isn't nothing — it's
+> the **liquidity-provision premium**: in a forced-seller cascade, whoever can
+> warehouse the risk gets paid for it, and that payment is genuine. It failed *here*
+> because we measured it raw and alone. As a *conditional* trade — switched on by a
+> volatility, breadth or credit signal, and sized for how rarely it fires — it stops
+> being folklore and starts being a risk premium with money behind it. We didn't
+> find the edge; we found the door to it. *(This short-horizon reversal is a paid,
+> documented liquidity-provision premium — Nagel 2012, "Evaporating Liquidity",
+> RFS.)*
+
 **What would change the verdict:** toward `INVESTABLE`, a deep-dip excess whose
 *block-bootstrap* CI clears zero and survives an honest out-of-sample split, with
 enough events to size a real book (these don't); toward a richer signal,

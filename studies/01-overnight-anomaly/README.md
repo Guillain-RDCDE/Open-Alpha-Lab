@@ -118,6 +118,16 @@ are the real-world footnote — liquidated within ~14 months.
 
 ## 7 · Going Further
 
+> **The door this leaves ajar.** The mirage was the *trade*, not the *fact*.
+> Overnight and intraday are two genuinely different risk regimes, and the gap you
+> carry by holding through the close is a real, separable premium — someone is paid
+> to bear it. Funds don't trade *"stocks go up at night"*; they treat the
+> overnight/intraday split as an **orthogonal risk factor** — a sleeve you can
+> isolate, hedge, or overlay on something else. That premium is real and it *is*
+> harvestable. What we killed was the naïve way of reaching for it. The thread is
+> right here — pull it. *(The literature calls this the overnight-vs-intraday
+> tug-of-war — Lou, Polk & Skouras 2019; see [`docs/references.md`](docs/references.md).)*
+
 **What would change the verdict:** toward `INVESTABLE`, a residual edge that
 survives costs *and* scales (smarter auction-only execution, or a sub-population
 with genuinely positive per-hour, post-beta, post-decay alpha); toward

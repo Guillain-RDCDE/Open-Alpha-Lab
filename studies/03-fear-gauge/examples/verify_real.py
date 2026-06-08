@@ -16,9 +16,12 @@ import sys
 
 import pandas as pd
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+_STUDY_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _STUDY_DIR)
+sys.path.insert(0, os.path.abspath(os.path.join(_STUDY_DIR, "..", "..")))  # repo root, for quantlab
 
 from fear_gauge import benchmark, data, robustness, triggers
+from quantlab.repro import DEFAULT_AS_OF, as_of, data_stamp
 
 pd.set_option("display.width", 200)
 pd.set_option("display.max_columns", 20)
@@ -29,8 +32,12 @@ MARKET = {"spx": "^GSPC", "ndx": "^NDX"}.get(
 
 
 def main():
-    mkt, vix = data.aligned(MARKET)
+    mkt, vix = data.aligned(MARKET, end=DEFAULT_AS_OF)
+    mkt, vix = as_of(mkt), as_of(vix)  # belt-and-braces: pin the sample to the as-of
     print(f"{MARKET}: {len(mkt):,} sessions  {mkt.index.min().date()} -> {mkt.index.max().date()}")
+    # Provenance: paste these fingerprints next to any number quoted from this run.
+    print(data_stamp(MARKET, mkt, cols=["Close"]))
+    print(data_stamp("^VIX", vix, cols=["Close"]))
 
     fam = {
         "V1_level_30": triggers.first_crossings(triggers.level(vix, 30), cooldown=21),
