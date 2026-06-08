@@ -1,0 +1,326 @@
+"""Generate the two narrative notebooks for Study 09 (Phantom-Kernel) from source.
+
+Like the earlier studies, the notebooks are a *generated artefact*: edit the cell text here,
+rebuild the skeletons, then execute with nbconvert to embed the figures/outputs.
+
+    python notebooks/build_notebooks.py
+    jupyter nbconvert --to notebook --execute --inplace \
+        notebooks/01_for_the_curious.ipynb notebooks/02_for_the_quants.ipynb
+
+Both notebooks run on the **offline simulator** (no network, no data) and follow the SAME
+seven desk beats (see ../../../METHODOLOGY.md). World A is where the AS assumptions hold — it
+validates the machinery; World B carries the documented frictions, and is where the verdict is
+earned. The frozen headline numbers (5-seed tournament, fingerprint) live in
+[`docs/results.md`](../docs/results.md) via `examples/run_experiments.py`.
+"""
+
+from __future__ import annotations
+
+import os
+
+import nbformat as nbf
+from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+BOOT = """\
+import sys, os
+sys.path.insert(0, os.path.abspath(".."))           # study root (phantom_kernel/ lives there)
+sys.path.insert(0, os.path.abspath("../../.."))      # repo root, for quantlab
+%matplotlib inline
+import matplotlib.pyplot as plt
+plt.rcParams["figure.figsize"] = (9.5, 5.2)
+import numpy as np, pandas as pd
+pd.set_option("display.float_format", lambda v: f"{v:,.4f}")
+from phantom_kernel import sim, estimator, strategies, experiments as ex
+
+# Smaller draws than docs/results.md so the notebook executes quickly; the story is identical.
+NORD, NSTEP = 200_000, 30_000
+print("two worlds:", sim.WORLD_A.name, "|", sim.WORLD_B.name)
+"""
+
+KERNEL_PLOT = """\
+# The money figure: the arrival kernel on a log axis. Exponential reach -> a straight line
+# (AS holds). Heavy-tailed reach -> a curve the exponential cannot fit.
+d = ex.default_deltas()
+ca = sim.fill_counts(sim.WORLD_A, d, n_orders=NORD, seed=0)
+cb = sim.fill_counts(sim.WORLD_B, d, n_orders=NORD, seed=0)
+fa, fb = estimator.fit_exponential(d, ca), estimator.fit_exponential(d, cb)
+fig, ax = plt.subplots()
+ma, mb = ca > 0, cb > 0
+ax.semilogy(d[ma], ca[ma], "o", ms=4, label="World A — exponential reach (AS holds)")
+ax.semilogy(d[mb], cb[mb], "s", ms=4, label="World B — heavy-tailed reach (real markets)")
+ax.semilogy(d, fa["A"] * np.exp(-fa["k"] * d), "-", lw=1, color="C0")
+ax.semilogy(d, fb["A"] * np.exp(-fb["k"] * d), "--", lw=1, color="C1",
+            label="exponential fit to World B (it can't)")
+ax.set_xlabel("quote distance δ"); ax.set_ylabel("fill intensity λ(δ)  (log)")
+ax.set_title("The arrival kernel: a straight line only when reach is exponential")
+ax.legend(); plt.show()
+print("World B fits a straight exponential with R² =", round(fb["r2"], 3),
+      "— the points curve away from it.")
+"""
+
+
+def md(text):
+    return new_markdown_cell(text)
+
+
+def code(text):
+    return new_code_cell(text)
+
+
+# ===========================================================================
+# 01 — FOR THE CURIOUS
+# ===========================================================================
+def build_curious():
+    cells = [
+        md(
+            "# Does market-making's 'optimal spread' rest on a real law? 👻\n"
+            "### The Avellaneda-Stoikov model — tested honestly, in plain English\n\n"
+            "There's a famous pair of equations, published in 2008, that a generation of "
+            "market-making bots quote from. A viral write-up calls them the near-universal "
+            "foundation of market making and says *not* using them is leaving serious money on "
+            "the table. The whole thing rests on one assumption: that orders arrive at a rate "
+            "that fades **exponentially** as you move your quote away from the mid price.\n\n"
+            "Beautiful assumptions are easy to write down. The question is whether real markets "
+            "obey it — and, if they don't, whether the model still works anyway. That's this "
+            "notebook."
+        ),
+        code(BOOT),
+        md(
+            "## 1 · The Claim\n\n"
+            "Two equations:\n\n"
+            "1. **Reservation price** — your fair value, the mid *skewed by your inventory*: hold "
+            "too much and you quote lower to sell it down. `r = s − q·γ·σ²·(T−t)`.\n"
+            "2. **Optimal spread** — how wide to quote: `δ = γ·σ²·(T−t) + (2/γ)·ln(1 + γ/k)`.\n\n"
+            "That last term — and the whole *closed-form* optimum — exists only because of the "
+            "exponential arrival law `λ(δ) = A·e^(−kδ)`, with `k` a fixed constant. Everything "
+            "hangs on that `k`."
+        ),
+        md(
+            "## 2 · So What?\n\n"
+            "If the exponential law holds, there's one correct spread and quoting anything else "
+            "is money left on the table. If it doesn't, the celebrated formula is calibrated to a "
+            "number (`k`) that doesn't really exist — and we should find out *which half of the "
+            "model actually earns its keep* before trusting it with a live order book."
+        ),
+        md(
+            "## 3 · How We'd Know\n\n"
+            "We can't market-make on a CFD broker, and the model is a *theorem about a model "
+            "world* — so we build the world. **World A** obeys every AS assumption (the machinery "
+            "must work here, or it's a bug). **World B** adds what real markets have: "
+            "heavy-tailed order sizes, price jumps, and informed traders. The clean test of the "
+            "assumption: *is order reach exponential?* If it is, the fill-rate curve is a straight "
+            "line on a log axis. If it's heavy-tailed, it curves."
+        ),
+        md(
+            "## 4 · The Teardown\n\n"
+            "First, the picture. On a log axis, World A's kernel is a straight line — exactly the "
+            "exponential AS assumes. World B's curves away: the heavy tail keeps delivering far-"
+            "out fills the exponential says shouldn't happen."
+        ),
+        code(KERNEL_PLOT),
+        md(
+            "The exponential is the wrong *shape* for realistic flow. Scored head-to-head against "
+            "a power law (heavy-tailed), the exponential wins in World A and **loses** in World B:"
+        ),
+        code(
+            "gof = ex.kernel_gof_table(n_orders=NORD, seed=0)\n"
+            "print(gof.to_string())"
+        ),
+        md(
+            "And because real `k` drifts through the day (the write-up admits 3–5×), a single "
+            "fixed `k` mis-prices the 'optimal' spread badly:"
+        ),
+        code(
+            "ki = ex.k_instability(seed=0)\n"
+            "print('true k per regime    :', ki['k_true'])\n"
+            "print('one static k AS uses :', ki['k_pooled_static'])\n"
+            "print('spread error / regime:', ki['spread_pct_error_per_regime'], '%')\n"
+            "print('worst spread error   :', ki['max_abs_spread_pct_error'], '%')"
+        ),
+        md(
+            "## 5 · The Verdict — and the twist\n\n"
+            "So the assumption is false. Does the model collapse? **No — and that's the "
+            "interesting part.** We run four market-makers through each world: full AS, AS with "
+            "rolling volatility (the recommended 'production fix'), a plain symmetric quoter, and "
+            "a *brainless inventory clamp* (no maths — just stop buying when you're too long)."
+        ),
+        code(
+            "for w in (sim.WORLD_A, sim.WORLD_B):\n"
+            "    t = ex.tournament(w, n_steps=NSTEP, seed=0)\n"
+            "    print(f'--- World {w.name} ---')\n"
+            "    print(t[['pnl_sharpe', 'inv_std', 'n_adverse']].to_string()); print()"
+        ),
+        md(
+            "Read those two tables:\n\n"
+            "- **World A (calm):** the brainless **clamp wins** on risk-adjusted P&L. AS works "
+            "hard to pin inventory to zero — a risk nobody was paying for in a calm market.\n"
+            "- **World B (jumps + informed flow):** full **AS wins** decisively — *even though* "
+            "its `k` is the wrong number — because keeping inventory tiny really matters when the "
+            "price jumps. And the 'rolling-vol' fix **collapses** (look at its Sharpe): one jump "
+            "spikes its volatility estimate and it stops trading.\n\n"
+            "The punchline: the part of AS that works (the inventory **skew**) has **no `k` in "
+            "it**. The phantom kernel only corrupts the spread *width* — the half the article "
+            "spends all its time on."
+        ),
+        md(
+            "## 6 · Could You Trade It?\n\n"
+            "Implement the **skew** — it's cheap, robust, and genuinely pays where inventory is "
+            "dangerous (crypto, exactly the article's venue). Treat the **spread formula** as a "
+            "rough heuristic, not a theorem: its `k` is a phantom and a sensible fixed width gets "
+            "most of the way there. And don't reach for naive rolling-vol without a circuit "
+            "breaker, or the first jump empties your book."
+        ),
+        md(
+            "## 7 · Going Further\n\n"
+            "The one thing the simulator *asserts* is that real order reach is heavy-tailed — the "
+            "literature is emphatic, but [`examples/verify_real.py`](../examples/verify_real.py) "
+            "lets you confirm it on real Binance trades. That's the headline next step. The "
+            "deep-dive notebook (`02_for_the_quants`) carries the inference, the AIC, and the "
+            "seed-robustness. **Fork it, break it, PR a better test.**"
+        ),
+    ]
+    return new_notebook(cells=cells, metadata=_meta())
+
+
+# ===========================================================================
+# 02 — FOR THE QUANTS
+# ===========================================================================
+def build_quants():
+    cells = [
+        md(
+            "# Phantom-Kernel — the teardown 👻🔬\n"
+            "### The Avellaneda-Stoikov optimum, mechanised and falsified\n\n"
+            "Same seven beats as `01_for_the_curious`, at depth: the kernel as the survival "
+            "function of order reach, exponential-vs-power-law model selection by Poisson AIC, "
+            "the static-`k` spread error under regime drift, and the market-making tournament "
+            "with bootstrap Sharpe CIs. Runs offline on the simulator; the frozen 5-seed numbers "
+            "and fingerprint are in [`docs/results.md`](../docs/results.md)."
+        ),
+        code(BOOT),
+        md(
+            "## 1 · The Claim, as two hypotheses\n\n"
+            "**H1 (the kernel):** order reach is exponential, so `λ(δ) = A·e^(−kδ)` with stable "
+            "`k` — reject if a power law fits better (AIC) or `k` is regime-unstable.\n"
+            "**H2 (the payoff):** the AS skew + closed-form spread beats naive quoters — reject if "
+            "a trivial inventory clamp matches it. The key identity: a quote at distance `δ` fills "
+            "iff an order *reaches* `δ`, so `λ(δ) = Λ·S_reach(δ)` — **the kernel is the survival "
+            "function of order reach.** Exponential reach ⟺ AS exactly; heavy-tailed ⟹ power law."
+        ),
+        md(
+            "## 2 · So What? — it's a question of attribution\n\n"
+            "`k` appears **only** in the spread's arrival term `(2/γ)·ln(1+γ/k)`; the reservation "
+            "price `r = s − q·γ·σ²·(T−t)` has no `k`. So if the edge is the skew, a wrong `k` is "
+            "nearly free; if it's the spread width, a wrong `k` is ruinous. The study decomposes "
+            "where the P&L lives."
+        ),
+        md(
+            "## 3 · How We'd Know — pre-registered, machinery validated first\n\n"
+            "World A must validate the estimator (recover the planted `k`) or any World-B failure "
+            "is a bug, not a finding:"
+        ),
+        code(
+            "rec = ex.estimator_recovery(n_orders=NORD, seed=0)\n"
+            "print('estimator recovery (World A):', rec)\n"
+            "assert abs(rec['rel_error_pct']) < 3 and rec['r2'] > 0.99, 'machinery must recover k'"
+        ),
+        md(
+            "## 4 · The Teardown\n\n"
+            "**(a) The kernel, on a log axis** — straight where reach is exponential, curved where "
+            "it's heavy-tailed."
+        ),
+        code(KERNEL_PLOT),
+        md(
+            "**(b) Model selection** — weighted R² *and* Poisson AIC. `aic_gap > 0` ⟹ the power "
+            "law is preferred, i.e. the AS exponential is rejected. World A: exponential. World B: "
+            "power law, decisively."
+        ),
+        code("ex.kernel_gof_table(n_orders=NORD, seed=0)"),
+        md(
+            "**(c) The phantom parameter** — four regimes with `k` spanning 4×. Each regime's `k` "
+            "is recovered exactly, but base AS fits one static `k`; the gap becomes a spread "
+            "error of up to ~160%."
+        ),
+        code(
+            "ki = ex.k_instability(seed=0)\n"
+            "import pprint; pprint.pprint(ki)"
+        ),
+        md(
+            "**(d) The tournament** — four quoters, one shared exogenous order stream per world. "
+            "The naive baselines quote at AS's own mid-session spread width, so the comparison is "
+            "pure skew/clamp logic. `pnl_sharpe` carries a bootstrap CI."
+        ),
+        code(
+            "tA = ex.tournament(sim.WORLD_A, n_steps=NSTEP, seed=0)\n"
+            "tB = ex.tournament(sim.WORLD_B, n_steps=NSTEP, seed=0)\n"
+            "print('World A (k_as=%.3f):' % tA.attrs['k_as']); print(tA.to_string()); print()\n"
+            "print('World B (k_as=%.3f):' % tB.attrs['k_as']); print(tB.to_string())"
+        ),
+        code(
+            "# Sharpe bars, both worlds side by side.\n"
+            "fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), sharey=False)\n"
+            "for ax, t, title in [(axes[0], tA, sim.WORLD_A.name), (axes[1], tB, sim.WORLD_B.name)]:\n"
+            "    t['pnl_sharpe'].plot(kind='barh', ax=ax)\n"
+            "    ax.set_title(f'World {title} — P&L Sharpe'); ax.axvline(0, color='k', lw=0.5)\n"
+            "plt.tight_layout(); plt.show()"
+        ),
+        md(
+            "Note the inversion: in World A the **clamp** tops the chart (elaborate inventory "
+            "control is over-engineering when inventory is cheap); in World B **AS (fixed)** tops "
+            "it while **AS (adaptive vol)** sits near zero — the rolling-vol fix blown out by "
+            "jumps. AS wins World B on a *wrong* `k`, because the skew (which carries no `k`) is "
+            "what's doing the work."
+        ),
+        md(
+            "**(e) Seed-robustness** — the orderings are not a single-draw fluke (5 seeds; the "
+            "frozen table is in `docs/results.md`)."
+        ),
+        code("ex.tournament_multiseed(sim.WORLD_B, seeds=(0, 1, 2)).round(3)"),
+        md(
+            "## 5 · The Verdict\n\n"
+            "**Signal NONE** — World-B kernel is power-law (R² 0.9996 vs exponential 0.68; AIC gap "
+            "+1.26M); static `k` mis-prices the spread by up to 162%. **Tradability FRAGILE** — a "
+            "clamp beats AS in World A (Sharpe 3.27 vs 1.59); AS wins World B (2.12) but the "
+            "rolling-vol fix collapses (0.17). **Optimal spread MISATTRIBUTED** — the value is in "
+            "the `k`-free skew. (Frozen 5-seed numbers + fingerprint: `docs/results.md`.)"
+        ),
+        md(
+            "## 6 · Could You Trade It?\n\n"
+            "Deploy `r = s − q·γ·σ²·(T−t)` (robust, `k`-free) for inventory control; set the "
+            "half-spread from a **jump-robust** realised vol, not `(1/γ)ln(1+γ/k)`, since `k` is "
+            "the phantom. Save the GLT bounds / Cartea–Jaimungal adverse-selection term for venues "
+            "with material informed flow — World B shows that's exactly where the skew saves you."
+        ),
+        md(
+            "## 7 · Going Further\n\n"
+            "- **Confirm the heavy tail on a real book** — `examples/verify_real.py` on Binance "
+            "trades (the headline PR).\n- A **jump-robust** adaptive vol (bipower) in "
+            "`AdaptiveASQuoter`.\n- The **GLT** closed form with hard inventory bounds vs the "
+            "clamp.\n- A **Cartea–Jaimungal** adverse-selection spread term.\n- A **γ-sweep** to "
+            "map where the skew's P&L cost stops exceeding its risk saving."
+        ),
+    ]
+    return new_notebook(cells=cells, metadata=_meta())
+
+
+def _meta():
+    return {
+        "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
+        "language_info": {"name": "python"},
+    }
+
+
+def main():
+    for fname, nb in [
+        ("01_for_the_curious.ipynb", build_curious()),
+        ("02_for_the_quants.ipynb", build_quants()),
+    ]:
+        path = os.path.join(HERE, fname)
+        with open(path, "w", encoding="utf-8") as fh:
+            nbf.write(nb, fh)
+        print(f"wrote {fname}  ({len(nb.cells)} cells)")
+
+
+if __name__ == "__main__":
+    main()

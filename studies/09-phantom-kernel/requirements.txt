@@ -1,0 +1,6 @@
+numpy>=1.24
+pandas>=2.0
+# This study's reproducible core is a seed-fixed simulator — no market data, no network.
+# The optional empirical leg (examples/verify_real.py) reads a local parquet of trades you
+# supply; it needs only pandas + pyarrow to read it.
+pyarrow>=14.0
