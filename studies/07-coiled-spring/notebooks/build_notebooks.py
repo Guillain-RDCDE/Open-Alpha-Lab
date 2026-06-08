@@ -1,0 +1,289 @@
+"""Generate the two narrative notebooks for Study 07 (Coiled-Spring) from source.
+
+Like Studies 01–05, the notebooks are a *generated artefact*: edit the cell text here,
+rebuild the skeletons, then execute with nbconvert to embed figures/outputs.
+
+    python notebooks/build_notebooks.py
+    jupyter nbconvert --to notebook --execute --inplace \
+        notebooks/01_for_the_curious.ipynb notebooks/02_for_the_quants.ipynb
+
+The executed path runs on the **offline synthetic universe** — a toy market with planted
+springboards (a coil on a rising EMA, then a volume breakout and a run) hidden among random
+walks — because the cached real parquets are git-ignored and the desk's reproducible core
+must run with no network. That synthetic is where the rule *works* (the detector fires and
+the backtest harvests the planted runs), which is exactly the point: it proves the code, so
+the **weak / fragile / busted real verdict** (quoted from [`docs/results.md`](../docs/results.md),
+produced by `examples/verify_real.py`) is a fact about the market, not a bug. Both notebooks
+follow the SAME seven desk beats (see ../../../METHODOLOGY.md).
+"""
+
+from __future__ import annotations
+
+import os
+
+import nbformat as nbf
+from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+BOOT = """\
+import sys, os
+sys.path.insert(0, os.path.abspath(".."))           # study root (coiled_spring/ lives there)
+sys.path.insert(0, os.path.abspath("../../.."))      # repo root, for quantlab
+%matplotlib inline
+import matplotlib.pyplot as plt
+plt.rcParams["figure.figsize"] = (9.5, 5.2)
+import numpy as np, pandas as pd
+pd.set_option("display.float_format", lambda v: f"{v:,.4f}")
+from coiled_spring import data, signals, backtest, robustness
+
+# Offline synthetic universe: planted springboards hidden among random walks. This is where
+# the rule SHOULD work — so it validates the machinery. The real verdict (a liquid 174-name
+# basket where it is WEAK / FRAGILE / BUSTED) is in ../docs/results.md via verify_real.py.
+frames, truth = data.synthetic_universe(seed=0)
+print(f"{len(frames)} names, {len(truth)} planted springboards")
+"""
+
+
+def md(text):
+    return new_markdown_cell(text)
+
+
+def code(text):
+    return new_code_cell(text)
+
+
+# ===========================================================================
+# 01 — FOR THE CURIOUS
+# ===========================================================================
+def build_curious():
+    cells = [
+        md(
+            "# Does a stock 'coiling' on its 20-EMA really spring? 🌀\n"
+            "### A retail trading-book rule — tested honestly, in plain English\n\n"
+            "There's a popular trading book that promises something seductive: find a stock "
+            "that pulls back to its rising **20-day moving average**, wait for it to break its "
+            "recent high on **double the usual volume**, buy — and ride an *explosive* +30 to "
+            "+50% move in **6 to 10 days**. The book proves it with a gallery of gorgeous "
+            "winners.\n\n"
+            "Beautiful winners are easy to find *after the fact*. The question is what happens "
+            "when you run the rule on **every** stock, counting the losers too. That's this "
+            "notebook."
+        ),
+        code(BOOT),
+        md(
+            "## 1 · The Claim\n\n"
+            "The rule has three hard steps — no indicator soup:\n\n"
+            "1. **Pivot.** A stock below its 20-EMA pops above it and makes a high.\n"
+            "2. **Hold.** It pulls back but **never closes below the 20-EMA**.\n"
+            "3. **Break.** It closes back above the pivot high on **≥ 2× average volume** — buy.\n\n"
+            "Let's look at one of our planted 'springboards' — a synthetic stock built to do "
+            "exactly this — so the shape is unmistakable before we judge it."
+        ),
+        code(
+            "tk = 'SPRG00'\n"
+            "f = frames[tk]\n"
+            "e = signals.ema(f['Close'], 20)\n"
+            "sig = signals.find_signals(f)\n"
+            "win = slice(60, 200)\n"
+            "ax = f['Close'].iloc[win].plot(label='close')\n"
+            "e.iloc[win].plot(ax=ax, label='20-EMA', linestyle='--')\n"
+            "for d in sig['breakout_date']:\n"
+            "    if f.index[60] <= d <= f.index[200]:\n"
+            "        ax.axvline(d, color='green', alpha=0.4)\n"
+            "ax.legend(); ax.set_title(f'{tk}: green = detected breakouts'); plt.show()\n"
+            "print(f'{len(sig)} breakouts detected in {tk}')"
+        ),
+        md(
+            "## 2 · So What?\n\n"
+            "If a *pure chart pattern* — visible to anyone — reliably front-ran a 30% move, it "
+            "would be a small miracle: free money on a screen, and a real crack in the idea "
+            "that markets price in what everyone can see. So the stakes are exactly why we "
+            "should be sceptical. Fifty years of studies say simple chart rules mostly don't "
+            "survive honest accounting. Does this one?"
+        ),
+        md(
+            "## 3 · How We'd Know\n\n"
+            "The fair test isn't 'does the stock go up after a breakout' — stocks drift up "
+            "anyway. It's: **does buying the breakout beat buying the same stock on a random "
+            "day** and holding the same number of days? If the breakout adds nothing over "
+            "ambient drift, it's a mirage. We announced this before running it."
+        ),
+        code(
+            "# Machinery sanity: on the planted universe the detector SHOULD find the springboards.\n"
+            "rec = robustness.detector_recall(frames, truth)\n"
+            "print('detector recall on planted springboards:', round(rec['recall'], 2),\n"
+            "      f\"({rec['n_hit']}/{rec['n_planted']})\")"
+        ),
+        md(
+            "## 4 · The Teardown\n\n"
+            "On the synthetic universe — where we *planted* real follow-through — the rule "
+            "works: the breakout clearly beats a random same-stock entry at short horizons, "
+            "and the trades are profitable. **That's the point**: it proves the code finds and "
+            "harvests a springboard *when one is really there*."
+        ),
+        code(
+            "sb = robustness.signal_vs_baseline(frames, horizons=(5, 10, 20))\n"
+            "print('breakout vs random same-stock entry (synthetic):')\n"
+            "print(sb[['n_signals', 'mean_breakout', 'mean_excess', 'hac_t']].round(4))\n\n"
+            "led = backtest.run_universe(frames, cost_bps=15.0)\n"
+            "st = backtest.trade_stats(led)\n"
+            "print('\\ntrade stats (synthetic):', {k: round(v, 4) if isinstance(v, float) else v\n"
+            "                                      for k, v in st.items()})"
+        ),
+        md(
+            "## 5 · The Verdict — on the *real* market\n\n"
+            "Now the honest part. Run on a **174-name liquid US universe, 1962–2026** (see "
+            "[`docs/results.md`](../docs/results.md)), the fireworks vanish:\n\n"
+            "- The breakout beats a random same-stock entry by only **+1.2% over 10 days** "
+            "(a *whisper* of momentum, barely significant). → **Signal: WEAK**\n"
+            "- The **median trade loses (−0.25%)**; win rate **41%**. The positive average is a "
+            "thin tail of jackpots. → **Tradability: FRAGILE**\n"
+            "- Only **1.7%** of breakouts do the advertised **+30%**. → **Explosive: BUSTED**\n\n"
+            "The book's gallery is the right tail of a distribution whose middle is a small "
+            "loss."
+        ),
+        md(
+            "## 6 · Could You Trade It?\n\n"
+            "On big liquid stocks the rule *almost* breaks even — but the payoff isn't there. "
+            "On the small, illiquid names where 40% pops actually happen, the trading costs "
+            "(wide spreads, your own market impact on a low-float stock spiking 3× volume) eat "
+            "the edge — break-even is around **75 bps round-trip**, right where those names "
+            "live. The upside and the survivable costs never sit in the same stock."
+        ),
+        md(
+            "## 7 · Going Further\n\n"
+            "The clean next tests: run it on a genuinely small-cap universe (where the book's "
+            "examples come from), a total-return rerun, and a 'let winners run' exit. The "
+            "deep-dive notebook (`02_for_the_quants`) carries the inference and the cost "
+            "sweep. **Fork it, break it, PR a better test.**"
+        ),
+    ]
+    return new_notebook(cells=cells, metadata=_meta())
+
+
+# ===========================================================================
+# 02 — FOR THE QUANTS
+# ===========================================================================
+def build_quants():
+    cells = [
+        md(
+            "# Coiled-Spring — the teardown 🌀🔬\n"
+            "### The 20-EMA pivot breakout, mechanised and falsified\n\n"
+            "Same seven beats as `01_for_the_curious`, at depth: causal pivot detection, the "
+            "exit-agnostic breakout-vs-random-entry test with HAC inference, the full "
+            "net-return distribution, the cost sweep, and decay-by-year. Executed on the "
+            "offline synthetic universe (planted springboards) so it runs with no network; the "
+            "**real verdict** is in [`docs/results.md`](../docs/results.md) via "
+            "`examples/verify_real.py`."
+        ),
+        code(BOOT),
+        md(
+            "## 1 · The Claim, as a hypothesis\n\n"
+            "H₁: forward *k*-day return after a qualifying breakout (bought next open) exceeds "
+            "the same name's random-entry drift over *k* days, HAC *t* > 2. H₁′ (strong form): "
+            "a large mass of breakouts deliver ≥ +30% within ~10 sessions. The rule's "
+            "parameters are the book's — `signals.Params` — none fitted."
+        ),
+        code("signals.Params()"),
+        md(
+            "## 2 · So What? — the stakes are the skepticism\n\n"
+            "A real +1.2%/10d excess at scale would annualise to a serious Sharpe *if "
+            "consistent*. The whole question is consistency vs a fat-tailed lottery. So we read "
+            "the **median**, the **win rate**, and the **break-even cost**, not the mean."
+        ),
+        md(
+            "## 3 · How We'd Know — pre-registered falsification\n\n"
+            "Signal `NONE` if the 10-day excess CI straddles zero / HAC *t* < 2. Tradability "
+            "`MIRAGE` if mean net ≤ 0 after costs or it's just beta. Explosive `BUSTED` if +30% "
+            "is a tail, not the base rate. Traps: look-ahead (pivots are causal), survivorship "
+            "(count every breakout), data-snooping (a marginal *t* is generous, not "
+            "conservative). Machinery sanity first:"
+        ),
+        code(
+            "rec = robustness.detector_recall(frames, truth)\n"
+            "print('synthetic detector recall:', rec)\n"
+            "assert rec['recall'] > 0.4, 'detector should recover planted springboards'"
+        ),
+        md(
+            "## 4 · The Teardown\n\n"
+            "**(a) The headline — breakout vs same-stock random entry.** The excess (per name, "
+            "pooled, HAC-tested) is the object: a trending name can't manufacture it because "
+            "the baseline is *that same name's* drift."
+        ),
+        code(
+            "sb = robustness.signal_vs_baseline(frames, horizons=(5, 10, 20))\n"
+            "sb.round(4)"
+        ),
+        md(
+            "**(b) The full distribution** — the part the book never prints. On the synthetic "
+            "the rule pays; on the real universe the median trade *loses* and the mean is a "
+            "right-tail artefact (see results.md percentiles [−11.3, −2.4, −0.25, +2.0, "
+            "+13.5]%)."
+        ),
+        code(
+            "led = backtest.run_universe(frames, cost_bps=15.0)\n"
+            "print('per-trade net Sharpe CI:', {k: round(v,4) for k,v in robustness.trade_sharpe_ci(led).items()})\n"
+            "ax = led['ret_net'].plot(kind='hist', bins=40, alpha=0.8)\n"
+            "ax.axvline(led['ret_net'].median(), color='red', label='median')\n"
+            "ax.axvline(led['ret_net'].mean(), color='green', label='mean')\n"
+            "ax.legend(); ax.set_title('net per-trade return (synthetic)'); plt.show()"
+        ),
+        md("**(c) Cost sweep** — where the edge dies. On the real universe break-even ≈ 75 bps."),
+        code("robustness.cost_sweep(frames, cost_grid_bps=(0, 5, 10, 20, 40, 80)).round(4)"),
+        md(
+            "**(d) Decay by year** — on the real data the green years are momentum blow-offs "
+            "(2000, 2020, 2024) and the red are chop/bear (2008, 2013): the 'edge' is "
+            "bull-regime beta, not a standalone alpha."
+        ),
+        code(
+            "decay = robustness.decay_by_year(frames, cost_bps=15.0)\n"
+            "decay.tail(12).round(4)"
+        ),
+        md(
+            "## 5 · The Verdict\n\n"
+            "Real-data stamps (results.md): **Signal WEAK** (10d excess +1.20%, HAC *t* = "
+            "2.05); **Tradability FRAGILE** (median net −0.25%, win 40.7%, per-trade Sharpe "
+            "0.05, break-even ≈ 75 bps); **Explosive BUSTED** (+30% hit rate 1.7%). On the "
+            "synthetic above the same machine pays — so the real numbers are the market, not a "
+            "bug."
+        ),
+        md(
+            "## 6 · Could You Trade It?\n\n"
+            "Break-even ≈ 75 bps vs a +73 bps gross edge → a cost-toggle from zero on large "
+            "caps. Square-root impact on a small-cap breakout (participation forced high by the "
+            "defining volume spike) plausibly doubles effective cost. Decay-adjusted, the net "
+            "Sharpe is indistinguishable from a long-UMD tilt harvested more cheaply."
+        ),
+        md(
+            "## 7 · Going Further\n\n"
+            "- A genuinely small-cap / microcap universe (where the upside *and* the costs "
+            "live).\n- Total-return rerun.\n- `backtest.ExitRules` sweep for the book's "
+            "half-off-at-+10% exit.\n- White (2000) Reality Check over an EMA-span / volume-gate "
+            "grid to price the implicit rule-search.\n- Regress the ledger on UMD to size how "
+            "much 'edge' is just momentum beta."
+        ),
+    ]
+    return new_notebook(cells=cells, metadata=_meta())
+
+
+def _meta():
+    return {
+        "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
+        "language_info": {"name": "python"},
+    }
+
+
+def main():
+    for fname, nb in [
+        ("01_for_the_curious.ipynb", build_curious()),
+        ("02_for_the_quants.ipynb", build_quants()),
+    ]:
+        path = os.path.join(HERE, fname)
+        with open(path, "w", encoding="utf-8") as fh:
+            nbf.write(nb, fh)
+        print(f"wrote {fname}  ({len(nb.cells)} cells)")
+
+
+if __name__ == "__main__":
+    main()

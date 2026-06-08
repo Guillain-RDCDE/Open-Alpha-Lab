@@ -58,6 +58,7 @@ two-readers-one-page convention, the rubric — is written up in
 | **[04](studies/04-social-oracle/)** | **Social-Oracle** | Does following a viral social-media crowd's cashtag surges actually pay? | `NONE` (no abnormal edge; −0.66% vs random by 1mo) | `MIRAGE` (gross is pure beta, median trade −1.3%, sleeve −44%) |
 | **[05](studies/05-twin-spread/)** | **Twin-Spread** | Does textbook pairs trading (GGR 1999) still pay after the world copied it? | `NONE` (no convergence edge; −0.48%/mo gross in the modern era, Sharpe CI [−0.84, −0.03]) | `MIRAGE` (negative before costs, −85% drawdown, β≈0; **Decay** `CONFIRMED`, and the obvious fixes don't rescue it) |
 | **[06](studies/06-clockwork-vol/)** | **Clockwork-Vol** | Does the VIX run on a fixed-period (40-/80-day) cycle you can time, or are its "cycles" shapes in red noise? | `NONE` (claimed periods sit *inside* the AR(1) red-noise envelope: p ≈ 0.998/0.9995/0.99; **Fixed clock** `NOT SUPPORTED`, period wanders 83–333 sessions) | `MIRAGE` (walk-forward forecast is a coin flip; cycle trade Sharpe 0.33 < buy-and-hold 0.56 and < its random-phase null, p≈0.74 — diluted beta) |
+| **[07](studies/07-coiled-spring/)** | **Coiled-Spring** | Does a stock resting on its rising 20-EMA spring into the trading-book's "explosive" +30-50% breakout? | `WEAK` (breakout beats a random same-stock entry by only +1.2%/10d, HAC *t*≈2.0; **Explosive as advertised?** `BUSTED` — only 1.7% of trades do +30%) | `FRAGILE` (median trade −0.25%, win 41%, per-trade Sharpe 0.05; bull-regime beta; break-even ≈75 bps, which the small-caps it targets blow through) |
 
 > **Study 01 in one line:** the overnight effect is *real and broad* (confirmed
 > across ~441 S&P 500 stocks), but its magnitude is inflated by a calendar-time
@@ -133,9 +134,28 @@ two-readers-one-page convention, the rubric — is written up in
 > **Signal `NONE` · Tradability `MIRAGE` · Fixed clock `NOT SUPPORTED`.** Method, reproducible
 > run and two notebooks: **[studies/06-clockwork-vol/](studies/06-clockwork-vol/)**.
 
+> **Study 07 in one line:** the desk's first **chart-pattern** study — a retail trading book
+> (*Trade the 20 EMA*) promises "explosive" +30-50% pops in days from a tidy three-step setup:
+> a stock breaks above its rising 20-EMA, pulls back *without losing the EMA*, then breaks its
+> pivot high on **2× volume** — buy it. Mechanised verbatim (no fitted parameter) over the
+> cached liquid 174-name universe, 1962–2026, and tested **exit-agnostically** against the only
+> fair benchmark — a *random entry in the same stock* over the same horizon. There's a faint
+> real pulse: the breakout beats that baseline by **+1.2% over 10 days** (HAC *t*≈2.0, and *0*
+> at 5 days) — a *whisper* of short-term momentum, not fireworks, and not corrected for the
+> universe of TA rules one could've searched. The book's promise is the survivor's tail: only
+> **1.7%** of 1,674 breakouts do +30%, the **median trade loses (−0.25%)**, win rate is **41%**,
+> and the positive mean is a thin right tail (per-trade Sharpe **0.05**). The "edge" clusters in
+> momentum blow-off years (2000 +4.3%, 2020 +4.5%, 2024 +2.6%; 2008 −3.6%, 2013 −3.2%) — it's
+> bull-regime beta — and break-even is **≈75 bps round-trip**, right where the small-caps the
+> book actually trades live. Validated on a synthetic universe with planted springboards (the
+> detector fires and the backtest pays), so the real verdict is the market talking.
+> **Signal `WEAK` · Tradability `FRAGILE` · Explosive as advertised? `BUSTED`.** Method,
+> reproducible run and two notebooks: **[studies/07-coiled-spring/](studies/07-coiled-spring/)**.
+
 Ideas in the queue: momentum vs the overnight/intraday split, the weekend effect,
 post-earnings drift, a cointegration-gated / stop-loss pairs variant (the beat-7 forks of
-Study 05), and a wavelet / VIX-futures-term-structure follow-up to Study 06's cycle null.
+Study 05), a wavelet / VIX-futures-term-structure follow-up to Study 06's cycle null, and a
+genuinely small-cap universe + White (2000) Reality Check for Study 07's breakout rule.
 Suggestions welcome via issues.
 
 ---
@@ -169,7 +189,8 @@ Open-Alpha-Lab/
 │   ├── 03-fear-gauge/            # study #3: buy-the-VIX-spike — twin of #2 in vol space
 │   ├── 04-social-oracle/         # study #4: follow-the-guru — event study in attention space
 │   ├── 05-twin-spread/           # study #5: pairs-trading decay — relative-value in the cross-section
-│   └── 06-clockwork-vol/         # study #6: VIX fixed-period cycles vs an AR(1) red-noise null
+│   ├── 06-clockwork-vol/         # study #6: VIX fixed-period cycles vs an AR(1) red-noise null
+│   └── 07-coiled-spring/         # study #7: the "20 EMA pivot breakout" chart rule, tested honestly
 └── pyproject.toml · CITATION.cff · LICENSE
 ```
 
