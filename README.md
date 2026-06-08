@@ -57,6 +57,7 @@ two-readers-one-page convention, the rubric — is written up in
 | **[03](studies/03-fear-gauge/)** | **Fear-Gauge** | Does buying the VIX spike / "VIX ≥ 30, double down at 50" beat buying a random day? | `REAL` for the level (VIX≥30) · `NONE` for the spike | `MIRAGE` (barely beats a −3% day, underperforms buy-and-hold, martingale draws down −33%) |
 | **[04](studies/04-social-oracle/)** | **Social-Oracle** | Does following a viral social-media crowd's cashtag surges actually pay? | `NONE` (no abnormal edge; −0.66% vs random by 1mo) | `MIRAGE` (gross is pure beta, median trade −1.3%, sleeve −44%) |
 | **[05](studies/05-twin-spread/)** | **Twin-Spread** | Does textbook pairs trading (GGR 1999) still pay after the world copied it? | `NONE` (no convergence edge; −0.48%/mo gross in the modern era, Sharpe CI [−0.84, −0.03]) | `MIRAGE` (negative before costs, −85% drawdown, β≈0; **Decay** `CONFIRMED`, and the obvious fixes don't rescue it) |
+| **[06](studies/06-clockwork-vol/)** | **Clockwork-Vol** | Does the VIX run on a fixed-period (40-/80-day) cycle you can time, or are its "cycles" shapes in red noise? | `NONE` (claimed periods sit *inside* the AR(1) red-noise envelope: p ≈ 0.998/0.9995/0.99; **Fixed clock** `NOT SUPPORTED`, period wanders 83–333 sessions) | `MIRAGE` (walk-forward forecast is a coin flip; cycle trade Sharpe 0.33 < buy-and-hold 0.56 and < its random-phase null, p≈0.74 — diluted beta) |
 
 > **Study 01 in one line:** the overnight effect is *real and broad* (confirmed
 > across ~441 S&P 500 stocks), but its magnitude is inflated by a calendar-time
@@ -116,9 +117,26 @@ two-readers-one-page convention, the rubric — is written up in
 > arbitraged past. Method, reproducible run and two notebooks:
 > **[studies/05-twin-spread/](studies/05-twin-spread/)**.
 
+> **Study 06 in one line:** the desk's first study of **periodicity** — does the VIX run on a
+> fixed-period clock (a viral [cycles thread](https://x.com/Namzes_G) dates an "80-day cycle low
+> to May 29", a 40-day cresting late July, synced to a stock 20-week low)? Tested against an
+> **AR(1) red-noise null** (the thing that fakes "cycles" to the eye), every period the thread
+> names — VIX **40d / 80d**, stocks' **100d / 250d / 1000d** — sits *inside* the noise envelope
+> (p ≈ 0.998 / 0.9995 / 0.99 / 0.9995 / 0.76): noise routinely fakes peaks taller than the VIX's.
+> The "dominant period" wanders **83→333 sessions** (it must be re-drawn — a curve-fit, not a
+> clock), the walk-forward forecast is a **coin flip** (49–51%, p ≈ 0.74), and the tradeable
+> expression earns **Sharpe 0.33 — below buy-and-hold's 0.56 and below its own random-phase
+> null** (diluted beta from 59% exposure, not timing). The machinery is validated on a synthetic
+> series with a *real* cycle baked in (it lights up 53–70× over the envelope, forecasts at 89%) —
+> so the VIX's silence is a fact about the market. The one flicker — hard-wiring exactly 80 days
+> gives 53% at p≈0.04 — is a single uncorrected period-search the spectral test contradicts.
+> **Signal `NONE` · Tradability `MIRAGE` · Fixed clock `NOT SUPPORTED`.** Method, reproducible
+> run and two notebooks: **[studies/06-clockwork-vol/](studies/06-clockwork-vol/)**.
+
 Ideas in the queue: momentum vs the overnight/intraday split, the weekend effect,
 post-earnings drift, a cointegration-gated / stop-loss pairs variant (the beat-7 forks of
-Study 05). Suggestions welcome via issues.
+Study 05), and a wavelet / VIX-futures-term-structure follow-up to Study 06's cycle null.
+Suggestions welcome via issues.
 
 ---
 
@@ -150,7 +168,8 @@ Open-Alpha-Lab/
 │   ├── 02-falling-knife/         # study #2: buy-the-dip — package + notebooks + examples + tests
 │   ├── 03-fear-gauge/            # study #3: buy-the-VIX-spike — twin of #2 in vol space
 │   ├── 04-social-oracle/         # study #4: follow-the-guru — event study in attention space
-│   └── 05-twin-spread/           # study #5: pairs-trading decay — relative-value in the cross-section
+│   ├── 05-twin-spread/           # study #5: pairs-trading decay — relative-value in the cross-section
+│   └── 06-clockwork-vol/         # study #6: VIX fixed-period cycles vs an AR(1) red-noise null
 └── pyproject.toml · CITATION.cff · LICENSE
 ```
 
