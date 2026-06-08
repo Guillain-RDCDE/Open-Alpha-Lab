@@ -27,38 +27,47 @@ than a hand-wavy *"yes"*.
 
 ---
 
-## Two readers, one page
+## The front-card and the notebooks — tell the story once
 
-Every front page is written to be read **two ways at once**, so we never split the
-audience or dumb anything down:
+The README is a **synthetic front-card**, not a document. In ~30 lines it answers
+three things and stops:
 
-- **The plain prose is for the curious.** No jargon. You can read any study
-  top-to-bottom and follow the whole story — the claim, the stakes, what we found,
-  whether you could trade it — without a stats background.
-- **The `> 🔬 For the quants` callouts are the rigorous layer.** Inline, right next
-  to the plain sentence they back up: the HAC *t*-stat, the formula, the confound
-  we ruled out and how. A pro reads these and gets the teardown; a curious reader
-  skips them and loses nothing.
-- **Heavy maths goes in a `<details>` fold** — there if you want it, invisible if
-  you don't.
+- **The verdict** — the two stamps and one honest sentence, in a box at the top. A
+  reader gets the conclusion in five seconds.
+- **What we tested** — the claim stated the way its *believers* state it, steelmanned,
+  with a link to whoever's making it. Two to four sentences.
+- **Where the proof is** — links to the two notebooks and any other deliverable.
 
-One document, two depths. That's the contract. (The narrative notebooks take this
-further: `01_for_the_curious` runs the plain layer, `02_for_the_quants` runs the
-deep one — but **both follow the exact same seven beats below**, so they're the
-same story told at two altitudes.)
+That's it. The **full demonstration lives entirely in the notebooks** — so we never
+tell the same story twice. (For years the front page *also* re-narrated the whole
+teardown; that produced two documents saying the same thing. The README is now the
+menu; the notebooks are the meal.)
+
+The notebooks carry the **two-readers, one-page** contract, read two ways at once so
+we never split the audience:
+
+- **`01_for_the_curious`** runs the plain layer — no jargon, top-to-bottom, the claim
+  and the stakes and the tricks that inflate the headline.
+- **`02_for_the_quants`** runs the rigorous layer — HAC *t*-stats, the confounds ruled
+  out and how, capacity, the Reality Check.
+
+Same story at two altitudes — and **both walk the same seven beats below.**
 
 ---
 
 ## The seven beats
 
-Every front page walks these seven beats, in this order, with these headers. The
+The two notebooks walk these seven beats, in this order, with these headers. The
 order isn't arbitrary — it's the order an honest investigation actually happens in:
 state the claim fairly, work out why it'd matter, decide how you'd be wrong, do the
-work, call it, ask if it pays, then open the door for the next person.
+work, call it, ask if it pays, then open the door for the next person. (The README
+front-card surfaces only **Beat 0** and a compressed **Beat 1**; the rest is the
+notebooks' job.)
 
 > **Beat 0 — Verdict, read first.** Before any of it: the answer, in a little box.
 > Two stamps and one sentence. A reader gets the conclusion in five seconds, *then*
-> chooses to follow the reasoning. We don't bury the lede.
+> chooses to follow the reasoning. We don't bury the lede. *(This is the heart of the
+> README front-card.)*
 
 **1 · The Claim.** State the idea the way its *believers* state it — at full
 strength, steelmanned, with a link to whoever's making it. No strawmen. If we're
@@ -172,10 +181,11 @@ A few non-negotiables that keep the desk honest:
 ## Reusing the template
 
 Starting a new study? Copy [`studies/_TEMPLATE/`](studies/_TEMPLATE/) to
-`studies/NN-your-idea/`, fill the seven beats, and keep the headers. Lean on
-`quantlab/` for the numbers so your results line up with everyone else's. When in
-doubt, re-read beat 6 — *"could you actually trade it?"* — because that's the beat
-that separates this desk from a blog.
+`studies/NN-your-idea/`. The template README is the **front-card** — fill the verdict
+box, the *what-we-tested* paragraph and the links, and keep it to ~30 lines; the seven
+beats themselves go in the two notebooks. Lean on `quantlab/` for the numbers so your
+results line up with everyone else's. When in doubt, re-read beat 6 — *"could you
+actually trade it?"* — because that's the beat that separates this desk from a blog.
 
 ---
 
