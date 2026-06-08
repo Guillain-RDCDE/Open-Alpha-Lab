@@ -55,7 +55,7 @@ two-readers-one-page convention, the rubric — is written up in
 | **[01](studies/01-overnight-anomaly/)** | **Overnight Anomaly** | Do stocks really make their money overnight — and is it manipulation? | `REAL` (HAC *t*≈5) | `MIRAGE` (mostly beta, dies after costs, capacity ~\$10M, decaying) |
 | **[02](studies/02-falling-knife/)** | **Falling-Knife** | Does buying the Nasdaq-100 / S&P 500 after a −3% drop beat buying a random day? | `NONE` at −3% · `WEAK` in deep panic | `MIRAGE` (tiny crash-clustered capacity, fails out-of-sample) |
 | **[03](studies/03-fear-gauge/)** | **Fear-Gauge** | Does buying the VIX spike / "VIX ≥ 30, double down at 50" beat buying a random day? | `REAL` for the level (VIX≥30) · `NONE` for the spike | `MIRAGE` (barely beats a −3% day, underperforms buy-and-hold, martingale draws down −33%) |
-| **[04](studies/04-social-oracle/)** | **Social-Oracle** | Does following a viral stock guru's cashtag mentions actually pay? | `WEAK` ⏳ (attention bump, but rides a pre-tweet run-up) | `MIRAGE` ⏳ (you enter after the pop, micro-cap spreads, fades, tiny capacity) |
+| **[04](studies/04-social-oracle/)** | **Social-Oracle** | Does following a viral social-media crowd's cashtag surges actually pay? | `NONE` (no abnormal edge; −0.66% vs random by 1mo) | `MIRAGE` (gross is pure beta, median trade −1.3%, sleeve −44%) |
 
 > **Study 01 in one line:** the overnight effect is *real and broad* (confirmed
 > across ~441 S&P 500 stocks), but its magnitude is inflated by a calendar-time
@@ -84,16 +84,18 @@ two-readers-one-page convention, the rubric — is written up in
 > reproducible code: **[studies/03-fear-gauge/](studies/03-fear-gauge/)**.
 
 > **Study 04 in one line:** the desk's first study whose trigger lives in the
-> **information flow**, not the price tape. A viral guru's cashtag mention plausibly
-> moves a name for a day or two — but the move is mostly a **run-up that already
-> happened** before the post, it **fades** over the following weeks, it barely beats
-> the momentum the name already had, and a follower (late by construction, trading
-> \$1–3 micro-caps with 50–200 bps spreads and a few-thousand-dollar capacity) can't
-> keep any of it. This study ships a **complete, tested method** and an offline
-> synthetic that proves the machinery detects the pump-and-fade it hunts; the live
-> stamps (`⏳`) are one `verify_real.py mentions.csv` away — a mention feed is
-> third-party and licence-bound, so none is bundled. Method, two notebooks and
-> reproducible code: **[studies/04-social-oracle/](studies/04-social-oracle/)**.
+> **information flow**, not the price tape — measured on **1,468 real
+> r/WallStreetBets viral surges** (2021–2025, CC-BY data, abnormal vs SPY). Buying
+> what the crowd screams carries **no abnormal edge**: a tiny insignificant one-day
+> flicker (+0.08%, p≈0.23) that *fades to negative* by a month (−0.66% vs a random
+> day, the crowd's pick less likely to be up than a coin flip), worse than the
+> momentum the name already had, and robust to a name jackknife. The backtest's gross
+> +0.72%/trade is **pure market beta** (abnormal +5 bps); the **median trade is
+> −1.3%**, costs erase the rest, and the equal-weight follower's sleeve compounds to
+> **−44% with an −84% drawdown** — while **42 of the most-viral names literally
+> delisted** (a survivorship bias the result survives anyway). A single-guru feed
+> (Serenity) is the motivating anecdote; the reproducible crowd is the measurable
+> instance. Method, real run and code: **[studies/04-social-oracle/](studies/04-social-oracle/)**.
 
 Ideas in the queue: momentum vs the overnight/intraday split, the weekend effect,
 post-earnings drift, pairs/cointegration decay. Suggestions welcome via issues.

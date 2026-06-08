@@ -173,6 +173,7 @@ def _equal_weight_market(frames: dict[str, pd.DataFrame]) -> pd.Series:
 def build_panel(
     prices: dict[str, pd.DataFrame],
     market_ret: pd.Series | None = None,
+    clip_daily: float | None = None,
 ) -> dict[str, pd.DataFrame]:
     """Turn raw per-ticker OHLC into the consumable panel.
 
@@ -180,8 +181,19 @@ def build_panel(
     reindexed onto its dates), so ``r_cc - r_mkt`` — the **abnormal return** every
     downstream module measures — needs no further alignment. If ``market_ret`` is
     ``None``, an equal-weight average of the panel stands in for the tape.
+
+    ``clip_daily`` winsorizes daily returns to ``±clip_daily`` (e.g. ``1.0`` = ±100%).
+    Micro-cap price data is filthy: reverse-split artefacts and bad prints produce
+    physically-impossible daily "returns" (a penny stock's split day reading as
+    +6,000,000%) that, summed into a cumulative-return pool, swamp every real number.
+    A generous clip (±100%/day keeps every genuine meme move — a true +100% close is
+    preserved) removes only the impossible. Stated as a decision, not hidden — house
+    rule. ``None`` (default) leaves returns untouched (used by the clean synthetic).
     """
     frames = {t: daily_returns(df) for t, df in prices.items()}
+    if clip_daily is not None:
+        for f in frames.values():
+            f["r_cc"] = f["r_cc"].clip(-clip_daily, clip_daily)
     if market_ret is None:
         market_ret = _equal_weight_market(frames)
     for f in frames.values():

@@ -1,0 +1,147 @@
+"""Real-data run — the headline numbers behind Study 04's verdict, on the WSB feed.
+
+Loads the committed real feed (`_data/wsb_mentions.csv`, derived from CC-BY-4.0
+youyanggu/yolostocks-data — see `examples/build_wsb_feed.py`), pulls cached prices
+for the mentioned names + SPY (the market, for abnormal returns), and runs the whole
+gauntlet: coverage -> event study -> random-day null -> momentum control -> fade
+curve -> clustering bootstrap -> name jackknife -> cost-charged backtest + capacity.
+
+    python examples/build_wsb_feed.py     # once, to (re)build the feed
+    python examples/verify_wsb.py         # prices cached after the first fetch
+
+It prints every table and writes a reproducible results doc (with an as-of date and
+a content fingerprint of the price inputs) to `docs/results_wsb.md`, so the README's
+verdict numbers can be traced to an exact run.
+"""
+
+import os
+import sys
+
+import pandas as pd
+
+_STUDY = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _STUDY)
+sys.path.insert(0, os.path.abspath(os.path.join(_STUDY, "..", "..")))  # repo root, for quantlab
+
+from social_oracle import backtest, benchmark, data, mentions, robustness
+from quantlab.repro import DEFAULT_AS_OF, fingerprint
+
+pd.set_option("display.width", 200)
+pd.set_option("display.max_columns", 20)
+
+FEED = os.path.join(_STUDY, "_data", "wsb_mentions.csv")
+OUT = os.path.join(_STUDY, "docs", "results_wsb.md")
+
+
+def _load_panel(feed, asof):
+    """Build the panel from cached prices only; report which names had no price."""
+    market = data.market_frame("SPY", end=asof)
+    raw, missing = {}, []
+    for tk in sorted(feed["ticker"].unique()):
+        # Cache-only: a name with no cached price is a delisted/renamed survivorship
+        # drop — count it, never silently refetch-and-stall on it.
+        if not os.path.exists(data._cache_path(tk, "split_only")):
+            missing.append(tk)
+            continue
+        try:
+            df = data.fetch(tk, end=asof, use_cache=True)
+            if len(df) > 60:
+                raw[tk] = df
+            else:
+                missing.append(tk)
+        except Exception:
+            missing.append(tk)
+    # Winsorize daily returns at ±100%: kills reverse-split / bad-print artefacts in
+    # filthy micro-cap data while preserving every genuine meme move.
+    return data.build_panel(raw, market_ret=market, clip_daily=1.0), market, missing
+
+
+def main():
+    feed = data.load_feed(FEED)
+    asof = DEFAULT_AS_OF
+    print(f"feed: {len(feed):,} mentions, {feed['ticker'].nunique()} names, "
+          f"{feed['timestamp'].min().date()} -> {feed['timestamp'].max().date()}")
+
+    panel, market, missing = _load_panel(feed, asof)
+    events, cov = mentions.to_events(feed, panel)
+    print(f"priced names: {len(panel)}  (missing/delisted: {len(missing)})")
+    print("coverage:", cov)
+
+    null = benchmark.conditional_vs_unconditional(panel, events, n_iter=2000)
+    hot = mentions.hot_streak_events(panel)
+    mom = benchmark.excess_vs_alternative(panel, events, hot, n_iter=2000)
+    fade = robustness.fade_curve(panel, events)
+    boot5 = robustness.block_bootstrap_excess(panel, events, horizon=5, n_iter=2000)
+    boot21 = robustness.block_bootstrap_excess(panel, events, horizon=21, n_iter=2000)
+    jack = robustness.name_jackknife(panel, events, horizon=5, top=5)
+    res = backtest.run(panel, events, hold_days=10)
+    sweep = backtest.cost_sweep(panel, events, hold_days=10)
+    edge_bps = max(res.stats.get("mean_gross", 0.0), 1e-9) * 1e4
+    cap = backtest.capacity(panel, events, edge_bps=max(edge_bps, 20.0))
+
+    fp = fingerprint(pd.DataFrame({t: f["Close"] for t, f in
+                                   sorted(panel.items())}).fillna(0.0), round_dp=4)
+
+    print("\n[random-day null]\n", null.round(4))
+    print("\n[momentum control]\n", mom.round(4))
+    print("\n[fade curve]\n", fade.round(4))
+    print("\n[block bootstrap] h=5:", {k: round(v, 4) for k, v in boot5.items()})
+    print("[block bootstrap] h=21:", {k: round(v, 4) for k, v in boot21.items()})
+    print("\n[name jackknife h=5]\n", jack.round(4))
+    print("\n[backtest hold=10]\n", {k: (round(v, 4) if isinstance(v, float) else v)
+                                     for k, v in res.stats.items()})
+    print("\n[cost sweep]\n", sweep.round(4))
+    print("\n[capacity]", {k: (round(v, 1) if isinstance(v, float) else v) for k, v in cap.items()})
+
+    _write_results(OUT, feed, panel, events, cov, missing, asof, fp,
+                   null, mom, fade, boot5, boot21, jack, res, sweep, cap)
+    print(f"\nwrote {OUT}")
+
+
+def _write_results(path, feed, panel, events, cov, missing, asof, fp,
+                   null, mom, fade, boot5, boot21, jack, res, sweep, cap):
+    def md(df):
+        return "```\n" + df.round(4).to_string() + "\n```"
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write(f"""# Results — Study 04 on the real WSB feed
+
+*Generated by [`examples/verify_wsb.py`](../examples/verify_wsb.py). Feed:
+[`_data/wsb_mentions.csv`](../_data/wsb_mentions.csv) (derived from CC-BY-4.0
+youyanggu/yolostocks-data). Market for abnormal returns: **SPY**.
+As-of **{asof}**. Price fingerprint **`{fp}`** ({len(panel)} priced names).*
+
+- Feed: **{len(feed):,}** mention-surge events, **{feed['ticker'].nunique()}** names,
+  {feed['timestamp'].min().date()} → {feed['timestamp'].max().date()}.
+- Coverage funnel (no silent caps): `{cov}`; **{len(missing)}** names dropped for no
+  tradeable price (delisted/renamed — itself a survivorship signal).
+- Clean events used: **{len(events):,}**.
+
+## Random-day null — does a mention beat a random (name, day)?
+{md(null)}
+
+## Momentum control — does a mention beat a name that was already hot?
+{md(mom)}
+
+## Fade curve — mean abnormal CAR by horizon
+{md(fade)}
+
+## Clustering bootstrap (calendar blocks)
+- h=5: `{ {k: round(v,4) for k,v in boot5.items()} }`
+- h=21: `{ {k: round(v,4) for k,v in boot21.items()} }`
+
+## Name jackknife (drop the most-mentioned names), h=5
+{md(jack)}
+
+## Backtest — buy next open, hold 10d, micro-cap costs
+`{ {k:(round(v,4) if isinstance(v,float) else v) for k,v in res.stats.items()} }`
+
+### Cost sweep (half-spread bps → mean net trade)
+{md(sweep)}
+
+### Capacity
+`{ {k:(round(v,1) if isinstance(v,float) else v) for k,v in cap.items()} }`
+""")
+
+
+if __name__ == "__main__":
+    main()

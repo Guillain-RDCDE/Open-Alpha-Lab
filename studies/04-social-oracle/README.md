@@ -11,26 +11,26 @@
 
 ## Verdict — read this first
 
-*This study ships a **complete, tested method** and an **offline synthetic** proof
-that the machinery detects the effect it hunts — but, unlike Studies 01–03, it does
-**not** bundle a live dataset: a mention feed is third-party, scraped, and
-licence-encumbered. The stamps below are therefore the desk's **stated prior** (from
-the literature + the synthetic), and the table is marked `⏳ pending a live feed`.
-Drop a real CSV into [`examples/verify_real.py`](examples/verify_real.py) and the
-same code fills them in. We publish the method and the prior honestly rather than a
-fabricated number.*
+*Measured on a **real, public, reproducible** feed: **1,468** viral mention-surge
+events across **182** priced names, 2021–2025, from daily r/WallStreetBets mention
+counts (CC-BY-4.0 `youyanggu/yolostocks-data` — see [`docs/results_wsb.md`](docs/results_wsb.md)
+and [`examples/build_wsb_feed.py`](examples/build_wsb_feed.py)). A single-guru feed
+(Serenity / @aleabitoreddit) lives behind X's auth wall and can't be redistributed,
+so we test the **same phenomenon on the crowd** — a purer, fully reproducible
+instance. Abnormal returns are vs **SPY**; as-of 2026-06-01, price fingerprint
+`1a11c294eeba`.*
 
-| Axis | Stamp (prior) | Why (one line) |
+| Axis | Stamp | Why (one line) |
 |---|---|---|
-| **Signal** — is the effect statistically real? | `WEAK` ⏳ | A mention plausibly carries a small, short-horizon *attention* bump — but it rides on a **run-up that already happened** (the tweet chases the move) and is hard to separate from plain momentum. |
-| **Tradability** — does it survive costs, capacity, scale? | `MIRAGE` ⏳ | You read the call *after* the pop, the names are **\$1–3 micro-caps** with 50–200 bps spreads, capacity is a few thousand dollars before your own order is the move, and the abnormal path **fades** over the following weeks. |
-| **Pump-and-fade?** — does the pop reverse? | `EXPECTED` ⏳ | The event-study signature the literature predicts: cumulative abnormal return rises *into* the mention, peaks early, then bleeds back — the follower buys the start of the bleed. |
+| **Signal** — is the effect statistically real? | `NONE` | A mention has **no abnormal edge over a random day**: excess +0.08% / +0.05% / **−0.66%** at 1d / 1wk / 1mo (p≈0.23 / 0.40 / 0.94 — i.e. *negative* by a month), and the clustering bootstrap straddles zero at every horizon. Not one lucky name (jackknife is flat). |
+| **Tradability** — does it survive costs, capacity, scale? | `MIRAGE` | Gross is **pure beta**: +0.72%/trade but only **+5 bps abnormal**; the **median trade is −1.3%**, net hits zero at a 25 bps spread and goes negative beyond, and the equal-weight sleeve runs **−44% with an −84% drawdown** (the 2022 pile-in). |
+| **Pump-and-fade?** — does the pop reverse? | `CONFIRMED` | The month-ahead abnormal return is significantly *negative* vs a random day, the share of up-names falls to **45.7%** (vs 51.4% random), and a mention does **worse than a name that was simply already hot** (−1.06% at 1mo). The follower buys the bleed. |
 
-> **In one sentence (the prior):** a viral guru's cashtag plausibly moves a name for a
-> day or two, but that's **attention beta that reverses** — the follower, late by
-> construction and trading thin micro-caps, is buying a pump already consumed and
-> calling it alpha; the method here is built to measure exactly that, on whatever
-> feed you bring.
+> **In one sentence:** on 1,468 real WallStreetBets viral surges, buying what the
+> crowd screams carries **no abnormal edge** — a tiny, insignificant one-day flicker
+> that fades to a *negative* month, gross "gains" that are just market beta the costs
+> erase, a median trade of −1.3%, and 42 of the most-viral names that literally
+> delisted. It's a pump you're late to, dressed as a signal.
 
 > **Not investment advice, and not about a person.** This tests a *phenomenon*
 > (social trading), using a public influencer feed only as the worked example.
@@ -124,34 +124,41 @@ never silently skipped.
 
 ## 4 · The Teardown
 
-> *Run it on a real feed and this section fills with live numbers. Until then, what
-> the **offline synthetic** shows — a universe with a deliberately mild pump-and-fade
-> baked in, so the test of significance still has to work for its money — confirms
-> the method recovers the signature it's built to find.* (Reproduce:
-> [`examples/run_synthetic_demo.py`](examples/run_synthetic_demo.py).)
+> *We ran it on 1,468 real WallStreetBets viral surges (2021–2025, 182 priced
+> names, abnormal vs SPY). Reproduce: [`examples/verify_wsb.py`](examples/verify_wsb.py);
+> full tables in [`docs/results_wsb.md`](docs/results_wsb.md).*
 
-- **The run-up is already in the chart.** The mean abnormal path climbs *into* t=0
-  (the tweet chases a move that mostly happened) — exactly the pre-event leg a naive
-  "look, it went up after" reading misses.
-- **The pop fades.** Forward abnormal CAR peaks within a few sessions and then bleeds
-  negative through the month — the follower, entering at the next open, is on the
-  wrong side of the reversal.
-- **It loses to a random day, and to momentum.** On the synthetic the mention basket
-  undershoots both the random-`(name, day)` null *and* the hot-streak control at a
-  week and a month — the construction the real test is built to detect.
-- **Clustering widens the bar.** The calendar-block bootstrap on the synthetic keeps
-  the excess where the iid test put it; on a real feed, where four hype waves can be
-  one theme, it's the test that stops a meme week counting as thirty observations.
-- **Costs finish it.** The micro-cap cost sweep turns the mean trade more negative at
-  every step from a 5 bps half-spread to 100; capacity, via square-root impact, lands
-  in the low thousands of dollars per name.
+- **There's no pop worth the name.** The mention-day abnormal return is **+0.14% at
+  a day, +0.32% at a week** — and *insignificant* (random-day p≈0.23 and 0.40; every
+  event-study *t* < 1). A whiff of attention, nothing you could lean on.
+- **And it fades to *negative*.** By a month the abnormal excess over a random day is
+  **−0.66%** (p≈0.94 — the mention sits in the bottom 6% of random baskets), and the
+  share of names that are even *up* falls to **45.7%**, versus **51.4%** for a random
+  name-day. The crowd's pick is *less* likely to be green a month later than a coin
+  flip over the same universe.
+- **It loses to plain momentum.** A mention beats a name that was *already hot* by a
+  hair at one day (+0.25%, p≈0.10) — then does **−1.06% worse** by a month (p≈0.97).
+  Whatever the mention adds at t+1 is momentum the name already carried, and it
+  reverses harder than the momentum alone.
+- **Clustering kills what's left.** The calendar-block bootstrap (hype arrives in
+  waves) puts the 1-week excess at **+0.06%, 95% CI [−0.65%, +0.82%]**, p(excess≤0)≈
+  **0.45** — dead zero — and the 1-month excess at **−0.67%, CI [−1.94%, +0.62%]**.
+  Nothing clears the bar at any horizon.
+- **It's not one lucky name.** The jackknife is flat: drop INTC, NFLX, AMD, PLTR or
+  AAPL and the conditional mean barely moves (0.0024–0.0038 vs 0.0032). The *nothing*
+  is broad, not a single 10-bagger hiding the result.
+- **Survivorship makes it worse, not better.** **42 of the most-viral names had no
+  tradeable price** — they delisted or were renamed (SIVB, FRC, TWTR, NKLA, RIDE,
+  ATVI…). The sample we *can* price is biased toward the survivors, and it *still*
+  shows no edge.
 
-> 🔬 **For the quants** — permutation null (random baskets over the pooled abnormal
-> CARs), label-permutation for the momentum gap, circular calendar-block bootstrap
-> (`benchmark.py`, `robustness.py`); horizons fixed at +1d/+1w/+1m, announced before
-> running. The synthetic's effect sizes are arbitrary (we chose them); what's load-
-> bearing is that the **sign and the survival** behave as the method requires.
-> Reproduce: [`notebooks/02_for_the_quants.ipynb`](notebooks/).
+> 🔬 **For the quants** — permutation null (2,000 random baskets over the pooled
+> abnormal CARs), label-permutation for the momentum gap, circular calendar-block
+> bootstrap (`benchmark.py`, `robustness.py`); horizons fixed at +1d/+1w/+1m,
+> announced before running. β=1 market adjustment vs SPY; daily returns winsorized at
+> ±100% to kill reverse-split / bad-print artefacts in filthy micro-cap data (a
+> stated decision — `data.build_panel(clip_daily=1.0)`). Reproduce:
+> [`examples/verify_wsb.py`](examples/verify_wsb.py).
 
 <details>
 <summary>🔬 The maths, in full</summary>
@@ -171,68 +178,77 @@ clustering. Capacity solves impact_bps(N) = c·10⁴·√(N/ADV$) = edge_bps for
 
 ## 5 · The Verdict
 
-> *The stamps, and what will earn them. Marked `⏳` until a live feed is run.*
+> *The two stamps, and the numbers that earned them.*
 
-- **Signal — `WEAK` (prior).** The literature on attention-driven returns
-  (Barber–Odean's attention-buying, the "dumb money" reversal, analyst/influencer
-  event studies) says a public mention *does* move a name briefly — so we expect a
-  real but small short-horizon bump. What makes it `WEAK` rather than `REAL`: it sits
-  on a pre-event run-up, and the momentum control is built to strip most of it out.
-  The live `p_greater`, the momentum-gap p-value and the block-bootstrap CI go here.
-- **Tradability — `MIRAGE` (prior).** The follower enters late by construction, the
-  abnormal path fades, the spreads are micro-cap-wide, and capacity is trivial. The
-  live cost sweep and capacity figure — the dollar size where impact eats the bump —
-  earn the stamp.
+- **Signal — `NONE`.** A crowd mention does not beat a random day at any horizon.
+  The excess is **+0.08% / +0.05% / −0.66%** at 1d/1w/1mo, with random-day p≈**0.23 /
+  0.40 / 0.94** (the month is significantly *negative*), the clustering bootstrap
+  straddles zero throughout (p(excess≤0)≈0.45 at a week), and the jackknife is flat.
+  My going-in prior was `WEAK` — the data was less kind than that. The only thing the
+  mention reliably predicts is a *below-average* month.
+- **Tradability — `MIRAGE`.** The backtest's gross +0.72%/trade is **pure beta** —
+  the abnormal piece is **+5 bps**. The **median trade is −1.3%**, the mean net hits
+  zero at a 25 bps spread and goes negative beyond it, and the equal-weight follower's
+  sleeve compounds to **−44% with an −84% drawdown** (everything mentioned crashed
+  together in 2022). You took meme-stock risk to earn the market's return, then gave
+  it to the spread.
 
-> 🔬 **For the quants** — the decisive cells, to be filled from a live run: random-day
-> `p_greater` at 1d/1w/1m; momentum-control `gap` and `p_mention_gt_alt`;
-> block-bootstrap `p_excess_le_0`; the fade-curve peak-vs-month; the name-jackknife
-> swing; mean net trade across the spread sweep; capacity in USD. The synthetic run
-> shows the shape; the feed sets the numbers.
+> 🔬 **For the quants** — decisive numbers in one place: random-day p≈0.23/0.40/0.94
+> (1d/1w/1mo); momentum-gap p≈0.10→0.97; block-bootstrap 1wk excess +0.06% [−0.65%,
+> +0.82%] and 1mo −0.67% [−1.94%, +0.62%]; fade-curve `pct_positive` 0.469→0.457;
+> backtest mean-abnormal +0.0005, median net −0.0134, sleeve Sharpe ≈0, max drawdown
+> −0.84. All from [`docs/results_wsb.md`](docs/results_wsb.md), as-of 2026-06-01,
+> price fingerprint `1a11c294eeba`.
 
 ## 6 · Could You Trade It?
 
 > *The honest money question — the beat that separates this desk from a dashboard.*
 
-The "signal ledger" screenshots show a clean line going up after each mention. The
-trade that line implies does not exist for *you*, for three compounding reasons.
-**Timing:** you read the post after it's public, so the entry you can actually get is
-the next open — past the pop, into the fade. **Spread:** these are \$1–3 names; cross
-a 50–200 bps spread on the way in and again on the way out and you've paid, round-
-trip, more than a month's worth of the abnormal bump before the position moves.
-**Capacity:** the square-root impact model puts the size at which your own order
-erases the edge in the low single-digit thousands of dollars per name — fine for a
-screenshot, useless for capital. Net of all three, the cost sweep marches the mean
-trade further into the red at every spread step. That's the `MIRAGE`.
+The dashboards show a clean line going up after each mention. The trade that line
+implies does not exist for *you*. **Timing:** you read the post after it's public, so
+the entry you can actually get is the next open — past the (already insignificant)
+pop, into the fade. **No edge to protect:** the abnormal return is **+5 bps**; the
+mean net trade is already zero at a 25 bps spread, and the median trade is **−1.3%**
+before you pay a cent. **The lived path:** held equal-weight, the sleeve runs −44%
+with an −84% drawdown, because the surges cluster in exactly the regimes (2022) where
+everything mentioned falls at once. That's the `MIRAGE`.
 
-> 🔬 **For the quants** — `backtest.run` enters at `open[t+1]`, holds a fixed window,
-> and charges `CostModel(half_spread_bps=25, slippage_bps=10)` — already optimistic
-> for the universe; `cost_sweep` walks the half-spread 5→100 bps; `capacity` reports
-> ADV$-scaled square-root impact. The realistic curve is the sleeve's, net — not the
-> gross line the dashboard draws.
+One honest twist the real feed surfaces: **capacity is *not* the binding constraint
+here.** The crowd's most-viral names are mega-caps (NVDA, TSLA, AMD…), so median
+dollar-volume is ~\$1B and square-root impact only bites past ~\$5M per trade. That's
+the opposite of a thin single-guru micro-cap feed, where capacity *is* the killer.
+For the WSB crowd the trade doesn't die of illiquidity — it dies because **there's no
+abnormal return to begin with**, and what little gross you book is market beta the
+spread takes back.
+
+> 🔬 **For the quants** — `backtest.run` enters at `open[t+1]`, holds 10 sessions,
+> charges `CostModel(half_spread_bps=25, slippage_bps=10)`; `cost_sweep` walks the
+> half-spread 5→100 bps (mean net +0.40% → −1.50%); `capacity` reports ADV$-scaled
+> square-root impact (median ADV ≈ \$1.0B → ~\$5.2M/trade at a 71 bps gross). The
+> realistic line is the sleeve's, net — not the gross line the dashboard draws.
 
 ## 7 · Going Further
 
-> **The door this leaves ajar.** The interesting inversion: the side of this trade
-> that *might* pay is the **opposite** of the folklore. If a mention reliably triggers
-> a pop-and-fade, the edge — if any survives costs — belongs to whoever is **early or
-> short the fade**, not to the late follower buying the hype. That's the same shape
-> as Study 03's punchline (you *sell* the fear, you don't buy it). Whether anything is
-> left after micro-cap costs is exactly what this method is built to answer — bring a
-> feed and find out.
+> **The door this leaves ajar.** We measured it as a *negative* — the crowd's pick
+> underperforms a random day a month out. So the side that *might* pay is the
+> **opposite** of the folklore: being **early or short the fade**, not the late
+> follower buying the hype. That's the same inversion as Study 03 (you *sell* the
+> fear, you don't buy it). Whether the short leg survives borrow and the brutal cost
+> of shorting meme names is the next study, not this one.
 
-- **Bring a real feed.** The whole study is one `python examples/verify_real.py
-  mentions.csv` away from live numbers. Survivorship-clean feeds (timestamped at
-  post time, including the calls that flopped) are the gold standard.
-- **Sentiment & conviction.** The feed carries a score; does a *high-conviction*
-  mention behave differently from an offhand one?
-- **First-mention vs pile-on.** Is the very first time a name appears different from
-  the tenth (the debounce throws the pile-on away — does it carry information)?
-- **Short the fade.** Test the inverted trade directly, net of borrow and the brutal
-  costs of shorting micro-caps.
-- **What a contributor could PR:** a real (licence-clean) mention dataset, a
-  borrow-cost model for the short leg, or a beta-estimated abnormal return to replace
-  the β=1 market adjustment.
+- **The single-guru feed.** We ran the *crowd* (reproducible, CC-BY); a clean
+  Serenity/@aleabitoreddit feed — timestamped at post time, including the calls that
+  flopped — is the obvious next dataset, and the one place capacity might actually
+  bind (thin names). Anyone can run it: `python examples/verify_wsb.py` is the
+  template; point `data.load_feed` at any `(timestamp, ticker)` CSV.
+- **Short the fade.** Test the inverted trade directly, net of borrow.
+- **Sentiment & conviction.** The feed carries a mention count; does a *louder* surge
+  behave differently from a quiet one?
+- **First-mention vs pile-on.** Is a name's first-ever surge different from its tenth
+  (the debounce throws pile-ons away — do they carry information)?
+- **What a contributor could PR:** a licence-clean single-influencer feed, a
+  borrow-cost model for the short leg, or a β-estimated abnormal return to replace the
+  β=1 market adjustment.
 
 ---
 
@@ -242,9 +258,11 @@ trade further into the red at every spread step. That's the `MIRAGE`.
 |---|---|
 | [`notebooks/01_for_the_curious.ipynb`](notebooks/) | the story + the stakes, plain language |
 | [`notebooks/02_for_the_quants.ipynb`](notebooks/) | the full method: abnormal-return event study, the two nulls, the fade, costs |
+| [`docs/results_wsb.md`](docs/results_wsb.md) | **the real run** — every headline table, fingerprinted and as-of'd |
+| [`_data/wsb_mentions.csv`](_data/) | the real feed: 1,705 WSB viral-surge events (CC-BY, see [`_data/PROVENANCE.md`](_data/PROVENANCE.md)) |
 | [`docs/references.md`](docs/) | sources + literature map (attention returns, the social-trading repos) |
 | [`social_oracle/`](social_oracle/) | the study package: `data` · `mentions` · `eventstudy` · `benchmark` · `backtest` · `robustness` |
-| [`examples/`](examples/) | [`run_synthetic_demo.py`](examples/run_synthetic_demo.py) (offline) · [`verify_real.py`](examples/verify_real.py) (bring your own feed) |
+| [`examples/`](examples/) | [`build_wsb_feed.py`](examples/build_wsb_feed.py) (build the feed) · [`verify_wsb.py`](examples/verify_wsb.py) (the real run) · [`run_synthetic_demo.py`](examples/run_synthetic_demo.py) (offline) · [`verify_real.py`](examples/verify_real.py) (any feed) |
 
 Every number is produced by [`social_oracle/`](social_oracle/), in the house style of
 the shared [`../../quantlab/`](../../quantlab/) engine; `pytest` covers it in CI.
