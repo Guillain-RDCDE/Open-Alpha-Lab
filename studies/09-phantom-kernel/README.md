@@ -19,7 +19,7 @@ fingerprint `1cb0c6bc010a`; every number in [`docs/results.md`](docs/results.md)
 
 | Axis | Stamp | Why (one line) |
 |---|---|---|
-| **Signal** — is the arrival kernel `λ(δ) = A·e^(−kδ)` real? | `NONE` | Under heavy-tailed order reach (the empirically documented case) the kernel is a **power law**, not an exponential — the fit flips from R² **1.00 → 0.68** while a power law scores **0.9996** (AIC prefers it by **+1.26M**); the `k` you'd estimate is **0.20**, a number with no stable meaning. A `k` that drifts 4× intraday (the article's own admission) mis-prices the "optimal" spread by up to **±163%**. |
+| **Signal** — is the arrival kernel `λ(δ) = A·e^(−kδ)` real? | `NONE` | Under heavy-tailed order reach (the empirically documented case) the kernel is a **power law**, not an exponential — the fit flips from R² **1.00 → 0.68** while a power law scores **0.9996** (AIC prefers it by **+1.26M**); the `k` you'd estimate is **0.20**, a number with no stable meaning. A `k` that drifts 4× intraday (the article's own admission) mis-prices the "optimal" spread by up to **±163%**. **Confirmed on real Binance order books** (Clauset/Vuong tail test): order size is power-law on **4/4** markets, price-distance on **3/4**. |
 | **Tradability** — does *skipping* AS "leave money on the table"? | `FRAGILE` | A **brainless inventory clamp** beats full AS on risk-adjusted P&L whenever inventory isn't dangerous (World A Sharpe **3.27 vs 1.59**). AS's genuine benefit shows only in the **hostile** world (Sharpe **2.12**, best of four) — and the article's recommended "rolling-vol" production fix **collapses** there (Sharpe **0.17**). |
 | **The famous "optimal spread"** — is it the source of the edge? | `MISATTRIBUTED` | The value lives in the **inventory skew**, which is **algebraically free of `k`**. The phantom kernel corrupts only the *spread width* — the half of the model the article crowns, and the half that doesn't carry the edge. |
 
@@ -38,10 +38,12 @@ fingerprint `1cb0c6bc010a`; every number in [`docs/results.md`](docs/results.md)
 > test is to build two worlds — one that obeys its assumptions (where the machinery must
 > validate) and one wired with the frictions it omits — and run the identical code in both.
 > The single empirical question the simulator can't answer for itself — *is real order reach
-> heavy-tailed?* — is answered decisively by the microstructure literature (power-law trade
-> size and order flow: Gabaix et al. 2003, Bouchaud et al. 2009), and left as a runnable
-> harness, [`examples/verify_real.py`](examples/verify_real.py), for anyone to confirm on a
-> market of their choice (see beat 7).
+> heavy-tailed?* — is settled by the microstructure literature (power-law trade size and order
+> flow: Gabaix et al. 2003, Bouchaud et al. 2009) **and confirmed here directly** on four real
+> Binance USD-M futures order books (rigorous Clauset/Vuong tail test): order flow is power-law,
+> not exponential — see [`docs/results_real.md`](docs/results_real.md), reproducible from
+> [`examples/confirm_heavy_tail.py`](examples/confirm_heavy_tail.py) (and a generic
+> bring-your-own-data harness, [`examples/verify_real.py`](examples/verify_real.py)).
 
 ---
 
@@ -168,7 +170,21 @@ shown across five seeds).
   estimate, the spread blows out, and the book stops trading. The fix needs the article's
   *other* fix (a circuit breaker) to survive — the "adaptations" are not free.
 
-> 🔬 **For the quants** — the goodness-of-fit is Poisson-weighted so dense buckets dominate;
+- **Confirmed on real order books — not just in simulation.** On four Binance USD-M futures
+  markets (TRX/XRP/ADA/LTC, 2024-01-15), the rigorous **Clauset-Shalizi-Newman + Vuong** tail
+  test calls **order size power-law on all four** (Vuong *V* = 2.8–5.5, *p* < 0.01) and the
+  price-distance `|price−mid|` power-law on **three** (the fourth merely *inconclusive*, never a
+  clean exponential). Real order flow is heavy-tailed on the exact venue the article targets —
+  the exponential AS kernel is rejected on live books. Full table in
+  [`docs/results_real.md`](docs/results_real.md).
+
+> 🔬 **For the quants** — on real data we drop the binned-count fit (it is grid-sensitive and
+> not a distribution test) for the standard **Clauset/Vuong** tail test: MLE power-law and
+> exponential above a KS-chosen `x_min`, then a normalised likelihood ratio (`V > 0` ⟹ power
+> law, winner only at `p < 0.05`). Order-size exponents land at α ≈ 3.0–3.4 across markets,
+> squarely heavy-tailed; price-distance is noisier (α ≈ 2.4–4.2) because concave (square-root)
+> impact and book depth attenuate the tail in price terms — the heavy tail is cleanest at its
+> source. The simulator's own kernel fit (below) is Poisson-weighted so dense buckets dominate;
 > the World-B verdict holds on weighted R² (0.9996 vs 0.6826) *and* Poisson AIC (gap
 > +1.26M, power law preferred). The tournament's exogenous order stream is shared across all
 > four quoters (the mid moves on information regardless of who filled), so the P&L differences
@@ -207,7 +223,8 @@ its length on the spread formula and the estimation of `k`, the decorative half.
   the documented empirical reality. A power law fits essentially perfectly where the
   exponential fails (R² 0.9996 vs 0.68), and the `k` you'd report is a line forced through a
   curve. With `k` drifting 4× intraday, a static estimate misprices the "optimal" spread by
-  up to 163%.
+  up to 163%. **Confirmed on real Binance order books** (Clauset/Vuong): order size is
+  power-law on 4/4 markets, price-distance on 3/4 — the heavy tail is real, not a sim artefact.
 - **Tradability · `FRAGILE`.** The model is not worthless: in a hostile market its tight
   inventory control genuinely wins (Sharpe 2.12, best of four). But "you're leaving money on
   the table without it" is overstated — a four-line inventory clamp beats it whenever
@@ -250,12 +267,12 @@ of inventory clamp.
 
 ## 7 · Going Further
 
-- **The empirical leg — confirm the heavy tail on a real book.** The one thing the simulator
-  asserts (rather than proves) is that real order reach is power-law. The literature is
-  emphatic, but [`examples/verify_real.py`](examples/verify_real.py) is a runnable harness:
-  point it at Binance spot aggTrades + bookTicker (free, no key), and it runs the same
-  exponential-vs-power-law goodness-of-fit on real fills and writes `docs/results_real.md`.
-  **This is the headline PR.**
+- **The empirical leg — done, and extendable.** The one thing the simulator asserts is that
+  real order reach is power-law; [`examples/confirm_heavy_tail.py`](examples/confirm_heavy_tail.py)
+  now **confirms it** on four real Binance futures books (Clauset/Vuong). It's one trading day
+  per market — the obvious next PR is a **multi-day, multi-venue sweep** (spot vs futures, more
+  symbols, several dates) to tighten the tail exponents and check stability, plus a fit *in
+  ticks* to remove the residual price-discreteness noise on the price-distance leg.
 - **A jump-robust adaptive vol.** Re-run the World-B tournament with a bipower/truncated
   realised-vol estimator in `AdaptiveASQuoter` — does the rolling-vol fix stop collapsing?
 - **The GLT closed form with hard inventory bounds.** Implement Guéant–Lehalle–Fernandez-Tapia
@@ -277,8 +294,10 @@ of inventory clamp.
 | [`phantom_kernel/estimator.py`](phantom_kernel/estimator.py) | fit the kernel (`A`, `k`); exponential-vs-power-law goodness-of-fit; the static-`k` spread error |
 | [`phantom_kernel/strategies.py`](phantom_kernel/strategies.py) | the two AS equations + four quoters (AS, adaptive-AS, symmetric, inventory clamp) + the market loop |
 | [`phantom_kernel/experiments.py`](phantom_kernel/experiments.py) | the teardown: estimator recovery, kernel falsification, the tournament |
-| [`examples/run_experiments.py`](examples/run_experiments.py) | the headline run → [`docs/results.md`](docs/results.md) (fingerprinted) |
-| [`examples/verify_real.py`](examples/verify_real.py) | the empirical leg — exp-vs-power-law on **real** trades you supply (beat 7) |
+| [`examples/run_experiments.py`](examples/run_experiments.py) | the simulator headline run → [`docs/results.md`](docs/results.md) (fingerprinted) |
+| [`examples/fetch_binance.py`](examples/fetch_binance.py) | download + join real Binance futures trades to the live book mid |
+| [`examples/confirm_heavy_tail.py`](examples/confirm_heavy_tail.py) | the **real-data confirmation** (Clauset/Vuong over 4 markets) → [`docs/results_real.md`](docs/results_real.md) |
+| [`examples/verify_real.py`](examples/verify_real.py) | generic bring-your-own-data harness — the tail test on any `trades.parquet` |
 | [`notebooks/`](notebooks/) | `01_for_the_curious` (the story) and `02_for_the_quants` (the teardown), same seven beats |
 | [`docs/references.md`](docs/references.md) | the model, its extensions, and the heavy-tail literature |
 

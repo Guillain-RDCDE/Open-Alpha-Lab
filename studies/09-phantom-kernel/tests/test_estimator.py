@@ -36,6 +36,15 @@ def test_gof_picks_powerlaw_in_world_b(deltas):
     assert g["r2_pow"] > g["r2_exp"]
 
 
+def test_tail_test_distinguishes_powerlaw_from_exponential():
+    """The Clauset/Vuong tail test (used on real data) must call clean samples correctly."""
+    rng = np.random.default_rng(0)
+    pareto = 1.0 + rng.pareto(2.0, 60_000)        # genuine power-law tail
+    expo = rng.exponential(1.0, 60_000)           # genuine exponential tail
+    assert estimator.tail_test(pareto)["winner"] == "power-law"
+    assert estimator.tail_test(expo)["winner"] == "exponential"
+
+
 def test_static_k_misprices_the_spread():
     deltas = np.linspace(0.25, 40.0, 80)
     out = estimator.static_k_spread_error(np.array([0.3, 0.6, 0.9, 1.2]), deltas, n_orders=120_000, seed=0)

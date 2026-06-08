@@ -23,6 +23,74 @@ import numpy as np
 
 
 # --------------------------------------------------------------------------- #
+# Rigorous tail discrimination: power-law vs exponential (Clauset/Vuong)
+# --------------------------------------------------------------------------- #
+def _normal_sf(z: float) -> float:
+    """Upper-tail of the standard normal (no scipy)."""
+    return 0.5 * math.erfc(z / math.sqrt(2.0))
+
+
+def tail_test(x: np.ndarray, xmin_quantiles=None) -> dict:
+    """Is the upper tail of ``x`` power-law or exponential? (Clauset-Shalizi-Newman + Vuong.)
+
+    Binned log-count regression is grid-sensitive and not a reliable distribution test; this is
+    the standard alternative. It (1) picks the tail cutoff ``xmin`` by minimising the KS
+    distance to a fitted continuous power law, (2) fits both a power law and a (shifted)
+    exponential to the tail by MLE, and (3) runs Vuong's normalised likelihood-ratio test.
+
+    Returns ``alpha`` (power-law exponent), ``lam`` (exponential rate), ``xmin``, ``n_tail``,
+    the Vuong statistic ``V`` (``> 0`` favours the power law), its two-sided ``p``, and a
+    ``winner`` that is only declared when ``p < 0.05`` (else ``"inconclusive"``).
+    """
+    x = np.asarray(x, float)
+    x = x[np.isfinite(x) & (x > 0)]
+    if xmin_quantiles is None:
+        xmin_quantiles = np.linspace(0.50, 0.98, 40)
+
+    best = None
+    for q in xmin_quantiles:
+        xmin = float(np.quantile(x, q))
+        tail = np.sort(x[x >= xmin])
+        n = tail.size
+        if n < 200 or xmin <= 0:
+            continue
+        alpha = 1.0 + n / float(np.sum(np.log(tail / xmin)))
+        # KS distance to the fitted continuous power law S(x) = (x/xmin)^-(alpha-1).
+        cdf_emp = np.arange(1, n + 1) / n
+        cdf_fit = 1.0 - (tail / xmin) ** (-(alpha - 1.0))
+        ks = float(np.max(np.abs(cdf_emp - cdf_fit)))
+        if best is None or ks < best["ks"]:
+            best = {"xmin": xmin, "n": n, "alpha": alpha, "ks": ks, "tail": tail}
+
+    if best is None:
+        return {"winner": "inconclusive", "n_tail": 0}
+
+    tail, xmin, n, alpha = best["tail"], best["xmin"], best["n"], best["alpha"]
+    lam = 1.0 / (tail.mean() - xmin) if tail.mean() > xmin else float("inf")
+
+    # Per-point log-likelihoods on the same tail, then Vuong's normalised LR test.
+    ll_pl = math.log(alpha - 1.0) - math.log(xmin) - alpha * np.log(tail / xmin)
+    ll_exp = math.log(lam) - lam * (tail - xmin)
+    d = ll_pl - ll_exp
+    lr = float(d.sum())
+    sd = float(d.std(ddof=1))
+    V = lr / (math.sqrt(n) * sd) if sd > 0 else 0.0
+    p = 2.0 * _normal_sf(abs(V))
+    winner = ("power-law" if V > 0 else "exponential") if p < 0.05 else "inconclusive"
+    return {
+        "alpha": round(alpha, 3),
+        "lam": lam,
+        "xmin": xmin,
+        "n_tail": n,
+        "ks": round(best["ks"], 4),
+        "LR": round(lr, 1),
+        "V": round(V, 2),
+        "p": p,
+        "winner": winner,
+    }
+
+
+# --------------------------------------------------------------------------- #
 # Weighted linear regression (the shared primitive)
 # --------------------------------------------------------------------------- #
 def _wls(x: np.ndarray, y: np.ndarray, w: np.ndarray) -> tuple[float, float, float]:

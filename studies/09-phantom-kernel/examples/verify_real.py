@@ -1,26 +1,19 @@
-"""Empirical leg (runnable harness) — does *real* order flow have an exponential kernel?
+"""Empirical leg — generic harness: does *real* order flow have an exponential kernel?
 
-This is the open thread of Study 09 (beat 7). The verdict in the README is earned on the
-simulator + the heavy-tail literature; this script lets anyone confront the load-bearing
-assumption with real market data, and writes ``docs/results_real.md`` with the same
-exponential-vs-power-law goodness-of-fit the simulator uses.
+The committed real-data confirmation lives in ``examples/confirm_heavy_tail.py`` (four Binance
+markets → ``docs/results_real.md``). This script is the **bring-your-own-data** version: point it
+at any parquet of executed trades and it runs the same rigorous Clauset/Vuong tail test
+(power-law vs exponential) on the price-distance ``|price - mid|`` and, if present, on order
+size — then writes ``docs/results_real.md``.
 
-It is **cache-only and degrades gracefully**: with no data it prints exactly how to get some
-and exits 0 (it never fabricates a number). Point it at a parquet of executed trades with a
-contemporaneous mid:
+    _cache/trades.parquet  with columns:  price (float), [qty (float),] mid (float)
 
-    _cache/trades.parquet  with columns:  price (float), qty (float), mid (float)
+where ``mid`` is the order-book mid at the moment of each trade. It is **cache-only and degrades
+gracefully**: with no data it prints how to build some (via ``fetch_binance.py``) and exits 0 —
+it never fabricates a number.
 
-where ``mid`` is the order-book mid at the moment of each trade. The empirical arrival kernel
-is then ``lambda(delta) = #{trades with |price - mid| >= delta}`` over a distance grid — the
-real-data analogue of the simulator's fill counts.
-
-How to get the data (Binance spot, free, no key):
-  * Trades + book ticker: https://data.binance.vision/ (aggTrades and bookTicker daily zips),
-    e.g. BTCUSDT. Join each trade to the prevailing bookTicker mid = (bid+ask)/2, write the
-    three columns above to _cache/trades.parquet, then re-run this script.
-
-    python examples/verify_real.py
+    python examples/fetch_binance.py        # builds _cache/trades.parquet from real data
+    python examples/verify_real.py          # then fits the tail on it
 """
 
 import os
@@ -33,7 +26,7 @@ _STUDY = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, _STUDY)
 sys.path.insert(0, os.path.abspath(os.path.join(_STUDY, "..", "..")))
 
-from phantom_kernel.estimator import goodness_of_fit
+from phantom_kernel.estimator import tail_test
 from quantlab.repro import fingerprint
 
 CACHE = os.path.join(_STUDY, "_cache", "trades.parquet")
@@ -42,14 +35,11 @@ OUT = os.path.join(_STUDY, "docs", "results_real.md")
 
 def _fetch_instructions():
     print("No cached trades found at", CACHE)
-    print("This is the empirical leg and needs real order flow. To run it:")
-    print("  1. Download Binance spot aggTrades + bookTicker for a symbol from")
-    print("     https://data.binance.vision/ (free, no API key).")
-    print("  2. Join each trade to the prevailing mid = (bid+ask)/2.")
-    print("  3. Write columns [price, qty, mid] to", CACHE)
-    print("  4. Re-run: python examples/verify_real.py")
-    print("\nThe README verdict stands on the simulator + the heavy-tail literature; this")
-    print("script is the open invitation to confirm it on a market of your choice.")
+    print("This generic harness fits the tail on any trades.parquet with [price, qty, mid].")
+    print("To build one from real Binance futures (free, no key) just run:")
+    print("    python examples/fetch_binance.py [SYMBOL] [YYYY-MM-DD]")
+    print("then re-run this script. For the committed multi-market confirmation, run:")
+    print("    python examples/confirm_heavy_tail.py   ->  docs/results_real.md")
 
 
 def main():
@@ -67,39 +57,37 @@ def main():
     if dist.size < 1000:
         raise SystemExit("need >= 1000 trades to fit a kernel")
 
-    # Distance grid out to the 99.9th percentile so the tail (the discriminating region) shows.
-    hi = float(np.quantile(dist, 0.999))
-    deltas = np.linspace(hi / 80.0, hi, 80)
-    dist_sorted = np.sort(dist)
-    counts = (dist.size - np.searchsorted(dist_sorted, deltas, side="left")).astype(float)
-
-    g = goodness_of_fit(deltas, counts)
-    fp = fingerprint(pd.DataFrame({"d": deltas, "c": counts},
-                                  index=pd.bdate_range("2000-01-03", periods=len(deltas))), round_dp=4)
+    # Rigorous power-law-vs-exponential tail test (Clauset/Vuong), not binned regression.
+    gd = tail_test(dist)
+    gs = tail_test(trades["qty"].to_numpy()) if "qty" in trades.columns else None
+    fp = fingerprint(trades.reset_index(drop=True).set_axis(
+        pd.RangeIndex(len(trades)).map(lambda i: pd.Timestamp("2000-01-01") + pd.Timedelta(seconds=i))
+    ), cols=[c for c in ("price", "qty", "mid") if c in trades.columns], round_dp=8)
 
     print(f"[real order flow] {dist.size:,} trades   fingerprint={fp}")
-    print(f"  exponential fit: R^2={g['r2_exp']:.4f}  k={g['k_exp']:.4f}")
-    print(f"  power-law  fit : R^2={g['r2_pow']:.4f}  alpha={g['alpha_pow']:.4f}")
-    print(f"  AIC gap (exp - pow) = {g['aic_gap']:,.0f}  ->  winner: {g['winner']}")
+    print(f"  |price-mid| tail: alpha={gd['alpha']}  V={gd['V']}  p={gd['p']:.1e}  -> {gd['winner']}")
+    if gs:
+        print(f"  order-size  tail: alpha={gs['alpha']}  V={gs['V']}  p={gs['p']:.1e}  -> {gs['winner']}")
 
-    verdict = ("the exponential AS kernel is REJECTED on this market (a power law fits better)"
-               if g["winner"] == "power-law"
-               else "the exponential AS kernel is NOT rejected on this market")
+    def verdict(g):
+        return {"power-law": "REJECTS the exponential AS kernel (heavy-tailed)",
+                "exponential": "is consistent with the exponential AS kernel",
+                "inconclusive": "is inconclusive (neither tail wins)"}[g["winner"]]
+
+    size_line = (f"| order size | alpha = {gs['alpha']} | V = {gs['V']} | {gs['p']:.1e} | **{gs['winner']}** |\n"
+                 if gs else "")
     with open(OUT, "w", encoding="utf-8") as fh:
         fh.write(f"""# Real-data leg — Study 09 (Phantom-Kernel)
 
 *Generated by [`examples/verify_real.py`](../examples/verify_real.py) on {dist.size:,} real
-trades. Empirical kernel: `lambda(delta) = #{{trades with |price - mid| >= delta}}`.
-Fingerprint **`{fp}`**.*
+trades. Test: Clauset-Shalizi-Newman power-law fit + Vuong likelihood ratio (`V > 0` favours a
+power-law tail; winner declared at `p < 0.05`). Fingerprint **`{fp}`**.*
 
-| fit | R^2 | parameter |
-|---|---|---|
-| exponential `A e^(-k d)` (AS) | {g['r2_exp']:.4f} | k = {g['k_exp']:.4f} |
-| power law `A' d^(-alpha)` | {g['r2_pow']:.4f} | alpha = {g['alpha_pow']:.4f} |
-
-AIC gap (exp - pow) = **{g['aic_gap']:,.0f}** -> winner: **{g['winner']}**.
-
-**Read:** {verdict}.
+| quantity | power-law exponent | Vuong V | p | tail |
+|---|---|---|---|---|
+| \\|price - mid\\| | alpha = {gd['alpha']} | V = {gd['V']} | {gd['p']:.1e} | **{gd['winner']}** |
+{size_line}
+**Read:** the price-distance tail {verdict(gd)}{(' ; order size ' + verdict(gs)) if gs else ''}.
 """)
     print(f"wrote {OUT}")
 
