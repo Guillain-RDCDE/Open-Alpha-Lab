@@ -9,10 +9,10 @@
 > protocol*, then publish the verdict, **edge or mirage**. Most are mirages. The
 > honest write-up of *why* is the point.
 >
-> Built by someone who ran the real thing (a fully systematic global-macro fund,
-> sub-\$100M → \$9B+/month) — so every idea is judged on **both** questions most
-> repos skip: *is the signal real?* **and** *does it survive real execution and
-> scale?*
+> Built by someone who ran the real thing — a fully systematic global-macro book
+> scaled from sub-\$100M to **\$9B+ in monthly traded notional** — so every idea is
+> judged on **both** questions most repos skip: *is the signal real?* **and** *does
+> it survive real execution and scale?*
 >
 > **Not investment advice.** Research & education. See [LICENSE](LICENSE).
 
@@ -55,6 +55,7 @@ two-readers-one-page convention, the rubric — is written up in
 | **[01](studies/01-overnight-anomaly/)** | **Overnight Anomaly** | Do stocks really make their money overnight — and is it manipulation? | `REAL` (HAC *t*≈5) | `MIRAGE` (mostly beta, dies after costs, capacity ~\$10M, decaying) |
 | **[02](studies/02-falling-knife/)** | **Falling-Knife** | Does buying the Nasdaq-100 / S&P 500 after a −3% drop beat buying a random day? | `NONE` at −3% · `WEAK` in deep panic | `MIRAGE` (tiny crash-clustered capacity, fails out-of-sample) |
 | **[03](studies/03-fear-gauge/)** | **Fear-Gauge** | Does buying the VIX spike / "VIX ≥ 30, double down at 50" beat buying a random day? | `REAL` for the level (VIX≥30) · `NONE` for the spike | `MIRAGE` (barely beats a −3% day, underperforms buy-and-hold, martingale draws down −33%) |
+| **[04](studies/04-social-oracle/)** | **Social-Oracle** | Does following a viral stock guru's cashtag mentions actually pay? | `WEAK` ⏳ (attention bump, but rides a pre-tweet run-up) | `MIRAGE` ⏳ (you enter after the pop, micro-cap spreads, fades, tiny capacity) |
 
 > **Study 01 in one line:** the overnight effect is *real and broad* (confirmed
 > across ~441 S&P 500 stocks), but its magnitude is inflated by a calendar-time
@@ -82,6 +83,18 @@ two-readers-one-page convention, the rubric — is written up in
 > whose −33% worst drawdown the no-2008 window hides. Method, two notebooks and
 > reproducible code: **[studies/03-fear-gauge/](studies/03-fear-gauge/)**.
 
+> **Study 04 in one line:** the desk's first study whose trigger lives in the
+> **information flow**, not the price tape. A viral guru's cashtag mention plausibly
+> moves a name for a day or two — but the move is mostly a **run-up that already
+> happened** before the post, it **fades** over the following weeks, it barely beats
+> the momentum the name already had, and a follower (late by construction, trading
+> \$1–3 micro-caps with 50–200 bps spreads and a few-thousand-dollar capacity) can't
+> keep any of it. This study ships a **complete, tested method** and an offline
+> synthetic that proves the machinery detects the pump-and-fade it hunts; the live
+> stamps (`⏳`) are one `verify_real.py mentions.csv` away — a mention feed is
+> third-party and licence-bound, so none is bundled. Method, two notebooks and
+> reproducible code: **[studies/04-social-oracle/](studies/04-social-oracle/)**.
+
 Ideas in the queue: momentum vs the overnight/intraday split, the weekend effect,
 post-earnings drift, pairs/cointegration decay. Suggestions welcome via issues.
 
@@ -103,6 +116,7 @@ A small, tested, reusable toolkit that powers every study:
 | [`quantlab/simulate.py`](quantlab/simulate.py) | Adversarial steelman of a strategy/manipulator P&L vs capital. |
 | [`quantlab/bayes.py`](quantlab/bayes.py) | Bayesian hypothesis posteriors + White (2000) Reality Check. |
 | [`quantlab/plots.py`](quantlab/plots.py) | Decomposition / grid plots. |
+| [`quantlab/repro.py`](quantlab/repro.py) | Reproducibility stamp: pin an as-of date + content fingerprint so headline numbers reproduce (or flag drift). |
 | [`quantlab/brokers/`](quantlab/brokers/) | Swappable `BrokerBase` + MT5 template (`dry_run=True`). |
 
 ```text
@@ -112,7 +126,8 @@ Open-Alpha-Lab/
 ├── studies/
 │   ├── 01-overnight-anomaly/     # study #1: notebooks, paper, RESPONSE, docs, data
 │   ├── 02-falling-knife/         # study #2: buy-the-dip — package + notebooks + examples + tests
-│   └── 03-fear-gauge/            # study #3: buy-the-VIX-spike — twin of #2 in vol space
+│   ├── 03-fear-gauge/            # study #3: buy-the-VIX-spike — twin of #2 in vol space
+│   └── 04-social-oracle/         # study #4: follow-the-guru — event study in attention space
 └── pyproject.toml · CITATION.cff · LICENSE
 ```
 
