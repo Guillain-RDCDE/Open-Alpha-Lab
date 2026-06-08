@@ -59,6 +59,9 @@ two-readers-one-page convention, the rubric — is written up in
 | **[05](studies/05-twin-spread/)** | **Twin-Spread** | Does textbook pairs trading (GGR 1999) still pay after the world copied it? | `NONE` (no convergence edge; −0.48%/mo gross in the modern era, Sharpe CI [−0.84, −0.03]) | `MIRAGE` (negative before costs, −85% drawdown, β≈0; **Decay** `CONFIRMED`, and the obvious fixes don't rescue it) |
 | **[06](studies/06-clockwork-vol/)** | **Clockwork-Vol** | Does the VIX run on a fixed-period (40-/80-day) cycle you can time, or are its "cycles" shapes in red noise? | `NONE` (claimed periods sit *inside* the AR(1) red-noise envelope: p ≈ 0.998/0.9995/0.99; **Fixed clock** `NOT SUPPORTED`, period wanders 83–333 sessions) | `MIRAGE` (walk-forward forecast is a coin flip; cycle trade Sharpe 0.33 < buy-and-hold 0.56 and < its random-phase null, p≈0.74 — diluted beta) |
 | **[07](studies/07-coiled-spring/)** | **Coiled-Spring** | Does a stock resting on its rising 20-EMA spring into the trading-book's "explosive" +30-50% breakout? | `WEAK` (breakout beats a random same-stock entry by only +1.2%/10d, HAC *t*≈2.0; **Explosive as advertised?** `BUSTED` — only 1.7% of trades do +30%) | `FRAGILE` (median trade −0.25%, win 41%, per-trade Sharpe 0.05; bull-regime beta; break-even ≈75 bps, which the small-caps it targets blow through) |
+| **[08](studies/08-true-strength/)** | **True-Strength** | Is the "True" Strength Index a *truer* momentum read than the MACD/RSI, or the same trade repainted? | `NONE` (TSI 84% spanned by MACD+RSI, pooled R²=0.84; same position as MACD 99.4% of days; equity-curve ρ=0.994; **"Truer"?** `BUSTED`) | `MIRAGE` (the 0.61 crossover Sharpe is long-equity beta — long/short timing Sharpe collapses to 0.05; nothing the cheaper MACD doesn't give, decays 0.77→0.15 over 0–40 bps) |
+| **[09](studies/09-phantom-kernel/)** | **Phantom-Kernel** | Does market-making's "optimal spread" (Avellaneda-Stoikov) rest on an order-arrival law real markets obey? | `NONE` (under heavy-tailed reach the kernel is a **power law**, not the assumed exponential: R²=0.9996 vs 0.68, AIC +1.26M; a static *k* misprices the spread ±163%; **"Optimal spread" the source of edge?** `MISATTRIBUTED` — the value is in the *k*-free inventory skew) | `FRAGILE` (a brainless inventory clamp beats full AS when inventory is cheap, Sharpe 3.27 vs 1.59; AS wins only in jumpy/informed markets, 2.12 — and the touted rolling-vol "fix" collapses to 0.17 under jumps) |
+| **[10](studies/10-markov-mint/)** | **Markov-Mint** | Can a Markov-chain → Monte-Carlo → calibration → Kelly pipeline (a viral Polymarket thread) "win every single trade"? | `NONE` (on a *provably-fair* martingale market the directional edge is −0.68 pp, HAC *t* = −0.77; oracle edge exactly 0; the raw MC "edge" is noise whose std collapses 19.8→2.1 pp as history grows; **"Win every trade"?** `BUSTED` — win rate 51.6%) | `MIRAGE` (Kelly-sized vs truth the bankroll → 0.0003× @2¢, 0.0017× @0 — it loses *before* costs because the calibration table's 0.958 ceiling forces a BUY NO on every favorite; the one real effect, the longshot bias, nets −13.6%/trade even for an oracle) |
 
 > **Study 01 in one line:** the overnight effect is *real and broad* (confirmed
 > across ~441 S&P 500 stocks), but its magnitude is inflated by a calendar-time
@@ -152,6 +155,40 @@ two-readers-one-page convention, the rubric — is written up in
 > **Signal `WEAK` · Tradability `FRAGILE` · Explosive as advertised? `BUSTED`.** Method,
 > reproducible run and two notebooks: **[studies/07-coiled-spring/](studies/07-coiled-spring/)**.
 
+> **Study 08 in one line:** an **indicator-redundancy** study — the "**True** Strength Index"
+> claims, by its very name, to be a cleaner, *truer* read on momentum than the MACD or the RSI
+> (QuantifiedStrategies sells a 1.7-profit-factor gold backtest on it, rules paywalled). We
+> can't test their hidden rule, so we test the claim the name makes: is the TSI a *distinct*
+> signal? Computed on textbook settings over the cached 174-name universe, 1962–2026, with each
+> oscillator reduced to a zero-centred, z-scored momentum level for a like-with-like compare.
+> It isn't distinct: the TSI is **84% spanned** by the MACD line and RSI (pooled R²=0.835), takes
+> the **same long/flat position as the MACD 99.4%** of days, and its long/short **equity curve
+> correlates 0.994** with it — three indicators, one trade. Its standalone 0.61 crossover Sharpe
+> is **long-equity beta**: symmetrise the position to cancel the unconditional drift and the
+> oscillator's own *timing* is Sharpe **0.05** (MACD 0.05, RSI −0.29), and the thin remainder
+> decays **0.77→0.15** across a 0–40 bps cost sweep. A grid Reality Check (White 2000) finds the
+> best-tuned TSI is a *real but generic* momentum signal (p≈0) — which is the point: it's
+> redundant, not fake. **Signal `NONE` · Tradability `MIRAGE` · "Truer" than MACD/RSI? `BUSTED`.**
+> Method, reproducible run and two notebooks: **[studies/08-true-strength/](studies/08-true-strength/)**.
+
+> **Study 09 in one line:** a **model-teardown** study — the Avellaneda-Stoikov market-making
+> model (the two equations a generation of crypto/HFT bots quote from) is sold as the optimal
+> spread you're "leaving money on the table" without. Its whole closed form rests on one
+> assumption: order-arrival intensity fades *exponentially* with quote distance,
+> `λ(δ)=A·e^(−kδ)`, with a stable `k`. Because we can't market-make on a CFD broker and AS is a
+> *theorem about a model world*, the reproducible core is a **seed-fixed order-flow simulator**:
+> a world A that obeys the assumptions (where the estimator must — and does — recover `k`, R²
+> 0.99998) and a world B with the documented frictions (heavy-tailed order reach, jumps,
+> informed flow). On realistic flow the kernel is a **power law, not an exponential** (R²=0.9996
+> vs 0.68, AIC prefers it by +1.26M), and a `k` that drifts 4× intraday misprices the "optimal"
+> spread by up to **±163%** — the celebrated equation is calibrated to a phantom. Yet AS still
+> *works* in the hostile world (best-of-four Sharpe 2.12) — because the part that does the work,
+> the inventory **skew**, contains **no `k`**; the phantom corrupts only the spread *width*.
+> Meanwhile a four-line inventory clamp beats full AS whenever inventory is cheap (Sharpe 3.27
+> vs 1.59), and the touted "rolling-vol" production fix collapses under jumps (0.17). **Signal
+> `NONE` · Tradability `FRAGILE` · "Optimal spread" the source of edge? `MISATTRIBUTED`.**
+> Method, reproducible run and two notebooks: **[studies/09-phantom-kernel/](studies/09-phantom-kernel/)**.
+
 Ideas in the queue: momentum vs the overnight/intraday split, the weekend effect,
 post-earnings drift, a cointegration-gated / stop-loss pairs variant (the beat-7 forks of
 Study 05), a wavelet / VIX-futures-term-structure follow-up to Study 06's cycle null, and a
@@ -190,7 +227,10 @@ Open-Alpha-Lab/
 │   ├── 04-social-oracle/         # study #4: follow-the-guru — event study in attention space
 │   ├── 05-twin-spread/           # study #5: pairs-trading decay — relative-value in the cross-section
 │   ├── 06-clockwork-vol/         # study #6: VIX fixed-period cycles vs an AR(1) red-noise null
-│   └── 07-coiled-spring/         # study #7: the "20 EMA pivot breakout" chart rule, tested honestly
+│   ├── 07-coiled-spring/         # study #7: the "20 EMA pivot breakout" chart rule, tested honestly
+│   ├── 08-true-strength/         # study #8: is the "True" Strength Index distinct from MACD/RSI, or a repaint?
+│   ├── 09-phantom-kernel/        # study #9: does Avellaneda-Stoikov's "optimal spread" rest on a real arrival law?
+│   └── 10-markov-mint/           # study #10: "Markov chain wins every trade" on Polymarket — tested on a martingale null
 └── pyproject.toml · CITATION.cff · LICENSE
 ```
 

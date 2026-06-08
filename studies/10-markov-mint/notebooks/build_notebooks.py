@@ -1,0 +1,312 @@
+"""Generate the two narrative notebooks for Study 10 (Markov-Mint) from source.
+
+Like every study on the desk, the notebooks are a *generated artefact*: edit the cell text
+here, rebuild the skeletons, then execute with nbconvert to embed figures/outputs.
+
+    python notebooks/build_notebooks.py
+    jupyter nbconvert --to notebook --execute --inplace \
+        notebooks/01_for_the_curious.ipynb notebooks/02_for_the_quants.ipynb
+
+Both notebooks run on a **small, fast** slice of the offline synthetic markets (a martingale
+null + a planted favorite-longshot wedge) so they execute with no network in seconds; the
+**headline numbers** (2,000 markets) live in [`docs/results.md`](../docs/results.md), produced
+by `examples/verify.py`. Both follow the SAME seven desk beats (see ../../../METHODOLOGY.md).
+"""
+
+from __future__ import annotations
+
+import os
+
+import nbformat as nbf
+from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+BOOT = """\
+import sys, os
+sys.path.insert(0, os.path.abspath(".."))           # study root (markov_mint/ lives there)
+sys.path.insert(0, os.path.abspath("../../.."))      # repo root, for quantlab
+%matplotlib inline
+import matplotlib.pyplot as plt
+plt.rcParams["figure.figsize"] = (9.5, 5.2)
+import numpy as np, pandas as pd
+pd.set_option("display.float_format", lambda v: f"{v:,.4f}")
+from markov_mint import data, robustness
+from markov_mint.markov import MarkovMintSystem
+
+# Small & fast: a martingale NULL (price = fair posterior, no edge exists) and a planted
+# favorite-longshot WEDGE (a real edge of known size). Headline numbers (2,000 markets) are
+# in ../docs/results.md via examples/verify.py.
+SYS = MarkovMintSystem(n_sims=1500)
+null = data.efficient_markets(n_markets=500, seed=0)
+wedge = data.biased_markets(n_markets=500, seed=1)
+print(f"{len(null)} fair markets, {len(wedge)} with a planted wedge")
+print(f"sanity: mean outcome {np.mean([m.outcome for m in null]):.3f} == mean price "
+      f"{np.mean([m.current_price for m in null]):.3f}  (a fair, calibrated market)")
+"""
+
+
+def md(text):
+    return new_markdown_cell(text)
+
+
+def code(text):
+    return new_code_cell(text)
+
+
+# ===========================================================================
+# 01 — FOR THE CURIOUS
+# ===========================================================================
+def build_curious():
+    cells = [
+        md(
+            "# Can a Markov chain really 'win every single trade'? 🎲\n"
+            "### A viral Polymarket quant thread — tested honestly, in plain English\n\n"
+            "A thread doing the rounds promises something irresistible: model a prediction-market "
+            "price as a **Markov chain**, simulate thousands of possible resolutions, calibrate, "
+            "size with Kelly, and **win every single trade**. It comes with real, runnable code.\n\n"
+            "Here's the catch the thread never checks: what does the machine print on a market "
+            "that is *already priced correctly* — where, by definition, there is no edge to find? "
+            "If it 'finds' one there, it's finding noise. So we build markets whose true answer we "
+            "know, and feed the thread's own code to them."
+        ),
+        code(BOOT),
+        md(
+            "## 1 · The Claim\n\n"
+            "The pipeline has five steps: (1) bucket the price history into 10 states and count "
+            "how it moves between them (the **transition matrix**); (2) **Monte-Carlo** thousands "
+            "of paths to expiry; (3) **calibrate** against a longshot table; (4) size with "
+            "**quarter-Kelly**; (5) execute as a **maker**. Let's look at one of our 'fair' "
+            "markets — a price that wanders honestly toward its outcome."
+        ),
+        code(
+            "m = null[3]\n"
+            "plt.plot(m.prices, lw=1.5)\n"
+            "plt.axhline(0.5, color='grey', ls='--', alpha=0.5)\n"
+            "plt.title(f'A fair market wandering toward its outcome (resolved {m.outcome})')\n"
+            "plt.xlabel('day'); plt.ylabel('YES price'); plt.ylim(0, 1); plt.show()\n"
+            "print('This price is the exact fair probability — there is nothing to arbitrage.')"
+        ),
+        md(
+            "## 2 · So What?\n\n"
+            "If past prices alone could front-run a resolution, it would be a money printer — and "
+            "a crack in one of the most-studied ideas in finance: that a correctly priced contract "
+            "moves *unpredictably* from its own history. Prediction markets make the test clean: "
+            "every contract resolves, so we can score every bet against a real yes/no answer."
+        ),
+        md(
+            "## 3 · How We'd Know\n\n"
+            "We announced the falsification before running it: on a **fair** market the machine "
+            "must capture **no edge** (it can't beat a price that's already right). If it bets and "
+            "wins only ~half the time, and a Kelly bankroll shrinks, the framework is trading "
+            "noise. We don't *assume* the market is fair — we build it as a genuine probability "
+            "and check it's calibrated (mean outcome == mean price, printed above)."
+        ),
+        code(
+            "df = robustness.analyze_markets(null, SYS, seed=0)\n"
+            "head = robustness.headline_test(df)\n"
+            "print(f\"machine edge per trade : {head['machine_edge_pp']:+.2f} pp  (t = {head['machine_t']:+.2f})\")\n"
+            "print(f\"best possible (oracle) : {head['oracle_edge_pp']:+.2f} pp  -> nothing to find on a fair market\")\n"
+            "print(f\"takes a position on    : {head['n_active']}/{head['n_total']} markets\")"
+        ),
+        md(
+            "## 4 · The Teardown\n\n"
+            "The 'edge' the chain reports is **noise**, and you can see it melt as you give the "
+            "model *more* history (a real signal would not). Below: the spread of the raw "
+            "Monte-Carlo edge shrinks toward zero as the price history grows from 20 to 250 days."
+        ),
+        code(
+            "hist = robustness.edge_vs_history(hist_lens=(20, 40, 60, 120, 250),\n"
+            "                                  n_markets=300, seed=0, system=SYS)\n"
+            "plt.plot(hist.index, hist['std_raw_edge_pp'], 'o-')\n"
+            "plt.title('The chain\\'s \"edge\" is noise: its spread collapses with more data')\n"
+            "plt.xlabel('days of price history'); plt.ylabel('std of raw edge (pp)'); plt.show()\n"
+            "hist.round(3)"
+        ),
+        md(
+            "And when you size those coin-flip bets with Kelly and score them against the **true** "
+            "outcomes, the bankroll doesn't grow — it's destroyed. The win rate is ~50%, not the "
+            "promised 100%."
+        ),
+        code(
+            "pnl = robustness.pnl_sim(df, spread=0.02, seed=0)\n"
+            "print(f\"win rate           : {pnl['win_rate']:.1%}   (the thread promised 100%)\")\n"
+            "print(f\"terminal bankroll  : {pnl['terminal_bankroll']:.4f}x  after a 2c spread\")\n"
+            "sweep = robustness.cost_sweep(df, spreads=(0.0, 0.01, 0.02, 0.04, 0.08), seed=0)\n"
+            "sweep[['mean_ret', 'win_rate']].round(3)"
+        ),
+        md(
+            "## 5 · The Verdict\n\n"
+            "On the full **2,000-market** run (see [`docs/results.md`](../docs/results.md)):\n\n"
+            "- The machine's directional edge is **−0.68 pp** (statistically zero) — the best any "
+            "method could do on a fair market is **0**. → **Signal: NONE**\n"
+            "- Kelly-sized, the bankroll falls to **0.0003×** (and **0.0017× even at zero cost**), "
+            "because the thread's calibration table caps at 0.958 and so **reflexively shorts every "
+            "favorite** — a guaranteed loser on fair odds. → **Tradability: MIRAGE**\n"
+            "- Win rate **51.6%**. → **'Win every trade': BUSTED**"
+        ),
+        md(
+            "## 6 · Could You Trade It?\n\n"
+            "Two layers, both fail. The method as written is *worse* than not trading. And if you "
+            "threw the chain away and traded the one real effect it gestures at — the "
+            "favorite-longshot bias — even a trader who **knew the true probabilities** would net "
+            "**−13.6% per trade** after a 2¢ spread. The genuine edge is a few cents; the bid/ask "
+            "eats it first."
+        ),
+        md(
+            "## 7 · Going Further\n\n"
+            "The deep-dive notebook (`02_for_the_quants`) carries the HAC inference, the "
+            "Markov-ablation, the calibration-ceiling bug, and the planted-edge recovery. The clean "
+            "next tests: a real Polymarket tape, and a *debugged* pipeline (to show it still reduces "
+            "to 'bet the longshot bias' and dies to the spread). **Fork it, break it, PR a better test.**"
+        ),
+    ]
+    return new_notebook(cells=cells, metadata=_meta())
+
+
+# ===========================================================================
+# 02 — FOR THE QUANTS
+# ===========================================================================
+def build_quants():
+    cells = [
+        md(
+            "# Markov-Mint — the teardown 🎲🔬\n"
+            "### A five-step Polymarket pipeline, ported verbatim and falsified on a martingale null\n\n"
+            "Same seven beats as `01_for_the_curious`, at depth: the HAC directional test, the "
+            "noise-vs-history scaling, the Markov ablation, the calibration-ceiling forced-NO bug, "
+            "and the planted-edge oracle bound. Runs on a small synthetic slice; the **2,000-market "
+            "headline** is in [`docs/results.md`](../docs/results.md) via `examples/verify.py`."
+        ),
+        code(BOOT),
+        md(
+            "## 1 · The Claim, as a hypothesis\n\n"
+            "H₁: ``E[sign(calibrate(MC) − price) · (outcome − price)] > 0`` with HAC *t* > 2. The "
+            "sharp null is an **efficient market**: price = ``P(YES | info)`` is a martingale "
+            "(Samuelson 1965), so no function of the past path covaries with ``outcome − price`` "
+            "and H₁ must fail. Our generator builds exactly that — a Bayesian posterior, a "
+            "martingale by the tower property — so any 'edge' is noise or artefact."
+        ),
+        md(
+            "## 2 · So What? — the stakes are the null\n\n"
+            "The whole question is whether a reported edge is information or estimator noise. The "
+            "decisive evidence is *scaling*: estimation error in a sparse 10×10 transition matrix "
+            "shrinks ∝ 1/√(transitions); genuine signal does not shrink as you add data."
+        ),
+        md(
+            "## 3 · How We'd Know — pre-registered falsification\n\n"
+            "Signal `NONE` if the directional HAC *t* < 2 on the null. Tradability `MIRAGE` if the "
+            "Kelly bankroll fails to grow net of a realistic spread (or loses pre-cost). 'Win every "
+            "trade' `BUSTED` if the win rate is a coin flip. First, the generator sanity check — a "
+            "martingale ends at its outcome, so the market is calibrated:"
+        ),
+        code(
+            "price = np.array([m.current_price for m in null]); outcome = np.array([m.outcome for m in null])\n"
+            "print(f'mean price {price.mean():.3f}  vs  mean outcome {outcome.mean():.3f}  '\n"
+            "      f'(|gap| = {abs(price.mean()-outcome.mean()):.3f})')\n"
+            "assert abs(price.mean() - outcome.mean()) < 0.05, 'the null must be a calibrated, fair market'"
+        ),
+        md(
+            "## 4 · The Teardown\n\n"
+            "**(a) No directional edge.** The realized edge ``sign(edge)·(outcome − price)``, "
+            "HAC-tested, is indistinguishable from zero — and the oracle (betting the true "
+            "probability) captures *exactly* zero, because no exploitable side exists on a fair market."
+        ),
+        code(
+            "df = robustness.analyze_markets(null, SYS, seed=0)\n"
+            "robustness.headline_test(df)"
+        ),
+        md(
+            "**(b) The chain's output is shrinking noise.** Mean ≈ 0 throughout; the std of the raw "
+            "Monte-Carlo edge collapses as history grows — the signature of estimation error."
+        ),
+        code(
+            "hist = robustness.edge_vs_history(hist_lens=(20, 40, 60, 120, 250),\n"
+            "                                  n_markets=300, seed=0, system=SYS)\n"
+            "fig, ax = plt.subplots()\n"
+            "ax.plot(hist.index, hist['std_raw_edge_pp'], 'o-', label='std (pp)')\n"
+            "ax.plot(hist.index, hist['mean_raw_edge_pp'], 's--', label='mean (pp)')\n"
+            "ax.axhline(0, color='grey', lw=0.8); ax.set_xlabel('history length'); ax.legend()\n"
+            "ax.set_title('raw Monte-Carlo edge vs history'); plt.show()\n"
+            "hist.round(3)"
+        ),
+        md(
+            "**(c) The Markov stage is a noise *generator*, not a signal — and not inert.** Delete "
+            "it (``raw_prob := price``) and the bet count collapses; the full pipeline's edge "
+            "correlates weakly with the price-only version, so most of what it acts on is "
+            "Monte-Carlo noise. The chain roughly **triples** the number of (coin-flip) bets."
+        ),
+        code(
+            "inert = robustness.inertness(null, SYS, seed=0)\n"
+            "print('active share — full :', round(inert['active_frac_full'], 3),\n"
+            "      ' | ablated (price only):', round(inert['active_frac_ablated'], 3))\n"
+            "print('edge corr full-vs-ablated:', round(inert['edge_corr_full_vs_ablated'], 3),\n"
+            "      f\"  (~{(1-inert['edge_corr_full_vs_ablated']**2)*100:.0f}% noise)\")"
+        ),
+        md(
+            "**(d) Why it loses *before* costs — the calibration ceiling.** The table caps at "
+            "0.958, so any richer contract is handed a probability below its price → a forced "
+            "**BUY NO**. On a fair market that shorts favorites; the top price bucket carries the "
+            "most trades and the worst return."
+        ),
+        code(
+            "print(robustness.calibration_ceiling_effect(df))\n"
+            "bucket = robustness.pnl_by_price_bucket(df, spread=0.0)\n"
+            "ax = bucket['mean_ret'].plot(kind='bar', color='firebrick', alpha=0.8)\n"
+            "ax.axhline(0, color='k', lw=0.8); ax.set_ylabel('gross return / trade')\n"
+            "ax.set_title('Where the machine bleeds: it shorts the favorites (90-100c)'); plt.show()\n"
+            "bucket.round(3)"
+        ),
+        md(
+            "## 5 · The Verdict\n\n"
+            "Headline (2,000 markets, results.md): **Signal NONE** (directional edge −0.68 pp, HAC "
+            "*t* = −0.77; oracle 0); **Tradability MIRAGE** (terminal bankroll 0.0003× @2¢, 0.0017× "
+            "@0; per-trade Sharpe −0.12, CI [−0.54, −0.03]); **'Win every trade' BUSTED** (win rate "
+            "51.6%). The raw-edge std falls 19.8 → 2.1 pp over history 20 → 250."
+        ),
+        md(
+            "## 6 · Could You Trade It? — the planted-edge bound\n\n"
+            "On a market with a **real** favorite-longshot wedge, an oracle that knows the true "
+            "probability bounds what's recoverable. The edge is real but thin — and the article's "
+            "machine, even here, does worse than nothing and still ignores its own Markov stage."
+        ),
+        code(
+            "rec = robustness.recover_planted(wedge, SYS, spread=0.02, seed=1)\n"
+            "print(f\"oracle  : {rec['oracle_edge_pp_gross']:+.2f} pp gross  ->  {rec['oracle_mean_ret_net']:+.2%} net of 2c\")\n"
+            "print(f\"machine : {rec['machine_edge_pp_gross']:+.2f} pp gross  (t = {rec['machine_t']:+.2f})\")\n"
+            "print(f\"machine still agrees with its Markov-ablated self {rec['same_direction_machine_vs_ablated']:.0%} of the time\")\n"
+            "print('oracle edge by price bucket (pp):', rec['oracle_edge_by_price_bucket_pp'])"
+        ),
+        md(
+            "## 7 · Going Further\n\n"
+            "- A **path-dependent** market generator (genuine one-step memory the chain *could* "
+            "catch — but calibration overwrites it).\n"
+            "- A **real Polymarket tape** to price the longshot bias net of true spreads.\n"
+            "- A **debugged pipeline** (uncapped calibration, YES = true resolution) to show it "
+            "still reduces to 'bet the bias' and dies to the spread — i.e. the bugs aren't why it "
+            "fails.\n"
+            "- An **adverse-selection maker model** to price the '+1.12% maker rebate' honestly."
+        ),
+    ]
+    return new_notebook(cells=cells, metadata=_meta())
+
+
+def _meta():
+    return {
+        "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
+        "language_info": {"name": "python"},
+    }
+
+
+def main():
+    for fname, nb in [
+        ("01_for_the_curious.ipynb", build_curious()),
+        ("02_for_the_quants.ipynb", build_quants()),
+    ]:
+        path = os.path.join(HERE, fname)
+        with open(path, "w", encoding="utf-8") as fh:
+            nbf.write(nb, fh)
+        print(f"wrote {fname}  ({len(nb.cells)} cells)")
+
+
+if __name__ == "__main__":
+    main()
