@@ -5,26 +5,26 @@ cached deep-history US names (split-only prices — see the data-mode note in
 [`pairs_trading/data.py`](../pairs_trading/data.py)). Rule: 20 minimum-SSD pairs,
 252-session formation, 126-session trading, open at 2·sigma, close on
 crossing, **wait=1** (honest next-session execution). As-of **2026-06-01**. Price
-fingerprint **`ac25cb7061be`** (174 names, 1962-01-02 →
+fingerprint **`fce2ce713a43`** (174 names, 1962-01-02 →
 2026-06-01).*
 
 > **Read the universe before the verdict.** This is a *liquid ~174-name basket*
 > (inherited from Study 04's cache), **not** the thousands-of-names CRSP universe GGR
 > (1999) formed from. Its breadth grows over time — **7** eligible
-> names in the early 1960s, **171** today — so only the modern era
+> names in the early 1960s, **174** today — so only the modern era
 > has enough names to yield genuinely tight minimum-distance pairs (eligible ≥ 60 from
-> **2004-07-21**). We **headline the modern era** and show the full sample as context. The
+> **2004-01-20**). We **headline the modern era** and show the full sample as context. The
 > pre-2000 numbers are formed from 7–45 names and are *not* a GGR replication.
 
 ## Headline — MODERN era (2004-01-02 → 2026-06-01), committed capital, wait=1
-`{'n_days': 5292, 'n_trades': 1128, 'committed_monthly_net': -0.0043, 'committed_monthly_gross': -0.0037, 'employed_monthly_net': -0.0065, 'sharpe_net': -0.4438, 'ann_return_net': -0.0504, 'max_drawdown': -0.7686, 'deployed_frac': 0.6646, 'mean_trade_gross': -0.0167, 'mean_trade_net': -0.0193, 'win_rate_net': 0.5567, 'median_days_held': 56.0}`
-- market neutrality: `{'alpha_daily_bps': -2.0296, 'alpha_ann_pct': -4.9864, 'beta': -0.0, 'r_squared': 0.0}`
-- bootstrap Sharpe CI: `{'sharpe': -0.4438, 'ci_low': -0.8055, 'ci_high': -0.0374, 'frac_negative': 0.983, 'n_obs': 5292, 'n_boot': 2000}`
-- capacity (per leg): `{'median_adv_usd': 147867546.2, 'capacity_usd_per_leg': 59147.0, 'edge_bps': 20.0}`
+`{'n_days': 5292, 'n_trades': 1080, 'committed_monthly_net': -0.0054, 'committed_monthly_gross': -0.0048, 'employed_monthly_net': -0.0088, 'sharpe_net': -0.4396, 'ann_return_net': -0.0623, 'max_drawdown': -0.8499, 'deployed_frac': 0.6115, 'mean_trade_gross': -0.0224, 'mean_trade_net': -0.025, 'win_rate_net': 0.562, 'median_days_held': 54.0}`
+- market neutrality: `{'alpha_daily_bps': -2.8713, 'alpha_ann_pct': -6.9812, 'beta': 0.0375, 'r_squared': 0.0036}`
+- bootstrap Sharpe CI: `{'sharpe': -0.4396, 'ci_low': -0.8357, 'ci_high': -0.0294, 'frac_negative': 0.98, 'n_obs': 5292, 'n_boot': 2000}`
+- capacity (per leg): `{'median_adv_usd': 130099452.3, 'capacity_usd_per_leg': 52039.8, 'edge_bps': 20.0}`
 
 ## Full sample (context only — thin early universe)
-`{'n_days': 15876, 'n_trades': 3190, 'committed_monthly_net': -0.0011, 'committed_monthly_gross': -0.0006, 'employed_monthly_net': -0.0017, 'sharpe_net': -0.1205, 'ann_return_net': -0.0132, 'max_drawdown': -0.7613, 'deployed_frac': 0.6488, 'mean_trade_gross': -0.0027, 'mean_trade_net': -0.0053, 'win_rate_net': 0.5665, 'median_days_held': 60.0}`
-- bootstrap Sharpe CI: `{'sharpe': -0.1205, 'ci_low': -0.3505, 'ci_high': 0.1249, 'frac_negative': 0.8345, 'n_obs': 15876, 'n_boot': 2000}`
+`{'n_days': 15876, 'n_trades': 3126, 'committed_monthly_net': -0.001, 'committed_monthly_gross': -0.0005, 'employed_monthly_net': -0.0017, 'sharpe_net': -0.1019, 'ann_return_net': -0.0125, 'max_drawdown': -0.8157, 'deployed_frac': 0.6324, 'mean_trade_gross': -0.0025, 'mean_trade_net': -0.0051, 'win_rate_net': 0.5589, 'median_days_held': 61.0}`
+- bootstrap Sharpe CI: `{'sharpe': -0.1019, 'ci_low': -0.3408, 'ci_high': 0.1473, 'frac_negative': 0.803, 'n_obs': 15876, 'n_boot': 2000}`
 
 ## Eligible-name growth + pair tightness (every 4th window)
 ```
@@ -44,24 +44,24 @@ trade_start
 1985-01-28           24    0.2783     1.4777
 1987-01-27           27    0.8370     2.2664
 1989-01-24           32    0.2767     0.9607
-1991-01-22           32    0.3759     1.7895
-1993-01-19           32    0.4019     1.0523
-1995-01-17           37    0.2997     0.7198
-1997-01-14           39    0.3659     1.4488
-1999-01-13           45    0.3782     2.8048
-2001-01-11           52    1.0351     2.4358
-2003-01-17           54    0.3335     1.1116
+1991-01-22           33    0.3759     1.6142
+1993-01-19           33    0.2330     0.9120
+1995-01-17           38    0.2897     0.6087
+1997-01-14           40    0.3075     1.3310
+1999-01-13           46    0.3782     2.8048
+2001-01-11           53    1.0351     2.4358
+2003-01-17           56    0.3335     1.1116
 2005-01-19           60    0.1834     0.5070
-2007-01-22           63    0.1548     0.6421
-2009-01-21           75    0.4172     1.1916
-2011-01-20           78    0.0657     0.6186
-2013-01-23           88    0.0053     0.5202
-2015-01-23           91    0.0002     0.3801
-2017-01-24          100    0.0007     0.4536
-2019-01-25          106    0.0005     0.4508
-2021-01-26          125    0.0005     0.9936
-2023-01-26          167    0.0003     0.6799
-2025-01-30          171    0.0002     0.7617
+2007-01-22           65    0.1548     0.6421
+2009-01-21           76    0.4172     1.1916
+2011-01-20           81    0.0657     0.6186
+2013-01-23           89    0.0053     0.4731
+2015-01-23           92    0.0002     0.3801
+2017-01-24          101    0.0000     0.4447
+2019-01-25          108    0.0000     0.4034
+2021-01-26          128    0.0000     0.9846
+2023-01-26          170    0.0000     0.4824
+2025-01-30          174    0.0000     0.5631
 ```
 
 ## Decay by year — the same rule, run year by year (full sample)
@@ -85,7 +85,7 @@ year
 1977       0.0027  0.5575     252
 1978      -0.0032 -0.5615     252
 1979      -0.0018 -0.3068     253
-1980       0.0050  0.7295     253
+1980       0.0049  0.7138     253
 1981       0.0053  0.8717     253
 1982      -0.0017 -0.2088     253
 1983       0.0078  1.1570     253
@@ -94,22 +94,22 @@ year
 1986       0.0028  0.4105     253
 1987      -0.0171 -2.0365     253
 1988      -0.0008 -0.1457     253
-1989       0.0025  0.5078     252
-1990      -0.0083 -1.0606     253
-1991       0.0114  1.8060     253
-1992       0.0052  0.9186     254
-1993       0.0062  1.0068     253
-1994       0.0098  1.9402     252
-1995      -0.0046 -0.7511     252
-1996       0.0031  0.5697     254
-1997      -0.0004 -0.0610     253
-1998       0.0100  1.2883     252
-1999       0.0053  0.6703     252
-2000      -0.0029 -0.2361     252
+1989       0.0020  0.3959     252
+1990      -0.0090 -1.2422     253
+1991       0.0053  0.8856     253
+1992       0.0033  0.5987     254
+1993       0.0075  1.0927     253
+1994       0.0062  1.2161     252
+1995      -0.0056 -0.9762     252
+1996       0.0030  0.5531     254
+1997      -0.0024 -0.4219     253
+1998       0.0092  1.1856     252
+1999       0.0506  2.1878     252
+2000      -0.0034 -0.2759     252
 2001       0.0058  0.7919     248
-2002      -0.0106 -1.2347     252
-2003       0.0095  2.0389     252
-2004      -0.0009 -0.0457     252
+2002      -0.0113 -1.0061     252
+2003       0.0143  2.5996     252
+2004       0.0083  0.4349     252
 2005      -0.0019 -0.4368     252
 2006      -0.0015 -0.3439     251
 2007       0.0050  1.0323     251
@@ -118,40 +118,40 @@ year
 2010      -0.0026 -0.3509     252
 2011       0.0046  0.7455     252
 2012       0.0031  0.9552     250
-2013      -0.0031 -0.7378     252
-2014      -0.0054 -1.4585     252
-2015      -0.0022 -0.5309     252
-2016      -0.0049 -1.0385     252
-2017      -0.0063 -1.7984     251
-2018      -0.0001 -0.0299     251
-2019       0.0070  1.6929     252
-2020      -0.0116 -1.0964     253
-2021       0.0019  0.3439     252
-2022      -0.0268 -0.7923     251
-2023      -0.0185 -0.6948     250
-2024      -0.0015 -0.0997     252
-2025       0.0037  0.6003     250
-2026       0.0017  0.3107      20
+2013      -0.0051 -1.4258     252
+2014      -0.0093 -1.2002     252
+2015      -0.0031 -0.7380     252
+2016      -0.0078 -1.5097     252
+2017      -0.0096 -2.7154     251
+2018      -0.0007 -0.1742     251
+2019       0.0074  1.4298     252
+2020      -0.0230 -1.9619     253
+2021       0.0025  0.4665     252
+2022      -0.0392 -1.0527     251
+2023      -0.0202 -0.6062     250
+2024       0.0036  0.1962     252
+2025      -0.0001 -0.0142     250
+2026      -0.0231 -3.7511      20
 ```
 
 ## Wait rule — GGR's bid-ask-bounce control, modern era (monthly net by execution lag)
 ```
            committed_monthly_net  sharpe_net  mean_trade_net  n_trades
 wait_days                                                             
-1                        -0.0043     -0.4438         -0.0193      1128
-2                        -0.0044     -0.4585         -0.0198      1126
-3                        -0.0039     -0.4581         -0.0175      1124
-5                        -0.0047     -0.5646         -0.0213      1120
+1                        -0.0054     -0.4396         -0.0250      1080
+2                        -0.0052     -0.4266         -0.0245      1079
+3                        -0.0049     -0.3978         -0.0228      1078
+5                        -0.0046     -0.4109         -0.0217      1072
 ```
 
 ## Cost sweep — modern era (per-leg half-spread bps → committed monthly net)
 ```
                  roundtrip_bps  committed_monthly_net  sharpe_net  mean_trade_net  n_trades
 half_spread_bps                                                                            
-0                       6.0000                -0.0039     -0.3977         -0.0173      1128
-2                      14.0000                -0.0040     -0.4161         -0.0181      1128
-5                      26.0000                -0.0043     -0.4438         -0.0193      1128
-10                     46.0000                -0.0048     -0.4898         -0.0213      1128
-20                     86.0000                -0.0057     -0.5817         -0.0253      1128
-40                    166.0000                -0.0074     -0.7641         -0.0333      1128
+0                       6.0000                -0.0049     -0.4044         -0.0230      1080
+2                      14.0000                -0.0051     -0.4185         -0.0238      1080
+5                      26.0000                -0.0054     -0.4396         -0.0250      1080
+10                     46.0000                -0.0058     -0.4747         -0.0270      1080
+20                     86.0000                -0.0066     -0.5449         -0.0310      1080
+40                    166.0000                -0.0084     -0.6846         -0.0390      1080
 ```

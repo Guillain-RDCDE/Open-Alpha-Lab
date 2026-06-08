@@ -56,12 +56,15 @@ CRSP cross-section the original was formed from.*
   much of the **bid-ask bounce** that inflated early measured returns; the rise of stat-arb
   desks crowded the convergence. *Bowen, Hutchinson & O'Sullivan (2010)* on intraday pairs
   and cost sensitivity.
-- **The richer modern toolkit (what we deliberately did *not* use).** *Avellaneda & Lee
-  (2010), "Statistical Arbitrage in the US Equities Market", Quantitative Finance* (PCA /
+- **The richer modern toolkit (the beat-7 forks we *worked*).** *Avellaneda & Lee (2010),
+  "Statistical Arbitrage in the US Equities Market", Quantitative Finance* (PCA /
   mean-reversion of residuals); *Engle & Granger (1987)* and *Johansen (1991)* cointegration
-  — the **economic-anchor** filters our naive minimum-SSD rule omits, and the obvious
-  beat-7 forks. Testing whether any of these rescues the rule is explicitly *out of scope*
-  here: we test the textbook rule the thread sells.
+  — the **economic-anchor** filters the naive minimum-SSD rule omits. We headline the
+  textbook rule the thread sells, then test the standard rescues directly in
+  [beat 7](../README.md#7--going-further) ([`docs/extensions.md`](extensions.md)): a
+  dependency-free **Dickey–Fuller gate** ([`pairs.df_tstat`](../pairs_trading/pairs.py)) and
+  a **stop-loss** ([`backtest.run(..., stop_loss=)`](../pairs_trading/backtest.py)). Neither
+  rescues it on this universe; a full Johansen / PCA build on a broader cache is the open PR.
 - **Why convergence is short gamma.** The negative-skew structure (many small wins, rare
   large losses) is general to mean-reversion bets; *Duarte, Longstaff & Yu (2007), "Risk and
   Return in Fixed-Income Arbitrage", RFS* makes the "picking up nickels" point that explains

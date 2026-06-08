@@ -11,24 +11,26 @@
 ## Verdict — read this first
 
 *Measured on a **reproducible** run of the textbook GGR (1999) rule over a cached, liquid
-**174-name** US universe, 1962–2026 (split-only prices). The honest test is the **modern
-era** (2005–2026): the universe is a *liquid basket*, **not** the thousands-of-names
-CRSP cross-section GGR formed from, and its breadth grows from **7** eligible names in the
-early 1960s to **171** today — only post-2004 are there enough names (≥60) to build the
-genuinely tight pairs the rule needs. As-of 2026-06-01, price fingerprint `ac25cb7061be`;
-every number in [`docs/results.md`](docs/results.md).*
+**174-name** US universe, 1962–2026 (split-only prices; daily returns winsorized at ±100%
+to kill bad prints — this cache hides a **BMW +6,192,999%** glitch that, unscrubbed, fakes
+a +3%/mo "edge"). The honest test is the **modern era** (2005–2026): the universe is a
+*liquid basket*, **not** the thousands-of-names CRSP cross-section GGR formed from, and its
+breadth grows from **7** eligible names in the early 1960s to **174** today — only post-2004
+are there enough names (≥60) to build the genuinely tight pairs the rule needs. As-of
+2026-06-01, price fingerprint `fce2ce713a43`; every number in [`docs/results.md`](docs/results.md).*
 
 | Axis | Stamp | Why (one line) |
 |---|---|---|
-| **Signal** — does the spread actually revert into a profit? | `NONE` | The minimum-distance pairs **don't reconverge enough to pay**: modern-era gross is **−0.37%/mo** (Sharpe **−0.44**, bootstrap CI **[−0.81, −0.04]**, 98% of resamples negative) — *negative even before a cent of cost*. The full sample is statistically zero (CI [−0.35, +0.13]). |
-| **Tradability** — does it survive costs, capacity, scale? | `MIRAGE` | There's no edge for costs to kill — and they deepen the loss anyway (monotone in the spread), to **−0.43%/mo net**, **Sharpe −0.44**, a **−77% max drawdown**, with **β≈0** so there isn't even market beta to fall back on. Liquidity is *not* the binding constraint (capacity ~\$59k/leg); the **missing edge** is. |
-| **Decay since GGR?** — has the famous edge faded? | `CONFIRMED` | The strategy's positive years cluster in **1983–2003**; the well-populated modern era is **mostly red** (worst: 2020 −1.2%, 2022 −2.7%, 2023 −1.9% monthly). The only modern green is in **dislocations** (2008 +0.9%/mo, Sharpe 1.30; 2019; 2025) — pairs trading as crisis insurance, not an everyday edge. |
+| **Signal** — does the spread actually revert into a profit? | `NONE` | The minimum-distance pairs **don't reconverge enough to pay**: modern-era gross is **−0.48%/mo** (Sharpe **−0.44**, bootstrap CI **[−0.84, −0.03]**, 98% of resamples negative) — *negative even at a literal zero spread*. The full sample is statistically zero (CI [−0.34, +0.15]). |
+| **Tradability** — does it survive costs, capacity, scale? | `MIRAGE` | There's no edge for costs to kill — and they deepen the loss anyway (monotone in the spread), to **−0.54%/mo net**, **Sharpe −0.44**, a **−85% max drawdown**, with **β≈0** so there isn't even market beta to fall back on. Liquidity is *not* the binding constraint (capacity ~\$52k/leg); the **missing edge** is. |
+| **Decay since GGR?** — has the famous edge faded? | `CONFIRMED` | The strategy's positive years cluster in **1983–2004**; the well-populated modern era is **mostly red** (worst: 2020 −2.3%, 2022 −3.9%, 2023 −2.0% monthly). The only modern green is in **dislocations** (2008 +0.9%/mo, Sharpe 1.30; 2019) — pairs trading as crisis insurance, not an everyday edge. **And the obvious modern fixes don't rescue it** (beat 7): a stop-loss tames the −85% drawdown to −24% but leaves it ~flat-negative; a cointegration gate doesn't help at all. |
 
 > **In one sentence:** run honestly on a tradeable liquid basket, the parameter-free
 > pairs-trading rule the tweet celebrates has **no convergence edge left** in the modern
 > era — it's significantly negative *before* costs, market-neutral so there's nowhere to
-> hide, and saddled with a −77% drawdown: a textbook the world arbitraged past, leaving
-> the naive follower holding the tail of pairs that diverge and never come back.
+> hide, saddled with an −85% drawdown, and **not revived by the obvious fixes**: a textbook
+> the world arbitraged past, leaving the naive follower holding the tail of pairs that
+> diverge and never come back.
 
 > **Not investment advice.** Research & education. See [../../LICENSE](../../LICENSE).
 
@@ -131,32 +133,34 @@ the reader see exactly when the test becomes fair.
   finds and trades genuine mean reversion when it exists. So a flat result on real data is
   a statement about the *market*, not a bug in the code.
 - **On real pairs, the spread doesn't pay.** Modern-era committed capital earns
-  **−0.37%/mo gross, −0.43%/mo net**, Sharpe **−0.44**. The win rate is **55.7%** — *more
+  **−0.48%/mo gross, −0.54%/mo net**, Sharpe **−0.44**. The win rate is **56.2%** — *more
   winners than losers* — and the mean is still negative: the textbook negative skew, big
   divergence losses swamping many small convergence gains.
 - **It's negative even at zero cost.** The cost sweep starts at a 0 bp spread and the
-  modern monthly net is already **−0.39%** (Sharpe −0.40). Costs make it monotonically
-  worse (−0.74%/mo at a 40 bp half-spread), but they aren't the cause — *there is no edge
+  modern monthly net is already **−0.49%** (Sharpe −0.40). Costs make it monotonically
+  worse (−0.84%/mo at a 40 bp half-spread), but they aren't the cause — *there is no edge
   for them to kill.*
 - **The bounce isn't hiding anything either.** GGR's bid-ask-bounce control — wait extra
-  days before executing — barely moves it (−0.43% → −0.56%/mo from wait 1→5). When a rule
+  days before executing — barely moves it (−0.54% → −0.46%/mo from wait 1→5). When a rule
   has real bounce profit, waiting bleeds it away; here there's no profit to bleed.
-- **It's cleanly market-neutral — which is the bad news.** β = **0.00**, R² = **0.00**
-  against the tape. The −0.43%/mo isn't disguised short-beta you could explain away; it's
+- **It's cleanly market-neutral — which is the bad news.** β = **0.04**, R² = **0.00**
+  against the tape. The −0.54%/mo isn't disguised short-beta you could explain away; it's
   the convergence rule itself, losing on its own terms.
-- **And it has decayed.** Run year by year, the positive prints cluster in **1983–2003**;
-  the modern era is mostly red, worst in **2020 (−1.2%), 2022 (−2.7%), 2023 (−1.9%)**
+- **And it has decayed.** Run year by year, the positive prints cluster in **1983–2004**;
+  the modern era is mostly red, worst in **2020 (−2.3%), 2022 (−3.9%), 2023 (−2.0%)**
   monthly. The only modern green years are **dislocations** — **2008 (+0.9%/mo, Sharpe
-  1.30)**, 2019, 2025 — when everything mean-reverts at once. Pairs trading survives as
+  1.30)**, 2019 — when everything mean-reverts at once. Pairs trading survives as
   *crisis insurance*, not as a standing edge.
 
 > 🔬 **For the quants** — committed-capital daily series stitched across non-overlapping
-> 126-session windows; Sharpe CI by 2,000-sample bootstrap (`quantlab.stats`); decay by
-> calendar-year grouping of the daily P&L; neutrality by OLS on the equal-weight
-> cross-section return; capacity by `impact_bps(N)=c·10⁴·√(N/ADV$)` solved at a nominal
-> 20 bp edge (moot here — the realised edge is negative). Modern bootstrap CI **[−0.81,
-> −0.04]** excludes zero on the *negative* side; full-sample **[−0.35, +0.13]** straddles
-> it. Reproduce: [`examples/verify_real.py`](examples/verify_real.py).
+> 126-session windows; daily returns winsorized at ±100% (`data.clean_panel`) — the
+> un-scrubbed cache fakes a +3%/mo gate "edge" off a single BMW print; Sharpe CI by
+> 2,000-sample bootstrap (`quantlab.stats`); decay by calendar-year grouping of the daily
+> P&L; neutrality by OLS on the equal-weight cross-section return; capacity by
+> `impact_bps(N)=c·10⁴·√(N/ADV$)` solved at a nominal 20 bp edge (moot here — the realised
+> edge is negative). Modern bootstrap CI **[−0.84, −0.03]** excludes zero on the *negative*
+> side; full-sample **[−0.34, +0.15]** straddles it. Reproduce:
+> [`examples/verify_real.py`](examples/verify_real.py).
 
 <details>
 <summary>🔬 The maths, in full</summary>
@@ -183,26 +187,26 @@ if the pair breaks — hence win-rate > 50% with a negative mean.
 > *The stamps, now earned.*
 
 - **Signal — `NONE`.** The minimum-distance pairs do not reconverge into a profit. Modern
-  gross is **−0.37%/mo** (Sharpe −0.44, bootstrap CI **[−0.81, −0.04]** — 98% of resamples
+  gross is **−0.48%/mo** (Sharpe −0.44, bootstrap CI **[−0.84, −0.03]** — 98% of resamples
   negative), and it stays negative at a literal zero spread, so it isn't a cost artefact.
-  The full sample is statistically indistinguishable from zero (CI [−0.35, +0.13]). My
+  The full sample is statistically indistinguishable from zero (CI [−0.34, +0.15]). My
   going-in prior was `WEAK` — a small, decayed-but-positive carry; the data was less kind.
 - **Tradability — `MIRAGE`.** There's no edge to charge costs against, and costs deepen the
-  loss anyway, monotonically, to **−0.43%/mo net** with a **−77% max drawdown**. The book
+  loss anyway, monotonically, to **−0.54%/mo net** with a **−85% max drawdown**. The book
   is genuinely market-neutral (β≈0), so there isn't even a beta to bank. Capacity is large
-  (~\$59k/leg before square-root impact bites a *hypothetical* 20 bp edge) — i.e. liquidity
+  (~\$52k/leg before square-root impact bites a *hypothetical* 20 bp edge) — i.e. liquidity
   was never the constraint here, unlike Study 04's micro-caps. The constraint is that the
   thing doesn't work.
-- **Decay since GGR — `CONFIRMED`.** Best years 1983–2003; modern era mostly red; green only
+- **Decay since GGR — `CONFIRMED`.** Best years 1983–2004; modern era mostly red; green only
   in dislocations. Consistent with the literature (Do & Faff 2010): pairs-trading
   profitability fell sharply after 2002 as decimalisation narrowed spreads and stat-arb
-  desks multiplied.
+  desks multiplied. And the obvious modern fixes don't reverse it — see beat 7.
 
 > 🔬 **For the quants** — decisive numbers in one place: modern committed monthly net
-> −0.0043, gross −0.0037, Sharpe −0.44, CI [−0.81, −0.04], frac_neg 0.983, win-rate 0.557,
-> median hold 56 sessions, max DD −0.77, β −0.00, R² 0.00; cost-sweep net at 0 bp = −0.0039;
-> wait-rule flat −0.0043→−0.0047. All from [`docs/results.md`](docs/results.md), as-of
-> 2026-06-01, fingerprint `ac25cb7061be`.
+> −0.0054, gross −0.0048, Sharpe −0.44, CI [−0.84, −0.03], frac_neg 0.98, win-rate 0.562,
+> median hold 54 sessions, max DD −0.85, β 0.04, R² 0.00; cost-sweep net at 0 bp = −0.0049;
+> wait-rule flat −0.0054→−0.0046. All from [`docs/results.md`](docs/results.md), as-of
+> 2026-06-01, fingerprint `fce2ce713a43`.
 
 ## 6 · Could You Trade It?
 
@@ -211,47 +215,68 @@ if the pair breaks — hence win-rate > 50% with a negative mean.
 You wouldn't, and the reason is unusually clean: **there is nothing to execute well.** Most
 of this desk's mirages are real signals that costs or capacity erase — here the signal is
 gone *before* the first cost, so there's no entry skill, venue, or sizing that rescues it.
-The names are liquid mega-caps (median ADV ~\$148M), so unlike the micro-cap feed of Study
+The names are liquid mega-caps (median ADV ~\$130M), so unlike the micro-cap feed of Study
 04, capacity is ample — which only sharpens the point: you *could* put real size on this,
-and real size on a −0.4%/mo, −77%-drawdown, market-neutral bleed is just a slower way to
+and real size on a −0.5%/mo, −85%-drawdown, market-neutral bleed is just a slower way to
 lose. The one place the rule earns its keep is the **2008-style dislocation**, where
 everything reverts at once and it prints +0.9%/mo — but a strategy you can only trade in a
 crisis is a hedge with a 60-day fuse, not a standing book.
 
 The honest "what would it take" is therefore a *different strategy*, not better execution:
 a **stop-loss** to cap the short-gamma tail (the naive rule holds losers to window-end —
-that's most of the −77%), a **cointegration filter** so you trade pairs with an economic
+that's most of the −85%), a **cointegration filter** so you trade pairs with an economic
 anchor instead of whatever hugged tightest by luck, and a **far broader universe** so the
-selected pairs are genuinely close. Those are the forks in beat 7 — and each is a concession
-that the *textbook* rule, the one the tweet sells, doesn't clear the bar.
+selected pairs are genuinely close. We actually *ran* those three — beat 7 — and each is a
+concession that the *textbook* rule, the one the tweet sells, doesn't clear the bar.
 
 > 🔬 **For the quants** — break-even is moot (gross < 0). The relevant capacity line,
-> `N* = ADV$·(edge_bps/(c·10⁴))²`, gives ~\$59k/leg only against an assumed 20 bp edge; at
+> `N* = ADV$·(edge_bps/(c·10⁴))²`, gives ~\$52k/leg only against an assumed 20 bp edge; at
 > the realised negative edge it's undefined. The lived series is the committed-capital
 > equity curve in [`docs/results.md`](docs/results.md), not the win-rate. Turnover is low
-> (median hold 56 sessions), so it isn't costs-by-churn — it's direction.
+> (median hold 54 sessions), so it isn't costs-by-churn — it's direction.
 
 ## 7 · Going Further
 
-> **The door this leaves ajar.** We killed the *naive, parameter-free* rule on a liquid
-> basket — which is exactly the rule the viral thread sells. That does **not** prove modern
-> stat-arb is dead; it proves the 1999 textbook recipe, unmodified, is. The interesting
-> question is which single modern fix, if any, drags it back over the line — and on this
-> universe none of the obvious ones is free.
+> **We didn't leave the obvious fixes as homework.** Killing the *naive* rule invites the
+> immediate "yes, but did you try…?" — so we ran the three standard rescues, each a single
+> change to the textbook rule, on the modern era. None drags it over the line. Full table
+> in [`docs/extensions.md`](docs/extensions.md); reproduce with
+> [`examples/verify_extensions.py`](examples/verify_extensions.py).
 
-- **A stop-loss.** The −77% drawdown is the un-capped short-gamma tail (losers held to
-  window-end). Does a hard stop turn the skew survivable — or just lock in the losses faster?
-- **A cointegration gate.** Replace "tightest SSD" with an actual Engle–Granger / Johansen
-  test, so a pair needs an economic reason to revert, not just a lucky formation year.
-- **A broader, sector-aware universe.** GGR formed from *thousands* of names; we had ~170.
-  The PR that matters most: point `data.load_universe` at a real S&P 1500 cache and re-run.
-- **Total-return prices.** We ran split-only (the cached mode); dividends fold a small,
-  named bias *against* the rule — a total-return rerun is the clean robustness check.
-- **The crisis-only book.** The only green is in dislocations — is "pairs trading as a
-  conditional 2008/2020 hedge" a real, sizeable thing, or just three lucky years?
+| Variant (modern era, committed capital) | Monthly net | Sharpe | Max DD | Verdict |
+|---|---|---|---|---|
+| **Baseline** (naive GGR rule) | **−0.54%** | −0.44 | **−85%** | the result above |
+| **+ Stop-loss 10%** | **−0.09%** | −0.22 | **−30%** | tames the tail, still no edge |
+| **+ Cointegration gate (DF)** | **−0.58%** | −0.63 | −87% | no help at all |
+| **+ Both fixes** | −0.15% | −0.35 | −46% | the stop does all the work |
+
+- **A stop-loss is the only thing that helps — and it only stanches the bleeding.** Capping
+  the per-episode loss cuts the drawdown from **−85% to −24%** (at a 5% stop) and lifts the
+  monthly net to **≈−0.06%** — i.e. you stop your way to *roughly flat*, not to profit. That
+  confirms the −85% was a real short-gamma tail (losers held to the window edge), but there's
+  no positive carry hiding under it.
+- **The cointegration gate doesn't work.** Demanding the formation spread pass a Dickey–Fuller
+  mean-reversion test (an *economic* anchor, not just a tight SSD) leaves it at **−0.58%/mo** —
+  *worse*. In-sample stationarity over the formation year simply doesn't predict
+  out-of-sample convergence on this universe: the classic gap between a backtest filter and a
+  forecast.
+- **Pair quality isn't the binding constraint either.** Trading only the **tightest 5** pairs
+  is the least-bad cut (−0.12%/mo) but still negative — so a genuinely broader universe might
+  raise the ceiling, but the offline proxy says it isn't the whole story.
+
+What's left genuinely open — and now framed as *worked* leads, not excuses:
+
+- **A broader, sector-aware universe.** GGR formed from *thousands* of names; we had ~170. The
+  one fix the offline data can't fully settle: point `data.load_universe` at a real S&P 1500
+  cache and re-run `verify_extensions.py`.
+- **Total-return prices.** We ran split-only (the cached mode); dividends fold a small, named
+  bias *against* the rule — a total-return rerun is the clean robustness check.
+- **The crisis-only book.** The only green is in dislocations (2008 +0.9%/mo) — is "pairs
+  trading as a conditional 2008/2020 hedge" a real, sizeable thing, or just a couple of years?
 
 The deep version — the synthetic validation, the bootstrap, the decay curve, the cost and
-neutrality teardown — is in [`notebooks/02_for_the_quants.ipynb`](notebooks/).
+neutrality teardown, and the extension table — is in
+[`notebooks/02_for_the_quants.ipynb`](notebooks/).
 
 ---
 
@@ -262,9 +287,10 @@ neutrality teardown — is in [`notebooks/02_for_the_quants.ipynb`](notebooks/).
 | [`notebooks/01_for_the_curious.ipynb`](notebooks/) | the story + the stakes, plain language |
 | [`notebooks/02_for_the_quants.ipynb`](notebooks/) | the full method: formation, the trade, decay, neutrality, costs |
 | [`docs/results.md`](docs/results.md) | **the real run** — every headline table, fingerprinted and as-of'd |
+| [`docs/extensions.md`](docs/extensions.md) | **the beat-7 forks worked** — stop-loss, cointegration gate, breadth, vs baseline |
 | [`docs/references.md`](docs/) | sources + literature map (GGR 1999, Do–Faff 2010, the decay literature) |
 | [`pairs_trading/`](pairs_trading/) | the study package: `data` · `pairs` · `backtest` · `robustness` |
-| [`examples/`](examples/) | [`run_synthetic_demo.py`](examples/run_synthetic_demo.py) (offline) · [`verify_real.py`](examples/verify_real.py) (the real run) |
+| [`examples/`](examples/) | [`run_synthetic_demo.py`](examples/run_synthetic_demo.py) (offline) · [`verify_real.py`](examples/verify_real.py) (the real run) · [`verify_extensions.py`](examples/verify_extensions.py) (the fixes) |
 
 Every number is produced by [`pairs_trading/`](pairs_trading/), in the house style of the
 shared [`../../quantlab/`](../../quantlab/) engine; `pytest` covers it in CI.

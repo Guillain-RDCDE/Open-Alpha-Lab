@@ -120,6 +120,40 @@ def _signal_positions(spread: np.ndarray, sigma: float, k: float) -> np.ndarray:
     return sig
 
 
+def _executed_positions(
+    sig: np.ndarray,
+    r_a: np.ndarray,
+    r_b: np.ndarray,
+    wait: int,
+    stop_loss: float | None,
+) -> np.ndarray:
+    """Turn signal positions into *executed* ones: lag by ``wait``, optionally stop out.
+
+    The position held on day t is the signal decided at close ``t-wait`` (no look-ahead).
+    With ``stop_loss`` set, an open episode is force-flattened for the rest of that
+    episode once its running long-short P&L since entry breaches ``-stop_loss`` — the
+    fix for the naive rule's habit of holding a broken pair to the window edge. With
+    ``stop_loss=None`` this reproduces the plain lagged signal exactly.
+    """
+    n = len(sig)
+    exec_pos = np.zeros(n)
+    cur_dir = 0.0
+    pnl_acc = 0.0
+    stopped = False
+    for t in range(n):
+        desired = sig[t - wait] if t - wait >= 0 else 0.0
+        if desired != cur_dir:           # episode boundary (open / close / sign flip)
+            cur_dir = desired
+            pnl_acc = 0.0
+            stopped = False
+        if cur_dir != 0.0 and not stopped:
+            exec_pos[t] = cur_dir
+            pnl_acc += cur_dir * (r_a[t] - r_b[t])
+            if stop_loss is not None and pnl_acc <= -stop_loss:
+                stopped = True            # close at today's end; flat for rest of episode
+    return exec_pos
+
+
 def simulate_pair(
     norm_a: np.ndarray,
     norm_b: np.ndarray,
@@ -130,6 +164,7 @@ def simulate_pair(
     pair: Pair,
     k: float = 2.0,
     wait: int = 1,
+    stop_loss: float | None = None,
     costs: CostModel = CostModel(),
 ) -> tuple[np.ndarray, np.ndarray, list[PairTrade]]:
     """Trade one pair across a window. Returns ``(daily_net, daily_gross, trades)``.
@@ -138,7 +173,7 @@ def simulate_pair(
     day (0 when flat). ``norm_*`` are the continuous normalized prices over the trading
     window; ``r_*`` the matching daily returns. The signal is lagged ``wait`` days, so a
     divergence seen at close ``t`` is executed from ``t+wait`` — the trade you could
-    actually place.
+    actually place. ``stop_loss`` (a fraction, e.g. 0.10) caps the per-episode loss.
     """
     if sigma <= 0 or len(dates) == 0:
         z = np.zeros(len(dates))
@@ -146,15 +181,7 @@ def simulate_pair(
 
     spread = norm_a - norm_b
     sig = _signal_positions(spread, sigma, k)
-
-    # Execution lag: the position you *hold* on day t was decided at close t-wait.
-    exec_pos = np.zeros_like(sig)
-    if wait <= 0:
-        exec_pos = sig
-    elif wait < len(sig):
-        exec_pos[wait:] = sig[:-wait]
-    # force-flat on the last day (window-end unwind) is implicit: P&L stops at array end,
-    # and the closing cost is charged below as exec_pos returns to 0 past the edge.
+    exec_pos = _executed_positions(sig, r_a, r_b, wait, stop_loss)
 
     leg = costs.leg_cost_frac()
     daily_gross = exec_pos * (r_a - r_b)
@@ -211,6 +238,7 @@ def trade_window(
     form_len: int,
     k: float = 2.0,
     wait: int = 1,
+    stop_loss: float | None = None,
     costs: CostModel = CostModel(),
 ) -> WindowResult:
     """Trade ``pairs`` over the post-formation portion of ``combined_close``.
@@ -241,7 +269,8 @@ def trade_window(
         ra = rets[p.a].to_numpy()[form_len:]
         rb = rets[p.b].to_numpy()[form_len:]
         net, gross, trades = simulate_pair(
-            na, nb, ra, rb, trade_dates, p.sigma, p, k=k, wait=wait, costs=costs
+            na, nb, ra, rb, trade_dates, p.sigma, p,
+            k=k, wait=wait, stop_loss=stop_loss, costs=costs,
         )
         net_mat[:, j] = net
         gross_mat[:, j] = gross
@@ -273,6 +302,9 @@ def run(
     trade_len: int = 126,
     k: float = 2.0,
     wait: int = 1,
+    stop_loss: float | None = None,
+    cointegration: bool = False,
+    df_crit: float = -2.86,
     costs: CostModel = CostModel(),
 ) -> BacktestResult:
     """Roll the full GGR pipeline across ``panel`` and stitch the daily P&L together.
@@ -281,6 +313,12 @@ def run(
     the prior ``form_len`` sessions, trade them ``trade_len`` sessions, collect the
     committed-capital daily return. Concatenes every window into one series and reports
     headline stats. Deterministic.
+
+    Beat-7 extension knobs (each tests whether one modern fix rescues the naive rule):
+      * ``stop_loss`` — cap the per-episode loss (the −77%-drawdown short-gamma tail).
+      * ``cointegration`` — keep only pairs whose formation spread passes a Dickey–Fuller
+        mean-reversion gate (``df_crit``), so a pair needs an *economic* reason to revert,
+        not a lucky formation year.
     """
     from .pairs import select_pairs        # local import keeps module graph flat
 
@@ -292,11 +330,13 @@ def run(
     closes = panel
     for fs, ts, te in _windows(len(closes), form_len, trade_len):
         formation = closes.iloc[fs:ts]
-        pairs = select_pairs(formation, top_n=top_n)
+        pairs = select_pairs(formation, top_n=top_n,
+                             cointegration=cointegration, df_crit=df_crit)
         if not pairs:
             continue
         combined = closes.iloc[fs:te]
-        wr = trade_window(combined, pairs, form_len=form_len, k=k, wait=wait, costs=costs)
+        wr = trade_window(combined, pairs, form_len=form_len, k=k, wait=wait,
+                          stop_loss=stop_loss, costs=costs)
         pieces.append(wr.daily_net)
         gross_pieces.append(wr.daily_gross)
         trades.extend(wr.trades)
@@ -307,7 +347,8 @@ def run(
     equity = (1.0 + daily).cumprod().rename("equity")
     stats = _performance(daily, gross, equity, trades, deployed_fracs)
     params = {"top_n": top_n, "form_len": form_len, "trade_len": trade_len,
-              "k": k, "wait": wait, "costs": costs}
+              "k": k, "wait": wait, "stop_loss": stop_loss,
+              "cointegration": cointegration, "costs": costs}
     return BacktestResult(daily, equity, trades, stats, params)
 
 

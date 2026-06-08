@@ -48,10 +48,42 @@ def _eligible(prices: pd.DataFrame, min_obs: int) -> list[str]:
     return [c for c in prices.columns if good[c] >= min_obs and prices[c].notna().all()]
 
 
+def df_tstat(spread: np.ndarray) -> float:
+    """Dickey–Fuller t-statistic for a unit root in ``spread`` (constant, no lags).
+
+    Regress Δsₜ = α + ρ·sₜ₋₁ + εₜ and return the t-stat of ρ̂. A strongly *negative*
+    value rejects the random-walk null in favour of **mean reversion** — the economic
+    anchor the raw minimum-SSD rule never checks. Dependency-free (no statsmodels): the
+    desk keeps its own stats, like the Acklam normal in `robustness.py`. This is a plain
+    DF, not an augmented ADF — adequate as a coarse cointegration gate, and named as such.
+    """
+    s = np.asarray(spread, dtype=float)
+    s = s[np.isfinite(s)]
+    if s.size < 20:
+        return float("nan")
+    s_lag = s[:-1]
+    ds = np.diff(s)
+    dof = len(ds) - 2
+    if dof <= 0 or np.var(s_lag) <= 0:        # constant spread -> not a mean-reverting pair
+        return float("nan")
+    X = np.column_stack([np.ones_like(s_lag), s_lag])      # [const, level]
+    beta, *_ = np.linalg.lstsq(X, ds, rcond=None)
+    resid = ds - X @ beta
+    sigma2 = float(resid @ resid) / dof
+    try:
+        xtx_inv = np.linalg.inv(X.T @ X)
+    except np.linalg.LinAlgError:
+        return float("nan")
+    se_rho = float(np.sqrt(sigma2 * xtx_inv[1, 1]))
+    return float(beta[1] / se_rho) if se_rho > 0 else float("nan")
+
+
 def select_pairs(
     formation_prices: pd.DataFrame,
     top_n: int = 20,
     min_obs: int | None = None,
+    cointegration: bool = False,
+    df_crit: float = -2.86,
 ) -> list[Pair]:
     """Rank every eligible pair by formation SSD and return the ``top_n`` tightest.
 
@@ -59,6 +91,12 @@ def select_pairs(
     populated across the whole window are eligible (a partial series would forge a
     spurious match). Returns pairs sorted by ascending SSD — the GGR "minimum-distance"
     ordering — each carrying the spread ``sigma`` the trader will trigger on.
+
+    With ``cointegration=True`` a pair is kept only if its formation spread passes a
+    Dickey–Fuller mean-reversion gate (DF t-stat < ``df_crit``; −2.86 ≈ 5% with a
+    constant) — the beat-7 fix that demands an economic reason to revert, not just a
+    lucky formation year. The gate is applied *before* the top-N truncation, so you get
+    the tightest ``top_n`` *survivors*.
     """
     n_rows = len(formation_prices)
     if min_obs is None:
@@ -80,6 +118,8 @@ def select_pairs(
         ssd = np.einsum("tj,tj->j", diff, diff)          # sum of squared deviations
         sigma = diff.std(axis=0, ddof=1)
         for off, j in enumerate(range(i + 1, m)):
+            if cointegration and not (df_tstat(diff[:, off]) < df_crit):
+                continue
             pairs.append(Pair(cols[i], cols[j], float(ssd[off]), float(sigma[off])))
 
     pairs.sort(key=lambda p: p.ssd)

@@ -104,6 +104,68 @@ def wait_rule_effect(
     return pd.DataFrame(rows).set_index("wait_days")
 
 
+def _row(tag, res):
+    s = res.stats
+    return {
+        "variant": tag,
+        "committed_monthly_net": s.get("committed_monthly_net", float("nan")),
+        "sharpe_net": s.get("sharpe_net", float("nan")),
+        "max_drawdown": s.get("max_drawdown", float("nan")),
+        "win_rate_net": s.get("win_rate_net", float("nan")),
+        "n_trades": s.get("n_trades", 0),
+    }
+
+
+def stop_loss_scan(
+    panel: pd.DataFrame,
+    stops=(None, 0.05, 0.10, 0.20),
+    top_n: int = 20,
+    form_len: int = 252,
+    trade_len: int = 126,
+    k: float = 2.0,
+    wait: int = 1,
+    costs: CostModel = CostModel(),
+) -> pd.DataFrame:
+    """Beat-7 fix #1: does capping the per-episode loss rescue the rule?
+
+    Re-runs the rule with no stop and with a few stop levels. The naive rule holds a
+    broken pair to the window edge — the bulk of the −77% drawdown. If a stop only trades
+    the deep drawdown for a worse mean (you keep getting stopped out just before
+    reversion), the tail wasn't the problem; the absent edge was. Columns: monthly net,
+    Sharpe, max drawdown, win rate, n_trades.
+    """
+    rows = []
+    for sl in stops:
+        res = run(panel, top_n=top_n, form_len=form_len, trade_len=trade_len,
+                  k=k, wait=wait, stop_loss=sl, costs=costs)
+        rows.append(_row("none" if sl is None else f"{sl:.0%}", res))
+    return pd.DataFrame(rows).set_index("variant")
+
+
+def top_n_scan(
+    panel: pd.DataFrame,
+    top_ns=(5, 10, 20, 40),
+    form_len: int = 252,
+    trade_len: int = 126,
+    k: float = 2.0,
+    wait: int = 1,
+    costs: CostModel = CostModel(),
+) -> pd.DataFrame:
+    """Beat-7 fix #3 (offline proxy): does trading *only the very tightest* pairs help?
+
+    A true "broaden to S&P 1500" test needs a bigger cache than ships here; the
+    offline-feasible cousin is the **selection breadth** knob — fewer, tighter pairs
+    (small top_n) vs more, looser ones. If even the top-5 tightest pairs don't pay, pair
+    *quality* on this universe isn't the binding issue. Columns as in :func:`stop_loss_scan`.
+    """
+    rows = []
+    for n in top_ns:
+        res = run(panel, top_n=int(n), form_len=form_len, trade_len=trade_len,
+                  k=k, wait=wait, costs=costs)
+        rows.append(_row(f"top_{n}", res))
+    return pd.DataFrame(rows).set_index("variant")
+
+
 def market_neutrality(daily: pd.Series, market: pd.Series) -> dict:
     """Regress the pairs portfolio on the tape: ``r_pairs = alpha + beta·r_mkt + eps``.
 

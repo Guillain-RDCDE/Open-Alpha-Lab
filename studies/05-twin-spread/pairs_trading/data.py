@@ -118,6 +118,35 @@ def close_panel(frames: dict[str, pd.DataFrame]) -> pd.DataFrame:
     return panel
 
 
+def clean_panel(panel: pd.DataFrame, clip_daily: float = 1.0) -> pd.DataFrame:
+    """Winsorize each name's daily returns to ``±clip_daily`` and rebuild prices from them.
+
+    Real price data is filthy: a single bad print (a foreign ADR mis-denominated, a split
+    not back-adjusted) shows up as a physically-impossible daily "return" — in this cache,
+    **BMW reads +6,192,999** on one 2015 session, **ARK +2,166** in 2007. Fed into a pairs
+    spread, such a spike fakes a colossal "divergence" that "reconverges" next day when the
+    print corrects, manufacturing phantom profit (the well-known reason naive pairs
+    backtests on raw data explode). We winsorize daily returns at ±100% — the same stated
+    decision as Study 04: it removes only the *impossible* (a genuine +100% close is
+    preserved) — then rebuild a self-consistent price panel so SSD, the spread, and the
+    backtest all see the same cleaned series. A liquid, low-yield universe makes this a
+    targeted scrub of a handful of glitches, not a reshaping of the data.
+    """
+    out = {}
+    for col in panel.columns:
+        s = panel[col]
+        first = s.first_valid_index()
+        if first is None:
+            continue
+        valid = s.loc[first:]
+        r = valid.pct_change().clip(-clip_daily, clip_daily).fillna(0.0)
+        rebuilt = float(valid.iloc[0]) * (1.0 + r).cumprod()
+        out[col] = rebuilt.reindex(panel.index)
+    cleaned = pd.DataFrame(out).sort_index()
+    cleaned.index.name = "Date"
+    return cleaned
+
+
 def dollar_volume_panel(frames: dict[str, pd.DataFrame]) -> pd.DataFrame:
     """Wide panel of daily dollar volume (Close × Volume) — for the capacity beat."""
     cols = {}

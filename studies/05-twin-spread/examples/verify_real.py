@@ -70,7 +70,7 @@ def _run_block(panel, dvol):
 def main():
     asof = DEFAULT_AS_OF
     frames = data.load_universe(mode="split_only", min_rows=750, asof=asof)
-    panel = data.close_panel(frames)
+    panel = data.clean_panel(data.close_panel(frames))   # winsorize bad prints (BMW +6.2M%, ...)
     dvol = data.dollar_volume_panel(frames)
     modern = panel.loc[MODERN_START:]
     print(f"universe: {panel.shape[1]} names with >=750 sessions, "

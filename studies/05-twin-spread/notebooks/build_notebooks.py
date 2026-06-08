@@ -89,7 +89,7 @@ def build_curious():
             "~+0.95%/mo at a Sharpe near 1.7. The machinery works. |\n"
             "| Do real liquid stocks revert like that today? | ❌ **No** — on the real basket the "
             "spread doesn't pay: **negative even before costs**. |\n"
-            "| Could you trade it? | ❌ **No edge to trade** — −0.43%/mo net, a −77% drawdown, "
+            "| Could you trade it? | ❌ **No edge to trade** — −0.54%/mo net, a −85% drawdown, "
             "market-neutral so there's nowhere to hide. |\n\n"
             "> Desk shorthand: **Signal `NONE` · Tradability `MIRAGE` · Decay `CONFIRMED`** — let's "
             "see the method earn them."
@@ -149,18 +149,20 @@ def build_curious():
             "sound. Now the real world, quoted from the reproducible run "
             "([`../docs/results.md`](../docs/results.md), via `examples/verify_real.py`):\n\n"
             "- **The selector still works** on real data — it finds tight pairs.\n"
-            "- **But the spread doesn't pay.** Modern era (2005–2026): **−0.37%/mo gross**, "
-            "**−0.43%/mo net**, Sharpe **−0.44**. Win rate 55.7% — *more winners than losers* — "
+            "- **But the spread doesn't pay.** Modern era (2005–2026): **−0.48%/mo gross**, "
+            "**−0.54%/mo net**, Sharpe **−0.44**. Win rate 56.2% — *more winners than losers* — "
             "and still a negative mean.\n"
             "- **Negative even at zero cost** — so it isn't a cost problem; there's no edge.\n"
-            "- **Decayed:** good years cluster in 1983–2003; the modern era is mostly red, worst in "
-            "2020 / 2022 / 2023. The only green is in crises (2008, 2019, 2025)."
+            "- **Decayed:** good years cluster in 1983–2004; the modern era is mostly red, worst in "
+            "2020 / 2022 / 2023. The only green is in crises (2008, 2019).\n"
+            "- **The obvious fixes don't rescue it** (beat 7): a stop-loss tames the −85% drawdown "
+            "to −24% but leaves it ~flat-negative; a cointegration gate doesn't help."
         ),
 
         md(
             "## 5 · The verdict ⚖️\n\n"
             "**Signal `NONE`** — real pairs don't reconverge into a profit (negative before costs, "
-            "bootstrap Sharpe CI below zero). **Tradability `MIRAGE`** — no edge to trade, a −77% "
+            "bootstrap Sharpe CI below zero). **Tradability `MIRAGE`** — no edge to trade, a −85% "
             "drawdown, market-neutral so no beta to bank. **Decay `CONFIRMED`** — the famous edge "
             "is behind us. The synthetic proves the only thing missing on real data is the one "
             "thing you can't code: stocks that actually revert."
@@ -181,12 +183,19 @@ def build_curious():
 
         md(
             "## 7 · Going further 🚪\n\n"
-            "- **A stop-loss** to cap the rare blow-ups (the −77% drawdown is uncapped losers).\n"
-            "- **A cointegration filter** so a pair needs an *economic* reason to revert, not luck.\n"
-            "- **A far broader universe** — GGR formed from *thousands* of names; we had ~170.\n\n"
-            "Each is a concession that the *textbook* rule the thread sells doesn't clear the bar. "
-            "The deep version — bootstrap, decay curve, neutrality, costs — is in "
-            "[`02_for_the_quants.ipynb`](02_for_the_quants.ipynb)."
+            "We didn't leave the fixes as homework — we ran them on the real modern era "
+            "([`../docs/extensions.md`](../docs/extensions.md)). None clears the bar:\n\n"
+            "| Fix | Monthly net | Max DD |\n"
+            "|---|---|---|\n"
+            "| Baseline (naive rule) | −0.54% | −85% |\n"
+            "| + Stop-loss 10% | −0.09% | −30% |\n"
+            "| + Cointegration gate | −0.58% | −87% |\n\n"
+            "- A **stop-loss** tames the drawdown (−85% → −24% at a 5% stop) but only stops you to "
+            "*roughly flat* — the tail was real, the edge isn't.\n"
+            "- A **cointegration gate** doesn't help: in-sample mean-reversion doesn't forecast it.\n"
+            "- Still open: a **far broader (S&P 1500) universe** and **total-return** prices.\n\n"
+            "The deep version — bootstrap, decay curve, neutrality, costs, the extension table — is "
+            "in [`02_for_the_quants.ipynb`](02_for_the_quants.ipynb)."
         ),
     ]
     return new_notebook(cells=cells, metadata=_meta())
@@ -242,7 +251,7 @@ def build_quants():
         md(
             "## 4 · Decay — the same rule, year by year\n\n"
             "On the synthetic there's no decay by construction (stationary twins). On **real** data "
-            "this is the headline: positive years cluster 1983–2003, the modern era is mostly red. "
+            "this is the headline: positive years cluster 1983–2004, the modern era is mostly red. "
             "See [`../docs/results.md`](../docs/results.md)."
         ),
         code(
@@ -261,18 +270,18 @@ def build_quants():
             "print('bootstrap :', {k:round(v,4) for k,v in robustness.bootstrap_sharpe(res.daily, n_boot=2000).items()})"
         ),
         md(
-            "> On **real** data these read: β = −0.00, R² = 0.00 (cleanly neutral), and a modern "
-            "bootstrap Sharpe CI of **[−0.81, −0.04]** — *entirely below zero*, 98% of resamples "
-            "negative. The full-sample CI [−0.35, +0.13] straddles zero (the thin early universe "
+            "> On **real** data these read: β = 0.04, R² = 0.00 (cleanly neutral), and a modern "
+            "bootstrap Sharpe CI of **[−0.84, −0.03]** — *entirely below zero*, 98% of resamples "
+            "negative. The full-sample CI [−0.34, +0.15] straddles zero (the thin early universe "
             "dilutes it)."
         ),
 
         md(
             "## 5 · The verdict, with the numbers\n\n"
-            "**Signal `NONE`** (real gross −0.37%/mo, CI below 0, negative at zero cost). "
-            "**Tradability `MIRAGE`** (net −0.43%/mo, −77% DD, β≈0, capacity ample so liquidity "
+            "**Signal `NONE`** (real gross −0.48%/mo, CI below 0, negative at zero cost). "
+            "**Tradability `MIRAGE`** (net −0.54%/mo, −85% DD, β≈0, capacity ample so liquidity "
             "isn't the constraint — the missing edge is). **Decay `CONFIRMED`** (best years "
-            "1983–2003; modern era red; green only in dislocations — 2008 +0.9%/mo Sharpe 1.30)."
+            "1983–2004; modern era red; green only in dislocations — 2008 +0.9%/mo Sharpe 1.30)."
         ),
 
         md(
@@ -292,13 +301,31 @@ def build_quants():
         ),
 
         md(
-            "## 7 · Going further\n\n"
-            "- **Stop-loss** — cap the uncapped short-gamma tail; does it make the skew survivable?\n"
-            "- **Cointegration gate** (Engle–Granger / Johansen) instead of raw minimum-SSD.\n"
-            "- **A real S&P 1500 cache** — point `data.load_universe` at thousands of names.\n"
-            "- **Total-return prices** — re-run off the split-only bias (named, works against the rule).\n"
-            "- **The crisis-only book** — is conditional pairs trading (2008/2020 hedge) a real, "
-            "sizeable thing?\n\n"
+            "## 7 · Going further — the fixes, worked\n\n"
+            "We ran the three standard rescues, each one change to the rule. On the synthetic "
+            "(true twins) the stop-loss should cut the drawdown while keeping the edge; the cells "
+            "below show it. On **real** data ([`../docs/extensions.md`](../docs/extensions.md)) "
+            "none clears the bar — stop-loss −0.09%/mo (DD −85%→−30%), cointegration gate "
+            "−0.58%/mo (no help), both −0.15%/mo. The stop does all the work, and only stanches "
+            "the bleed; the gate's in-sample stationarity doesn't forecast convergence."
+        ),
+        code(
+            "import pandas as pd\n"
+            "rows = []\n"
+            "for name, kw in [('baseline', {}), ('+stop 10%', dict(stop_loss=0.10)),\n"
+            "                 ('+coint gate', dict(cointegration=True)),\n"
+            "                 ('+both', dict(stop_loss=0.10, cointegration=True))]:\n"
+            "    r = backtest.run(panel, top_n=8, **kw).stats\n"
+            "    rows.append({'variant': name, 'monthly_net': r['committed_monthly_net'],\n"
+            "                 'sharpe': r['sharpe_net'], 'max_dd': r['max_drawdown']})\n"
+            "display(pd.DataFrame(rows).set_index('variant').round(4))\n"
+            "print('stop-loss scan (synthetic):')\n"
+            "display(robustness.stop_loss_scan(panel, top_n=8).round(4))"
+        ),
+        md(
+            "Still open: a **real S&P 1500 cache** (point `data.load_universe` at thousands of "
+            "names), **total-return** prices (off the split-only bias), and the **crisis-only "
+            "book** (is a conditional 2008/2020 pairs hedge real?).\n\n"
             "Engine: [`../../../quantlab/`](../../../quantlab/). Method: "
             "[`METHODOLOGY.md`](../../../METHODOLOGY.md)."
         ),
