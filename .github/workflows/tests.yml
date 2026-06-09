@@ -50,6 +50,9 @@ jobs:
       - name: Study 11 — Vanishing-Penny test-suite
         run: pytest -q studies/11-vanishing-penny/tests
 
+      - name: Study 16 — Storm-Shy test-suite
+        run: pytest -q studies/16-storm-shy/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
@@ -58,3 +61,4 @@ jobs:
           python studies/05-twin-spread/examples/run_synthetic_demo.py
           python studies/09-phantom-kernel/examples/run_synthetic_demo.py
           python studies/11-vanishing-penny/examples/run_synthetic_demo.py
+          python studies/16-storm-shy/examples/run_synthetic_demo.py
