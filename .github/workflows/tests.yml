@@ -29,6 +29,9 @@ jobs:
           # Core only — no network/yfinance needed for the test-suite.
           pip install numpy pandas matplotlib pyarrow pytest
 
+      - name: Study-construction gate (every published study, same construction)
+        run: python tools/check_study_completeness.py
+
       - name: Core engine test-suite (quantlab, offline, deterministic)
         run: pytest -q
 
@@ -82,6 +85,9 @@ jobs:
 
       - name: Study 18 — Dull-Roar test-suite
         run: pytest -q studies/18-dull-roar/tests
+
+      - name: Study 19 — Rubber-Band test-suite
+        run: pytest -q studies/19-rubber-band/tests
 
       - name: Smoke-run the offline demos
         run: |
