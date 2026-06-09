@@ -27,6 +27,7 @@ from .strategies import (
     AdaptiveASQuoter,
     ASQuoter,
     ClampQuoter,
+    JumpRobustASQuoter,
     SymmetricQuoter,
     metrics,
     optimal_spread,
@@ -172,6 +173,59 @@ def tournament_both(**kw) -> dict[str, pd.DataFrame]:
 def tournament_multiseed(world: sim.World, seeds=(0, 1, 2, 3, 4), **kw) -> pd.DataFrame:
     """P&L Sharpe per quoter across ``seeds`` — proves the ranking isn't a single-draw fluke."""
     rows = [tournament(world, seed=s, **kw)["pnl_sharpe"] for s in seeds]
+    df = pd.DataFrame(rows, index=[f"seed{s}" for s in seeds])
+    df.loc["mean"] = df.mean()
+    return df
+
+
+# --------------------------------------------------------------------------- #
+# Beat-7 worked complement — does a jump-robust vol rescue the "production fix"?
+# --------------------------------------------------------------------------- #
+def extension_rescue(
+    world: sim.World,
+    n_steps: int = 60_000,
+    dt: float = 0.01,
+    gamma: float = 0.1,
+    seed: int = 0,
+) -> pd.DataFrame:
+    """Three AS variants on one market: fixed sigma, naive rolling-vol, jump-robust rolling-vol.
+
+    The base study found the article's recommended rolling realised-vol fix (``AdaptiveASQuoter``)
+    collapses in the jumpy World B. This swaps in a **bipower-variation** vol estimate
+    (``JumpRobustASQuoter``) and asks whether the fix is salvageable. All three face the identical
+    exogenous flow, so differences are pure estimator effects.
+    """
+    flow = sim.simulate_flow(world, n_steps=n_steps, dt=dt, seed=seed)
+    T = n_steps * dt
+    k_as = _k_for_as(world, seed)
+    quoters = {
+        "AS (fixed sigma)": ASQuoter(gamma, world.sigma, k_as, T),
+        "AS (naive RV)": AdaptiveASQuoter(gamma, world.sigma, k_as, T, dt=dt),
+        "AS (jump-robust BV)": JumpRobustASQuoter(gamma, world.sigma, k_as, T, dt=dt),
+    }
+    rows = {}
+    for name, q in quoters.items():
+        led = run_market(flow, q, T=T)
+        m = metrics(led)
+        sharpe = m["sharpe_step"]
+        ci_lo = ci_hi = float("nan")
+        if sharpe_ci_bootstrap is not None:
+            ci = sharpe_ci_bootstrap(daily_returns(led), n_boot=2000, periods_per_year=1, seed=seed)
+            sharpe, ci_lo, ci_hi = ci["sharpe"], ci["ci_low"], ci["ci_high"]
+        rows[name] = {
+            "terminal_pnl": round(m["terminal_pnl"], 2),
+            "pnl_sharpe": round(sharpe, 3),
+            "ci_lo": round(ci_lo, 3),
+            "ci_hi": round(ci_hi, 3),
+            "inv_std": round(m["inv_std"], 2),
+            "n_fills": m["n_fills"],
+        }
+    return pd.DataFrame(rows).T
+
+
+def extension_rescue_multiseed(world: sim.World, seeds=(0, 1, 2, 3, 4), **kw) -> pd.DataFrame:
+    """P&L Sharpe of the three AS variants across ``seeds`` (+ a mean row)."""
+    rows = [extension_rescue(world, seed=s, **kw)["pnl_sharpe"] for s in seeds]
     df = pd.DataFrame(rows, index=[f"seed{s}" for s in seeds])
     df.loc["mean"] = df.mean()
     return df

@@ -25,7 +25,7 @@ Avellaneda & Stoikov (2008) derive two "mathematically optimal" quotes — a res
 | **[01_for_the_curious](notebooks/01_for_the_curious.ipynb)** | the curious | the story |
 | **[02_for_the_quants](notebooks/02_for_the_quants.ipynb)** | quants | the teardown |
 
-The simulator headline run is fingerprinted in [docs/results.md](docs/results.md); its one empirical assertion — that real order reach is heavy-tailed — is confirmed directly on four Binance futures books in [docs/results_real.md](docs/results_real.md), reproducible from [examples/confirm_heavy_tail.py](examples/confirm_heavy_tail.py) (data via [examples/fetch_binance.py](examples/fetch_binance.py)).
+The simulator headline run is fingerprinted in [docs/results.md](docs/results.md); its one empirical assertion — that real order reach is heavy-tailed — is confirmed directly on four Binance futures books in [docs/results_real.md](docs/results_real.md), reproducible from [examples/confirm_heavy_tail.py](examples/confirm_heavy_tail.py) (data via [examples/fetch_binance.py](examples/fetch_binance.py)). The **beat-7 worked complement** — *does a jump-robust (bipower) volatility estimate rescue the article's collapsing rolling-vol "production fix"?* — is in [docs/extension.md](docs/extension.md) (verdict: **not rescued** — it mitigates the collapse but adapting spread width stays the wrong lever, which sharpens the core finding), reproducible from [examples/extension.py](examples/extension.py).
 
 ---
 

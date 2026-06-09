@@ -88,6 +88,34 @@ class AdaptiveASQuoter(ASQuoter):
                 self.sigma = float(rv / math.sqrt(self.dt))  # per-sqrt-time vol
 
 
+class JumpRobustASQuoter(AdaptiveASQuoter):
+    """AS with a **jump-robust** rolling vol (bipower variation) — the beat-7 rescue attempt.
+
+    The naive :class:`AdaptiveASQuoter` blows up under jumps: squared returns inhale the jump
+    variance, one jump spikes ``sigma``, the spread explodes and the book stops trading. Bipower
+    variation (Barndorff-Nielsen & Shephard 2004) estimates the *diffusive* variance from
+    products of adjacent absolute returns,
+
+        BV = (pi/2) * mean(|r_i| * |r_{i-1}|),
+
+    where a lone jump enters only ~two terms and is dominated — so the vol estimate tracks the
+    genuine volatility regime (still adapting to stochastic vol) without spiking on a jump. Same
+    AS skew and spread formulas; only the ``sigma`` estimator changes.
+    """
+
+    def observe(self, s: float) -> None:
+        self._prices.append(s)
+        if len(self._prices) > self.vol_window + 1:
+            self._prices.pop(0)
+        if len(self._prices) >= 20:
+            d = np.abs(np.diff(np.asarray(self._prices)))
+            if d.size >= 2:
+                bv = (math.pi / 2.0) * float(np.mean(d[1:] * d[:-1]))  # robust per-step variance
+                robust_std = math.sqrt(bv)                              # robust per-step std
+                if robust_std > 0:
+                    self.sigma = float(robust_std / math.sqrt(self.dt))
+
+
 class SymmetricQuoter:
     """Constant half-spread, centred on the mid. No inventory skew — the naive baseline."""
 

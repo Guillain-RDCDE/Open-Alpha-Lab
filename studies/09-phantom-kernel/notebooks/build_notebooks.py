@@ -210,11 +210,14 @@ def build_curious():
             "already **confirmed** on four real Binance order books "
             "([`examples/confirm_heavy_tail.py`](../examples/confirm_heavy_tail.py) → "
             "[`docs/results_real.md`](../docs/results_real.md)): order flow is power-law, not "
-            "exponential. The natural next steps are a **multi-day, multi-venue** sweep to tighten "
-            "the tail exponents, a **jump-robust** adaptive vol that might rescue the collapsing "
-            "'production fix', and the **GLT** hard-inventory-bound quoter vs the brainless clamp. "
-            "The deep-dive notebook (`02_for_the_quants`) carries the inference, the AIC, and the "
-            "seed-robustness. **Fork it, break it, PR a better test.**"
+            "exponential. We also already **worked one complement**: does a *jump-robust* "
+            "(bipower) volatility estimate rescue the collapsing rolling-vol 'production fix'? "
+            "Answer — **no, only mitigated** (see [`docs/extension.md`](../docs/extension.md)): it "
+            "roughly doubles the collapsed Sharpe but stays far below plain fixed-σ AS, because "
+            "adapting spread *width* is the wrong lever. The natural next steps are a **multi-day, "
+            "multi-venue** real-data sweep and the **GLT** hard-inventory-bound quoter vs the "
+            "brainless clamp. The deep-dive notebook (`02_for_the_quants`) carries the inference, "
+            "the AIC, and the seed-robustness. **Fork it, break it, PR a better test.**"
         ),
     ]
     nb = new_notebook(cells=cells, metadata=_meta())
@@ -372,10 +375,13 @@ def build_quants():
             "- **Heavy tail on a real book — done.** Confirmed on 4 Binance markets "
             "(`examples/confirm_heavy_tail.py` → `docs/results_real.md`); next is a **multi-day / "
             "multi-venue** sweep and a fit *in ticks* to remove price-discreteness noise.\n"
-            "- A **jump-robust** adaptive vol (bipower) in `AdaptiveASQuoter` — can it rescue the "
-            "collapsing 'production fix'?\n- The **GLT** closed form with hard inventory bounds vs "
+            "- **Jump-robust adaptive vol — worked** ([`docs/extension.md`](../docs/extension.md)): "
+            "bipower variation *mitigates but does not rescue* the rolling-vol fix (World-B Sharpe "
+            "0.17→0.32, still ≪ fixed-σ 2.12) — adapting spread *width* is the wrong lever, which "
+            "sharpens the core verdict.\n- The **GLT** closed form with hard inventory bounds vs "
             "the clamp.\n- A **Cartea–Jaimungal** adverse-selection spread term.\n- A **γ-sweep** "
-            "to map where the skew's P&L cost stops exceeding its risk saving."
+            "to map where the skew's P&L cost stops exceeding its risk saving.\n- A **multi-day / "
+            "multi-venue** real-data sweep (tail exponents, tick-space fit)."
         ),
     ]
     nb = new_notebook(cells=cells, metadata=_meta())
