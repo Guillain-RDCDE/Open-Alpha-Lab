@@ -66,6 +66,37 @@ def test_continuation_lift_tracks_momentum():
     assert hi > lo
 
 
+def test_continuation_is_detectable_and_tracks_momentum():
+    """The genuine forecast leg is real on the synthetic and scales with the baked-in momentum."""
+    from crimson_hour import data
+    ct = decompose.continuation_test(data.synthetic_sessions(momentum=0.20, seed=7)[0])
+    # red mornings -> more red afternoons and a more negative mean afternoon than green mornings
+    assert ct["sign_diff_pp"] > 0
+    assert ct["mean_rest_oc_red_bps"] < ct["mean_rest_oc_green_bps"]
+    lo = decompose.continuation_test(data.synthetic_sessions(momentum=0.02, seed=7)[0])["mean_diff_bps"]
+    hi = decompose.continuation_test(data.synthetic_sessions(momentum=0.40, seed=7)[0])["mean_diff_bps"]
+    assert abs(hi) > abs(lo)            # stronger momentum -> larger afternoon contrast
+
+
+def test_afternoon_short_backtest_breakeven_and_cost_monotone(feat):
+    """The tradable leg: a break-even cost exists, and net Sharpe falls as costs rise."""
+    bt = decompose.afternoon_short_backtest(feat)
+    assert bt["n_trades"] > 50
+    assert bt["break_even_cost_bps"] == bt["gross_mean_bps"]
+    nets = [bt["net"][c]["net_sharpe"] for c in (0.0, 0.5, 1.0, 2.0, 5.0)]
+    assert nets == sorted(nets, reverse=True)          # monotonically decreasing in cost
+    # net mean at the break-even cost is ~0 by construction
+    be = bt["break_even_cost_bps"]
+    assert abs(bt["gross_mean_bps"] - be) < 1e-6
+
+
+def test_welch_t_zero_for_identical():
+    import numpy as np
+    a = np.array([1.0, 2.0, 3.0, 4.0])
+    out = decompose.welch_t(a, a)
+    assert abs(out["t"]) < 1e-9 and out["p_value"] > 0.99
+
+
 def test_mining_inflates_a_modest_edge():
     """A true 62% edge, mined across a dozen tiny confluences, routinely *looks* far bigger."""
     res = decompose.mining_inflation(p_true=0.62, n_cond=25, n_candidates=12,

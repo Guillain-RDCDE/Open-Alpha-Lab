@@ -65,13 +65,17 @@ def faithful_report(feat):
 
 
 def hipower_report(feat):
-    """The opening-candle leg with real power: the mechanical-vs-forecast split + OC-red table."""
+    """The opening-candle leg with real power: the mechanical-vs-forecast split, the OC-red table,
+    the formal continuation test, and the tradable afternoon-short cost sweep (beat 6)."""
     split = decompose.mechanical_vs_predictive(feat)
     masks = {k: v for k, v in signals.condition_masks(feat).items()
              if k in ("baseline", "oc_red", "oc_green")}
     sess = decompose.conditional_table(masks, signals.session_red(feat))
     rest = decompose.conditional_table(masks, signals.rest_red(feat))
-    return {"n": len(feat), "split": split, "session_table": sess, "rest_table": rest}
+    cont = decompose.continuation_test(feat)
+    backtest = decompose.afternoon_short_backtest(feat)
+    return {"n": len(feat), "split": split, "session_table": sess, "rest_table": rest,
+            "continuation": cont, "backtest": backtest}
 
 
 def main():
@@ -112,6 +116,16 @@ def main():
               f"(baseline {s['continuation_baseline']:.1%}, lift {s['continuation_lift_pp']:+.1f} pp)")
         print(f"  -> {s['mechanical_share']:.0%} of the headline lift is a mechanical head-start, "
               f"not a forecast")
+        c = hipower[tk]["continuation"]
+        print(f"continuation real?  mean rest_ret OC-red {c['mean_rest_oc_red_bps']:+.2f} bps vs "
+              f"OC-green {c['mean_rest_oc_green_bps']:+.2f} bps (Welch t={c['mean_t']:+.2f}, "
+              f"p={c['mean_p_value']:.3f}); sign diff {c['sign_diff_pp']:+.1f} pp (z p={c['sign_p_value']:.3f})")
+        b = hipower[tk]["backtest"]
+        print(f"tradable?  short 10:30->close on OC-red: gross {b['gross_mean_bps']:+.2f} bps/trade "
+              f"(t={b['gross_t']:+.2f}, Sharpe {b['gross_sharpe']:+.2f}, win {b['win_rate']:.1%}); "
+              f"break-even RT cost {b['break_even_cost_bps']:.2f} bps")
+        print(f"           net Sharpe @ {{0,1,2,5}} bps: "
+              + ", ".join(f"{b['net'][x]['net_sharpe']:+.2f}" for x in (0.0, 1.0, 2.0, 5.0)))
 
     # Forking-paths: the realistic P(session red | OC-red) from the high-power run is the *true*
     # edge a mined confluence draws from. Show that selecting the best of a bank of confluences,
@@ -176,6 +190,8 @@ lift (pp) over baseline:
 
     for tk, r in hipower.items():
         s = r["split"]
+        c = r["continuation"]
+        b = r["backtest"]
         lines.append(f"""
 ## {tk} — opening-candle leg, high power ({r['n']} sessions)
 
@@ -191,7 +207,29 @@ P(**rest of day** 10:30→16:00 closes red | morning condition) — the part act
   {s['continuation_baseline']:.1%}, lift **{s['continuation_lift_pp']:+.1f} pp**).
 - **{s['mechanical_share']:.0%}** of the headline lift is a *mechanical head-start* (an OC-red day
   is already below its open at 10:30), not continuation. The forecastable edge for the rest of the
-  day is the small continuation lift.""")
+  day is the small continuation lift.
+
+**Is the continuation a real signal?** Mean rest-of-day return after an OC-red morning
+**{c['mean_rest_oc_red_bps']:+.2f} bps** vs after OC-green **{c['mean_rest_oc_green_bps']:+.2f} bps**
+— a contrast of **{c['mean_diff_bps']:+.2f} bps** (Welch *t* = **{c['mean_t']:+.2f}**, p =
+**{c['mean_p_value']:.3f}**); on the *sign*, P(rest red | OC-red) − P(rest red | OC-green) =
+**{c['sign_diff_pp']:+.1f} pp** (z p = **{c['sign_p_value']:.3f}**). The morning *does* carry real
+directional information into the afternoon — small, but statistically there.
+
+**Could you trade it? (beat 6 — the afternoon short, cost-swept.)** Short 10:30→close on every
+OC-red day (pnl = −rest_ret), {b['n_trades']} trades (~{b['trades_per_year']:.0f}/yr):
+
+| | gross | @0.5 bps | @1 bps | @2 bps | @5 bps |
+|---|--:|--:|--:|--:|--:|
+| net mean (bps/trade) | {b['gross_mean_bps']:+.2f} | {b['net'][0.5]['net_mean_bps']:+.2f} | {b['net'][1.0]['net_mean_bps']:+.2f} | {b['net'][2.0]['net_mean_bps']:+.2f} | {b['net'][5.0]['net_mean_bps']:+.2f} |
+| net Sharpe | {b['net'][0.0]['net_sharpe']:+.2f} | {b['net'][0.5]['net_sharpe']:+.2f} | {b['net'][1.0]['net_sharpe']:+.2f} | {b['net'][2.0]['net_sharpe']:+.2f} | {b['net'][5.0]['net_sharpe']:+.2f} |
+
+The gross expectancy is **{b['gross_mean_bps']:+.2f} bps/trade** at a gross Sharpe of only
+**{b['gross_sharpe']:+.2f}** — and its own *t*-stat is **{b['gross_t']:+.2f}**, i.e. the tradable
+edge is **not statistically distinguishable from zero**. The break-even round-trip cost is
+**{b['break_even_cost_bps']:.2f} bps**, which sits inside a realistic all-in two-leg intraday
+round-trip (spread + slippage + not hitting the exact close). The continuation *signal* is real;
+the afternoon *trade* is noise that dies on costs.""")
 
     if mining is not None:
         lines.append(f"""

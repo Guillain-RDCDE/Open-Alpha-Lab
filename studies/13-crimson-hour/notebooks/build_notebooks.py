@@ -54,6 +54,11 @@ R = dict(
     es_conf="5/11 = 45.5%", es_ci="[21.3%, 72.0%]", nq_conf="7/16 = 43.8%", nq_ci="[23.1%, 66.8%]",
     es_fisher="0.62", nq_fisher="1.00",
     fork_true="70.5%", fork_best="84.6%", fork_p95="92.0%", fork_p88="36.2%",
+    # continuation significance + tradable afternoon-short cost sweep (beat 6)
+    spy_sign_p="0.001", spy_mean="-2.19 bps", spy_meang="+5.60 bps", spy_mean_p="0.121",
+    qqq_sign_p="0.003", qqq_mean="-3.70 bps", qqq_meang="+9.05 bps", qqq_mean_p="0.041",
+    spy_gross="+2.19 bps", spy_gt="+0.68", spy_gs="+0.40", spy_be="2.19 bps", spy_net2="+0.03",
+    qqq_gross="+3.70 bps", qqq_gt="+0.91", qqq_gs="+0.54", qqq_be="3.70 bps", qqq_net2="+0.25",
 )
 
 
@@ -218,13 +223,32 @@ def build_curious():
 
         md(
             "## 6 · Could you trade it? 🏦\n\n"
-            "Not as a money-maker. The thing that's *real* — a red first hour leaves the rest of "
-            "the day slightly more likely to drift down — is about **6 percentage points** of "
-            "direction. To trade it you'd short at 10:30 and cover at the close, paying the spread "
-            "and commission every day, and eating the times the afternoon rips back up (which is "
-            "nearly half of them). Six points of edge on a coin-flip-sized move is exactly the kind "
-            "of thing that looks great as a *\"bias\"* and bleeds out as a *strategy*. As the "
-            "newsletter says, it's a lean, not a trade — and a thin one."
+            "We actually ran the trade. Short the rest of the day whenever the first hour is red, "
+            "cover at the close (this is the *one* positive-expectancy way to play it). On real "
+            f"SPY it makes **{R['spy_gross']} per trade** before costs — which sounds like "
+            "something until you see the two catches.\n\n"
+            "**First, it might be luck:** that gross number has a *t*-stat of just "
+            f"**{R['spy_gt']}** (QQQ {R['qqq_gt']}) — statistically indistinguishable from zero. "
+            "**Second, costs eat it:** the trade only breaks even if your round-trip cost stays "
+            f"under **{R['spy_be']}** (QQQ {R['qqq_be']}), and a realistic intraday round-trip — "
+            "spread, slippage, and the fact you can't perfectly hit the 4 pm print, *twice* a day "
+            f"— lands right there. Charge a sensible 2 bps and SPY's risk-adjusted return collapses "
+            f"to **{R['spy_net2']}** (a flat line). The continuation is a real *lean*; as a *trade* "
+            "it's noise that dies on the spread. The newsletter's own words — *bias, not a trade* — "
+            "are exactly right."
+        ),
+        code(
+            "# The afternoon short, cost-swept (synthetic illustration; real numbers quoted above).\n"
+            "bt = decompose.afternoon_short_backtest(feat)\n"
+            "costs = [0.0, 0.5, 1.0, 2.0, 5.0]\n"
+            "nets = [bt['net'][c]['net_sharpe'] for c in costs]\n"
+            "plt.plot(costs, nets, 'o-', color='#b22222')\n"
+            "plt.axhline(0, color='k', lw=0.6)\n"
+            "plt.axvline(bt['break_even_cost_bps'], color='grey', ls='--',\n"
+            "            label=f\"break-even {bt['break_even_cost_bps']:.1f} bps\")\n"
+            "plt.xlabel('round-trip cost (bps)'); plt.ylabel('net Sharpe of the afternoon short')\n"
+            "plt.title('A thin edge with a low break-even — gone at realistic costs'); plt.legend()\n"
+            "plt.show()"
         ),
 
         md(
@@ -309,6 +333,25 @@ def build_quants():
         ),
 
         md(
+            "## 4d · Is the continuation *signal* real? (separate from tradable)\n\n"
+            "`continuation_test` contrasts the afternoon after OC-red vs OC-green, on the sign "
+            "(two-proportion z) and the mean return (Welch t). This is the small, true core — "
+            "intraday return continuation — and it must be judged *before* asking if it pays."
+        ),
+        code(
+            "ct = decompose.continuation_test(feat)\n"
+            "print({k:(round(v,4) if isinstance(v,float) else v) for k,v in ct.items()})"
+        ),
+        md(
+            f"> **Real tape:** the afternoon is genuinely lower after a red morning — SPY mean "
+            f"rest_ret **{R['spy_mean']}** (OC-red) vs **{R['spy_meang']}** (OC-green), sign "
+            f"contrast z p = **{R['spy_sign_p']}** (mean-contrast Welch p = {R['spy_mean_p']}, "
+            f"marginal); QQQ **{R['qqq_mean']}** vs **{R['qqq_meang']}**, sign p = "
+            f"**{R['qqq_sign_p']}**, mean p = **{R['qqq_mean_p']}**. The morning carries real "
+            "directional information into the afternoon. Whether you can *bank* it is beat 6."
+        ),
+
+        md(
             "## 4 · Does IB-rejection add anything over OC-red?\n\n"
             "Two-proportion z and Fisher exact on (OC-red ∧ IB-rejected) vs (OC-red ∧ ¬rejected). "
             "Under the synthetic null the increment is ~0 and non-significant."
@@ -374,22 +417,41 @@ def build_quants():
             f"**Signal `WEAK`** — genuine continuation lift only **{R['spy_cont_lift']}** / "
             f"**{R['qqq_cont_lift']}** (SPY/QQQ, ~700 sessions); **{R['spy_mech']}–{R['qqq_mech']}%** "
             f"of the headline is a mechanical head-start; IB-rejection increment ≈ 0 (Fisher p "
-            f"{R['es_fisher']}/{R['nq_fisher']}). **Tradability `MIRAGE`** — a close-*direction* "
-            "bias is not an entry, and ~6 pp of directional tilt does not survive a round-trip "
-            "spread plus a realistic target. **\"88% predictive?\" `INFLATED`** — a small-sample, "
+            f"{R['es_fisher']}/{R['nq_fisher']}). **Tradability `MIRAGE`** — the afternoon short "
+            f"that monetises the continuation grosses {R['spy_gross']}/{R['qqq_gross']} at Sharpe "
+            f"{R['spy_gs']}/{R['qqq_gs']} with a *t* of only {R['spy_gt']}/{R['qqq_gt']} (noise), "
+            f"and its {R['spy_be']}/{R['qqq_be']} break-even sits inside real costs (net Sharpe "
+            f"{R['spy_net2']}/{R['qqq_net2']} at 2 bps). **\"88% predictive?\" `INFLATED`** — a small-sample, "
             f"selection-maximised draw from a ~{R['fork_true']} true rate (E[best of 12]≈"
             f"{R['fork_best']}). Real numbers as-of 2026-06-01 in [`../docs/results.md`](../docs/results.md)."
         ),
 
         md(
-            "## 6 · Could you trade it — the cost the bias can't pay\n\n"
-            "The only positive-expectancy leg is the continuation: short at 10:30 on a red hour, "
-            "cover at 16:00. Its edge is the rest-of-day directional tilt, ~**+6 pp** of "
-            "P(down) — call it a few bps of expected move on a near-symmetric distribution. Charge "
-            "a round-trip equity-index spread + commission *every session* (per the house rule, "
-            "costs against the alpha, not the gross) and add the variance of a full-afternoon hold, "
-            "and the thin directional tilt is gone. There is no capacity question — SPY/ES are "
-            "bottomless — because the edge dies on costs long before size matters."
+            "## 6 · Could you trade it — the afternoon short, cost-swept\n\n"
+            "The only positive-expectancy expression is to trade the continuation: short 10:30→close "
+            "on OC-red days (pnl = −rest_ret). We run it and sweep the round-trip cost."
+        ),
+        code(
+            "bt = decompose.afternoon_short_backtest(feat)\n"
+            "print({k:(round(v,4) if isinstance(v,float) else v) for k,v in bt.items() if k!='net'})\n"
+            "costs = [0.0,0.5,1.0,2.0,5.0]\n"
+            "print('net Sharpe by cost:', {c: round(bt['net'][c]['net_sharpe'],3) for c in costs})\n"
+            "plt.plot(costs, [bt['net'][c]['net_sharpe'] for c in costs], 'o-', color='#b22222')\n"
+            "plt.axhline(0, color='k', lw=0.6)\n"
+            "plt.axvline(bt['break_even_cost_bps'], color='grey', ls='--', label='break-even')\n"
+            "plt.xlabel('round-trip cost (bps)'); plt.ylabel('net Sharpe'); plt.legend()\n"
+            "plt.title('Afternoon short: net Sharpe vs cost (synthetic)'); plt.show()"
+        ),
+        md(
+            f"> **Real tape:** the afternoon short earns a gross **{R['spy_gross']}/trade** on SPY "
+            f"(**{R['qqq_gross']}** QQQ) at a gross Sharpe of only **{R['spy_gs']}** / **{R['qqq_gs']}** "
+            f"— and its own *t*-stat is **{R['spy_gt']}** / **{R['qqq_gt']}**, i.e. the tradable "
+            f"expectancy is **not distinguishable from zero**. Break-even round-trip cost is "
+            f"**{R['spy_be']}** / **{R['qqq_be']}**, which a realistic two-leg intraday round-trip "
+            f"(spread + slippage + imperfect close fill) meets; at 2 bps the net Sharpe is "
+            f"**{R['spy_net2']}** (SPY) / **{R['qqq_net2']}** (QQQ). Capacity is irrelevant — the "
+            "binding constraint is that the gross edge is noise (t < 1) and the break-even is below "
+            "real costs. A real *signal*, an untradable *trade*."
         ),
 
         md(

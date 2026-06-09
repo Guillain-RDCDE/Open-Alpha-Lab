@@ -92,6 +92,28 @@ oc_green  145  381 0.3806      0.3332       0.4303  -6.0802
   is already below its open at 10:30), not continuation. The forecastable edge for the rest of the
   day is the small continuation lift.
 
+**Is the continuation a real signal?** Mean rest-of-day return after an OC-red morning
+**-2.19 bps** vs after OC-green **+5.60 bps**
+— a contrast of **-7.79 bps** (Welch *t* = **-1.55**, p =
+**0.121**); on the *sign*, P(rest red | OC-red) − P(rest red | OC-green) =
+**+12.8 pp** (z p = **0.001**). The morning *does* carry real
+directional information into the afternoon — small, but statistically there.
+
+**Could you trade it? (beat 6 — the afternoon short, cost-swept.)** Short 10:30→close on every
+OC-red day (pnl = −rest_ret), 344 trades (~120/yr):
+
+| | gross | @0.5 bps | @1 bps | @2 bps | @5 bps |
+|---|--:|--:|--:|--:|--:|
+| net mean (bps/trade) | +2.19 | +1.69 | +1.19 | +0.19 | -2.81 |
+| net Sharpe | +0.40 | +0.31 | +0.22 | +0.03 | -0.51 |
+
+The gross expectancy is **+2.19 bps/trade** at a gross Sharpe of only
+**+0.40** — and its own *t*-stat is **+0.68**, i.e. the tradable
+edge is **not statistically distinguishable from zero**. The break-even round-trip cost is
+**2.19 bps**, which sits inside a realistic all-in two-leg intraday
+round-trip (spread + slippage + not hitting the exact close). The continuation *signal* is real;
+the afternoon *trade* is noise that dies on costs.
+
 ## QQQ — opening-candle leg, high power (725 sessions)
 
 P(session closes red | morning condition) — what edgeful quotes:
@@ -117,6 +139,28 @@ oc_green  143  374 0.3824      0.3345       0.4326  -5.2130
 - **79%** of the headline lift is a *mechanical head-start* (an OC-red day
   is already below its open at 10:30), not continuation. The forecastable edge for the rest of the
   day is the small continuation lift.
+
+**Is the continuation a real signal?** Mean rest-of-day return after an OC-red morning
+**-3.70 bps** vs after OC-green **+9.05 bps**
+— a contrast of **-12.75 bps** (Welch *t* = **-2.05**, p =
+**0.041**); on the *sign*, P(rest red | OC-red) − P(rest red | OC-green) =
+**+10.8 pp** (z p = **0.003**). The morning *does* carry real
+directional information into the afternoon — small, but statistically there.
+
+**Could you trade it? (beat 6 — the afternoon short, cost-swept.)** Short 10:30→close on every
+OC-red day (pnl = −rest_ret), 351 trades (~122/yr):
+
+| | gross | @0.5 bps | @1 bps | @2 bps | @5 bps |
+|---|--:|--:|--:|--:|--:|
+| net mean (bps/trade) | +3.70 | +3.20 | +2.70 | +1.70 | -1.30 |
+| net Sharpe | +0.54 | +0.46 | +0.39 | +0.25 | -0.19 |
+
+The gross expectancy is **+3.70 bps/trade** at a gross Sharpe of only
+**+0.54** — and its own *t*-stat is **+0.91**, i.e. the tradable
+edge is **not statistically distinguishable from zero**. The break-even round-trip cost is
+**3.70 bps**, which sits inside a realistic all-in two-leg intraday
+round-trip (spread + slippage + not hitting the exact close). The continuation *signal* is real;
+the afternoon *trade* is noise that dies on costs.
 
 ## Forking paths — how a mined "confluence" inflates a modest edge
 

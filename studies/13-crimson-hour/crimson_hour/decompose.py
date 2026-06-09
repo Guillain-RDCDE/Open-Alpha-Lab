@@ -157,6 +157,88 @@ def mechanical_vs_predictive(feat: pd.DataFrame) -> dict:
     }
 
 
+def welch_t(a: np.ndarray, b: np.ndarray) -> dict:
+    """Welch's unequal-variance t-test of mean(a) vs mean(b) (two-sided, normal-tail p)."""
+    a = np.asarray(a, float); a = a[np.isfinite(a)]
+    b = np.asarray(b, float); b = b[np.isfinite(b)]
+    na, nb = a.size, b.size
+    va, vb = a.var(ddof=1), b.var(ddof=1)
+    se = math.sqrt(va / na + vb / nb)
+    t = (a.mean() - b.mean()) / se if se > 0 else 0.0
+    return {"mean_a": float(a.mean()), "mean_b": float(b.mean()),
+            "diff": float(a.mean() - b.mean()), "t": float(t),
+            "p_value": float(math.erfc(abs(t) / math.sqrt(2)))}
+
+
+def continuation_test(feat: pd.DataFrame) -> dict:
+    """Is the genuine forecast — afternoon continuation — statistically real?
+
+    Tests whether the rest-of-day (10:30→16:00) differs after a red opening hour vs a green one,
+    two ways: a two-proportion z on the *sign* (P(rest red | OC-red) vs P(rest red | OC-green))
+    and a Welch t on the *return* (mean rest_ret by group, in bps). A significant contrast means
+    the morning carries real directional information into the afternoon — the small, true core of
+    the claim, separate from whether it is *tradable* (see :func:`afternoon_short_backtest`).
+    """
+    from .signals import oc_red, rest_red
+
+    oc = oc_red(feat)
+    rr = rest_red(feat)
+    red = rate(oc, rr)
+    grn = rate(~oc, rr)
+    z = two_proportion_z(red["k"], red["n"], grn["k"], grn["n"])
+
+    rest = feat["rest_ret"].to_numpy(float)
+    ocb = oc.fillna(False).to_numpy(bool)
+    wt = welch_t(rest[ocb], rest[~ocb])
+    return {
+        "rest_red_oc_red": red["rate"], "rest_red_oc_green": grn["rate"],
+        "sign_diff_pp": (red["rate"] - grn["rate"]) * 100, "sign_z": z["z"],
+        "sign_p_value": z["p_value"],
+        "mean_rest_oc_red_bps": wt["mean_a"] * 1e4, "mean_rest_oc_green_bps": wt["mean_b"] * 1e4,
+        "mean_diff_bps": wt["diff"] * 1e4, "mean_t": wt["t"], "mean_p_value": wt["p_value"],
+        "n_oc_red": red["n"], "n_oc_green": grn["n"],
+    }
+
+
+def afternoon_short_backtest(feat: pd.DataFrame,
+                             costs_bps: tuple[float, ...] = (0.0, 0.5, 1.0, 2.0, 5.0),
+                             trading_days: int = 252) -> dict:
+    """Beat 6 made into a number: short 10:30→close on every red-opening-hour day, sweep costs.
+
+    The only positive-expectancy reading of the claim is to trade the continuation: on an OC-red
+    day, short the rest of the session (pnl = −rest_ret). Reports the gross per-trade mean (bps),
+    its t-stat and annualised Sharpe, the win rate, the **break-even round-trip cost** (the cost
+    that zeroes the mean), and a net-of-cost table. The decisive honesty check: a gross Sharpe is
+    not an edge if its own t-stat is ~0 and the break-even sits inside realistic costs.
+    """
+    from .signals import oc_red
+
+    oc = oc_red(feat).fillna(False).to_numpy(bool)
+    pnl = -feat["rest_ret"].to_numpy(float)[oc]
+    pnl = pnl[np.isfinite(pnl)]
+    n = pnl.size
+    if n < 2:
+        return {"n_trades": n}
+    mean = float(pnl.mean())
+    sd = float(pnl.std(ddof=1))
+    years = len(feat) / trading_days
+    trades_per_year = n / years if years > 0 else float("nan")
+    t_stat = mean / (sd / math.sqrt(n)) if sd > 0 else 0.0
+    gross_sharpe = mean / sd * math.sqrt(trades_per_year) if sd > 0 else float("nan")
+
+    net = {}
+    for c in costs_bps:
+        m = mean - c * 1e-4
+        net[c] = {"net_mean_bps": m * 1e4,
+                  "net_sharpe": (m / sd * math.sqrt(trades_per_year)) if sd > 0 else float("nan")}
+    return {
+        "n_trades": n, "trades_per_year": trades_per_year,
+        "gross_mean_bps": mean * 1e4, "gross_t": t_stat, "gross_sharpe": gross_sharpe,
+        "win_rate": float((pnl > 0).mean()), "break_even_cost_bps": mean * 1e4,
+        "net": net,
+    }
+
+
 def ib_increment(feat: pd.DataFrame) -> dict:
     """Does IB-rejection add anything *on top of* OC-red? (confluence vs OC-red-not-rejected).
 
