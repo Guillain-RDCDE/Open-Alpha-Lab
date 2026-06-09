@@ -1,0 +1,471 @@
+"""Generate the two narrative notebooks for Study 20 (Freight-Train) from source.
+
+    python notebooks/build_notebooks.py
+    jupyter nbconvert --to notebook --execute --inplace \
+        notebooks/01_for_the_curious.ipynb notebooks/02_for_the_quants.ipynb
+
+The executed path runs on the **offline synthetic universe** — a multi-asset tape with a *baked-in*
+persistent drift (so past returns predict future ones) — because the cached real ETF closes are
+git-ignored and the desk's reproducible core must run with no network. The synthetic proves the
+machinery (a real trend by construction, a driftless null that kills it), so the **real verdict** (a
+live ETF basket, quoted from [`docs/results.md`](../docs/results.md) via `examples/verify.py`) is a fact
+about the market: a faint, decayed standalone edge whose *crisis convexity* is the real product. Both
+notebooks walk the SAME seven desk beats (see ../../../METHODOLOGY.md).
+"""
+
+from __future__ import annotations
+
+import os
+
+import nbformat as nbf
+from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+BOOT = """\
+import sys, os
+sys.path.insert(0, os.path.abspath(".."))           # study root (trend_follow/ lives there)
+sys.path.insert(0, os.path.abspath("../../.."))      # repo root, for quantlab
+%matplotlib inline
+import matplotlib.pyplot as plt
+plt.rcParams["figure.figsize"] = (9.5, 5.2)
+import numpy as np, pandas as pd
+pd.set_option("display.float_format", lambda v: f"{v:,.4f}")
+from trend_follow import data, trend, strategy, decompose, extension
+
+# Offline synthetic universe: each asset's drift is a slow, persistent AR(1) (so past returns predict
+# future ones -> time-series momentum). The NULL (trend_strength=0) is driftless noise. The real
+# ETF-basket verdict is in ../docs/results.md.
+panel,  truth = data.synthetic_panel(trend_strength=0.0006, seed=20)   # the trend tape
+panel0, _     = data.synthetic_panel(trend_strength=0.0,    seed=20)   # the driftless null
+print(f"{truth.n_assets} assets x {truth.n_bars} days | baked trend_strength={truth.trend_strength} | null=0")
+"""
+
+# Real headline numbers (from docs/results.md via examples/verify.py; cells below EXECUTE on synthetic).
+# 14 ETFs, 1993-2026, as-of 2026-06-01, fingerprint b44e64aaa95b.
+R = dict(
+    n_etf="14", lo="1993", hi="2026", fp="b44e64aaa95b",
+    pooled_t="+1.5", hit="52", hac_t="+1.8",
+    tsmom_sr="+0.29", tsmom_ann="+3.5", tsmom_dd="-46", basket_sr="+0.45", gain="-0.16", turn="3.3",
+    alpha="+4.0", alpha_t="+1.9", beta="-0.05",
+    sub1="+0.53", sub2="+0.27", sub3="-0.08",
+    crisis_tsmom="+0.53", crisis_basket="-7.83", crisis_n="41",
+    calm_tsmom="+0.26", calm_basket="+1.59", convex="+0.27",
+)
+
+BADGES = (
+    "![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)\n"
+    "![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)\n"
+    "![Crisis hedge?: Confirmed](https://img.shields.io/badge/Crisis_hedge%3F-Confirmed-8b949e?style=flat-square)\n\n"
+)
+
+
+def md(t): return new_markdown_cell(t)
+def code(t): return new_code_cell(t)
+
+
+# ===========================================================================
+# 01 — FOR THE CURIOUS
+# ===========================================================================
+def build_curious():
+    cells = [
+        md(
+            "# Freight-Train 🚂\n"
+            "### \"The trend is your friend\" — ride what's moving across many markets. Does it pay, and why would you hold it?\n\n"
+            + BADGES +
+            "The oldest rule in systematic trading: buy what's been going up, sell what's been going "
+            "down, across a whole basket of markets, and let the winners run. It's the engine of the "
+            "**managed-futures** industry — *time-series momentum*, and unlike most folk rules it has "
+            "serious academic backing (Moskowitz, Ooi & Pedersen 2012, across 58 futures and a century "
+            "of data).\n\n"
+            "This is the desk's third idea from Kakushadze & Serur's *151 Trading Strategies* (strategy "
+            "§10.4), and it's the most *grown-up* specimen yet: not an obvious mirage, but a real effect "
+            "whose honest verdict is subtle. We prove the machinery on a synthetic universe where we "
+            "bake a trend in (and a driftless null where there's nothing to ride), then run it on a "
+            "real ETF basket — and find the standalone payoff is *faint and fading*, while the reason to "
+            "actually hold it survives in a place the headline Sharpe never looks.\n\n"
+            "> 📓 **Plain-language layer.** The time-series-momentum *t*-stat, the alpha regression and "
+            "the crisis-convexity test are in **[02_for_the_quants.ipynb](02_for_the_quants.ipynb)**.\n"
+            ">\n"
+            "> ⚠️ **Not investment advice.** Every chart is generated by the code beside it; the core runs "
+            "on a **synthetic** tape with a *baked-in* trend, so the real-ETF numbers (from "
+            "[`../docs/results.md`](../docs/results.md)) are a measurement. House style in "
+            "[METHODOLOGY.md](../../../METHODOLOGY.md)."
+        ),
+        code(BOOT),
+
+        md(
+            "## The answer first 🎯\n\n"
+            "| What we asked | The honest answer |\n"
+            "|---|---|\n"
+            "| Does the trend predict the future? | 🟡 **Weakly, on this menu.** Real and strong in the "
+            "academic cross-asset data; faint on our 14 equity-heavy ETFs "
+            f"(pooled *t* = **{R['pooled_t']}**). |\n"
+            "| Does it beat just holding the basket? | 🟡 **No, lately.** Standalone Sharpe "
+            f"**{R['tsmom_sr']}**, *below* the basket, and **decayed** ({R['sub1']} → {R['sub3']}). |\n"
+            "| Then why hold it? | ⚪ **For the crash months.** When the basket loses "
+            f"**{R['crisis_basket']}%/mo**, trend *earns* **{R['crisis_tsmom']}%/mo** — the "
+            "diversification you actually buy. |\n\n"
+            "> Desk shorthand: **Signal `WEAK` · Tradability `FRAGILE` · Crisis hedge? `CONFIRMED`** — a "
+            "thin standalone edge whose real value is its behaviour in a storm."
+        ),
+
+        md(
+            "## 1 · The claim 📣\n\n"
+            "Stated plainly: **what has trended tends to keep trending.** Take each market's own past-"
+            "year return; if it's up, go long, if it's down, go short; size each position by the inverse "
+            "of its volatility so no single market dominates; and diversify across dozens of them. The "
+            "average of those timed bets is the trend-following return. On our synthetic universe we "
+            "baked a slow, persistent drift into each asset — so the past genuinely predicts the future:"
+        ),
+        code(
+            "pr = trend.predictability(panel)\n"
+            "print(f\"pooled time-series-momentum t = {pr['pooled_t']:+.1f}, hit rate {pr['hit_rate']:.0%}\")\n"
+            "tr = trend.trailing_return(panel, 252).iloc[252::21].stack()\n"
+            "fwd = ((1+panel).rolling(21).apply(np.prod, raw=True).shift(-21)-1).iloc[252::21].stack()\n"
+            "d = pd.DataFrame({'past': tr, 'next': fwd}).dropna()\n"
+            "fig, ax = plt.subplots(figsize=(6.2,5.6))\n"
+            "ax.scatter(d['past']*100, d['next']*100, s=8, alpha=.3)\n"
+            "ax.axhline(0, c='grey', lw=.6); ax.axvline(0, c='grey', lw=.6)\n"
+            "ax.set_xlabel('past-year return (%)'); ax.set_ylabel('next-month return (%)')\n"
+            "ax.set_title('Baked trend: a positive past year tilts the next month positive')\n"
+            "plt.show()"
+        ),
+
+        md(
+            "## 2 · So what? 💰\n\n"
+            "If trends persist, you get a strategy with two prized traits. First, it's **diversifying**: "
+            "it trades dozens of unrelated markets, long and short, so it isn't just dressed-up stock "
+            "beta. Second — the big one — it tends to be **short a falling market** by the time a crash "
+            "is under way, so it can *make money in exactly the months everything else is losing it*. "
+            "That \"crisis alpha\" is why pensions and endowments pay for managed futures even when its "
+            "standalone return is modest."
+        ),
+
+        md(
+            "## 3 · How we'd know 🔬\n\n"
+            "Four checks, up front:\n\n"
+            "1. **Is the trend real?** Does a positive past-year return predict a positive next-month "
+            "return, significantly?\n"
+            "2. **Does it beat holding the basket**, net of costs? (Costs should barely matter — the "
+            "signal is slow.)\n"
+            "3. **Is it still working** — or has it decayed across the decades?\n"
+            "4. **The payoff shape:** does it earn in the basket's worst months? And the **null** — a "
+            "driftless tape must yield nothing.\n\n"
+            "**Mirage/weak line:** the predictability is marginal and the standalone edge has faded — in "
+            "which case the verdict hinges on whether the *diversification* survives."
+        ),
+
+        md(
+            "## 4 · The teardown 🔧\n\n"
+            "### 4a · The trend is real — and the null is flat\n"
+            "Run the strategy on both synthetic tapes: the baked trend and the driftless null."
+        ),
+        code(
+            "for label, p in [('trend', panel), ('driftless null', panel0)]:\n"
+            "    pr = trend.predictability(p); cmp = strategy.compare(p, cost_bps=2.0)\n"
+            "    print(f\"{label:16s}: pooled t {pr['pooled_t']:+.1f} | TSMOM Sharpe {cmp['tsmom']['sharpe']:+.2f} \"\n"
+            "          f\"(gain vs basket {cmp['sharpe_gain']:+.2f}), turnover {cmp['turnover_ann']:.1f}x/yr\")"
+        ),
+
+        md(
+            "### 4b · The equity curve, and the slow signal\n"
+            "Trend-following on the baked tape — note the *low turnover*: the signal moves over months, "
+            "so you rebalance a few times a year, and costs barely bite (the opposite of a daily signal)."
+        ),
+        code(
+            "t = strategy.tsmom_returns(panel, cost_bps=2.0); b = strategy.long_only_basket(panel).reindex(t.index)\n"
+            "eq_t = (1+t).cumprod(); eq_b = (1+b).cumprod()\n"
+            "fig, ax = plt.subplots()\n"
+            "ax.plot(eq_t.index, eq_t.values, color='#2ea44f', label=f\"trend (Sharpe {strategy.summary(t)['sharpe']:+.2f})\")\n"
+            "ax.plot(eq_b.index, eq_b.values, color='#8b949e', label=f\"long-only basket (Sharpe {strategy.summary(b)['sharpe']:+.2f})\")\n"
+            "ax.legend(); ax.set_ylabel('growth of $1'); ax.set_title(f'Trend, gross of nothing fancy -- turnover {strategy.turnover_ann(panel):.1f}x/yr')\n"
+            "plt.show()"
+        ),
+
+        md(
+            "### 4c · The real tape — faint and fading\n"
+            "On a basket of 14 real ETFs (quoted from [`../docs/results.md`](../docs/results.md)):\n\n"
+            f"- The trend is **weak here**: pooled *t* = **{R['pooled_t']}**, strategy Newey–West *t* = "
+            f"**{R['hac_t']}** — at the edge of significance (the academic studies use 50+ cross-asset "
+            "futures; our menu is equity-heavy and retail-accessible).\n"
+            f"- Standalone it earns Sharpe **{R['tsmom_sr']}**, *below* just holding the basket "
+            f"(**{R['basket_sr']}**), and it has **decayed**: sub-sample Sharpe **{R['sub1']} → "
+            f"{R['sub2']} → {R['sub3']}**.\n"
+            f"- Costs are *not* the issue (turnover only **{R['turn']}×/yr**) — unlike "
+            "[Study 19](../../19-rubber-band/), this signal is slow.\n\n"
+            "So as a return engine, it's `WEAK`/`FRAGILE`. But we haven't looked where it actually earns "
+            "its keep."
+        ),
+
+        md(
+            "### 4d · Where it earns its keep — the crash months\n"
+            "Split months into the basket's *worst* and the rest, and compare. This is the whole reason "
+            "to hold trend."
+        ),
+        code(
+            "cc = extension.crisis_convexity(panel, cost_bps=2.0)\n"
+            "labels = ['basket worst months', 'all other months']\n"
+            "tsm = [cc['tsmom_crisis_mean_pct'], cc['tsmom_calm_mean_pct']]\n"
+            "bsk = [cc['basket_crisis_mean_pct'], cc['basket_calm_mean_pct']]\n"
+            "x = np.arange(2); w = 0.38\n"
+            "fig, ax = plt.subplots()\n"
+            "ax.bar(x-w/2, tsm, w, color='#2ea44f', label='trend'); ax.bar(x+w/2, bsk, w, color='#8b949e', label='basket')\n"
+            "ax.axhline(0, c='k', lw=.6); ax.set_xticks(x); ax.set_xticklabels(labels); ax.set_ylabel('avg monthly return (%)'); ax.legend()\n"
+            "ax.set_title('Crisis convexity: trend is green when the basket is deep red')\n"
+            "plt.show()\n"
+            "print('(Synthetic shown. On the REAL basket: trend "
+            f"{R['crisis_tsmom']}%/mo vs basket {R['crisis_basket']}%/mo in its worst {R['crisis_n']} months.)')"
+        ),
+
+        md(
+            "## 5 · The verdict 🧾\n\n"
+            f"- **Real but weak here** — pooled *t* {R['pooled_t']}, strategy *t* {R['hac_t']}; strong in "
+            "the academic cross-asset data, faint on this equity-heavy ETF menu.\n"
+            f"- **Decayed standalone** — Sharpe {R['sub1']} → {R['sub3']}, below buy-and-hold.\n"
+            f"- **But the convexity holds** — **{R['crisis_tsmom']}%/mo** in the basket's worst months, "
+            f"basket beta **{R['beta']}**.\n\n"
+            "> **Signal `WEAK` · Tradability `FRAGILE` · Crisis hedge? `CONFIRMED`.** Not a mirage and "
+            "not a money-printer — a diversifier whose value lives in its shape, not its average."
+        ),
+
+        md(
+            "## 6 · Could you trade it? 💸\n\n"
+            f"- **Costs aren't the wall.** Turnover ~{R['turn']}×/yr; the break-even cost is far above "
+            "anything realistic. This one *survives* execution — the rare case on this desk.\n"
+            "- **The standalone edge is thin and has decayed**, so you would *not* hold it for its own "
+            "Sharpe.\n"
+            f"- **You'd hold it as a sleeve.** Its job is the **{R['crisis_tsmom']}%/mo** it makes when "
+            "the rest of the book is down hardest — a negatively-correlated hedge you're *paid* (a "
+            "little) to carry rather than paying an insurance premium for.\n\n"
+            "> Tradability **`FRAGILE`** standalone; **`CONFIRMED`** as a crisis hedge — the worked "
+            "complement ([`../docs/extension.md`](../docs/extension.md)) makes the diversification case."
+        ),
+
+        md(
+            "## 7 · Going further 🚪\n\n"
+            "- **The crisis-convexity test** (beat 7 of the quants notebook + "
+            "[`../docs/extension.md`](../docs/extension.md)): trend's behaviour in the basket's worst "
+            "months, the diversification a thin Sharpe hides.\n"
+            "- **A real cross-asset menu.** Our 14 ETFs are equity-heavy; the academic edge needs ~50 "
+            "futures spanning rates, FX, commodities and equities. A broader basket should lift the "
+            "standalone Sharpe and sharpen the convexity.\n"
+            "- **Faster/slower lookbacks & blends.** 1-, 3- and 12-month trends blended (and a vol-target "
+            "overlay à la [Study 16](../../16-storm-shy/)) are how real CTAs run — does that rescue the "
+            "standalone line?\n\n"
+            "PRs welcome — give trend the cross-asset menu it deserves, or pin when the equity-only "
+            "version faded."
+        ),
+    ]
+    return new_notebook(cells=cells, metadata=_meta())
+
+
+# ===========================================================================
+# 02 — FOR THE QUANTS
+# ===========================================================================
+def build_quants():
+    cells = [
+        md(
+            "# Freight-Train — a quantitative teardown 🔬\n"
+            "### Time-series-momentum t-stat · TSMOM vs the basket · alpha & beta · sub-sample decay · crisis convexity · the driftless null\n\n"
+            + BADGES +
+            "The deep companion to the [notebook for the curious](01_for_the_curious.ipynb) — *same "
+            "seven beats, every claim with its standard error.* The steelman is §10.4 futures trend "
+            "following (Moskowitz–Ooi–Pedersen 2012): ``w_i = sign(R_i^T)/sigma_i`` across a basket. We "
+            "prove the apparatus on a synthetic tape with a baked persistent drift (and a driftless "
+            "null), then read the real verdict off a live ETF basket.\n\n"
+            "> ⚠️ **Not investment advice.** The core executes on the synthetic tape; the real ETF run is "
+            "in [`../docs/results.md`](../docs/results.md) via `examples/verify.py`, sources in "
+            "[`../docs/references.md`](../docs/references.md).\n"
+            ">\n"
+            "> 💡 **The `💡 In plain words` notes** translate each result back to intuition."
+        ),
+        code(BOOT),
+
+        md(
+            "## Beat 0 · Verdict\n\n"
+            "| Axis | Stamp | Why |\n"
+            "|---|---|---|\n"
+            "| **Signal** — is the trend real? | 🟡 `WEAK` | Strong in cross-asset academic data and on "
+            f"our control (synthetic pooled *t* > 3); faint on this equity-heavy ETF menu (pooled *t* = "
+            f"**{R['pooled_t']}**, strategy HAC *t* = **{R['hac_t']}**). |\n"
+            "| **Tradability** | 🟡 `FRAGILE` | Survives costs easily (turnover "
+            f"**{R['turn']}×/yr**), but standalone Sharpe **{R['tsmom_sr']}** is *below* the basket and "
+            f"has decayed (**{R['sub1']} → {R['sub3']}**). |\n"
+            "| **Crisis hedge?** | ⚪ `CONFIRMED` | In the basket's worst months it earns "
+            f"**{R['crisis_tsmom']}%/mo** (basket **{R['crisis_basket']}%/mo**), beta **{R['beta']}** — "
+            "the diversification it's actually held for. |\n\n"
+            "> **In one sentence:** a real but faint, decayed standalone edge that survives costs and "
+            "earns its keep as a negatively-correlated crisis hedge — held for its shape, not its "
+            "average.\n\n"
+            "*(This notebook executes on the synthetic tape; the real ETF numbers that set the stamps are "
+            "in [`../docs/results.md`](../docs/results.md).)*"
+        ),
+
+        md(
+            "## Beat 1 · The claim, precisely\n\n"
+            "For each asset, $w_{i,t} = \\gamma\\,\\text{sign}(R^{T}_{i,t})/\\sigma_{i,t}$ with "
+            "$\\sum_i|w_i| = 1$, where $R^T$ is the trailing-$T$ return and $\\sigma_i$ the trailing vol. "
+            "The claim is $\\mathbb{E}[\\text{sign}(R^T_{i,t})\\,r_{i,t+1}] > 0$ — past direction predicts "
+            "future direction. The synthetic bakes a stationary AR(1) drift "
+            "$\\mu_{i,t}=\\phi\\mu_{i,t-1}+\\dots$ (so $\\phi\\to1$ gives persistence); "
+            "$\\text{trend\\_strength}=0$ is the driftless null."
+        ),
+        code(
+            "print(f\"baked trend_strength {truth.trend_strength}, AR(1) phi {truth.phi}\")\n"
+            "print(f\"turnover {strategy.turnover_ann(panel):.1f}x/yr -- a months-long signal, rebalanced monthly\")"
+        ),
+
+        md(
+            "## Beat 2 · So what?\n\n"
+            "Two properties make trend valuable beyond its Sharpe. **(i)** It is long *and* short across "
+            "many low-correlation markets, so it is not disguised equity beta — measurable as a low "
+            "regression beta to the basket. **(ii)** It is *convex* in the underlying: by construction it "
+            "is short a market that has been falling, so its payoff resembles a long-straddle / long-"
+            "volatility position (Fung–Hsieh), paying off in crashes. Beats 4–6 measure the standalone "
+            "edge, its decay, and — decisively — the convexity."
+        ),
+
+        md(
+            "## Beat 3 · Pre-registered protocol\n\n"
+            "1. **Predictability** (`trend.predictability`): pooled NW *t* of "
+            "$\\text{sign(past)}\\times\\text{future}$. Pre-registered: > 2 on the trend tape, ≈ 0 on null.\n"
+            "2. **Strategy significance** (`decompose.mean_tstat_hac`): NW *t* on the TSMOM stream.\n"
+            "3. **Alpha & beta** (`decompose.basket_alpha`): vs the equal-weight basket.\n"
+            "4. **Decay** (`decompose.subsample_sharpe`): Sharpe across thirds of the sample.\n"
+            "5. **Convexity** (`extension.crisis_convexity`): TSMOM return in the basket's worst months.\n"
+            "6. **Null:** every leg flat on the driftless tape.\n\n"
+            "**Verdict logic:** `WEAK`/`FRAGILE` if the standalone edge is marginal and decayed; the "
+            "third axis turns on whether the convexity survives."
+        ),
+
+        md(
+            "## Beat 4 · The teardown\n\n"
+            "### 4a · Predictability and the strategy, trend vs null"
+        ),
+        code(
+            "for label, p in [('trend', panel), ('null', panel0)]:\n"
+            "    pr = trend.predictability(p)\n"
+            "    t = decompose.mean_tstat_hac(strategy.tsmom_returns(p, cost_bps=2.0))\n"
+            "    a = decompose.basket_alpha(p, cost_bps=2.0)\n"
+            "    print(f\"{label:6s}: pooled t {pr['pooled_t']:+.1f}, hit {pr['hit_rate']:.0%} | \"\n"
+            "          f\"strategy HAC t {t['t_stat']:+.1f} | alpha {a['alpha_ann_pct']:+.1f}% (t{a['alpha_t']:+.1f}) beta {a['beta']:+.2f}\")"
+        ),
+
+        md(
+            "### 4b · Sub-sample decay\n"
+            "Sharpe across thirds of the tape (on the real basket this is where the standalone case "
+            "weakens)."
+        ),
+        code(
+            "display(decompose.subsample_sharpe(panel, cost_bps=2.0, n_chunks=3).round(3))\n"
+            "rs = decompose.rolling_sharpe(strategy.tsmom_returns(panel, cost_bps=2.0), window=252*3)\n"
+            "fig, ax = plt.subplots(); ax.plot(rs.index, rs.values); ax.axhline(0, ls=':', c='grey')\n"
+            "ax.set_ylabel('rolling 3y Sharpe'); ax.set_title('Trend Sharpe wanders -- it is regime-dependent')\n"
+            "plt.show()"
+        ),
+
+        md(
+            "### 4c · Costs barely matter (the slow-signal point)\n"
+            "The mirror image of Study 19: low turnover ⇒ a break-even far above any realistic cost."
+        ),
+        code(
+            "sw = strategy.cost_sweep(panel)\n"
+            "fig, ax = plt.subplots(); ax.plot(sw.index, sw['sharpe'].values, 'o-'); ax.axhline(0, ls=':', c='grey')\n"
+            "ax.set_xlabel('cost per unit traded (bps)'); ax.set_ylabel('net Sharpe'); ax.set_title('Flat: costs are not the threat -- decay is')\n"
+            "plt.show()\n"
+            "display(sw.round(3))"
+        ),
+
+        md(
+            "### 4d · The driftless null\n"
+            "No persistent drift ⇒ no predictability, no edge."
+        ),
+        code(
+            "pr0 = trend.predictability(panel0); cmp0 = strategy.compare(panel0, cost_bps=2.0)\n"
+            "print(f\"null: pooled t {pr0['pooled_t']:+.1f} | TSMOM Sharpe {cmp0['tsmom']['sharpe']:+.2f} \"\n"
+            "      f\"| alpha {decompose.basket_alpha(panel0, cost_bps=2.0)['alpha_ann_pct']:+.1f}%\")\n"
+            "print('nothing to ride -> nothing earned. The apparatus measures the effect, not itself.')"
+        ),
+
+        md(
+            "### 4e · Crisis convexity — the decisive leg\n"
+            "TSMOM return in the basket's worst months vs the rest."
+        ),
+        code(
+            "cc = extension.crisis_convexity(panel, cost_bps=2.0)\n"
+            "print(f\"basket worst {cc['n_crisis_months']} months: trend {cc['tsmom_crisis_mean_pct']:+.2f}%/mo \"\n"
+            "      f\"vs basket {cc['basket_crisis_mean_pct']:+.2f}%/mo\")\n"
+            "print(f\"calm months: trend {cc['tsmom_calm_mean_pct']:+.2f}%/mo vs basket {cc['basket_calm_mean_pct']:+.2f}%/mo\")\n"
+            "print(f\"convexity (crisis minus calm own-return): {cc['convexity_pp']:+.2f} pp\")"
+        ),
+        md(
+            "> 💡 **In plain words.** Trend's average return is forgettable, but it is *negatively* "
+            "correlated with the basket precisely when that matters — it makes money in the worst months. "
+            "A sleeve like that improves a portfolio's whole risk profile even with a low standalone "
+            "Sharpe; that is the `CONFIRMED` crisis hedge."
+        ),
+
+        md(
+            "## Beat 5 · The verdict\n\n"
+            f"- **Real but weak here** (4a): synthetic control strong, real-basket pooled *t* {R['pooled_t']}.\n"
+            f"- **Decayed standalone** (4b): Sharpe {R['sub1']} → {R['sub3']}, below the basket.\n"
+            f"- **Convexity confirmed** (4e): {R['crisis_tsmom']}%/mo in crises, beta {R['beta']}.\n\n"
+            "> **Signal `WEAK` · Tradability `FRAGILE` · Crisis hedge? `CONFIRMED`.**"
+        ),
+
+        md(
+            "## Beat 6 · Could you trade it?\n\n"
+            f"- **Costs:** not the wall — turnover ~{R['turn']}×/yr, break-even far above realistic "
+            "levels. It survives execution.\n"
+            "- **Standalone:** thin and decayed — you would not hold it for its own Sharpe.\n"
+            "- **As a sleeve:** the negatively-correlated crisis payoff is the reason to carry it; you "
+            "are (slightly) *paid* to hold a hedge.\n\n"
+            "Tradability **`FRAGILE`** standalone; **`CONFIRMED`** as a diversifier."
+        ),
+
+        md(
+            "## Beat 7 · Going further\n\n"
+            "### 7a · Worked complement — the crisis-convexity test\n"
+            "Quantify the diversification on the real basket: TSMOM's return in the basket's worst "
+            "months, the down-market capture, and the basket beta."
+        ),
+        code(
+            "cc = extension.crisis_convexity(panel, cost_bps=2.0); dm = extension.down_market_capture(panel, cost_bps=2.0)\n"
+            "print(f\"synthetic: crisis trend {cc['tsmom_crisis_mean_pct']:+.2f}%/mo vs basket {cc['basket_crisis_mean_pct']:+.2f}%/mo; \"\n"
+            "      f\"down-month trend {dm['tsmom_in_down_months_pct']:+.2f}% vs basket {dm['basket_in_down_months_pct']:+.2f}%\")\n"
+            f"print('On the REAL basket (../docs/extension.md): trend {R['crisis_tsmom']}%/mo vs basket {R['crisis_basket']}%/mo')\n"
+            f"print('in the worst {R['crisis_n']} months -- the diversification a {R['tsmom_sr']} standalone Sharpe hides.')"
+        ),
+        md(
+            "**The result.** On the real basket the standalone line is `WEAK`/`FRAGILE`, but the crisis "
+            f"convexity is unambiguous: **{R['crisis_tsmom']}%/mo** when the basket loses "
+            f"**{R['crisis_basket']}%/mo**, at a basket beta of **{R['beta']}**. The constraint a real "
+            "allocator cares about — *what does this do when everything else is on fire* — is exactly "
+            "where trend earns its place. The worked complement reframes a forgettable standalone result "
+            "as a portfolio-level keep. Full run in [`../docs/extension.md`](../docs/extension.md).\n\n"
+            "### 7b · Other forks\n"
+            "- **A true cross-asset menu** (rates, FX, commodities, equity indices — the MOP 2012 "
+            "universe) should lift both the standalone Sharpe and the convexity.\n"
+            "- **Multi-horizon blends + a vol-target overlay** (à la [Study 16](../../16-storm-shy/)) — "
+            "how CTAs actually run.\n"
+            "- **Total-return inputs** and a transaction-cost model calibrated to futures, not ETFs.\n\n"
+            "PRs welcome — give trend its real menu, or date the decay of the equity-only version."
+        ),
+    ]
+    return new_notebook(cells=cells, metadata=_meta())
+
+
+def _meta():
+    return {"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
+            "language_info": {"name": "python"}}
+
+
+def main():
+    nbf.write(build_curious(), os.path.join(HERE, "01_for_the_curious.ipynb"))
+    nbf.write(build_quants(), os.path.join(HERE, "02_for_the_quants.ipynb"))
+    print("wrote 01_for_the_curious.ipynb and 02_for_the_quants.ipynb")
+
+
+if __name__ == "__main__":
+    main()
