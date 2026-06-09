@@ -104,7 +104,13 @@ def build_curious():
             "2. **Optimal spread** — how wide to quote: `δ = γ·σ²·(T−t) + (2/γ)·ln(1 + γ/k)`.\n\n"
             "That last term — and the whole *closed-form* optimum — exists only because of the "
             "exponential arrival law `λ(δ) = A·e^(−kδ)`, with `k` a fixed constant. Everything "
-            "hangs on that `k`."
+            "hangs on that `k`.\n\n"
+            "> 🔬 **For the quants** — two pre-registered hypotheses. **H1 (the kernel):** order "
+            "reach is exponential, so `λ(δ)=A·e^(−kδ)` with stable `k` — reject if a power-law "
+            "kernel wins on AIC or `k` is regime-unstable. **H2 (the payoff):** the AS skew + "
+            "closed-form spread beats naive quoters — reject if a trivial inventory clamp matches "
+            "it on risk-adjusted P&L. The full teardown carrying every standard error is the "
+            "companion [02_for_the_quants](02_for_the_quants.ipynb)."
         ),
         md(
             "## 2 · So What?\n\n"
@@ -120,7 +126,13 @@ def build_curious():
             "must work here, or it's a bug). **World B** adds what real markets have: "
             "heavy-tailed order sizes, price jumps, and informed traders. The clean test of the "
             "assumption: *is order reach exponential?* If it is, the fill-rate curve is a straight "
-            "line on a log axis. If it's heavy-tailed, it curves."
+            "line on a log axis. If it's heavy-tailed, it curves.\n\n"
+            "> 🔬 **For the quants** — the identity that makes H1 testable: a quote at distance `δ` "
+            "fills iff an incoming order *reaches* at least `δ` into the book, so "
+            "`λ(δ) = Λ·P(reach ≥ δ) = Λ·S_reach(δ)` — **the arrival kernel is the survival "
+            "function of order reach.** Exponential reach ⟺ the AS kernel exactly; heavy-tailed "
+            "reach ⟹ a power law. We pre-register: Signal `NONE` if a power law wins AIC on "
+            "realistic flow, and `k` so regime-dependent that a static fit mis-prices the spread."
         ),
         md(
             "## 4 · The Teardown\n\n"
@@ -131,7 +143,13 @@ def build_curious():
         code(KERNEL_PLOT),
         md(
             "The exponential is the wrong *shape* for realistic flow. Scored head-to-head against "
-            "a power law (heavy-tailed), the exponential wins in World A and **loses** in World B:"
+            "a power law (heavy-tailed), the exponential wins in World A and **loses** in World B:\n\n"
+            "> 🔬 **For the quants** — the fit is Poisson-AIC model selection; World B prefers the "
+            "power law by an AIC gap of **+1.26M** (R² 0.9996 vs 0.68). And this isn't only a "
+            "simulator artefact: the rigorous **Clauset–Shalizi–Newman + Vuong** tail test on "
+            "**real Binance order books** (4 markets, [`docs/results_real.md`](../docs/results_real.md)) "
+            "calls order size power-law on **4/4** and price-distance on **3/4** — real order flow "
+            "is heavy-tailed, so the exponential `k` is calibrated to a kernel markets don't have."
         ),
         code(
             "gof = ex.kernel_gof_table(n_orders=NORD, seed=0)\n"
@@ -171,7 +189,12 @@ def build_curious():
             "spikes its volatility estimate and it stops trading.\n\n"
             "The punchline: the part of AS that works (the inventory **skew**) has **no `k` in "
             "it**. The phantom kernel only corrupts the spread *width* — the half the article "
-            "spends all its time on."
+            "spends all its time on.\n\n"
+            "> 🔬 **For the quants** — it's algebra, not luck: `r = s − q·γ·σ²·(T−t)` contains no "
+            "`k`; `k` enters *only* the spread's arrival term `(2/γ)·ln(1+γ/k)`. So a misspecified "
+            "`k` shifts quote *width* (a level effect on fill rate) but leaves the inventory "
+            "skew — the thing driving `q`→0 — untouched. That's why World-B AS keeps its tight "
+            "control and positive Sharpe with `k` off by 3×: the broken half wasn't doing the work."
         ),
         md(
             "## 6 · Could You Trade It?\n\n"
@@ -183,10 +206,14 @@ def build_curious():
         ),
         md(
             "## 7 · Going Further\n\n"
-            "The one thing the simulator *asserts* is that real order reach is heavy-tailed — the "
-            "literature is emphatic, but [`examples/verify_real.py`](../examples/verify_real.py) "
-            "lets you confirm it on real Binance trades. That's the headline next step. The "
-            "deep-dive notebook (`02_for_the_quants`) carries the inference, the AIC, and the "
+            "The one thing the simulator *asserts* — that real order reach is heavy-tailed — we "
+            "already **confirmed** on four real Binance order books "
+            "([`examples/confirm_heavy_tail.py`](../examples/confirm_heavy_tail.py) → "
+            "[`docs/results_real.md`](../docs/results_real.md)): order flow is power-law, not "
+            "exponential. The natural next steps are a **multi-day, multi-venue** sweep to tighten "
+            "the tail exponents, a **jump-robust** adaptive vol that might rescue the collapsing "
+            "'production fix', and the **GLT** hard-inventory-bound quoter vs the brainless clamp. "
+            "The deep-dive notebook (`02_for_the_quants`) carries the inference, the AIC, and the "
             "seed-robustness. **Fork it, break it, PR a better test.**"
         ),
     ]
@@ -227,7 +254,10 @@ def build_quants():
             "**H2 (the payoff):** the AS skew + closed-form spread beats naive quoters — reject if "
             "a trivial inventory clamp matches it. The key identity: a quote at distance `δ` fills "
             "iff an order *reaches* `δ`, so `λ(δ) = Λ·S_reach(δ)` — **the kernel is the survival "
-            "function of order reach.** Exponential reach ⟺ AS exactly; heavy-tailed ⟹ power law."
+            "function of order reach.** Exponential reach ⟺ AS exactly; heavy-tailed ⟹ power law.\n\n"
+            "> 💡 **In plain words** — the model assumes orders fade away in a tidy exponential as "
+            "you quote further from the mid. We're really asking two things: *does that fade have "
+            "the right shape?* (H1) and *if it doesn't, does the model still make money?* (H2)."
         ),
         md(
             "## 2 · So What? — it's a question of attribution\n\n"
@@ -255,9 +285,25 @@ def build_quants():
         md(
             "**(b) Model selection** — weighted R² *and* Poisson AIC. `aic_gap > 0` ⟹ the power "
             "law is preferred, i.e. the AS exponential is rejected. World A: exponential. World B: "
-            "power law, decisively."
+            "power law, decisively.\n\n"
+            "> 💡 **In plain words** — line up two candidate shapes against the data and ask which "
+            "the evidence prefers. In the textbook world the exponential wins (it's the truth "
+            "there); in the realistic world the heavy-tailed power law wins by a landslide."
         ),
         code("ex.kernel_gof_table(n_orders=NORD, seed=0)"),
+        md(
+            "**(b′) The same test on real order books.** The simulator only *asserts* heavy-tailed "
+            "reach; we confirm it. On four Binance USD-M futures books (TRX/XRP/ADA/LTC, "
+            "2024-01-15) the rigorous **Clauset–Shalizi–Newman + Vuong** tail test (run offline "
+            "here from the committed [`docs/results_real.md`](../docs/results_real.md), reproducible "
+            "via [`examples/confirm_heavy_tail.py`](../examples/confirm_heavy_tail.py)) calls order "
+            "**size** power-law on **4/4** markets (Vuong V 2.8–5.5, p<0.01, α≈3.0–3.4) and "
+            "**|price−mid|** power-law on **3/4** (the 4th merely *inconclusive*, never a clean "
+            "exponential). Real order flow is heavy-tailed on the venue the article targets.\n\n"
+            "> 💡 **In plain words** — this isn't a quirk of our toy market: real crypto order "
+            "books have the fat tail too, so the exponential the model leans on is the wrong shape "
+            "out in the wild, not just in the lab."
+        ),
         md(
             "**(c) The phantom parameter** — four regimes with `k` spanning 4×. Each regime's `k` "
             "is recovered exactly, but base AS fits one static `k`; the gap becomes a spread "
@@ -291,7 +337,11 @@ def build_quants():
             "control is over-engineering when inventory is cheap); in World B **AS (fixed)** tops "
             "it while **AS (adaptive vol)** sits near zero — the rolling-vol fix blown out by "
             "jumps. AS wins World B on a *wrong* `k`, because the skew (which carries no `k`) is "
-            "what's doing the work."
+            "what's doing the work.\n\n"
+            "> 💡 **In plain words** — when markets are calm, the elaborate model is *out-traded by "
+            "four lines of code* that just stop buying when you're too long. It only earns its "
+            "keep when prices jump and carrying inventory genuinely hurts — and even then, what "
+            "saves it is the inventory lean, not the famous spread formula."
         ),
         md(
             "**(e) Seed-robustness** — the orderings are not a single-draw fluke (5 seeds; the "
@@ -304,7 +354,11 @@ def build_quants():
             "+1.26M); static `k` mis-prices the spread by up to 162%. **Tradability FRAGILE** — a "
             "clamp beats AS in World A (Sharpe 3.27 vs 1.59); AS wins World B (2.12) but the "
             "rolling-vol fix collapses (0.17). **Optimal spread MISATTRIBUTED** — the value is in "
-            "the `k`-free skew. (Frozen 5-seed numbers + fingerprint: `docs/results.md`.)"
+            "the `k`-free skew. (Frozen 5-seed numbers + fingerprint: `docs/results.md`; real-data "
+            "heavy-tail confirmation: `docs/results_real.md`.)\n\n"
+            "> 💡 **In plain words** — the headline equation everyone copies rests on a false "
+            "assumption *and* isn't where the money is. Keep the inventory lean; treat the spread "
+            "formula as a rough rule of thumb, not a theorem."
         ),
         md(
             "## 6 · Could You Trade It?\n\n"
@@ -315,11 +369,13 @@ def build_quants():
         ),
         md(
             "## 7 · Going Further\n\n"
-            "- **Confirm the heavy tail on a real book** — `examples/verify_real.py` on Binance "
-            "trades (the headline PR).\n- A **jump-robust** adaptive vol (bipower) in "
-            "`AdaptiveASQuoter`.\n- The **GLT** closed form with hard inventory bounds vs the "
-            "clamp.\n- A **Cartea–Jaimungal** adverse-selection spread term.\n- A **γ-sweep** to "
-            "map where the skew's P&L cost stops exceeding its risk saving."
+            "- **Heavy tail on a real book — done.** Confirmed on 4 Binance markets "
+            "(`examples/confirm_heavy_tail.py` → `docs/results_real.md`); next is a **multi-day / "
+            "multi-venue** sweep and a fit *in ticks* to remove price-discreteness noise.\n"
+            "- A **jump-robust** adaptive vol (bipower) in `AdaptiveASQuoter` — can it rescue the "
+            "collapsing 'production fix'?\n- The **GLT** closed form with hard inventory bounds vs "
+            "the clamp.\n- A **Cartea–Jaimungal** adverse-selection spread term.\n- A **γ-sweep** "
+            "to map where the skew's P&L cost stops exceeding its risk saving."
         ),
     ]
     nb = new_notebook(cells=cells, metadata=_meta())
