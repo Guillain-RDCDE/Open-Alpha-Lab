@@ -53,6 +53,36 @@ jobs:
       - name: Study 16 — Storm-Shy test-suite
         run: pytest -q studies/16-storm-shy/tests
 
+      - name: Study 06 — Clockwork-Vol test-suite
+        run: pytest -q studies/06-clockwork-vol/tests
+
+      - name: Study 07 — Coiled-Spring test-suite
+        run: pytest -q studies/07-coiled-spring/tests
+
+      - name: Study 08 — True-Strength test-suite
+        run: pytest -q studies/08-true-strength/tests
+
+      - name: Study 10 — Markov-Mint test-suite
+        run: pytest -q studies/10-markov-mint/tests
+
+      - name: Study 12 — Paper-Prophet test-suite
+        run: pytest -q studies/12-paper-prophet/tests
+
+      - name: Study 13 — Crimson-Hour test-suite
+        run: pytest -q studies/13-crimson-hour/tests
+
+      - name: Study 14 — Gamma-Gospel test-suite
+        run: pytest -q studies/14-gamma-gospel/tests
+
+      - name: Study 15 — Sigma-Sleight test-suite
+        run: pytest -q studies/15-sigma-sleight/tests
+
+      - name: Study 17 — Glass-Ceiling test-suite
+        run: pytest -q studies/17-glass-ceiling/tests
+
+      - name: Study 18 — Dull-Roar test-suite
+        run: pytest -q studies/18-dull-roar/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
