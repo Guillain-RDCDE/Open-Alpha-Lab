@@ -25,7 +25,7 @@ The [AdaptiveRSI framework](https://adaptiversi.gumroad.com) ([TradingView](http
 | **[01_for_the_curious](notebooks/01_for_the_curious.ipynb)** | the curious | the story + the stakes in plain language, why a strictly-rising curve gives the game away, and the constant hiding inside every "adaptive" zone |
 | **[02_for_the_quants](notebooks/02_for_the_quants.ipynb)** | quants | the full machinery: monotone-bijection proof, the crossing-identity and rescale-invariance (both exactly 0), the arithmetic cheat-sheet, and the cost-charged horse race vs a re-optimised constant |
 
-The real run — every fingerprinted, as-of'd horse-race table — is in [docs/results.md](docs/results.md); reproduce offline via [examples/run_synthetic_demo.py](examples/run_synthetic_demo.py) and on the real tape via [examples/verify.py](examples/verify.py) (`--fetch` once to populate the daily-close cache).
+The real run — every fingerprinted, as-of'd horse-race table — is in [docs/results.md](docs/results.md); the **beat-7 worked complement** (a *genuinely* vol-adaptive σ-band — the framework's unbuilt regime promise — which moves the threshold several RSI points yet beats a plain fixed level in 0 of 6 real cells) is in [docs/extension.md](docs/extension.md). Reproduce offline via [examples/run_synthetic_demo.py](examples/run_synthetic_demo.py); on the real tape via [examples/verify.py](examples/verify.py) and [examples/extension.py](examples/extension.py) (`--fetch` once to populate the daily-close cache).
 
 ---
 
