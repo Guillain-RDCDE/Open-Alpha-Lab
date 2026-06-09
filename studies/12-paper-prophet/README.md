@@ -225,22 +225,57 @@ top isn't an edge; it's a leak.
 
 ## 7 · Going Further
 
-- **Other instruments / the missing tailwind.** Vol-targeting's lift depends on the leverage effect,
-  which is strong in equity indices and weaker or inverted elsewhere (commodities, some FX). Re-run
-  the exact stack on those and show the "edge" travels with the *sizing tailwind*, not the forecast.
-- **Higher-order / different orders.** Does ARIMA(2,0,2), or auto-selected (p,d,q) by AIC, rescue
-  the directional signal? Pre-registered expectation: no — more parameters fit more in-sample noise,
-  and the walk-forward hit-rate stays at 50%.
+### Worked complement — the same stack across eight assets
+
+The decisive follow-up: run the *identical* code on assets with different tailwinds, and ask whether
+the SPY result generalises. We did. Equity indices (**SPY, QQQ, EWJ, EWZ** — strong leverage effect)
+plus **GLD, TLT, UUP, USO** (gold / long bonds / USD / oil — weak or absent), cold walk-forward, full
+histories. Full table and fingerprints in [`docs/extension.md`](docs/extension.md); the engine is
+[`paper_prophet/extension.py`](paper_prophet/extension.py).
+
+| Asset | n | hit-rate | HAC *t* | ARIMA increment | vol-targeting lift |
+|---|--:|--:|--:|--:|--:|
+| SPY | 8,091 | 51.98% | +0.85 | **−0.35** | +0.07 |
+| QQQ | 6,559 | 52.34% | +1.54 | **−0.22** | +0.28 |
+| EWJ | 7,075 | 51.80% | +0.47 | +0.06 | −0.05 |
+| EWZ | 6,203 | 50.11% | −0.55 | **−0.14** | −0.07 |
+| GLD | 5,116 | 51.76% | +0.93 | **−0.30** | +0.09 |
+| TLT | 5,717 | 50.76% | +0.22 | +0.04 | −0.01 |
+| UUP | 4,390 | 50.09% | −1.79 | **−0.55** | +0.01 |
+| USO | 4,784 | 50.59% | +1.09 | +0.43 | +0.09 |
+
+**What it confirms — and what it complicates.** One result is rock-solid: the forecast carries **no
+directional skill on any of the eight** — every hit-rate sits in 50.1–52.3% with **|HAC *t*| < 2**.
+Signal `NONE` is universal, not an SPY accident. But the panel also *complicates* the tidy story I
+pre-registered, and the desk publishes that honestly:
+
+- **The ARIMA increment's sign tracks each asset's drift, not skill.** It is negative on the risers
+  (SPY −0.35, QQQ −0.22, GLD −0.30 — going ~50% short forfeits the climb) and *positive* on the
+  fallers (USO +0.43, EWJ, TLT — shorting a sinking asset happens to help). With hit-rates on the
+  coin everywhere, that is drift mechanics, not forecasting: the overlay never adds value *because it
+  predicts*, only where the asset fell anyway.
+- **The vol-targeting "tailwind" is real but small and not a clean equity-vs-rest split.** The lift
+  over buy-and-hold is modest where positive (QQQ +0.28, GLD +0.09, SPY +0.07, USO +0.09) and ~zero
+  or negative on EWJ, EWZ, TLT, UUP — *including* equity indices — and the leverage-effect proxy is
+  noisy. So "vol-targeting is the part that works" holds on the SPY sample but is **not a reliable
+  cross-asset free lunch**: on several tapes the GARCH sizing doesn't even beat holding the asset.
+  The one thing that is bulletproof across all eight is the *absence of a forecast edge*.
+
+### Still open
+
+- **Higher-order / different orders.** Does ARIMA(2,0,2), or AIC-selected (p,d,q), rescue the
+  direction? Expectation: no — more parameters fit more in-sample noise, the walk-forward hit-rate
+  stays ~50% — but it's worth the worked control.
 - **The author's GARCH-vs-Markov question.** The thread closes by asking when GARCH and a Markov
-  regime model *disagree*. With [Study 10](../10-markov-mint/) already in the repo, a follow-up could
-  actually run both on the same tape and answer it — turning his rhetorical closer into a measured one.
-- **The in-sample mirage that wasn't.** We found the in-sample fit-then-grade hit-rate (51.91%)
-  *below* the walk-forward one (51.98%) — no inflation, because a low-order ARIMA has nothing to
-  overfit in near-white-noise returns. A richer model (high-order ARIMA, or a neural net like the
-  thread's companion piece) *would* manufacture an in-sample mirage; reproducing that gap on the
-  same tape would make the teaching point concrete.
-- **What to PR:** the other-instruments sweep, the AIC-/high-order control, the
-  GARCH-vs-Markov-disagreement experiment, or a richer-model in-sample-inflation figure.
+  regime model *disagree*. With [Study 10](../10-markov-mint/) in the repo, a follow-up could run both
+  on the same tape and answer it — turning his rhetorical closer into a measured one.
+- **The in-sample mirage that wasn't (here).** In-sample fit-then-grade hit-rate (51.91%) sat *below*
+  the walk-forward one (51.98%) on the full tape — no inflation, because a low-order ARIMA has nothing
+  to overfit in near-white-noise returns (on a 5-year slice it *does* inflate ~+5 pp; see the
+  `02_for_the_quants` notebook). A richer model would manufacture a larger mirage; quantifying that
+  gap is the clean teaching figure.
+- **What to PR:** the AIC-/high-order control, the GARCH-vs-Markov-disagreement experiment, a
+  richer-model in-sample-inflation figure, or more no-tailwind assets in the panel.
 
 ---
 
@@ -251,7 +286,9 @@ top isn't an edge; it's a leak.
 | [`paper_prophet/data.py`](paper_prophet/) | SPY daily loader (cached), log-return transform, the ADF sanity check the article gets right |
 | [`paper_prophet/stack.py`](paper_prophet/) | the article's `TimeSeriesTradingSystem` ported verbatim (ARIMA(1,0,1) + GARCH(1,1), rolling 252-day walk-forward), with a switch to replace `sign(f̂)` by constant-long |
 | [`paper_prophet/decompose.py`](paper_prophet/) | the Sharpe decomposition: stack vs vol-targeting control vs flat-sized forecast; the alpha-vs-(vol-managed)-beta regression; the cost sweep |
+| [`paper_prophet/extension.py`](paper_prophet/) | the beat-7 worked complement: the same stack across tailwind (equity) vs no-tailwind (gold/bonds/USD/oil) assets |
 | [`examples/verify.py`](examples/) | the headline run → [`docs/results.md`](docs/) (as-of + fingerprint) |
+| [`examples/extension.py`](examples/) | the cross-asset panel run → [`docs/extension.md`](docs/) |
 | [`notebooks/`](notebooks/) | `01_for_the_curious` (the story) and `02_for_the_quants` (the teardown), same seven beats |
 | [`docs/references.md`](docs/references.md) | the thread + the efficiency / vol-targeting / ARIMA-GARCH literature it walks into |
 
