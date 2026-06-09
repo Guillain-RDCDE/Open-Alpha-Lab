@@ -52,6 +52,7 @@ style is written up in **[METHODOLOGY.md](METHODOLOGY.md)**.
 | **[09](studies/09-phantom-kernel/)** | **Phantom-Kernel** | Is Avellaneda-Stoikov's "optimal spread" built on a real arrival law? | 🔴 None | 🟡 Fragile |
 | **[10](studies/10-markov-mint/)** | **Markov-Mint** | Can a Markov-chain pipeline "win every trade" on Polymarket? | 🔴 None | 🔴 Mirage |
 | **[11](studies/11-vanishing-penny/)** | **Vanishing-Penny** | How fast does a guaranteed \$40M Polymarket arbitrage close? | 🟢 Real | 🔴 Mirage |
+| **[12](studies/12-paper-prophet/)** | **Paper-Prophet** | Does an ARIMA+GARCH stack forecast the SPY, or is it vol-targeting in a trenchcoat? | 🔴 None | 🔴 Mirage |
 
 > **Click any study** for the full teardown — two narrative notebooks (one for the curious,
 > one for the quant), reproducible code, and every number behind the two stamps.

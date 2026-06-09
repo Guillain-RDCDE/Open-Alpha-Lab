@@ -1,0 +1,301 @@
+"""Generate the two narrative notebooks for Study 12 (Paper-Prophet) from source.
+
+Like every study on the desk, the notebooks are a *generated artefact*: edit the cell text here,
+rebuild the skeletons, then execute with nbconvert to embed figures/outputs.
+
+    python notebooks/build_notebooks.py
+    jupyter nbconvert --to notebook --execute --inplace \
+        notebooks/01_for_the_curious.ipynb notebooks/02_for_the_quants.ipynb
+
+Both notebooks run a **small, fast** walk-forward slice (a few hundred days) so they execute in
+under a minute; the **headline numbers** (the full ~8,000-day tape) live in
+[`docs/results.md`](../docs/results.md), produced by `examples/verify.py`. Both follow the SAME
+seven desk beats (see ../../../METHODOLOGY.md).
+"""
+
+from __future__ import annotations
+
+import os
+
+import nbformat as nbf
+from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+BOOT = """\
+import sys, os, warnings
+warnings.filterwarnings("ignore")
+sys.path.insert(0, os.path.abspath(".."))            # study root (paper_prophet/ lives there)
+sys.path.insert(0, os.path.abspath("../../.."))       # repo root, for quantlab
+os.environ.setdefault("OVERNIGHT_CACHE", os.path.abspath("../../../_cache"))
+%matplotlib inline
+import matplotlib.pyplot as plt
+plt.rcParams["figure.figsize"] = (9.5, 5.2)
+import numpy as np, pandas as pd
+pd.set_option("display.float_format", lambda v: f"{v:,.4f}")
+from paper_prophet import data, decompose
+from paper_prophet.stack import generate_signals
+
+# Small & fast: grade ~300 walk-forward days on the most recent SPY. The full-tape headline
+# (~8,000 days) is in ../docs/results.md via examples/verify.py.
+prices = data.load_spy()["Close"]
+rets = data.log_returns(prices)
+SLICE = rets.iloc[-(252 + 300):]          # 252-day warmup + ~300 graded days
+wf = generate_signals(SLICE, lookback=252, max_steps=300)
+print(f"graded {len(wf.frame)} walk-forward days, ending {wf.frame.index[-1].date()}")
+"""
+
+
+def md(text):
+    return new_markdown_cell(text)
+
+
+def code(text):
+    return new_code_cell(text)
+
+
+# ===========================================================================
+# 01 — FOR THE CURIOUS
+# ===========================================================================
+def build_curious():
+    cells = [
+        md(
+            "# Can an ARIMA+GARCH model really 'win every single trade' on the SPY? 🧥\n"
+            "### A viral time-series quant thread — tested honestly, in plain English\n\n"
+            "A thread doing the rounds promises a *complete* systematic stack: model returns with "
+            "**ARIMA** to forecast direction, layer **GARCH** to size your bets by volatility, "
+            "walk it forward, and harvest 'consistent edge' on any liquid market. It ships real, "
+            "runnable code on the SPY.\n\n"
+            "Here's the tell the author half-admits: *'the GARCH position sizing is doing more work "
+            "than the ARIMA forecast direction.'* So the honest question isn't 'does the stack make "
+            "a Sharpe?' — it probably does. It's: **once you remove the volatility-targeting, is "
+            "there any forecasting edge left at all?** We run his code and split the two apart."
+        ),
+        code(BOOT),
+        md(
+            "## 1 · The Claim\n\n"
+            "Five steps: (1) check stationarity and model **returns, not prices**; (2) fit "
+            "**ARIMA(1,0,1)** on a rolling 252-day window to forecast tomorrow's direction; "
+            "(3) fit **GARCH(1,1)** on the residuals to forecast volatility; (4) size "
+            "``min(1, 1/σ̂)``; (5) trade ``sign(forecast) × size``, walk-forward.\n\n"
+            "Step 1 is genuinely right: a price level has a **unit root** (its past barely "
+            "constrains its future direction), while returns are stationary. The ADF test says so:"
+        ),
+        code(
+            "chk = data.stationarity_check(prices)\n"
+            "print(f\"price levels  ADF p = {chk['price_adf_p']:.3f}  -> unit root (don't model)\")\n"
+            "print(f\"log-returns   ADF p = {chk['returns_adf_p']:.4f}  -> stationary (model this)\")"
+        ),
+        md(
+            "## 2 · So What?\n\n"
+            "If a one-line ARIMA on five years of closes could call **tomorrow's direction** on the "
+            "most-traded index on Earth, it would be a money printer — and a crack in forty years of "
+            "market-efficiency evidence. The likelier, more useful story: the stack *does* post a "
+            "decent Sharpe, but for a reason that has nothing to do with forecasting. Scaling down "
+            "when volatility is high is **volatility targeting** — a real, documented way to hold "
+            "equity risk more efficiently. Mistake that for a working *forecast* and you'll apply "
+            "'the model' where the vol-targeting tailwind isn't there, and lose."
+        ),
+        md(
+            "## 3 · How We'd Know\n\n"
+            "Announced before running: we take the author's own code and build a **control** that "
+            "keeps the *exact* GARCH sizing but replaces the forecast with a plain 'always long'. "
+            "If the stack barely beats that control, the edge was the sizing, not the forecast. And "
+            "we grade the forecast's **direction** against a coin: if it's ~50%, there's no signal."
+        ),
+        code(
+            "de = decompose.directional_edge(wf)\n"
+            "print(f\"ARIMA directional hit-rate : {de['hit_rate']*100:.1f}%   (50% = a coin)\")\n"
+            "print(f\"directional edge (HAC t)   : {de['dir_edge_hac_t']:+.2f}   (|t|<2 = noise)\")"
+        ),
+        md(
+            "## 4 · The Teardown\n\n"
+            "Split the Sharpe. The full stack vs the **same sizing on a constant-long signal** "
+            "(pure vol-targeting) vs the forecast with no sizing vs plain buy-and-hold:"
+        ),
+        code(
+            "sd = decompose.sharpe_decomposition(wf)\n"
+            "labels = ['full stack\\n(sign×size)', 'vol-targeting\\n(long×size)',\n"
+            "          'forecast only\\n(sign, flat)', 'buy & hold']\n"
+            "vals = [sd['sharpe_stack'], sd['sharpe_voltgt'], sd['sharpe_flat_forecast'], sd['sharpe_buyhold']]\n"
+            "ax = plt.bar(labels, vals, color=['steelblue','seagreen','indianred','grey'])\n"
+            "plt.axhline(0, color='k', lw=0.8); plt.ylabel('annualised Sharpe (slice)')\n"
+            "plt.title('The Sharpe is the sizing, not the forecast'); plt.show()\n"
+            "print(f\"vol-targeting reproduces {sd['voltgt_reproduces_frac']*100:.0f}% of the stack's Sharpe; \"\n"
+            "      f\"ARIMA adds {sd['arima_increment_sharpe']:+.2f}\")"
+        ),
+        md(
+            "On this slice the constant-long-with-the-same-sizing control reproduces most of the "
+            "stack's Sharpe — the forecast adds little. And once you charge the forecast's extra "
+            "turnover a spread, that little shrinks further. (Headline full-tape numbers below.)"
+        ),
+        code(
+            "decompose.cost_sweep(wf)[['sharpe_stack_net','sharpe_voltgt_net','arima_increment_net']].round(3)"
+        ),
+        md(
+            "## 5 · The Verdict\n\n"
+            "On the full **8,091-day** SPY run (see [`docs/results.md`](../docs/results.md)):\n\n"
+            "- ARIMA's directional hit-rate is **51.98%** (HAC *t* = +0.85) — a coin flip. "
+            "→ **Signal: NONE**\n"
+            "- Constant-long with the **same GARCH sizing** scores **+0.53** Sharpe vs the stack's "
+            "**+0.17** — the forecast *subtracts* **0.35** (worse, −0.55, net of a 2 bp spread). "
+            "Even plain buy-and-hold (+0.45) beats the stack. → **Tradability: MIRAGE**\n"
+            "- Per-day win rate **51.98%**. → **'Win every trade': BUSTED**"
+        ),
+        md(
+            "## 6 · Could You Trade It?\n\n"
+            "The forecast on its own isn't worth its turnover. The part that *does* make a Sharpe — "
+            "the GARCH vol-targeting — is real, but it's a one-line ``1/σ̂`` overlay on a plain "
+            "long-SPY position that anyone can run **without** ARIMA. The thread sells the decorative "
+            "half (the forecast) on the back of the working half (the sizing)."
+        ),
+        md(
+            "## 7 · Going Further\n\n"
+            "The deep-dive (`02_for_the_quants`) carries the HAC directional test, the alpha-vs-"
+            "vol-managed-beta regression, the cost sweep, and the in-sample-inflation control. The "
+            "clean next tests: run the *same* stack on assets without the vol-targeting tailwind, "
+            "and answer the author's own closing question — when do GARCH and a Markov regime model "
+            "(Study 10) disagree? **Fork it, break it, PR a better test.**"
+        ),
+    ]
+    return new_notebook(cells=cells, metadata=_meta())
+
+
+# ===========================================================================
+# 02 — FOR THE QUANTS
+# ===========================================================================
+def build_quants():
+    cells = [
+        md(
+            "# Paper-Prophet — the teardown 🧥🔬\n"
+            "### An ARIMA(1,0,1)+GARCH(1,1) stack, ported faithfully and decomposed on the SPY\n\n"
+            "Same seven beats as `01_for_the_curious`, at depth: the HAC directional test, the "
+            "Sharpe decomposition (forecast vs sizing), the alpha-vs-managed-beta regression, the "
+            "cost sweep, and the in-sample-vs-walk-forward inflation control. Runs a ~300-day "
+            "slice; the **full-tape headline** is in [`docs/results.md`](../docs/results.md) via "
+            "`examples/verify.py`."
+        ),
+        code(BOOT),
+        md(
+            "## 1 · The Claim, as a hypothesis\n\n"
+            "H₁ (the part worth testing): the ARIMA sign carries realized directional edge, "
+            "``E[sign(f̂)·r] > 0`` with HAC *t* > 2, **and** the walk-forward Sharpe materially "
+            "exceeds the *same GARCH sizing on a constant-long signal*. The sharp null is the "
+            "weak-EMH random-walk-in-returns: daily index returns have negligible, non-tradable "
+            "serial dependence (Fama 1970), so ``sign(f̂)`` ≈ a coin and the Sharpe is the "
+            "vol-targeting term (Moreira–Muir 2017)."
+        ),
+        md(
+            "## 2 · So What? — the stakes are alpha vs managed beta\n\n"
+            "Vol-targeting lifts the Sharpe of *any* long-biased signal because realized vol is "
+            "persistent and inversely related to forward returns. So a high stack-Sharpe is fully "
+            "consistent with **zero** forecasting skill. The decisive quantity is the *increment* "
+            "the ARIMA sign adds over constant-long-with-the-same-sizing, net of the turnover it "
+            "induces."
+        ),
+        md(
+            "## 3 · How We'd Know — pre-registered falsification\n\n"
+            "Signal `NONE` if the directional HAC *t* < 2. Tradability `MIRAGE` if the stack's "
+            "Sharpe is not materially above the vol-targeting control and/or the ARIMA increment "
+            "goes ≤ 0 net of costs. 'Win every trade' `BUSTED` if the win rate is a coin flip. "
+            "First the GARCH sizing itself — it is genuinely informative about volatility, which is "
+            "why it works:"
+        ),
+        code(
+            "f = wf.frame\n"
+            "fig, ax = plt.subplots()\n"
+            "ax.plot(f.index, f['vol'], lw=1.0, color='darkorange', label='GARCH σ̂ (one-step)')\n"
+            "ax.plot(f.index, f['ret'].abs(), lw=0.5, color='grey', alpha=0.6, label='|realised return|')\n"
+            "ax.set_title('GARCH tracks volatility (the half that works)'); ax.legend(); plt.show()"
+        ),
+        md(
+            "## 4 · The Teardown\n\n"
+            "**(a) The direction is a coin flip.** The per-day bet ``sign(f̂)·r``, HAC-tested, is "
+            "indistinguishable from zero; the hit-rate sits on 50%."
+        ),
+        code(
+            "decompose.directional_edge(wf)"
+        ),
+        md(
+            "**(b) The Sharpe is the sizing.** Constant-long with the *same* GARCH σ̂ reproduces "
+            "most of the stack's Sharpe; the ARIMA increment is small and its bootstrap CI brackets "
+            "zero."
+        ),
+        code(
+            "sd = decompose.sharpe_decomposition(wf)\n"
+            "{k: (round(v,3) if isinstance(v,float) else v) for k,v in sd.items()}"
+        ),
+        md(
+            "**(c) What the model 'found' is managed beta.** Regress the stack on plain SPY, then on "
+            "the vol-managed-SPY factor (the constant-long×size leg). Against the managed factor the "
+            "alpha collapses — the stack *is* that factor."
+        ),
+        code(
+            "decompose.alpha_vs_beta(wf)"
+        ),
+        md(
+            "**(d) Costs eat the increment.** The forecast's sign-flips create turnover the "
+            "constant-long control doesn't pay. The net ARIMA increment falls as the spread rises."
+        ),
+        code(
+            "cs = decompose.cost_sweep(wf)\n"
+            "ax = cs['arima_increment_net'].plot(marker='o')\n"
+            "ax.axhline(0, color='k', lw=0.8); ax.set_xlabel('round-trip spread (bps)')\n"
+            "ax.set_ylabel('net ARIMA increment (Sharpe)')\n"
+            "ax.set_title('What the forecast adds, net of its own turnover'); plt.show()\n"
+            "cs.round(4)"
+        ),
+        md(
+            "## 5 · The Verdict\n\n"
+            "Headline (full 8,091-day tape, results.md): **Signal NONE** (hit-rate 51.98%, HAC "
+            "*t* = +0.85); **Tradability MIRAGE** (vol-targeting +0.53 vs stack +0.17; ARIMA "
+            "increment −0.35, 95% of bootstraps negative; alpha vs managed beta +0.0006%/day ≈ 0); "
+            "**'Win every trade' BUSTED** (win rate 51.98%)."
+        ),
+        md(
+            "## 6 · Could You Trade It? — the in-sample mirage lives in short samples\n\n"
+            "The author rightly warns that fitting on the full series and grading in-sample is 'a "
+            "curve fit with a label'. Here is the subtle part. On this **short** slice the mistake "
+            "manufactures a real mirage (in-sample hit-rate well above the walk-forward one); on the "
+            "**full 33-year tape** it washes out to ≈ 0 (see [`docs/results.md`](../docs/results.md)). "
+            "That is the warning made concrete: a 5-year backtest — exactly the window the thread's "
+            "code uses — is precisely where in-sample fitting invents an edge that does not survive "
+            "out of sample. The honest, large-sample number is the one with no edge at all."
+        ),
+        code(
+            "decompose.in_sample_inflation(SLICE, wf)   # +pp here on the short slice; ~0 on the full tape"
+        ),
+        md(
+            "## 7 · Going Further\n\n"
+            "- The **same stack on other instruments** (commodities, FX) where the leverage effect "
+            "— and thus the vol-targeting tailwind — is weaker or inverted: the 'edge' should travel "
+            "with the *sizing*, not the forecast.\n"
+            "- **AIC-selected (p,d,q)** to check that more parameters don't rescue the direction "
+            "(they fit in-sample noise; the walk-forward hit-rate stays ~50%).\n"
+            "- **GARCH vs Markov disagreement** — run this stack and [Study 10](../../10-markov-mint/)'s "
+            "regime model on the same tape and answer the thread's own closing question."
+        ),
+    ]
+    return new_notebook(cells=cells, metadata=_meta())
+
+
+def _meta():
+    return {
+        "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
+        "language_info": {"name": "python"},
+    }
+
+
+def main():
+    for fname, nb in [
+        ("01_for_the_curious.ipynb", build_curious()),
+        ("02_for_the_quants.ipynb", build_quants()),
+    ]:
+        path = os.path.join(HERE, fname)
+        with open(path, "w", encoding="utf-8") as fh:
+            nbf.write(nb, fh)
+        print(f"wrote {fname}  ({len(nb.cells)} cells)")
+
+
+if __name__ == "__main__":
+    main()
