@@ -25,7 +25,7 @@ The residual that kept surfacing as the *only* real thing inside the desk's fanc
 | **[01_for_the_curious](notebooks/01_for_the_curious.ipynb)** | the curious | the story in plain language: why volatility clusters, why dodging storms beats predicting prices, and the drawdowns that vanish |
 | **[02_for_the_quants](notebooks/02_for_the_quants.ipynb)** | quants | the full machinery: variance-forecastability AR(1), the Moreira–Muir spanning alpha with HAC errors, a bootstrap Sharpe-gain CI, the CRRA certainty-equivalent at matched risk, and the flat-vol null |
 
-The real run — every fingerprinted, as-of'd SPY/QQQ number — is in [docs/results.md](docs/results.md). Reproduce offline via [examples/run_synthetic_demo.py](examples/run_synthetic_demo.py); on the real tape via [examples/verify.py](examples/verify.py) (`--fetch` once to populate the daily-close cache).
+The real run — every fingerprinted, as-of'd SPY/QQQ number — is in [docs/results.md](docs/results.md); the **beat-7 worked complement** (the *no-borrowing test* — cap leverage at 1.0 and the de-risk slice still carries ~100% of the edge, so a leverage-constrained book keeps the benefit) is in [docs/extension.md](docs/extension.md). Reproduce offline via [examples/run_synthetic_demo.py](examples/run_synthetic_demo.py); on the real tape via [examples/verify.py](examples/verify.py) and [examples/extension.py](examples/extension.py) (`--fetch` once to populate the daily-close cache).
 
 ---
 

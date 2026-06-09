@@ -58,6 +58,7 @@ R = dict(
     qqq_rho="+0.74", qqq_bh="+0.51", qqq_mgd="+0.77", qqq_gain="+0.26",
     qqq_alpha="+4.56", qqq_t="3.54", qqq_ci="[+0.04, +0.48]", qqq_turn="7",
     qqq_dd_bh="-83", qqq_dd_mgd="-38", qqq_ce="+6.92",
+    spy_share_derisk="105", qqq_share_derisk="101",
 )
 
 BADGES = (
@@ -321,15 +322,19 @@ def build_curious():
 
         md(
             "## 7 · Going further 🚪\n\n"
-            "- **Build the vol forecast better.** We used a plain 21-day window. Does a GARCH or "
-            "EWMA forecast (already in [`vol.ewma_vol`](../storm_shy/vol.py)) tighten the ride "
-            "further — or is the simple window 90% of the prize?\n"
-            "- **Across asset classes.** Vol-targeting is strongest where vol-of-vol is high. Bonds, "
-            "commodities, FX, crypto — where does it help most, and where does the leverage it "
-            "demands become unrealistic?\n"
-            "- **The leverage constraint, taken seriously.** Cap leverage at 1.0 (no borrowing): how "
-            "much of the gain is left when you can only ever *de*-risk? That's the version a fund "
-            "without a financing desk actually lives.\n\n"
+            "- **We built the hardest version — \"what if you can't borrow?\"** The one catch we "
+            "admitted is that the overlay leans on *leverage* in calm times. So we took it away: cap "
+            "leverage at 1.0, never borrow, only ever *cut* risk. The result (worked complement, beat "
+            "7 of the quants notebook + [`../docs/extension.md`](../docs/extension.md)): on real "
+            f"SPY/QQQ the de-risk piece alone carries **~{R['spy_share_derisk']}/"
+            f"{R['qqq_share_derisk']}%** of the edge — the drawdowns still collapse and the gain barely "
+            "moves. A long-only, no-financing-desk investor keeps almost all of it. The caveat we "
+            "flagged turns out to matter *least*.\n"
+            "- **Build the vol forecast better.** Does a GARCH or EWMA forecast "
+            "([`vol.ewma_vol`](../storm_shy/vol.py)) tighten the ride further — or is the simple "
+            "21-day window already 90% of the prize?\n"
+            "- **Across asset classes.** Bonds, commodities, FX, crypto — where does sizing by "
+            "inverse-vol help most, and where does the leverage it *would* demand become unrealistic?\n\n"
             "PRs welcome — push the honest 'yes' harder, or find the regime where even this one breaks."
         ),
     ]
@@ -580,20 +585,60 @@ def build_quants():
 
         md(
             "## Beat 7 · Going further\n\n"
+            "### 7a · Worked complement — the no-borrowing test\n"
+            "The headline verdict flags exactly **one** caveat: the overlay must gear up in calm "
+            "regimes to hold its risk target, so the gain is `RISK-MANAGED`, not free — and the "
+            "Cederburg et al. (2020) critique is that *a Sharpe gain needing leverage may not be an "
+            "investor gain.* So let's make that caveat a backtest. The edge splits into two "
+            "economically distinct pieces, and we isolate them by capping leverage:\n\n"
+            "- **De-risk** — cutting exposure in storms. Needs **no borrowing** (weights only fall "
+            "below 1), and it's where the drawdown reduction lives.\n"
+            "- **Lever-up-calm** — adding exposure in quiet regimes. **Needs leverage**; the contested "
+            "slice.\n\n"
+            "Capping at 1.0 keeps only the de-risk piece, so "
+            "`gain_full = gain_derisk + gain_leverage` is an exact split."
+        ),
+        code(
+            "from storm_shy import extension as ext\n"
+            "for label, series in [('clustered', ret), ('flat null', ret_flat)]:\n"
+            "    g = ext.gain_decomposition(series)\n"
+            "    print(f\"{label:10s}: de-risk {g['gain_derisk']:+.2f} + leverage {g['gain_leverage']:+.2f} \"\n"
+            "          f\"= full {g['gain_full']:+.2f}  (de-risk = {g['share_derisk']:.0%} of the edge; \"\n"
+            "          f\"no-borrow avg lev {g['derisk_avg_leverage']:.2f}, dd {g['buyhold_maxdd']:.0%} -> \"\n"
+            "          f\"{g['derisk_maxdd']:.0%})\")\n"
+            "sw = ext.leverage_cap_sweep(ret)\n"
+            "g0 = ext.gain_decomposition(ret)\n"
+            "fig, ax = plt.subplots()\n"
+            "ax.plot(sw.index, sw['sharpe_gain'].values, 'o-', label='Sharpe gain vs leverage cap')\n"
+            "ax.axhline(g0['gain_derisk'], ls=':', c='grey', label=f\"de-risk only (cap 1.0) = {g0['gain_derisk']:+.2f}\")\n"
+            "ax.set_xlabel('max leverage'); ax.set_ylabel('Sharpe gain'); ax.legend()\n"
+            "ax.set_title('Most of the gain is de-risk (no borrowing); the rest is the leverage slice')\n"
+            "plt.show()"
+        ),
+        md(
+            "**The result — and it *strengthens* the verdict.** On the idealized synthetic tape the "
+            "leverage slice is real but the smaller part (~⅓); the de-risk piece, which needs no "
+            "borrowing, carries the majority. On the **real tape it's starker still**: de-risk carries "
+            f"**~{R['spy_share_derisk']}/{R['qqq_share_derisk']}%** of the SPY/QQQ edge — the leverage "
+            "slice is essentially **zero** (the fat-tailed, vol-asymmetric market rewards *cutting* "
+            "risk in storms far more than *adding* it in calm). So the very investor the Cederburg "
+            "critique worries about — long-only, leverage-capped, no financing desk — **keeps the "
+            f"benefit**: the drawdown still collapses (SPY {R['spy_dd_bh']}%→{R['spy_dd_mgd']}%, QQQ "
+            f"{R['qqq_dd_bh']}%→{R['qqq_dd_mgd']}%) and the no-borrow certainty-equivalent gain barely "
+            "moves. The full real run is in [`../docs/extension.md`](../docs/extension.md) "
+            "(`examples/extension.py`). The hardest constraint, imposed, leaves `INVESTABLE` standing "
+            "and sharpens what `RISK-MANAGED` means: the risk being managed is *downside*, and managing "
+            "it down takes no leverage at all.\n\n"
+            "### 7b · Other forks\n"
             "- **Better variance forecasts.** Swap the 21-day window for EWMA "
             "([`vol.ewma_vol`](../storm_shy/vol.py)) or a GARCH(1,1); does a sharper σ̂ tighten the "
-            "ride, or is the simple window already ~90% of the prize? (Diminishing returns is the "
-            "likely — and interesting — answer.)\n"
-            "- **Leverage-constrained version.** Cap at 1.0 (no borrowing). How much of the alpha "
-            "survives when you can only ever *de*-risk? This is the practical core of the Cederburg "
-            "critique, made into a backtest.\n"
+            "ride, or is the simple window already ~90% of the prize?\n"
             "- **Cross-asset and cross-factor.** Moreira–Muir is strongest where vol-of-vol is high "
             "and weakest (per Cederburg) for some factors out-of-sample. Sweep equities, bonds, "
-            "commodities, FX; map where the overlay earns its keep and where the leverage it demands "
-            "makes it `FRAGILE`.\n"
-            "- **Combine with the desk's beta-honesty.** Study 01 showed overnight 'alpha' was mostly "
-            "beta; here the managed factor's beta is ~0.6 — how much of the lift is timing the *equity* "
-            "risk premium vs timing *idiosyncratic* vol? A factor-model decomposition would settle it.\n\n"
+            "commodities, FX; map where the overlay earns its keep and where it turns `FRAGILE`.\n"
+            "- **Beta-honesty (à la Study 01).** The managed factor's beta is ~0.6 — how much of the "
+            "lift is timing the *equity* risk premium vs *idiosyncratic* vol? A factor-model "
+            "decomposition would settle it.\n\n"
             "PRs welcome — strengthen the honest 'yes', or find the constraint under which even this "
             "one becomes a mirage."
         ),

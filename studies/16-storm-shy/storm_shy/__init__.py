@@ -27,4 +27,9 @@ brutal protocol. The reusable pieces, in the desk's usual split:
       than the headline; (4) **decay & equal-risk** checks so the win is not just a lucky window or
       disguised de-risking. The verdict it lands: Signal `REAL`, Tradability `INVESTABLE`,
       "Free lunch?" `RISK-MANAGED` — a real edge, honestly bounded.
+    * :mod:`extension` — the beat-7 worked complement: the **no-borrowing test**. Cap leverage at
+      1.0 and split the edge into a *de-risk* slice (cutting risk in storms — needs no borrowing)
+      and a *leverage* slice (gearing up in calm — the contested Cederburg part). On the real tape
+      the de-risk slice carries essentially the whole edge, so a leverage-constrained book keeps the
+      benefit — `INVESTABLE` survives the hardest constraint.
 """
