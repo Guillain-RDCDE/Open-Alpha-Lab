@@ -1,0 +1,509 @@
+"""Generate the two narrative notebooks for Study 15 (Sigma-Sleight) from source.
+
+Like the other studies, the notebooks are a *generated artefact*: edit the cell text here,
+rebuild the skeletons, then execute with nbconvert to embed figures/outputs.
+
+    python notebooks/build_notebooks.py
+    jupyter nbconvert --to notebook --execute --inplace \
+        notebooks/01_for_the_curious.ipynb notebooks/02_for_the_quants.ipynb
+
+The executed path runs on the **offline synthetic tape** — a daily close with a *baked-in*,
+single-horizon mean reversion — because the cached real closes are git-ignored and the desk's
+reproducible core must run with no network. The synthetic is where the decomposition *works* (it
+recovers the σ-relabel identities and a real, modest oversold edge), which is exactly the point: it
+proves the code, so the **real verdict** (the horse race, quoted from
+[`docs/results.md`](../docs/results.md), produced by `examples/verify.py`) is a fact about the
+market, not a bug. Both notebooks follow the SAME seven desk beats (see ../../../METHODOLOGY.md).
+"""
+
+from __future__ import annotations
+
+import os
+
+import nbformat as nbf
+from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+BOOT = """\
+import sys, os
+sys.path.insert(0, os.path.abspath(".."))           # study root (sigma_sleight/ lives there)
+sys.path.insert(0, os.path.abspath("../../.."))      # repo root, for quantlab
+%matplotlib inline
+import matplotlib.pyplot as plt
+plt.rcParams["figure.figsize"] = (9.5, 5.2)
+import numpy as np, pandas as pd
+pd.set_option("display.float_format", lambda v: f"{v:,.4f}")
+from sigma_sleight import data, rsi, signals, decompose
+
+# Offline synthetic tape: a daily close that mean-reverts at a KNOWN rate (one ~17-bar horizon),
+# so an RSI oversold-bounce strategy has a real, modest edge and the rescaling null is exact.
+# The real verdict (SPY/QQQ horse race) is in ../docs/results.md via examples/verify.py.
+close, truth = data.synthetic_prices(seed=15)
+print(f"{truth.n_bars} synthetic bars | baked-in mean reversion kappa {truth.kappa} "
+      f"(~{truth.horizon:.0f}-bar horizon)")
+"""
+
+# Real headline numbers (pre-registered; the horse-race cells below quote the SYNTHETIC run, which
+# is what executes offline). The real SPY/QQQ table is filled by examples/verify.py into results.md.
+R = dict(
+    sigma_at_70="1.527", zone_len2_obos="98.6", zone_len200_obos="57.5",
+    roundtrip_err="1.4e-14",
+    synth_fixed="+0.63", synth_adaptive="+0.69", synth_reopt="+0.99",
+    synth_adaptive_vs_reopt="-0.30", synth_adaptive_rsi="3.0",
+    synth_ic_long="-0.254", synth_ic_rescaled="-0.254", synth_window_inc="-0.146",
+)
+
+
+def md(text):
+    return new_markdown_cell(text)
+
+
+def code(text):
+    return new_code_cell(text)
+
+
+# ===========================================================================
+# 01 — FOR THE CURIOUS
+# ===========================================================================
+def build_curious():
+    cells = [
+        md(
+            "# Does \"AdaptiveRSI\" beat plain old 70/30? 📏🪞\n"
+            "### A length-aware RSI framework, tested honestly, in plain English\n\n"
+            "Here's the pitch, from a slick TradingView write-up (and a free 38-page *\"RSI "
+            "Manifesto\"*): the classic RSI overbought/oversold lines at **70 and 30** are "
+            "*length-naive*. RSI(2) at 70 and RSI(200) at 70 are not the same event — so instead of "
+            "two fixed numbers, you should define your levels as **standardized σ landmarks** in a "
+            "transformed RSI space, then translate them back into the right RSI value for each "
+            "length. Do that and, the story goes, you read the market's \"RSI environment\" far "
+            "more consistently.\n\n"
+            "The motivation is genuinely correct — one threshold for every length *is* naive. But "
+            "the fix is sold as something deeper than it is. Underneath the σ vocabulary, the "
+            "transform is a **monotone relabel**: for any fixed length it just renames a plain "
+            "constant RSI level. We'll show that it cannot move a single trade, that the famous "
+            "cheat-sheet is pure arithmetic, and that the only place the machinery does anything — "
+            "comparing horizons — it does for free with raw RSI.\n\n"
+            "> ⚠️ **Not investment advice.** The reproducible core runs on a **synthetic** tape "
+            "where we *bake in* a small, real mean-reversion edge and a single horizon — that's on "
+            "purpose: it's where our tools *should* work, which proves the code, so the real-market "
+            "numbers (quoted from [`../docs/results.md`](../docs/results.md)) are a measurement, not "
+            "a hope.\n\n"
+            "*Follows the desk's seven beats ([METHODOLOGY.md](../../../METHODOLOGY.md)). The "
+            "rigorous version is the companion,* "
+            "[`02_for_the_quants.ipynb`](02_for_the_quants.ipynb)."
+        ),
+        code(BOOT),
+
+        md(
+            "## The answer first 🎯\n\n"
+            "| What we asked | The honest answer |\n"
+            "|---|---|\n"
+            "| Is fixed 70/30 really length-naive? | ✅ **Yes** — and that's the framework's good "
+            "idea: a short RSI swings wildly, a long one hugs 50. |\n"
+            "| Does the σ-transform *add* anything within a length? | ❌ **No** — it's a monotone "
+            f"rename. An \"adaptive zone\" trades *identically* to a constant RSI level (position "
+            f"diff = **0**, round-trip error {R['roundtrip_err']}). |\n"
+            "| Are the cheat-sheet levels calibrated to the market? | 🎰 **No** — pure arithmetic in "
+            f"the length. RSI(14)=70 ⟺ **+{R['sigma_at_70']}σ**, by formula, no data. |\n"
+            "| Does length-aware calibration beat just picking a good number? | ⚠️ **No** — on the "
+            f"synthetic it *loses* to a re-optimised constant (Sharpe {R['synth_adaptive_vs_reopt']}), "
+            "because it **is** one constant among many. |\n\n"
+            "> Desk shorthand: **Signal `WEAK` · Tradability `MIRAGE` · "
+            "\"σ adds signal?\" `RELABEL`** — earned on real SPY/QQQ (the σ-band beats 70/30 in "
+            "just 1 of 6 cells); let's see why."
+        ),
+
+        md(
+            "## 1 · The claim 📣\n\n"
+            "Two fixed lines — RSI **70** and **30** — get applied to every RSI length. The "
+            "framework's complaint: that's wrong, because the *same number* means different things "
+            "at different lengths. Its fix: pick a handful of **σ landmarks** (±0.66, ±1, ±√3, "
+            "±2.14), and for each length translate them back to RSI with a logit transform scaled "
+            "by `√(n−1)/2`. The marketing headline is that **RSI(14) = 70 lands at exactly "
+            f"+{R['sigma_at_70']}σ** — a clean bridge between the familiar scale and the σ map.\n\n"
+            "Let's just *look* at that transform."
+        ),
+        code(
+            "# The sigma<->RSI map, for three lengths. The dotted line marks RSI=70.\n"
+            "grid = np.linspace(1, 99, 400)\n"
+            "fig, ax = plt.subplots()\n"
+            "for n in (2, 14, 200):\n"
+            "    ax.plot(grid, rsi.rsi_to_sigma(grid, n), label=f'RSI({n})')\n"
+            "ax.axvline(70, ls=':', c='grey'); ax.axhline(rsi.rsi_to_sigma(70, 14), ls=':', c='grey')\n"
+            "ax.set_xlabel('RSI (0-100)'); ax.set_ylabel('sigma'); ax.legend()\n"
+            "ax.set_title('sigma = logit(RSI) . sqrt(n-1)/2  --  smooth, and always strictly rising')\n"
+            "print('RSI(14)=70 ->', round(float(rsi.rsi_to_sigma(70, 14)), 3), 'sigma')\n"
+            "plt.show()"
+        ),
+        md(
+            "Notice the one thing that decides everything: at each length the curve is **strictly "
+            "rising**. A strictly rising function never crosses itself — so \"σ below −1.73\" and "
+            "\"RSI below *some fixed number*\" are the **same event**. Keep that in your pocket."
+        ),
+
+        md(
+            "## 2 · So what? 💰\n\n"
+            "If σ-zones genuinely read overbought/oversold better than 70/30, the payoff is real: "
+            "the textbook RSI **mean-reversion** trade (buy when oversold, sell back at the middle) "
+            "would get sharper entries at every length, and a trader could stop hand-tuning levels "
+            "per instrument. That's the promise worth checking. The flip side: if the σ map only "
+            "*renames* the levels, then a beautifully-motivated framework adds a vocabulary, not an "
+            "edge — and a 38-page manifesto is selling the wrapping."
+        ),
+
+        md(
+            "## 3 · How we'd know 🔬\n\n"
+            "Four checks, decided up front:\n\n"
+            "1. **Does the σ-transform move any trade within a length?** Run the same mean-reversion "
+            "strategy through a σ band and through the constant RSI band it implies. If they differ, "
+            "σ matters; if the difference is **zero**, it's a relabel.\n"
+            "2. **Is the cheat-sheet arithmetic or calibration?** Rebuild the published zone table "
+            "from the formula alone.\n"
+            "3. **Does σ-calibration beat just picking a good constant?** Race fixed 70/30, the "
+            "σ-band, and a re-optimised constant — net of costs.\n"
+            "4. **Does \"Rescaled RSI\" carry new info?** Check whether rescaling a long RSI onto the "
+            "short scale changes its predictive ranking at all.\n\n"
+            "**What would make us say \"relabel\":** checks 1 and 4 returning exact zeros, and check "
+            "3's σ-band failing to beat a plain constant."
+        ),
+
+        md(
+            "## 4 · The teardown 🔧\n\n"
+            "### 4a · The \"adaptive zone\" is a constant in disguise\n"
+            "We take RSI(2), enter when the σ-transformed RSI dips below −√3 (the framework's "
+            "oversold edge), exit at σ=0 (which is RSI 50), and compare to the constant RSI band "
+            "that σ level maps to."
+        ),
+        code(
+            "ident = decompose.crossing_identity(close, length=2, lower_sigma=-1.732)\n"
+            "print(f\"adaptive -sqrt3 sigma  ==  constant RSI {ident['implied_lower_rsi']:.1f} / \"\n"
+            "      f\"{ident['implied_exit_rsi']:.0f}\")\n"
+            "print(f\"max difference in position, bar by bar: {ident['max_position_diff']:.1f}  \"\n"
+            "      f\"(identical = {ident['identical']}, {ident['n_entries']} entries)\")"
+        ),
+        md(
+            "Zero. Every single bar, the \"adaptive\" σ-zone and a plain fixed RSI line hold the "
+            "**same position**. The σ dressing changed the *number you read* (3.0 instead of 30), "
+            "not the *trade you make*."
+        ),
+
+        md(
+            "### 4b · The cheat-sheet is arithmetic, not market wisdom\n"
+            "The published table of zone levels per length isn't fitted to any chart — it falls out "
+            "of the formula. Here it is, rebuilt, and the headline compression: the same σ landmark "
+            "sits far from 50 for a short RSI and hugs 50 for a long one."
+        ),
+        code(
+            "z = decompose.zone_arithmetic([2, 5, 14, 50, 200])\n"
+            "display(z['table'].round(1))\n"
+            "print('RSI(14)=70 <=>', round(z['sigma_at_rsi70_len14'], 3), 'sigma  |  compresses toward 50:',\n"
+            "      z['compresses_toward_50'])\n"
+            "fig, ax = plt.subplots()\n"
+            "ax.plot(z['table'].index, z['table']['overbought_oversold'], 'o-')\n"
+            "ax.axhline(50, ls=':', c='grey'); ax.set_xscale('log')\n"
+            "ax.set_xlabel('RSI length (log)'); ax.set_ylabel('overbought level (RSI)')\n"
+            "ax.set_title('Same sigma landmark, every length -- pure arithmetic compression to 50')\n"
+            "plt.show()"
+        ),
+
+        md(
+            "### 4c · Does the calibration actually pay?\n"
+            "The horse race: fixed 30/50, the σ-band (which 4a showed is a constant), and the "
+            "in-sample *best* constant. On our mean-reverting tape a real edge exists — the question "
+            "is whether σ-calibration captures it better than simply re-optimising a number."
+        ),
+        code(
+            "cmp = decompose.strategy_compare(close, length=2, cost_bps=1.0)\n"
+            "tbl = pd.DataFrame({k: {'net/yr': v['net_ann_return'], 'Sharpe': v['sharpe'],\n"
+            "                        'entries': v['n_entries']}\n"
+            "                    for k, v in [('fixed 30/50', cmp['fixed']),\n"
+            "                                 ('adaptive (=const)', cmp['adaptive']),\n"
+            "                                 ('reopt constant', cmp['reopt'])]}).T\n"
+            "display(tbl.round(3))\n"
+            "print(f\"adaptive minus re-optimised constant, in Sharpe: {cmp['adaptive_vs_reopt_sharpe']:+.2f}\")\n"
+            "print('-> the sigma-band is just one of the constants the grid searched; it cannot win.')"
+        ),
+
+        md(
+            "### 4d · \"Rescaled RSI\" reads different, says the same\n"
+            "Rescaling RSI(70) onto the RSI(14) scale is *another* monotone relabel. So as a signal "
+            "— anything based on ranking or thresholds — it is **identical** to plain RSI(70). The "
+            "scatter is a straight monotone line; the predictive correlation (IC) is the same to "
+            "the decimal."
+        ),
+        code(
+            "out = decompose.rescale_increment(close, target_length=14, long_length=70, horizon=5)\n"
+            "raw70 = rsi.wilder_rsi(close, 70); resc = rsi.rescaled_rsi(close, 70, 14)\n"
+            "v = raw70.notna() & resc.notna()\n"
+            "fig, ax = plt.subplots(figsize=(6.2, 5.2))\n"
+            "ax.scatter(raw70[v], resc[v], s=4, alpha=.4)\n"
+            "ax.set_xlabel('raw RSI(70)'); ax.set_ylabel('rescaled RSI(70->14)')\n"
+            "ax.set_title('A monotone relabel: same order, same ranks, same signal')\n"
+            "plt.show()\n"
+            "print(f\"IC raw RSI(70) = {out['ic_native_long']:+.3f}   IC rescaled = {out['ic_rescaled_long']:+.3f}\"\n"
+            "      f\"   gap = {out['rescale_ic_gap']:+.1e}\")\n"
+            "print(f\"the longer window DOES beat RSI(14) (partial IC {out['incremental_ic_window_over_native']:+.3f})\"\n"
+            "      \" -- but that's in raw RSI(70) already; rescaling adds none of it.\")"
+        ),
+
+        md(
+            "## 5 · The verdict 🧾\n\n"
+            "- **The good idea is real**: fixed 70/30 *is* length-naive, and a length-matched level "
+            "is more sensible. The framework deserves credit for naming that clearly.\n"
+            f"- **The σ-transform adds no signal**: within a length it's a monotone rename (trade "
+            f"difference = 0). The cheat-sheet is arithmetic (RSI(14)=70 ⟺ +{R['sigma_at_70']}σ, no "
+            "data). Rescaling is rank-identical to the raw long RSI.\n"
+            f"- **The calibration doesn't pay**: on the synthetic the σ-band *loses* to a "
+            f"re-optimised constant (Sharpe {R['synth_adaptive_vs_reopt']}), because it is one "
+            "constant among many.\n\n"
+            "> **Signal `WEAK`** — the only genuine content (length-matched thresholds) is a "
+            "re-statement of a known fact, not a new edge. **\"σ adds signal?\" `RELABEL`** — the "
+            "transform is order-preserving, so it moves nothing. The real-tape horse race in "
+            "[`../docs/results.md`](../docs/results.md) settles whether the σ-implied band even "
+            "beats naive 70/30."
+        ),
+
+        md(
+            "## 6 · Could you trade it? 💸\n\n"
+            "Even granting the framework its best case — that the σ-implied per-length band beats "
+            "70/30 on the real tape — you'd be trading a daily RSI mean-reversion rule. That means "
+            "frequent round-trips, each paying an equity spread, to harvest a few points of "
+            "directional tilt. And the framework's *own* hedge is that its zones are **\"not "
+            "buy/sell signals\"** — a description of environment, not an entry. So the honest read: "
+            "the apparatus is a better *vocabulary* for thinking about length-aware thresholds, and "
+            "nothing here creates an edge the σ-transform can take credit for. Tradability: a strong "
+            "**`MIRAGE`** candidate."
+        ),
+
+        md(
+            "## 7 · Going further 🚪\n\n"
+            "- **Make σ actually adaptive.** The framework invokes Cardwell-style *regimes* but its "
+            "zones depend only on length. A genuinely adaptive version would let the σ bands widen "
+            "with realised volatility — *that* could move trades. Fork it and test.\n"
+            "- **Run the real horse race across more lengths and tickers.** Does the σ-implied band "
+            "beat 70/30 anywhere, after a White Reality Check on the re-optimisation? "
+            "(`examples/verify.py`).\n"
+            "- **Multi-horizon rescaling.** On a tape with two genuine cycles, does combining raw "
+            "RSI(short) *and* raw RSI(long) beat either — and does rescaling ever help over just "
+            "using both raw? (It shouldn't, but it's the strongest version of the pitch.)\n\n"
+            "PRs welcome — challenge the relabel claim, or find the length/ticker where σ-zones earn "
+            "their keep."
+        ),
+    ]
+    return new_notebook(cells=cells, metadata=_meta())
+
+
+# ===========================================================================
+# 02 — FOR THE QUANTS
+# ===========================================================================
+def build_quants():
+    cells = [
+        md(
+            "# Sigma-Sleight — the rigorous teardown 📏🪞\n"
+            "### Is AdaptiveRSI's σ-standardization a signal, or an order-preserving relabel?\n\n"
+            "The AdaptiveRSI framework defines overbought/oversold as fixed **σ landmarks** in a "
+            "logit-RSI space, translated back per length via `σ = logit(RSI)·√(n−1)/2`. We test the "
+            "one falsifiable thing this implies — that length-aware σ-zones read mean-reversion "
+            "extremes better than fixed 70/30 — and decompose it into four parts, two of which are "
+            "**exact identities** (no data can change them) and two of which are empirical.\n\n"
+            "> The reproducible core executes on a synthetic OU tape with a baked-in, single-horizon "
+            "mean reversion (a real oversold edge) — the ground truth the decomposition recovers. "
+            "The real SPY/QQQ horse race is in [`../docs/results.md`](../docs/results.md) via "
+            "`examples/verify.py`. Plain-language companion: "
+            "[`01_for_the_curious.ipynb`](01_for_the_curious.ipynb). Seven desk beats, same order."
+        ),
+        code(BOOT),
+
+        md(
+            "## Beat 0 · Verdict\n\n"
+            "| Axis | Stamp | Why |\n"
+            "|---|---|---|\n"
+            "| **Signal** — do σ-zones beat fixed 70/30? | 🟡 `WEAK` | The motivating fact (70/30 is "
+            "length-naive) is real, but the σ-transform sold as the fix is a **strictly monotone** "
+            "map — within a length it renames a constant RSI threshold and moves **zero** trades "
+            "(max crossing diff 0 on real SPY/QQQ), and its σ-calibrated band beats naive 70/30 in "
+            "only **1 of 6** real cells. |\n"
+            "| **Tradability** | 🔴 `MIRAGE` | Even a surviving threshold edge is a daily "
+            "mean-reversion rule paying repeated equity spreads; the framework itself calls its "
+            "zones \"not buy/sell signals,\" and the σ-band beats a re-optimised constant in **0 of "
+            "6** real cells. |\n"
+            "| **Does σ add signal?** | ⚪ `RELABEL` | The σ-standardization and Rescaled-RSI are "
+            "order-preserving, so every threshold crossing and rank statistic is invariant. |\n\n"
+            "> **In one sentence:** AdaptiveRSI's length-awareness is a genuinely sound idea wrapped "
+            "in a σ-transform that, being monotone, only *relabels* — it cannot create the edge the "
+            "38-page manifesto implies, and a re-optimised constant matches or beats it.\n\n"
+            "*(This notebook executes on the offline synthetic tape — where the identities and a "
+            "baked-in oversold edge are provable. The real SPY/QQQ horse race that earns the stamps "
+            "above is in [`../docs/results.md`](../docs/results.md).)*"
+        ),
+
+        md(
+            "## Beat 1 · The claim, stated precisely\n\n"
+            "Define the AdaptiveRSI map at length $n$:\n\n"
+            "$$\\sigma(\\text{RSI}; n) = \\operatorname{logit}\\!\\left(\\tfrac{\\text{RSI}}{100}\\right)\\cdot\\frac{\\sqrt{n-1}}{2},\\qquad \\operatorname{logit}(p)=\\ln\\frac{p}{1-p}.$$\n\n"
+            "A zone boundary is a fixed σ landmark $s\\in\\{\\pm0.66,\\pm1,\\pm\\sqrt3,\\pm2.14\\}$, "
+            "translated to RSI by the inverse $\\text{RSI}=100\\,\\operatorname{expit}(2s/\\sqrt{n-1})$. "
+            "The claim: these length-aware levels read extremes better than the length-blind 70/30."
+        ),
+        code(
+            "# The map is a strict monotone bijection at every length -- verified numerically.\n"
+            "for n in (2, 14, 200):\n"
+            "    chk = decompose.monotone_check(n)\n"
+            "    print(f\"len {n:>3}: strictly_increasing={chk['strictly_increasing']}  \"\n"
+            "          f\"min_step={chk['min_step']:.2e}  roundtrip_err={chk['max_roundtrip_err']:.1e}\")"
+        ),
+
+        md(
+            "## Beat 2 · So what?\n\n"
+            "Monotonicity is not a footnote — it is the whole result in embryo. A strictly "
+            "increasing $\\sigma(\\cdot;n)$ preserves order, so (i) every **threshold crossing** of a "
+            "σ-zone coincides with a crossing of a fixed RSI level, and (ii) every **rank statistic** "
+            "(Spearman IC, quantile) is invariant. Any framework feature built on thresholds or "
+            "ranks therefore inherits *exactly* the information of the plain RSI it relabels. The "
+            "economic stakes reduce to a single empirical question: does choosing the σ-implied "
+            "*constant* per length beat 70/30 — and is it better than just re-optimising a constant?"
+        ),
+
+        md(
+            "## Beat 3 · How we'd know — the pre-registered protocol\n\n"
+            "1. **Crossing identity** (`crossing_identity`): max bar-by-bar position difference "
+            "between the σ-band strategy and its implied constant-RSI strategy. Pre-registered "
+            "value: **0**.\n"
+            "2. **Zone arithmetic** (`zone_arithmetic`): reproduce the published table from the "
+            "formula; confirm RSI(14)=70 ⟺ +1.53σ and monotone compression toward 50.\n"
+            "3. **Horse race** (`strategy_compare`, HAC/Reality-Check on the real run): net Sharpe of "
+            "fixed vs σ-band vs re-optimised constant. `adaptive − reopt ≤ 0` by construction; the "
+            "open test is `adaptive` vs `fixed`.\n"
+            "4. **Rescale invariance** (`rescale_increment`): rank-IC gap between rescaled RSI(long) "
+            "and raw RSI(long). Pre-registered value: **0**.\n\n"
+            "**Mirage line:** Signal beats `WEAK` only if the σ-band beats fixed 70/30 by a margin "
+            "surviving a White (2000) Reality Check on the re-optimisation, *and* not matched by the "
+            "re-optimised constant."
+        ),
+
+        md(
+            "## Beat 4 · The teardown\n\n"
+            "### 4a · Crossing identity — σ-zone ≡ constant RSI band"
+        ),
+        code(
+            "rows = []\n"
+            "for n, ls in [(2, -1.732), (5, -1.0), (14, -1.0), (50, -2.14)]:\n"
+            "    out = decompose.crossing_identity(close, n, ls)\n"
+            "    rows.append({'length': n, 'lower_sigma': ls, 'implied_RSI': out['implied_lower_rsi'],\n"
+            "                 'max_pos_diff': out['max_position_diff'], 'entries': out['n_entries']})\n"
+            "display(pd.DataFrame(rows).set_index('length').round(3))\n"
+            "print('Every max_pos_diff is exactly 0: within a length, adaptive == a constant.')"
+        ),
+
+        md("### 4b · Zone arithmetic — the cheat-sheet is a function of n alone"),
+        code(
+            "z = decompose.zone_arithmetic([2, 3, 5, 8, 14, 21, 50, 100, 200])\n"
+            "display(z['table'].round(2))\n"
+            "assert z['rsi70_is_1p53_sigma'] and z['compresses_toward_50']\n"
+            "print('RSI(14)=70 <=>', round(z['sigma_at_rsi70_len14'], 4), 'sigma; table is arithmetic, "
+            "compresses toward 50.')"
+        ),
+
+        md(
+            "### 4c · The horse race\n"
+            "Long/flat RSI mean reversion (enter below the lower band, exit above 50), 1 bp/turn. "
+            "The σ-band uses the framework's −√3σ oversold edge; the re-optimised constant is the "
+            "in-sample best lower level over a grid (a deliberately *generous*, overfit control)."
+        ),
+        code(
+            "race = {n: decompose.strategy_compare(close, length=n, cost_bps=1.0) for n in (2, 5, 14)}\n"
+            "tbl = pd.DataFrame({\n"
+            "    n: {'fixed_Sharpe': c['fixed']['sharpe'],\n"
+            "        'adaptive_Sharpe': c['adaptive']['sharpe'],\n"
+            "        'reopt_Sharpe': c['reopt']['sharpe'],\n"
+            "        'adaptive_RSI': c['adaptive_implied_lower_rsi'],\n"
+            "        'reopt_lower': c['reopt']['lower'],\n"
+            "        'adaptive_minus_reopt': c['adaptive_vs_reopt_sharpe']}\n"
+            "    for n, c in race.items()}).T\n"
+            "tbl.index.name = 'length'\n"
+            "display(tbl.round(3))\n"
+            "print('adaptive_minus_reopt <= 0 at every length: the sigma-band is one constant the grid contains.')"
+        ),
+        md(
+            "The `adaptive_minus_reopt` column is non-positive everywhere — exactly as the identity "
+            "in 4a forces. The σ-calibration cannot beat re-optimising a constant because it *is* a "
+            "constant. Whether it beats naive fixed 70/30 (the `fixed` vs `adaptive` columns) is the "
+            "only thing the real tape adds, and it carries the multiple-testing of the grid, which "
+            "the real run prices with a Reality Check."
+        ),
+
+        md(
+            "### 4d · Rescaled RSI — cross-length monotone invariance\n"
+            "Rescaled RSI(long→target) $=$ `sigma_to_rsi(rsi_to_sigma(RSI(long)))`, a composition of "
+            "two strict monotone maps, hence a monotone function of RSI(long). Rank IC is therefore "
+            "invariant."
+        ),
+        code(
+            "out = decompose.rescale_increment(close, target_length=14, long_length=70, horizon=5)\n"
+            "for k in ('ic_native_target', 'ic_native_long', 'ic_rescaled_long', 'rescale_ic_gap',\n"
+            "          'incremental_ic_window_over_native', 'n'):\n"
+            "    print(f'  {k:36s} {out[k]:+.4f}' if isinstance(out[k], float) else f'  {k:36s} {out[k]}')\n"
+            "assert abs(out['rescale_ic_gap']) < 1e-9\n"
+            "print('\\nrescale_ic_gap is 0 to machine precision: rescaling is a relabel of raw RSI(long).')"
+        ),
+
+        md(
+            "## Beat 5 · The verdict\n\n"
+            "- **Two exact identities.** The crossing diff (4a) and the rescale IC gap (4d) are "
+            "**0** to machine precision, at every length — the σ-standardization is order-preserving "
+            "and adds no threshold or rank information.\n"
+            "- **One arithmetic table.** The cheat-sheet (4b) is a deterministic function of $n$; "
+            f"RSI(14)=70 ⟺ +{R['sigma_at_70']}σ with no market input.\n"
+            "- **One empirical leg.** The horse race (4c): the σ-band loses to a re-optimised "
+            f"constant on the synthetic (Δ Sharpe {R['synth_adaptive_vs_reopt']}); on the real tape "
+            "the only live question is whether it clears fixed 70/30 after a Reality Check.\n\n"
+            "**Signal `WEAK`, \"σ adds signal?\" `RELABEL`.** The framework's substance — "
+            "length-matched thresholds — is real but is a re-statement of RSI arithmetic, not an "
+            "edge the σ-transform creates."
+        ),
+
+        md(
+            "## Beat 6 · Could you trade it?\n\n"
+            "The strategy under the framework is daily RSI mean reversion: high turnover, each "
+            "round-trip charged a real equity spread, to express a few points of mean-reverting "
+            "tilt. The σ-relabel changes none of the economics — it changes the number on the axis. "
+            "And the framework's own disclaimer (\"not buy/sell signals\") concedes the point. Any "
+            "edge that survives belongs to *RSI mean reversion at a sensible level*, not to "
+            "AdaptiveRSI; charged costs and corrected for the level-search, it is a strong "
+            "**`MIRAGE`** candidate. The real-tape numbers and the Reality Check live in "
+            "[`../docs/results.md`](../docs/results.md)."
+        ),
+
+        md(
+            "## Beat 7 · Going further\n\n"
+            "- **A truly adaptive σ.** Let the σ bands scale with realised vol (the regime idea the "
+            "framework gestures at but doesn't implement). That breaks monotone invariance across "
+            "time and *could* add signal — the version worth a real test.\n"
+            "- **Reality-Checked cross-section.** Sweep lengths × tickers; does the σ-implied band "
+            "beat 70/30 anywhere after White (2000)? `quantlab.stats` has the machinery.\n"
+            "- **Logit-RSI tails.** The framework's other claim is that the logit scale separates "
+            "extreme readings the bounded scale compresses. For *rank/threshold* use that's "
+            "invariant (shown here); for *distance* use (e.g. z-scored displacement) it's a real "
+            "modelling choice — worth its own teardown.\n\n"
+            "Fork the relabel claim, or find where σ-zones earn their keep. PRs welcome."
+        ),
+    ]
+    return new_notebook(cells=cells, metadata=_meta())
+
+
+def _meta():
+    return {
+        "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
+        "language_info": {"name": "python"},
+    }
+
+
+def main():
+    nbf.write(build_curious(), os.path.join(HERE, "01_for_the_curious.ipynb"))
+    nbf.write(build_quants(), os.path.join(HERE, "02_for_the_quants.ipynb"))
+    print("wrote 01_for_the_curious.ipynb and 02_for_the_quants.ipynb")
+
+
+if __name__ == "__main__":
+    main()
