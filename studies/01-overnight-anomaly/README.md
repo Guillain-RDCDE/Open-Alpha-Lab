@@ -8,9 +8,9 @@
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** — is the effect statistically real? | 🟢 `REAL` | SPY overnight mean carries a Newey-West *t* ≈ 5; confirmed across ~441 S&P 500 stocks (~69% have overnight > intraday Sharpe). |
-| **Tradability** — does it survive costs, capacity, scale? | 🔴 `MIRAGE` | Magnitude inflated by a calendar-time illusion; what's left is mostly gap-risk **beta** below trading costs; it **decays** (5y Sharpe ~2→~0.5) and **doesn't scale** (capacity ~\$10M). |
-| **Manipulation?** — does the pattern prove fraud? | ⚪ `NOT SUPPORTED` | Bayesian posterior ≈ 2–3%; the discriminating evidence (foreign-ETF & China inversions, negative P&L at scale) favours microstructure. |
+| **Signal** — is the effect statistically real? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | SPY overnight mean carries a Newey-West *t* ≈ 5; confirmed across ~441 S&P 500 stocks (~69% have overnight > intraday Sharpe). |
+| **Tradability** — does it survive costs, capacity, scale? | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) | Magnitude inflated by a calendar-time illusion; what's left is mostly gap-risk **beta** below trading costs; it **decays** (5y Sharpe ~2→~0.5) and **doesn't scale** (capacity ~\$10M). |
+| **Manipulation?** — does the pattern prove fraud? | ![Not supported](https://img.shields.io/badge/Not_supported-8b949e?style=flat-square) | Bayesian posterior ≈ 2–3%; the discriminating evidence (foreign-ETF & China inversions, negative P&L at scale) favours microstructure. |
 
 > **In one sentence:** the overnight effect is *real and broad*, but its size is a clock illusion, what remains is mostly beta below trading costs, it doesn't scale, and the "market-manipulation" reading isn't supported.
 
