@@ -64,27 +64,24 @@ def code(text):
 def build_curious():
     cells = [
         md(
-            "# Does dealer gamma tell you what kind of day it'll be? 🃏\n"
-            "### \"See what dealers see\" — the GEX regime read, tested honestly, in plain English\n\n"
-            "Here's the pitch, straight from a viral thread: price is just the *output*. The real "
-            "*input* is **dealer hedging**. When dealers are **long gamma** they sell rips and buy "
-            "dips — a calm **range** day. When they're **short gamma** they chase the move — a "
-            "violent **trend** day. Add up every option's gamma × open-interest and you get **GEX**, "
-            "and its *sign*, knowable before the open, supposedly tells you the character of the day "
-            "before the first candle prints. *\"The regime question is more important than "
-            "direction.\"* It's sold as a daily read for \\$7/month.\n\n"
-            "It's a great story, and there's a real mechanism under it. But there's an obvious "
-            "suspect hiding in plain sight: **the VIX**. Scary, high-vol days are *both* more "
-            "trending *and* (being put-heavy) negative-gamma. So is GEX telling you anything the "
-            "VIX wasn't already? That's the whole study.\n\n"
-            "> ⚠️ **Not investment advice.** The reproducible core runs on a **synthetic** tape "
-            "where we *bake in* the answer — one world with a real gamma effect, one where it's "
-            "pure VIX in disguise — so we can prove our test tells them apart. The real-market "
-            "numbers come from [`examples/verify.py`](../examples/verify.py) into "
-            "[`../docs/results.md`](../docs/results.md).\n\n"
-            "*Follows the desk's seven beats ([METHODOLOGY.md](../../../METHODOLOGY.md)). The "
-            "rigorous version is the companion,* "
-            "[`02_for_the_quants.ipynb`](02_for_the_quants.ipynb)."
+            "# Gamma-Gospel — does dealer gamma call the day? 🃏\n"
+            "### Is the GEX \"regime read\" a real dealer-hedging signal, or the VIX in a trenchcoat?\n\n"
+            "![Signal: Pre-reg](https://img.shields.io/badge/Signal-Pre--reg-8b949e?style=flat-square)\n"
+            "![Tradability: Pre-reg](https://img.shields.io/badge/Tradability-Pre--reg-8b949e?style=flat-square)\n\n"
+            "A viral thread says price is just the *output*; the real *input* is **dealer hedging** — "
+            "long-gamma dealers fade moves (calm **range** day), short-gamma dealers chase them "
+            "(violent **trend** day), and the sign of net **GEX**, knowable before the open, calls the "
+            "day's character. But there's a suspect hiding in plain sight: **the VIX** — scary days "
+            "are both more trending *and* put-heavy (negative-gamma). This study is **pre-registered**: "
+            "no real-market results yet, only the expectation that GEX is mostly the volatility regime "
+            "relabeled.\n\n"
+            "> 📓 **This is the plain-language layer.** The deep companion is "
+            "**[02_for_the_quants.ipynb](02_for_the_quants.ipynb)** — same story, deeper.\n"
+            ">\n"
+            "> ⚠️ **Not investment advice.** Pre-registered design: the stamps above are expectations, "
+            "to be earned (or refuted) by the run on the real SPY chain "
+            "([`examples/verify.py`](../examples/verify.py) → [`../docs/results.md`](../docs/results.md)). "
+            "House style in [METHODOLOGY.md](../../../METHODOLOGY.md)."
         ),
         code(BOOT),
 
@@ -222,7 +219,7 @@ def build_curious():
             "collapse — is in [`02_for_the_quants.ipynb`](02_for_the_quants.ipynb)."
         ),
     ]
-    return new_notebook(cells=cells, metadata=_meta())
+    _write(new_notebook(cells=cells, metadata=_meta()), "01_for_the_curious.ipynb")
 
 
 # ===========================================================================
@@ -231,20 +228,26 @@ def build_curious():
 def build_quants():
     cells = [
         md(
-            "# Gamma-Gospel — the teardown 🃏🔬\n"
-            "### Dealer GEX sign vs the day's character: a real effect, or the VIX partialled back in?\n\n"
-            "The rigorous companion to [`01_for_the_curious.ipynb`](01_for_the_curious.ipynb). Same "
-            "seven beats, full method. Thesis: the GEX-regime claim contains a **real but modest** "
-            "dealer-gamma effect that is **largely confounded by the volatility level** — a raw "
-            "negative-gamma gap in realised vol and directional efficiency that mostly (vol: almost "
-            "entirely) **collapses once VIX is partialled out**. The construction also rests on an "
-            "**unobservable dealer-positioning assumption** (long calls / short puts), which we "
-            "flag rather than hide.\n\n"
-            "> ⚠️ **Executed on the synthetic tape** — two panels sharing a VIX-driven confound, one "
-            "with a baked-in genuine gamma effect (`beta_de=0.06`, `beta_vol=0.002`) and one with "
-            "none — where the nested regression recovers exactly what we put in. The real verdict is "
-            "produced by [`examples/verify.py`](../examples/verify.py) into "
-            "[`../docs/results.md`](../docs/results.md). Fixed seeds; no network."
+            "# Gamma-Gospel — a quantitative teardown 🔬\n"
+            "### GEX construction · unobservable dealer assumption · HAC nested regression · baked-in-β recovery · the VIX trenchcoat\n\n"
+            "![Signal: Pre-reg](https://img.shields.io/badge/Signal-Pre--reg-8b949e?style=flat-square)\n"
+            "![Tradability: Pre-reg](https://img.shields.io/badge/Tradability-Pre--reg-8b949e?style=flat-square)\n\n"
+            "The deep companion to the [notebook for the curious](01_for_the_curious.ipynb) — *same "
+            "seven beats.* **Pre-registered** thesis: the GEX-regime claim contains a real but modest "
+            "dealer-gamma effect **largely confounded by the volatility level** — a raw negative-gamma "
+            "gap in realised vol and directional efficiency that mostly collapses once VIX is "
+            "partialled out — and rests on an **unobservable dealer-positioning assumption** (long "
+            "calls / short puts) we flag rather than hide.\n\n"
+            "> ⚠️ **Not investment advice.** Pre-registered design. Executed here on the **synthetic "
+            "tape** — two panels sharing a VIX-driven confound, one with a baked-in genuine gamma "
+            "effect (`beta_de=0.06`, `beta_vol=0.002`) and one with none — where the nested HAC "
+            "regression recovers exactly what we put in (fixed seeds, no network); the real SPY-chain "
+            "stamps come from [`examples/verify.py`](../examples/verify.py) → "
+            "[`../docs/results.md`](../docs/results.md), literature in "
+            "[`../docs/references.md`](../docs/references.md).\n"
+            ">\n"
+            "> 💡 **The `💡 In plain words` notes** translate each result back into intuition. House "
+            "style in [METHODOLOGY.md](../../../METHODOLOGY.md)."
         ),
         code(BOOT),
 
@@ -359,7 +362,7 @@ def build_quants():
             "[`../docs/references.md`](../docs/references.md)."
         ),
     ]
-    return new_notebook(cells=cells, metadata=_meta())
+    _write(new_notebook(cells=cells, metadata=_meta()), "02_for_the_quants.ipynb")
 
 
 def _meta():
@@ -369,16 +372,16 @@ def _meta():
     }
 
 
+def _write(nb, name):
+    path = os.path.join(HERE, name)
+    with open(path, "w", encoding="utf-8") as fh:
+        nbf.write(nb, fh)
+    print(f"wrote {name}  ({len(nb.cells)} cells)")
+
+
 def main():
-    targets = {
-        "01_for_the_curious.ipynb": build_curious(),
-        "02_for_the_quants.ipynb": build_quants(),
-    }
-    for fname, nb in targets.items():
-        path = os.path.join(HERE, fname)
-        with open(path, "w", encoding="utf-8") as fh:
-            nbf.write(nb, fh)
-        print(f"wrote {fname}  ({len(nb.cells)} cells)")
+    build_curious()
+    build_quants()
 
 
 if __name__ == "__main__":

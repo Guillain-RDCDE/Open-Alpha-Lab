@@ -21,9 +21,9 @@
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** — is the effect statistically real? | {{🟢 `REAL` · 🟡 `WEAK` · 🔴 `NONE`}} | {{one line — the decisive number}} |
-| **Tradability** — does it survive costs, capacity, scale? | {{🟢 `INVESTABLE` · 🟡 `FRAGILE` · 🔴 `MIRAGE`}} | {{one line}} |
-| {{*optional 3rd axis specific to the study, e.g. "Manipulation?"*}} | ⚪ `{{STAMP}}` | {{one line}} |
+| **Signal** — is the effect statistically real? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | {{one line — the decisive number}} |
+| **Tradability** — does it survive costs, capacity, scale? | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) | {{one line}} |
+| {{*optional 3rd axis specific to the study, e.g. "Manipulation?"*}} | ![Not supported](https://img.shields.io/badge/Not_supported-8b949e?style=flat-square) | {{one line}} |
 
 > **In one sentence:** {{the whole study compressed to a single honest line}}.
 
@@ -50,8 +50,14 @@ paper/, RESPONSE.md, docs/results*.md (the fingerprinted real run), docs/extensi
 *{{if docs/references.md exists}}Sources & literature map: [docs/references.md](docs/references.md). {{/if}}Engine: [`quantlab/`](../../quantlab/). **Not investment advice** — research & education. See [LICENSE](../../LICENSE).*
 
 <!--
-  STAMP COLOURS: Signal REAL→🟢 WEAK→🟡 NONE→🔴 (mixed→🟡).
-  Tradability INVESTABLE→🟢 FRAGILE→🟡 MIRAGE→🔴.
-  Optional 3rd "myth-check" axis (BUSTED / MISATTRIBUTED / NOT SUPPORTED /
-  CONFIRMED …)→ ⚪ (it's a qualitative verdict, off the green/red scale).
+  VERDICT BADGES (shields.io, style=flat-square). The Stamp cell is a coloured
+  pill: ![Word](https://img.shields.io/badge/Word-COLOUR?style=flat-square)
+    Signal      REAL→2ea44f (green)  WEAK/MIXED→dab617 (amber)  NONE→c0392b (red)
+    Tradability INVESTABLE→2ea44f    FRAGILE→dab617             MIRAGE→c0392b
+    3rd "myth-check" axis (BUSTED / MISATTRIBUTED / NOT SUPPORTED / CONFIRMED /
+    PRE-REG …) → 8b949e (grey) — a qualitative verdict, off the green/red scale.
+  Badge text encoding: space→_  ·  literal hyphen→--  (e.g. Not_supported, Pre--reg).
+  Compound stamp → two badges + plain-text qualifier, e.g.
+    ![Real](…/Real-2ea44f…) on the level · ![None](…/None-c0392b…) on the spike
+  The SAME palette drives the landing table and the notebook heroes — keep it consistent.
 -->

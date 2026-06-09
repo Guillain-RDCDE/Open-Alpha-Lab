@@ -125,6 +125,34 @@ What the stamps mean:
   tiny-capacity. `MIRAGE` — gone once you charge real costs, or it can't scale, or
   it's just beta you were always paid for.
 
+### The visual language — verdict badges
+
+One palette carries the verdict everywhere a reader meets it — the landing table,
+each study's front-card, and the hero of both notebooks — so the same colour always
+means the same thing. The stamps render as flat-square [shields.io](https://shields.io)
+badges, not coloured emoji dots (which wrap badly in narrow table cells):
+
+| Colour | Hex | Signal | Tradability | 3rd "myth-check" axis |
+|---|---|---|---|---|
+| 🟩 green | `2ea44f` | `REAL` | `INVESTABLE` | — |
+| 🟨 amber | `dab617` | `WEAK` / `MIXED` | `FRAGILE` | — |
+| 🟥 red | `c0392b` | `NONE` | `MIRAGE` | — |
+| ⬜ grey | `8b949e` | — | — | `BUSTED` · `MISATTRIBUTED` · `NOT SUPPORTED` · `CONFIRMED` · `PRE-REG` |
+
+- **Front-card / landing:** a message-only pill —
+  `![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square)`.
+- **Notebook hero (cell 0):** a labelled badge that names the axis —
+  `![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)`.
+- **Encoding:** space → `_`, literal hyphen → `--`, `?` → `%3F`
+  (e.g. `Not_supported`, `Pre--reg`, `Explosive%3F`).
+- **Compound stamp:** two badges plus a plain-text qualifier —
+  `![Real](…/Real-2ea44f…) on the level · ![None](…/None-c0392b…) on the spike`.
+
+Every notebook opens on the same **hero**: a tight H1 + one-line subtitle, the verdict
+badge row, a 2–3 sentence lede, then a *not-investment-advice* callout and a pointer to
+the companion notebook. The scaffold is in
+[`studies/_TEMPLATE/notebooks/build_notebooks.py`](studies/_TEMPLATE/notebooks/build_notebooks.py).
+
 ---
 
 ## The shared protocol (the engine behind beat 4)
