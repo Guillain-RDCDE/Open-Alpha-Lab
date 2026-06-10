@@ -128,6 +128,9 @@ jobs:
       - name: Study 32 — Rip-Tide test-suite
         run: pytest -q studies/32-rip-tide/tests
 
+      - name: Study 33 — Slingshot test-suite
+        run: pytest -q studies/33-slingshot/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
@@ -140,3 +143,4 @@ jobs:
           python studies/30-house-edge/examples/run_synthetic_demo.py
           python studies/31-trade-winds/examples/run_synthetic_demo.py
           python studies/32-rip-tide/examples/run_synthetic_demo.py
+          python studies/33-slingshot/examples/run_synthetic_demo.py
