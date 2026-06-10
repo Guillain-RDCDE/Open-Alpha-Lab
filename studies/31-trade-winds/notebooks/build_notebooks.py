@@ -44,7 +44,9 @@ R = dict(fp="efab160ee1f0", asof="2026-06-10", days="6546", n="18",
          eq_sh="0.43", eq_dd="-57", eqtr_sh="0.52", eqtr_dd="-33",
          b_sh="0.48", b_dd="-34", btr_sh="0.56", btr_dd="-20",
          sub1="+0.83", sub2="-0.28", sub3="+0.29",
-         syn_prem="2.4", syn_null="0.2")
+         syn_prem="2.4", syn_null="0.2",
+         wide_n="27", wide_sh="0.55", wide_fp="78f6e1add375",
+         br1="0.20", br8="0.46", br16="0.51", br27="0.55")
 
 BADGES = (
     "![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)\n"
@@ -196,13 +198,21 @@ def build_curious():
 
         md(
             "## 7 · Going further 🚪\n\n"
-            "- **More markets, more history** (beat 7 of the quants notebook): real managed futures uses "
-            "50–100+ contracts; breadth is most of trend's Sharpe. Widen the basket.\n"
-            "- **Combine with carry** — trend + carry across futures is the classic two-premium managed-"
-            "futures core; do they diversify each other?\n"
-            "- **Right-size the sleeve for *your* portfolio** — the optimal trend weight depends on what "
-            "else you hold; fork the blend cell and solve it for your book.\n\n"
-            "PRs welcome — widen the universe, add a carry sleeve, or optimise the portfolio weight."
+            "### Worked complement — breadth is the lever ([`../docs/extension.md`](../docs/extension.md))\n"
+            f"We widened from the 18 futures to a **{R['wide_n']}-market** liquid-ETF universe and swept the "
+            "Sharpe against the number of markets:\n\n"
+            f"- One market trends at Sharpe ~**{R['br1']}**; spreading the same signal over more markets "
+            f"lifts it monotonically — **{R['br8']}** at 8, **{R['br16']}** at 16, **{R['br27']}** at all "
+            f"{R['wide_n']}.\n"
+            f"- The full wider book's standalone Sharpe is **{R['wide_sh']}** — *above* the basket (0.51) "
+            "and 60/40 (0.48) that the narrow 18-market book trailed. **The `FRAGILE` standalone verdict "
+            "was largely a breadth limitation** — and the curve is still rising at 27, which is why real "
+            "managed futures runs 50–100+ markets.\n\n"
+            "### Other forks\n"
+            "- **More breadth still** — single-stock futures, more rates/FX; the sweep says Sharpe keeps climbing.\n"
+            "- **Combine with carry** — trend + carry is the classic two-premium managed-futures core.\n"
+            "- **Right-size the sleeve for *your* portfolio** — fork the blend cell and solve the weight.\n\n"
+            "PRs welcome — widen the universe further, add a carry sleeve, or optimise the portfolio weight."
         ),
     ]
     nb = new_notebook(cells=cells, metadata=_meta())
@@ -322,21 +332,46 @@ def build_quants():
 
         md(
             "## Beat 7 · Going further\n\n"
-            "### 7a · Worked complement — the lookback sweep & the decay\n"
-            "Is it a tuned lookback? Is the drought real? Both, measured."
+            "### 7a · Worked complement — breadth is the lever ([`../docs/extension.md`](../docs/extension.md))\n"
+            "The standalone book was `FRAGILE` (Sharpe 0.30) on 18 futures. The literature says that's a "
+            "*breadth* artefact. We sweep the Sharpe against the number of markets — on the synthetic here, "
+            f"on a {R['wide_n']}-market liquid-ETF universe in [`../docs/extension.md`](../docs/extension.md)."
+        ),
+        code(
+            "bs = extension.breadth_sweep(r, ks=[1,2,4,8,12,18], n_draws=30, seed=31)\n"
+            "display(bs.round(3))\n"
+            "fig, ax = plt.subplots()\n"
+            "ax.plot(bs.index, bs['mean_sharpe'], marker='o', color='#2ea44f')\n"
+            "ax.fill_between(bs.index, bs['sharpe_p25'], bs['sharpe_p75'], alpha=0.2, color='#2ea44f')\n"
+            "ax.set_xlabel('number of markets'); ax.set_ylabel('mean net Sharpe'); ax.set_title('Trend Sharpe scales with breadth')\n"
+            f"print('Real wider ETF universe (../docs/extension.md, {R['wide_n']} markets): '\n"
+            f"      '1->{R['br1']}, 8->{R['br8']}, 16->{R['br16']}, {R['wide_n']}->{R['wide_sh']} '\n"
+            "      '-- standalone Sharpe now ABOVE the basket (0.51) and 60/40 (0.48).')"
+        ),
+        md(
+            "> 💡 **In plain words.** A single market trends at Sharpe ~0.2; spread the same signal over "
+            f"more markets and it climbs monotonically. Widening from 18 futures to {R['wide_n']} ETFs "
+            f"lifts the standalone book to **{R['wide_sh']}** — *past* the benchmarks the narrow book "
+            "trailed. The `FRAGILE` stamp was largely a breadth limit; the curve is still rising at "
+            f"{R['wide_n']}, which is why real managed futures runs 50–100+ markets."
+        ),
+        md(
+            "### 7b · The lookback sweep & the honest decay\n"
+            "Not a tuned lookback (positive across horizons), and the 2010s drought shown openly."
         ),
         code(
             "print('Lookback sweep (synthetic):'); print(extension.lookback_sweep(r).round(3).to_string())\n"
             f"print('\\nReal sub-period Sharpe (../docs/results.md): {R['sub1']} / {R['sub2']} / {R['sub3']}')\n"
-            f"print('Real lookback sweep: 1m 0.07, 3m 0.28, 6m 0.39, 12m 0.65, blend 0.30 -- positive across, strongest at 12m.')"
+            "print('Real lookback sweep: 1m 0.07, 3m 0.28, 6m 0.39, 12m 0.65, blend 0.30 -- positive across, strongest at 12m.')"
         ),
         md(
-            "**The result.** The premium is positive across every lookback (strongest at the classic 12-"
-            "month horizon) — not a tuned parameter — and the sub-period Sharpe exposes the real 2010s "
-            "drought honestly. A real premium with real lean years, whose portfolio value (crisis alpha) "
-            "survives both. Full run in [`../docs/results.md`](../docs/results.md).\n\n"
-            "### 7b · Other forks\n"
-            "- **Breadth** — 50–100 markets is most of real trend's Sharpe; widen the basket.\n"
+            "**The result.** Breadth lifts the standalone Sharpe past the benchmarks (7a); the premium is "
+            "positive across every lookback (not a tuned parameter); and the sub-period Sharpe exposes the "
+            "real 2010s drought honestly. A real premium with real lean years, whose portfolio value "
+            "(crisis alpha) survives both. Full runs in [`../docs/results.md`](../docs/results.md) and "
+            "[`../docs/extension.md`](../docs/extension.md).\n\n"
+            "### 7c · Other forks\n"
+            "- **More breadth still** — 50–100 markets; the sweep predicts the Sharpe keeps rising.\n"
             "- **Trend + carry** — the two-premium managed-futures core; do they diversify each other?\n"
             "- **Optimal sleeve weight** — solve the portfolio weight for a given book and risk aversion.\n\n"
             "PRs welcome — widen the universe, add carry, or optimise the blend."

@@ -119,4 +119,54 @@ def fetch_futures(cache_dir: str = DEFAULT_CACHE, fetch: bool = False, min_years
 
 
 def asset_class(ticker: str) -> str:
-    return FUTURES.get(ticker, "other")
+    return FUTURES.get(ticker, ETF_UNIVERSE.get(ticker, "other"))
+
+
+# A WIDER, de-duplicated liquid-ETF universe (used by the beat-7 breadth complement). ETFs trade with
+# tiny spreads and long history, so they're a fair stand-in for a broad managed-futures basket — and
+# crucially they push the market count past the 18 futures, to test whether breadth keeps lifting the edge.
+ETF_UNIVERSE = {
+    "SPY": "equity", "QQQ": "equity", "IWM": "equity", "EFA": "equity",       # US large/tech/small + dev-intl
+    "EEM": "equity", "EWJ": "equity", "FEZ": "equity", "VGK": "equity",       # EM, Japan, Europe
+    "SHY": "rates", "IEF": "rates", "TLT": "rates", "LQD": "rates", "HYG": "rates",  # 1-3y..30y + credit
+    "GLD": "commodity", "SLV": "commodity", "USO": "commodity", "UNG": "commodity",  # gold, silver, oil, gas
+    "DBC": "commodity", "DBA": "commodity", "GDX": "commodity",               # broad cmdty, ags, gold miners
+    "UUP": "fx", "FXE": "fx", "FXY": "fx", "FXB": "fx", "FXA": "fx",          # USD, EUR, JPY, GBP, AUD
+    "VNQ": "reit", "IYR": "reit",                                            # US REITs
+}
+
+
+def fetch_etf_universe(cache_dir: str = DEFAULT_CACHE, fetch: bool = False, min_years: float = 12.0
+                       ) -> pd.DataFrame:
+    """Daily returns of the WIDER liquid-ETF universe (:data:`ETF_UNIVERSE`), cache-first.
+
+    Same contract as :func:`fetch_futures` — **cache-only** unless ``fetch=True`` — but a broader,
+    de-duplicated basket (~28 ETFs across six asset classes) for the beat-7 breadth study.
+    """
+    cache = os.path.join(cache_dir, "trade_winds_etf_universe.parquet")
+    if os.path.exists(cache):
+        return pd.read_parquet(cache)
+    if not fetch:
+        return pd.DataFrame()
+    import yfinance as yf  # lazy
+    closes = {}
+    for tk in ETF_UNIVERSE:
+        try:
+            raw = yf.download(tk, period="max", interval="1d", auto_adjust=True, progress=False)
+            if raw is None or raw.empty:
+                continue
+            if isinstance(raw.columns, pd.MultiIndex):
+                raw.columns = raw.columns.get_level_values(0)
+            s = raw["Close"].dropna()
+            s.index = pd.DatetimeIndex(s.index).tz_localize(None)
+            if (s.index[-1] - s.index[0]).days / 365.25 >= min_years:
+                closes[tk] = s.astype(float)
+        except Exception:
+            continue
+    if not closes:
+        return pd.DataFrame()
+    rets = pd.DataFrame(closes).sort_index().pct_change().clip(-0.25, 0.25).dropna(how="all")
+    rets.index.name = "date"
+    os.makedirs(cache_dir, exist_ok=True)
+    rets.to_parquet(cache)
+    return rets

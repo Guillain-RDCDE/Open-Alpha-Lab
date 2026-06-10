@@ -25,7 +25,7 @@ The one strategy a quant desk keeps coming back to is **time-series momentum** (
 | **[01_for_the_curious](notebooks/01_for_the_curious.ipynb)** | the curious | why "the trend is your friend" is the one cliché that survives, the crisis-alpha it really buys, and why it only shines *inside* a portfolio |
 | **[02_for_the_quants](notebooks/02_for_the_quants.ipynb)** | quants | TSMOM vs the long-only basket, the cost & lookback sweeps, the sub-period decay, the crisis-alpha decomposition, the blend that lifts portfolio Sharpe |
 
-The fingerprinted real-data run (18 futures, 2000–2026) is in [docs/results.md](docs/results.md); reproduce it offline on the synthetic control via [examples/run_synthetic_demo.py](examples/run_synthetic_demo.py), or on the real tape via [examples/verify.py](examples/verify.py) (`--fetch` to download the futures basket).
+The fingerprinted real-data run (18 futures, 2000–2026) is in [docs/results.md](docs/results.md); the **beat-7 worked complement** — *breadth is the lever*, where widening to a 27-market universe lifts the standalone Sharpe 0.30 → 0.55, past the benchmarks — is in [docs/extension.md](docs/extension.md). Reproduce offline on the synthetic control via [examples/run_synthetic_demo.py](examples/run_synthetic_demo.py); on the real tape via [examples/verify.py](examples/verify.py) and [examples/extension.py](examples/extension.py) (`--fetch` to download the baskets).
 
 ---
 

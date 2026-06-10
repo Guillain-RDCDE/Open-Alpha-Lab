@@ -28,6 +28,36 @@ def lookback_sweep(returns: pd.DataFrame, lookbacks_list=((21,), (63,), (126,), 
     return out
 
 
+def breadth_sweep(returns: pd.DataFrame, ks=None, n_draws: int = 40, cost_bps: float = 2.0,
+                  seed: int = 31, **kw) -> pd.DataFrame:
+    """The beat-7 breadth complement: mean book Sharpe as a function of the NUMBER of markets.
+
+    For each ``k`` we average the net-of-cost TSMOM Sharpe over ``n_draws`` random size-``k`` subsets of
+    the universe (the full universe for the largest ``k``). Trend-following's Sharpe is a *breadth*
+    story — this shows whether the curve is still rising (i.e. more markets would help) or has plateaued.
+    """
+    import numpy as np
+    rng = np.random.default_rng(seed)
+    n = returns.shape[1]
+    if ks is None:
+        ks = sorted({1, 2, 4, 8, 12, min(n, 16), n})
+    rows = {}
+    for k in ks:
+        if k > n:
+            continue
+        sharpes = []
+        draws = 1 if k == n else n_draws
+        for _ in range(draws):
+            cols = list(returns.columns) if k == n else list(rng.choice(returns.columns, size=k, replace=False))
+            sharpes.append(summary(book_returns(returns[cols], cost_bps=cost_bps, **kw))["sharpe"])
+        rows[k] = {"mean_sharpe": float(np.nanmean(sharpes)),
+                   "sharpe_p25": float(np.nanpercentile(sharpes, 25)),
+                   "sharpe_p75": float(np.nanpercentile(sharpes, 75))}
+    out = pd.DataFrame(rows).T
+    out.index.name = "n_markets"
+    return out
+
+
 def subperiod_sharpe(returns: pd.DataFrame, n_splits: int = 3, cost_bps: float = 2.0, **kw) -> pd.DataFrame:
     """Net Sharpe of the book across equal-length sub-periods — to expose decay (the 2010s drought)."""
     book = book_returns(returns, cost_bps=cost_bps, **kw).dropna()

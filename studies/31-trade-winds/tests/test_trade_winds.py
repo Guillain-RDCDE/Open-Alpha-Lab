@@ -47,3 +47,10 @@ def test_crisis_alpha_shape(trend_ret):
     ca = costs.crisis_alpha(trend_ret, equity_cols=["MKT00", "MKT01"])
     assert {"book_in_equity_crises_ann", "corr_to_equities", "n_crisis_months"} <= set(ca)
     assert ca["n_crisis_months"] > 0
+
+
+def test_breadth_sweep_rises_with_markets(trend_ret):
+    """Beat-7: trend's Sharpe is a breadth story — more markets ⇒ higher mean Sharpe (monotone-ish)."""
+    sw = extension.breadth_sweep(trend_ret, ks=[1, 4, 12, 18], n_draws=15, seed=31)
+    assert list(sw.columns) == ["mean_sharpe", "sharpe_p25", "sharpe_p75"]
+    assert sw["mean_sharpe"].loc[18] > sw["mean_sharpe"].loc[1]      # the whole point
