@@ -89,6 +89,39 @@ jobs:
       - name: Study 19 — Rubber-Band test-suite
         run: pytest -q studies/19-rubber-band/tests
 
+      - name: Study 20 — Freight-Train test-suite
+        run: pytest -q studies/20-freight-train/tests
+
+      - name: Study 21 — Fools-Gold test-suite
+        run: pytest -q studies/21-fools-gold/tests
+
+      - name: Study 22 — Crystal-Ball test-suite
+        run: pytest -q studies/22-crystal-ball/tests
+
+      - name: Study 23 — Broken-Tether test-suite
+        run: pytest -q studies/23-broken-tether/tests
+
+      - name: Study 24 — Stampede test-suite
+        run: pytest -q studies/24-stampede/tests
+
+      - name: Study 25 — Clean-Slate test-suite
+        run: pytest -q studies/25-clean-slate/tests
+
+      - name: Study 26 — Sand-Castle test-suite
+        run: pytest -q studies/26-sand-castle/tests
+
+      - name: Study 27 — Steamroller test-suite
+        run: pytest -q studies/27-steamroller/tests
+
+      - name: Study 28 — Carousel test-suite
+        run: pytest -q studies/28-carousel/tests
+
+      - name: Study 29 — Hedgers-Toll test-suite
+        run: pytest -q studies/29-hedgers-toll/tests
+
+      - name: Study 30 — House-Edge test-suite
+        run: pytest -q studies/30-house-edge/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
@@ -98,3 +131,4 @@ jobs:
           python studies/09-phantom-kernel/examples/run_synthetic_demo.py
           python studies/11-vanishing-penny/examples/run_synthetic_demo.py
           python studies/16-storm-shy/examples/run_synthetic_demo.py
+          python studies/30-house-edge/examples/run_synthetic_demo.py
