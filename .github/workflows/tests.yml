@@ -125,6 +125,9 @@ jobs:
       - name: Study 31 — Trade-Winds test-suite
         run: pytest -q studies/31-trade-winds/tests
 
+      - name: Study 32 — Rip-Tide test-suite
+        run: pytest -q studies/32-rip-tide/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
@@ -136,3 +139,4 @@ jobs:
           python studies/16-storm-shy/examples/run_synthetic_demo.py
           python studies/30-house-edge/examples/run_synthetic_demo.py
           python studies/31-trade-winds/examples/run_synthetic_demo.py
+          python studies/32-rip-tide/examples/run_synthetic_demo.py
