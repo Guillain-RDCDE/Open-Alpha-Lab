@@ -131,6 +131,18 @@ jobs:
       - name: Study 33 — Slingshot test-suite
         run: pytest -q studies/33-slingshot/tests
 
+      - name: Study 34 — Aftershock test-suite
+        run: pytest -q studies/34-aftershock/tests
+
+      - name: Study 35 — Contango test-suite
+        run: pytest -q studies/35-contango/tests
+
+      - name: Study 36 — Greenback test-suite
+        run: pytest -q studies/36-greenback/tests
+
+      - name: Study 37 — Barometer test-suite
+        run: pytest -q studies/37-barometer/tests
+
       - name: Study 38 — Chorus test-suite
         run: pytest -q studies/38-chorus/tests
 
@@ -150,5 +162,9 @@ jobs:
           python studies/31-trade-winds/examples/run_synthetic_demo.py
           python studies/32-rip-tide/examples/run_synthetic_demo.py
           python studies/33-slingshot/examples/run_synthetic_demo.py
+          python studies/34-aftershock/examples/run_synthetic_demo.py
+          python studies/35-contango/examples/run_synthetic_demo.py
+          python studies/36-greenback/examples/run_synthetic_demo.py
+          python studies/37-barometer/examples/run_synthetic_demo.py
           python studies/38-chorus/examples/run_synthetic_demo.py
           python studies/39-black-box/examples/run_synthetic_demo.py
