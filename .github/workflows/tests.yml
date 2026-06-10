@@ -122,6 +122,9 @@ jobs:
       - name: Study 30 — House-Edge test-suite
         run: pytest -q studies/30-house-edge/tests
 
+      - name: Study 31 — Trade-Winds test-suite
+        run: pytest -q studies/31-trade-winds/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
@@ -132,3 +135,4 @@ jobs:
           python studies/11-vanishing-penny/examples/run_synthetic_demo.py
           python studies/16-storm-shy/examples/run_synthetic_demo.py
           python studies/30-house-edge/examples/run_synthetic_demo.py
+          python studies/31-trade-winds/examples/run_synthetic_demo.py
