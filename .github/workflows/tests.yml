@@ -131,6 +131,12 @@ jobs:
       - name: Study 33 — Slingshot test-suite
         run: pytest -q studies/33-slingshot/tests
 
+      - name: Study 38 — Chorus test-suite
+        run: pytest -q studies/38-chorus/tests
+
+      - name: Study 39 — Black-Box test-suite
+        run: pytest -q studies/39-black-box/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
@@ -144,3 +150,5 @@ jobs:
           python studies/31-trade-winds/examples/run_synthetic_demo.py
           python studies/32-rip-tide/examples/run_synthetic_demo.py
           python studies/33-slingshot/examples/run_synthetic_demo.py
+          python studies/38-chorus/examples/run_synthetic_demo.py
+          python studies/39-black-box/examples/run_synthetic_demo.py
