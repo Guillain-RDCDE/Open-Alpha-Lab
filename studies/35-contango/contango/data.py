@@ -15,11 +15,10 @@ and short the most-contangoed harvests a real carry. The data layer keeps the de
     ``carry_strength`` sets how strongly roll yield maps into return; ``carry_strength = 0`` is the
     **null** (a carry signal disconnected from returns — nothing to harvest). Returns
     ``(returns, roll_yield, truth)``.
-  * :func:`fetch_curve` — the real-tape hook. Computing roll yield needs the **term structure** — at least
-    the front and first-deferred contract price for each commodity, every week. yfinance does not reliably
-    serve the deferred contracts (it gives a single front-month *continuous* series), and the desk's cache
-    holds only that front-month tape. So this is a **cache-first stub**: it returns ``{}`` on the (current)
-    cache miss, exactly like Study 27 (Steamroller) before its FRED fetch. See ``docs/results.md``.
+  * :func:`fetch_curve` — a generic futures-curve hook (front + deferred parquet), kept for a future broad
+    multi-commodity curve feed. It returns ``{}`` on a cache miss and is **not** how the real run is done:
+    the real energy roll yield is measured in :mod:`contango.energy` from front-vs-laddered ETF pairs
+    (USO/USL, UNG/UNL), no paid feed required. See ``docs/results.md``.
   * :func:`load_front_month_basket` — loads the cached ``commodity_futures_weekly.parquet`` (12 commodities,
     **front-month continuous returns only**). Useful to illustrate the basket and *cross-check the universe*,
     but it is **not enough to compute roll yield** — that needs the deferred leg this file lacks.
@@ -135,10 +134,9 @@ def fetch_curve(cache_dir: str = DEFAULT_CACHE, fetch: bool = False) -> dict:
     week — the slope of the curve. The desk's cache holds only the front-month *continuous* series
     (:func:`load_front_month_basket`); yfinance does not reliably serve the individual deferred contracts.
     So this hook reads a cached ``commodity_term_structure.parquet`` if one is ever populated (front_*/def_*
-    columns), and otherwise returns ``{}`` — the real run is **pending a term-structure fetch**, exactly as
-    Study 27 (Steamroller) was pending its FRED download. The offline synthetic core is the validated proof
-    meanwhile. ``fetch=True`` is reserved for a future curve source; today it still returns ``{}`` because no
-    free source serves the deferred contracts in this environment.
+    columns), and otherwise returns ``{}``. It is a placeholder for a future *broad* multi-commodity curve
+    feed; the real energy run does not depend on it — see :mod:`contango.energy` (front-vs-laddered ETF
+    pairs). The offline synthetic core proves the cross-sectional bucket machinery meanwhile.
     """
     cache = os.path.join(cache_dir, "commodity_term_structure.parquet")
     if os.path.exists(cache):
@@ -149,5 +147,5 @@ def fetch_curve(cache_dir: str = DEFAULT_CACHE, fetch: bool = False) -> dict:
             front = df[front_cols].rename(columns=lambda c: c[6:])
             deferred = df[def_cols].rename(columns=lambda c: c[4:])
             return {"front": front, "deferred": deferred}
-    # cache miss: the deferred leg is not available in this environment — pending fetch.
+    # cache miss: no broad multi-commodity curve cache — the real run uses contango.energy instead.
     return {}

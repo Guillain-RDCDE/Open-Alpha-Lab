@@ -28,6 +28,16 @@ from .data import ASSETS, ASSET_ORDER
 MONTHS_PER_YEAR = 12
 
 
+def _resolve_spec(assets: dict | None, order: list | None) -> tuple[dict, list]:
+    """Pick the asset spec: the synthetic ``ASSETS``/``ASSET_ORDER`` by default, else the one passed in.
+
+    Lets every book run unchanged on the synthetic control (tests) *and* on the real 18-ETF panel, by
+    handing the real ``REAL_ASSETS`` / ``REAL_ASSET_ORDER`` spec through ``assets`` / ``order``.
+    """
+    spec = ASSETS if assets is None else assets
+    return spec, list(spec.keys()) if order is None else order
+
+
 def summary(returns: pd.Series, periods_per_year: int = MONTHS_PER_YEAR) -> dict:
     """Annualised Sharpe, return, vol, CAGR, max-drawdown, skew for a monthly return series."""
     r = pd.Series(returns).astype(float).dropna()
@@ -57,7 +67,8 @@ def _macro_momentum(macro: pd.DataFrame, smooth: int = 3) -> pd.DataFrame:
     return ((chg - mu) / sd).fillna(0.0)
 
 
-def macro_momentum_weights(macro: pd.DataFrame, smooth: int = 3) -> pd.DataFrame:
+def macro_momentum_weights(macro: pd.DataFrame, smooth: int = 3, assets: dict | None = None,
+                           order: list | None = None) -> pd.DataFrame:
     """Cross-asset macro-momentum weights, dollar-neutral and gross-normalised, lagged one month.
 
     Each asset's raw tilt is its macro exposure dotted with the *current* macro momentum::
@@ -65,31 +76,36 @@ def macro_momentum_weights(macro: pd.DataFrame, smooth: int = 3) -> pd.DataFrame
         score_{a,t} = g_beta_a · zΔgrowth_t + i_beta_a · zΔinflation_t
 
     so an asset is overweighted when the macro trends it benefits from are improving. Scores are
-    cross-sectionally demeaned (dollar-neutral), gross-normalised to 1, and lagged one month.
+    cross-sectionally demeaned (dollar-neutral), gross-normalised to 1, and lagged one month. Defaults to
+    the synthetic ``ASSETS`` spec; pass ``assets``/``order`` (e.g. ``REAL_ASSETS``) for the real ETF book.
     """
+    spec, order = _resolve_spec(assets, order)
     mm = _macro_momentum(macro, smooth=smooth)
-    g_beta = np.array([ASSETS[a]["g_beta"] for a in ASSET_ORDER])
-    i_beta = np.array([ASSETS[a]["i_beta"] for a in ASSET_ORDER])
+    g_beta = np.array([spec[a]["g_beta"] for a in order])
+    i_beta = np.array([spec[a]["i_beta"] for a in order])
     score = (np.outer(mm["growth"].to_numpy(), g_beta)
              + np.outer(mm["inflation"].to_numpy(), i_beta))
-    W = pd.DataFrame(score, index=macro.index, columns=ASSET_ORDER)
+    W = pd.DataFrame(score, index=macro.index, columns=order)
     W = W.sub(W.mean(axis=1), axis=0)                       # dollar-neutral
     gross = W.abs().sum(axis=1).replace(0.0, np.nan)
     W = W.div(gross, axis=0).fillna(0.0)
     return W.shift(1).fillna(0.0)
 
 
-def inflation_tilt_weights(macro: pd.DataFrame, smooth: int = 3) -> pd.DataFrame:
+def inflation_tilt_weights(macro: pd.DataFrame, smooth: int = 3, assets: dict | None = None,
+                           order: list | None = None) -> pd.DataFrame:
     """Inflation-hedge weights: overweight real assets when inflation momentum is positive, lagged.
 
     The single-theme overlay — long real assets (commodities/TIPS/gold), short nominal (equities/bonds)
     scaled by the *sign and size* of inflation momentum, dollar-neutral, gross 1, lagged one month. When
-    inflation momentum flips negative the book flips too (short real, long nominal).
+    inflation momentum flips negative the book flips too (short real, long nominal). Defaults to the
+    synthetic spec; pass ``assets``/``order`` for the real ETF book.
     """
+    spec, order = _resolve_spec(assets, order)
     mm = _macro_momentum(macro, smooth=smooth)
-    real = np.array([1.0 if ASSETS[a]["real"] else -1.0 for a in ASSET_ORDER])
+    real = np.array([1.0 if spec[a]["real"] else -1.0 for a in order])
     score = np.outer(mm["inflation"].to_numpy(), real)     # +infl momentum → long real basket
-    W = pd.DataFrame(score, index=macro.index, columns=ASSET_ORDER)
+    W = pd.DataFrame(score, index=macro.index, columns=order)
     W = W.sub(W.mean(axis=1), axis=0)
     gross = W.abs().sum(axis=1).replace(0.0, np.nan)
     W = W.div(gross, axis=0).fillna(0.0)
@@ -97,39 +113,46 @@ def inflation_tilt_weights(macro: pd.DataFrame, smooth: int = 3) -> pd.DataFrame
 
 
 def book_returns(returns: pd.DataFrame, macro: pd.DataFrame, kind: str = "macro_momentum",
-                 cost_bps: float = 5.0, smooth: int = 3) -> pd.Series:
+                 cost_bps: float = 5.0, smooth: int = 3, assets: dict | None = None,
+                 order: list | None = None) -> pd.Series:
     """Net monthly return of a book (``'macro_momentum'`` or ``'inflation'``), minus turnover cost.
 
     Weights are formed from the macro state and applied to that month's asset returns (the weights are
-    already lagged inside the weight functions). Cost is ``cost_bps`` per unit of weight traded.
+    already lagged inside the weight functions). Cost is ``cost_bps`` per unit of weight traded. Pass
+    ``assets``/``order`` to run on the real ETF panel rather than the synthetic spec.
     """
+    _, order = _resolve_spec(assets, order)
     if kind == "macro_momentum":
-        w = macro_momentum_weights(macro, smooth=smooth)
+        w = macro_momentum_weights(macro, smooth=smooth, assets=assets, order=order)
     elif kind == "inflation":
-        w = inflation_tilt_weights(macro, smooth=smooth)
+        w = inflation_tilt_weights(macro, smooth=smooth, assets=assets, order=order)
     else:
         raise ValueError(f"unknown book kind {kind!r}")
-    w = w.reindex(returns.index).fillna(0.0)[ASSET_ORDER]
-    gross = (w * returns[ASSET_ORDER]).sum(axis=1)
+    w = w.reindex(returns.index).fillna(0.0)[order]
+    gross = (w * returns[order].fillna(0.0)).sum(axis=1)
     cost = (cost_bps * 1e-4) * w.diff().abs().sum(axis=1)
     return (gross - cost).rename(kind)
 
 
-def turnover_ann(macro: pd.DataFrame, kind: str = "macro_momentum", smooth: int = 3) -> float:
+def turnover_ann(macro: pd.DataFrame, kind: str = "macro_momentum", smooth: int = 3,
+                 assets: dict | None = None, order: list | None = None) -> float:
     """Average annual one-way turnover (Σ|Δw|·12) — macro signals are slow, so this is low."""
     if kind == "macro_momentum":
-        w = macro_momentum_weights(macro, smooth=smooth)
+        w = macro_momentum_weights(macro, smooth=smooth, assets=assets, order=order)
     else:
-        w = inflation_tilt_weights(macro, smooth=smooth)
+        w = inflation_tilt_weights(macro, smooth=smooth, assets=assets, order=order)
     return float(w.diff().abs().sum(axis=1).mean() * MONTHS_PER_YEAR)
 
 
 def compare(returns: pd.DataFrame, macro: pd.DataFrame, cost_bps: float = 5.0, smooth: int = 3,
-            periods_per_year: int = MONTHS_PER_YEAR) -> dict:
+            periods_per_year: int = MONTHS_PER_YEAR, assets: dict | None = None,
+            order: list | None = None) -> dict:
     """Headline stats for both books plus their (low) turnover."""
     out = {}
     for kind in ("macro_momentum", "inflation"):
-        r = book_returns(returns, macro, kind=kind, cost_bps=cost_bps, smooth=smooth)
+        r = book_returns(returns, macro, kind=kind, cost_bps=cost_bps, smooth=smooth,
+                         assets=assets, order=order)
         s = summary(r, periods_per_year)
-        out[kind] = {**s, "turnover_ann": turnover_ann(macro, kind=kind, smooth=smooth)}
+        out[kind] = {**s, "turnover_ann": turnover_ann(macro, kind=kind, smooth=smooth,
+                                                       assets=assets, order=order)}
     return out

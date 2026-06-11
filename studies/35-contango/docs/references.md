@@ -39,7 +39,8 @@
 
 - **Study 27 — Steamroller (§8.2, FX carry)**, [`../../27-steamroller/`](../../27-steamroller/). The
   *currency* carry trade: same long-high / short-low cross-sectional carry book, a real premium with a
-  steamroller crash tail. Contango is its commodity sibling — and shares its PENDING-FETCH honesty pattern.
+  steamroller crash tail. Contango is its commodity sibling — the same `REAL`-signal / crash-prone story,
+  measured here on the real energy tape (front vs laddered ETF pairs).
 - **Study 29 — Hedgers-Toll (§9.2, commodity COT hedging pressure)**,
   [`../../29-hedgers-toll/`](../../29-hedgers-toll/). The *other* commodity-futures premium: the
   hedging-pressure / COT signal. Roll yield (Contango) and hedging pressure (Hedgers-Toll) are the two
@@ -48,12 +49,12 @@
 
 ## The data constraint (house rule: stated in the open)
 
-- **Roll yield needs the term structure.** It is the slope between the **front** and **deferred** contract,
-  so it cannot be computed from a single front-month continuous series. The desk caches only the
-  front-month tape (`_cache/commodity_futures_weekly.parquet`, 12 commodities); yfinance does not reliably
-  serve the deferred contracts, and the other free sources surveyed carry no futures curve. The real run
-  is therefore **PENDING a term-structure fetch** — see [`results.md`](results.md) — and the committed
-  verdict rests on the fully-validated synthetic control and the literature meanwhile.
+- **Roll yield needs the term structure** — the slope between the **front** and a **deferred** contract, so
+  it cannot be read from a single front-month series. Rather than a paid futures-curve feed, the desk
+  observes it on the real tape through **front-month vs 12-month-laddered ETF pairs** on the same underlying
+  (WTI USO/USL, gas UNG/UNL): the laddered fund sits further out the curve, so `laddered − front` *is* the
+  realized roll. Liquid, key-free, clean yfinance history — no FRED, no EIA. The cross-sectional 12-name
+  bucket book is the synthetic **machinery proof**; the real energy run is in [`results.md`](results.md).
 
 ## The shared method
 

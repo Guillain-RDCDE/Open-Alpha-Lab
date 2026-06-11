@@ -9,12 +9,12 @@
 | Axis | Stamp | Why |
 |---|---|---|
 | **Signal** — do backwardated commodities out-earn contangoed ones? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | Yes — roll yield is a documented commodity premium (Gorton–Rouwenhorst 2006; Erb–Harvey 2006; Koijen et al. 2018). Our synthetic control recovers it (high-minus-low roll-yield spread **+27.6%/yr**, gross Sharpe **+1.86**) and the disconnected null is flat (Sharpe **−0.28**). |
-| **Tradability** — does it survive costs, capacity, scale? | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) | It's *cheap to run* (slow signal, turnover 0.19/wk, break-even ~160 bp — costs aren't the constraint) — but carry is a **volatile, crash-prone** stream that unwinds hard in commodity-wide risk-off, and the premium is biggest in the least-liquid contracts. |
-| **Real-tape run?** | ![Pre-reg](https://img.shields.io/badge/Pre--reg-8b949e?style=flat-square) | Roll yield needs the **term structure** (front + deferred contracts), which this sandbox can't fetch — the cache holds only front-month continuous returns. The apparatus, mirage line and expected shape are pre-registered in [docs/results.md](docs/results.md); the run is **pending a curve fetch**. |
+| **Tradability** — does it survive costs, capacity, scale? | ![Mirage](https://img.shields.io/badge/Mirage-cf222e?style=flat-square) | On the real energy tape, **no**. Timing the front-month by the curve points the right way (WTI Sharpe **+0.35** vs −0.01 buy-and-hold) but the combined book is statistically flat (Sharpe **+0.16**, HAC *t* **0.66**) with an **−83% drawdown** — the only liquid energy curves are too few and too crash-prone to harvest. Cost isn't the killer (10 bp barely dents it); the noise and concentration are. |
+| **Real-tape run?** | ![Done](https://img.shields.io/badge/Done-2ea44f?style=flat-square) | **Done — no paid feed needed.** Roll yield is read directly from **front-month vs 12-month-laddered ETF pairs** (WTI USO/USL, gas UNG/UNL): their return gap *is* the term-structure roll. Real numbers, fingerprinted & as-of pinned, in [docs/results.md](docs/results.md). |
 
-> **In one sentence:** the commodity carry premium — long the backwardated curves, short the contangoed — is a real, durable, cheap-to-run edge that is volatile and crash-prone (a `FRAGILE` cousin of the FX carry steamroller), and we've proven the machinery on a synthetic control and pre-registered the real-tape run, which is **pending the term-structure data the sandbox can't serve**.
+> **In one sentence:** the commodity roll yield is **real and enormous** — on the real tape the front-month USO bled **−76%** while the 12-month-laddered USL on the *same* crude was **+4%** (an 80-point contango tax; natural-gas UNG is down −99%) — but **harvesting** it on the two liquid energy curves is a `MIRAGE`: a curve-timing carry book is statistically indistinguishable from zero (Sharpe +0.16, HAC *t* 0.66) with −83% drawdowns, so the signal's value is **defensive** (don't be the sucker long the front-month in contango), not a positive-carry alpha.
 
-> ⚠️ **Real run pending a term-structure fetch.** Computing roll yield needs the front *and* deferred contract for each commodity (the slope of the curve); the desk caches only front-month continuous returns, and no free source here serves the deferred leg. The verdict above is earned on the fully-validated synthetic control and the literature — exactly the honesty pattern of [Study 27 (Steamroller)](../../27-steamroller/) before its FRED download. Reproduce offline via [examples/run_synthetic_demo.py](examples/run_synthetic_demo.py); the pre-registered real run is [examples/verify.py](examples/verify.py) → [docs/results.md](docs/results.md).
+> ✅ **Real run done — and the FRED/curve-feed problem is gone for good.** Computing roll yield needs the term structure, but you don't need a paid futures feed to see it: the **front-month** energy ETF (USO, UNG) and the **12-month-laddered** one on the same underlying (USL, UNL) differ *only* in where on the curve they sit, so `laddered − front` is the realized roll cost — the famous USO bleed, straight from yfinance. The cross-sectional bucket machinery is still proved on the synthetic control ([examples/run_synthetic_demo.py](examples/run_synthetic_demo.py)); the real energy run is [examples/verify.py](examples/verify.py) → [docs/results.md](docs/results.md).
 
 ## What we tested
 
@@ -24,8 +24,9 @@ along the term-structure curve — positive when the curve is **backwardated** (
 negative when **contangoed** (front < deferred, rolls down) — so a book long the most-backwardated and
 short the most-contangoed commodities harvests a real carry premium (Gorton–Rouwenhorst 2006; Erb–Harvey
 2006; Koijen et al. 2018). We prove the engine on a synthetic 12-commodity panel with a *baked* roll-yield
-premium (and a disconnected null that earns nothing), run the dollar-neutral carry book, and — since the
-real term structure isn't fetchable here — pre-register the real-tape run. It is the commodity sibling of
+premium (and a disconnected null that earns nothing), then run it for real on the **energy tape** — reading
+the term-structure roll straight off front-month vs 12-month-laddered ETF pairs (USO/USL, UNG/UNL), no paid
+feed required. It is the commodity sibling of
 [Study 27 (Steamroller, FX carry)](../../27-steamroller/) and a cousin of
 [Study 29 (Hedgers-Toll, commodity COT)](../../29-hedgers-toll/).
 
@@ -33,10 +34,10 @@ real term structure isn't fetchable here — pre-register the real-tape run. It 
 
 | | For whom | Inside |
 |---|---|---|
-| **[01_for_the_curious](notebooks/01_for_the_curious.ipynb)** | the curious | what roll yield is, why backwardation pays, why carry is cheap to run but crash-prone, and what the real run is waiting on |
-| **[02_for_the_quants](notebooks/02_for_the_quants.ipynb)** | quants | the carry premium by roll-yield bucket, the control-vs-null, turnover & break-even, and the carry+momentum diversification blend |
+| **[01_for_the_curious](notebooks/01_for_the_curious.ipynb)** | the curious | what roll yield is, why backwardation pays and contango bleeds, and the real USO vs USL story |
+| **[02_for_the_quants](notebooks/02_for_the_quants.ipynb)** | quants | the real energy bleed table, the curve-timing book vs buy-and-hold, the control-vs-null bucket machinery, and the carry+momentum diversification blend |
 
-The pre-registered real run — every number, once a curve fetch lands — is in [docs/results.md](docs/results.md);
+The real energy run — every number, fingerprinted and as-of pinned — is in [docs/results.md](docs/results.md);
 the **beat-7 worked complement** (does a momentum sleeve diversify the carry book? — yes, blend Sharpe
 beats either leg) is in [docs/extension.md](docs/extension.md).
 

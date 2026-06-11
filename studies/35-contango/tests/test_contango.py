@@ -1,7 +1,7 @@
 """The synthetic term-structure panel is deterministic; the cross-sectional carry book recovers the
 roll-yield premium gross on the control and finds ~none in the null; the book is dollar-neutral and causal;
 turnover is low; the carry+momentum blend behaves; and the cost / break-even machinery behaves. The
-real-tape hook returns empty on the (current) cache miss — pending a term-structure fetch."""
+generic futures-curve hook returns empty on a cache miss (the real energy run lives in test_energy.py)."""
 
 import numpy as np
 import pandas as pd
@@ -71,8 +71,8 @@ def test_carry_plus_momentum_combine(carry_ret, carry_ry):
     assert c["blend_sharpe"] >= min(c["carry_sharpe"], c["momentum_sharpe"]) - 1e-9
 
 
-def test_fetch_curve_pending_on_cache_miss():
-    """The real-tape hook returns empty when no term-structure cache exists — pending a fetch."""
+def test_fetch_curve_empty_on_cache_miss():
+    """The generic futures-curve hook returns empty when no broad term-structure cache exists."""
     out = data.fetch_curve(cache_dir="/nonexistent_cache_dir_xyz", fetch=False)
     assert out == {}
     out2 = data.fetch_curve(cache_dir="/nonexistent_cache_dir_xyz", fetch=True)

@@ -1,72 +1,91 @@
 # Results — Study 36 (Greenback): dollar-carry & the carry⊕momentum combo
 
-> ⚠️ **Real run PENDING one networked fetch (as-of 2026-06-10).** This study's carry signal needs
-> **short-term interest rates from FRED** (e.g. `DGS3MO` / the G10 3-month interbank series). FX spot from
-> yfinance works in this sandbox, but the **FRED rates download times out** here — and without the rates
-> there is no carry signal. So, exactly like [Study 27 (Steamroller)](../../27-steamroller/), this file is
-> a transparent **pending-fetch stub**: the verdict below is earned on the fully-validated **synthetic
-> control** and the long-run academic literature, and the real-tape numbers await one networked FRED fetch:
->
-> ```
-> python examples/verify.py --fetch     # downloads short rates (FRED) + FX spot (yfinance), caches, writes this file
-> ```
->
-> The offline core is fully validated and reproducible via
-> [`examples/run_synthetic_demo.py`](../examples/run_synthetic_demo.py).
+> **Real G10 run · offline from cache · as-of 2024-01-31 · fingerprint `ef7450ae792e`.**
+> OECD 3-month interbank short rates (% p.a., monthly) + yfinance FX (USD per 1 unit of nine foreign
+> currencies, resampled to month-end), a **USD-funded monthly book** over **2001-08 → 2024-01** (270
+> months; the strategy sleeves report 264 months after the 12-month momentum warm-up). The as-of is pinned
+> to the rates' **2024-01** end — OECD's MEI series was discontinued there — so the headline numbers don't
+> creep with the calendar. Reproduce: `python examples/verify.py` (no network); the offline synthetic
+> machinery proof is `python examples/run_synthetic_demo.py`.
 
-## The verdict — Signal `REAL` · Tradability `FRAGILE` · Real-tape run? `PRE-REG`
+## The verdict — Signal `REAL` · Tradability `FRAGILE` · Combo diversifies the crash? `PARTIAL`
 
 The FX carry premium — high-short-rate currencies out-earn low-rate ones, because uncovered interest-rate
 parity fails — is one of the most durable anomalies in macro (Lustig–Roussanov–Verdelhan 2011;
 Menkhoff–Sarno–Schmeling–Schrimpf 2012). It is also the textbook *"picking up nickels in front of a
-steamroller"*: sharply negative-skewed, dripping steady gains then losing a fortune in a global risk-off
-(1998, 2008). **Study 27 (Steamroller) already measured the carry premium itself, and that vol-targeting
-can't dodge its crash.** Greenback builds on it with the *next* question — the one the believers actually
-trade: combine carry with its natural complement, **momentum**, into the classic **carry⊕momentum combo**
-(Asness–Moskowitz–Pedersen 2013; Koijen–Moskowitz–Pedersen–Vrugt "Carry" 2018). Because carry and momentum
-pay at **different times**, the combo earns a *higher* Sharpe than either standalone and — the part that
-matters for the steamroller — momentum tends to ride the trend *out of* a carry crash, cushioning the
-drawdown that carry alone can't escape. That is why the combo is the standard diversifier, and why the
-verdict is `REAL` signal / `FRAGILE` tradability (the crash never fully goes away).
+steamroller"*: sharply negative-skewed, dripping steady gains then losing a fortune in a global risk-off.
+**Study 27 (Steamroller) already measured the carry premium itself, and that vol-targeting can't dodge its
+crash.** Greenback is the *next* question — the believer's actual trade: combine carry with its supposed
+complement, **momentum**, into the classic **carry⊕momentum combo** (Asness–Moskowitz–Pedersen 2013;
+Koijen–Moskowitz–Pedersen–Vrugt "Carry" 2018), and add the **dollar-carry** tilt (long/short the USD basket
+by the average rate gap; LRV's dollar factor).
 
-## What the synthetic control proves (offline, reproducible)
+On the real 2001–2024 G10 tape the verdict splits honestly:
 
-On a synthetic currency panel with a baked carry premium, sticky risk-off crashes, and an independent
-trend the momentum sleeve can ride (seed 36, 9 currencies × 600 months, net of 10 bp):
+- **Carry is real but thin** — Sharpe **+0.22**, +1.8%/yr, with the textbook negative-skew crash (**skew
+  −0.70**, worst months **Oct-2008 −10.6%** and **Mar-2020 −9.1%**). The bucket spread is **+3.0%/yr**, but
+  the Sharpe's bootstrap 95% CI is **[−0.17, +0.69]** (14% of resamples negative) — a real but weak
+  premium over this post-2000 sample, exactly as the literature finds carry decayed.
+- **FX momentum *failed* this sample** — Sharpe **−0.14**, −1.1%/yr. Cross-sectional FX momentum, strong in
+  the 1980s–90s, eroded to roughly zero-to-negative post-2008 (Menkhoff et al; the well-documented FX-mom
+  decay). On this tape it lost money.
+- **The combo can't beat carry — but it still diversifies the crash.** Combo Sharpe **+0.06** is *below*
+  carry's +0.22, because a losing momentum leg drags the blend (`combo beats best leg: False`). Yet the
+  diversification mechanics fire as advertised: the legs are **decorrelated (+0.05)**, so the combo's
+  **skew improves (−0.57 vs −0.70)**, its **worst month halves (−6.4% vs −10.6%)**, and in carry's worst 5
+  months the combo lost only **−3.0% vs carry's −7.6%**. The cushion is real; the Sharpe uplift is not —
+  *this sample's* momentum simply had no edge to lend. Hence **`PARTIAL`**.
+
+So: **Signal `REAL`** (carry pays, with its crash), **Tradability `FRAGILE`** (a thin, crash-prone, cost-
+sensitive premium), and the combo thesis is **`PARTIAL`** on the real tape — it cushions the steamroller
+exactly as designed, but cannot lift the Sharpe while its momentum leg is itself losing.
+
+## The real G10 books (net @10 bp, vol-scaled to 8%, USD-funded monthly, 2001–2024)
 
 | sleeve | Sharpe | ann. return | vol | skew | max-DD |
 |---|---|---|---|---|---|
-| carry (vol-scaled) | **+1.18** | +10.4% | 8.9% | **−1.55** | **−60%** |
-| dollar-carry tilt | +0.17 | +0.9% | 5.3% | −0.13 | −44% |
-| momentum | +1.53 | +11.9% | 7.8% | −0.36 | −18% |
-| **carry⊕momentum combo** | **+1.69** | +11.2% | 6.6% | −1.62 | **−20%** |
+| carry (cross-sectional) | **+0.22** | +1.8% | 8.3% | **−0.70** | −27% |
+| dollar-carry tilt (LRV) | +0.17 | +1.5% | 8.9% | −0.44 | −45% |
+| momentum (12-1m trend) | **−0.14** | −1.1% | 8.0% | +0.39 | −47% |
+| **carry⊕momentum combo** | **+0.06** | +0.4% | 5.9% | −0.57 | −26% |
 
-- **The carry premium is real and recovered:** high-minus-low rate bucket spread **+5.3%/yr**; the
-  full-UIRP **null** collapses to a flat **+0.8%/yr** (carry Sharpe ≈ 0.19) — the diagnostics measure the
-  effect, not themselves.
-- **The steamroller is there:** the carry book's monthly skew is **−1.55**, worst month **−13.7%**, max
-  drawdown **−60%** — the negative-skew crash the literature warns of.
-- **The combo beats either leg and dulls the crash:** combo Sharpe **+1.69** vs carry **+1.18** /
-  momentum **+1.53**, because the two legs barely correlate (**+0.26**). And momentum cushions the
-  steamroller: the combo's max drawdown is **−20%** (vs carry's **−60%**), and in carry's worst 5 months
-  the combo lost only **−9.3%** vs carry's **−11.0%**.
-- **Cost behaviour:** carry rebalances slowly (its break-even is effectively unbounded on the control's
-  fixed rates); momentum's break-even is **≈14.6 bp**; the combo's Sharpe decays gracefully from **+1.75
-  (0 bp)** to **+1.13 (100 bp)** — tradability is `FRAGILE` because of the *crash*, not the cost.
-- **The dollar-carry tilt is weak on this control by construction:** the synthetic's average rate gap is
-  near-constant, so the time-series dollar signal barely moves (Sharpe +0.17). On the real tape — where
-  the USD rate cycles versus the basket — Lustig–Roussanov–Verdelhan's dollar factor is a genuine,
-  separate premium; that is precisely what `--fetch` will measure.
+- **Carry premium:** high-minus-low rate bucket spread **+3.0%/yr**; carry book Sharpe **+0.22**, bootstrap
+  95% CI **[−0.17, +0.69]**, 14% of resamples negative — real but statistically thin over this sample.
+- **The steamroller is on the real tape:** carry skew **−0.70**, worst month **−10.6% (Oct 2008)**, next
+  **−9.1% (Mar 2020)** then **−7.0% (Sep 2008)** — the GFC and COVID risk-offs, the crash the literature
+  warns of.
+- **Momentum decayed:** the 12-1-month FX-momentum sleeve earned **−0.14** Sharpe on 2001–2024 — the
+  well-documented erosion of cross-sectional FX momentum after the mid-2000s.
+- **The combo diversifies but doesn't out-Sharpe:** combo **+0.06** < carry **+0.22** (`combo_beats_legs =
+  False`) because momentum lost; but leg correlation is **+0.05**, the combo's worst month is **−6.4%** (vs
+  carry's −10.6%) and in carry's worst 5 months it lost **−3.0%** vs carry's **−7.6%** — the crash *is*
+  cushioned, the Sharpe uplift is not.
+- **The dollar-carry tilt is a separate, weak stream:** Sharpe **+0.17**, −45% DD — the LRV dollar factor
+  is present but, like static carry, thin and crash-exposed on this sample.
+- **Cost behaviour (the FRAGILE call):** carry turns over slowly (**0.55×/yr**) but its **break-even is only
+  ≈13 bp** — a thin gross edge; momentum turns over **4.4×/yr** and loses gross (break-even 0). The combo's
+  net Sharpe decays from **+0.17 (0 bp)** to **+0.06 (10 bp)** to **−0.10 (25 bp)** — cost bites fast.
+  Tradability is `FRAGILE` on both counts: the crash *and* the thin, cost-sensitive edge.
 
-## What `--fetch` will fill in
+## How this differs from Study 27 (Steamroller)
 
-The real G10 run will report, on FRED rates + yfinance FX: the carry premium and its Newey–West *t*, the
-**dollar-carry** tilt's standalone Sharpe (the LRV dollar factor), the **momentum** sleeve, and the
-**carry⊕momentum combo** — its Sharpe uplift over either leg, the leg correlation across the 1998/2008
-crises, and how much momentum cushioned the actual carry crashes — each fingerprinted and as-of pinned. The
-expected shape (from the literature) is a combo Sharpe meaningfully above either standalone (~0.8–1.0) with
-the carry crash still present but shallower, i.e. exactly the `REAL` / `FRAGILE` verdict the synthetic
-control already earns. **Real-tape run? `PRE-REG`** — announced before the fetch, so the goalposts can't move.
+Steamroller measured the **G10 carry premium itself** and showed a **vol-targeting overlay cannot dodge the
+carry crash**. Greenback takes that as given and tests the believer's *fix*: not an overlay but
+**diversification** — the **carry⊕momentum combo** plus the **dollar-carry tilt**. The real-tape finding
+sharpens the Steamroller story: the *mechanical* cushion is genuine (decorrelated legs ⇒ shallower crash,
+−10.6% → −6.4% worst month, −7.6% → −3.0% in carry's worst 5), but on 2001–2024 **momentum had no edge to
+lend**, so the combo cushions the crash *without* lifting the Sharpe. The honest fix dulls the steamroller;
+it does not turn carry into a free lunch.
+
+## What the offline synthetic control proves (machinery)
+
+The seeded synthetic panel (9 currencies × 600 months, a baked carry premium + sticky risk-off crashes + an
+*independent profitable* trend) is the controlled proof that the books recover what's there: carry Sharpe
+**+1.18** on the control vs a flat **+0.8%/yr** full-UIRP null, carry skew **−1.55**, and — *with a winning
+momentum leg by construction* — the combo Sharpe **+1.69** beats either leg at correlation **+0.26**. The
+control demonstrates the combo *would* out-Sharpe when momentum has an edge; the real tape shows that on
+2001–2024 FX momentum did not, which is precisely why the real combo verdict is `PARTIAL`, not the control's
+unconditional win. Reproduce: `python examples/run_synthetic_demo.py`.
 
 *Sources & literature map: [docs/references.md](references.md); the carry⊕momentum writeup is in
 [docs/extension.md](extension.md). Engine: [`quantlab/`](../../../quantlab/).*

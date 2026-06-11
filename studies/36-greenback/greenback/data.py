@@ -11,21 +11,25 @@ cache split:
     trailing-return momentum book is profitable too. ``carry_strength`` sets the premium; ``trend_strength``
     the momentum signal; ``carry_strength = 0`` is the carry **null** (full UIRP — no premium, no crash).
     Returns ``(excess-returns panel, rate-differential frame, truth)``.
-  * :func:`fetch_fx_rates` — the real hook. *Would* pull FX spot (yfinance) + short rates (FRED) and build
-    the carry panel; **cache-first**, network only behind ``fetch=True``. In this environment the FRED
-    rates fetch **times out**, so on a cache-miss it returns ``{}`` and the real run is skipped — the
-    synthetic core stands alone, exactly as [Study 27 (Steamroller)](../../27-steamroller/) does.
+  * :func:`fetch_fx_rates` — the **real tape**, served from cache. Reads two pre-fetched parquets —
+    ``_cache/g10_short_rates.parquet`` (OECD 3-month interbank short rates, % p.a., monthly, columns
+    ``USD,JPY,GBP,EUR,CAD,AUD,CHF,SEK,NOK,NZD``, sample ~1994→**2024-01**; OECD MEI was discontinued so the
+    rates end 2024-01) and ``_cache/g10_fx.parquet`` (daily FX, **USD per 1 unit** of nine foreign
+    currencies ``EUR,GBP,AUD,NZD,JPY,CAD,CHF,SEK,NOK``, yfinance ~2003→2026) — and builds the monthly carry
+    book. **Cache-first, offline.** :func:`build_carry_panel` does the carry math (below).
 
-Two data choices, stated up front. **Monthly horizon** — carry is a slow rate-differential signal and
-momentum a 12-month trend; monthly is the right (and cleanly available) frequency. **USD base** — the
-dollar-carry tilt is naturally expressed against the USD funding leg.
+The carry math, stated up front. For a USD investor the **excess return** of being long 1 unit of a
+foreign currency, funded in USD, over a month is ≈ **FX appreciation + the rate gap accrual** =
+``Δlog(usd_per_unit) + (rate_foreign − rate_USD)/12`` (rates in decimal p.a.). The **carry signal** is the
+forward discount ≈ the rate differential ``rate_foreign − rate_USD`` (high = high carry). Two choices:
+**monthly horizon** (rates are monthly; carry is slow; FX resampled to month-end) and **USD base** (the
+USD is the funding leg, so the dollar-carry tilt is naturally long/short USD vs the basket). Effective
+sample after rates ∩ FX and a 12-month momentum warm-up ≈ **2003→2024-01**.
 """
 
 from __future__ import annotations
 
-import io
 import os
-import urllib.request
 from dataclasses import dataclass
 
 import numpy as np
@@ -126,78 +130,70 @@ def synthetic_fx(n_ccy: int = 9, n_months: int = 600, carry_strength: float = 0.
 
 
 # --------------------------------------------------------------------------- #
-# Real tape — FX spot (yfinance) + short rates (FRED). PENDING: the FRED fetch times out in this sandbox.
+# Real tape — OECD 3-month short rates + yfinance FX, served from the offline cache.
 # --------------------------------------------------------------------------- #
 
-# Short-term (3-month) interbank rates, % p.a., monthly, FRED ids.
-FRED_RATES = {
-    "USD": "IR3TIB01USM156N", "EUR": "IR3TIB01EZM156N", "JPY": "IR3TIB01JPM156N",
-    "GBP": "IR3TIB01GBM156N", "AUD": "IR3TIB01AUM156N", "CAD": "IR3TIB01CAM156N",
-    "CHF": "IR3TIB01CHM156N", "SEK": "IR3TIB01SEM156N", "NOK": "IR3TIB01NOM156N",
-}
-# FX spot via yfinance (USD per 1 unit of foreign currency where the pair quotes that way).
-YF_FX = {
-    "EUR": "EURUSD=X", "GBP": "GBPUSD=X", "AUD": "AUDUSD=X", "JPY": "JPY=X",
-    "CAD": "CAD=X", "CHF": "CHF=X", "SEK": "SEK=X", "NOK": "NOK=X",
-}
+RATES_CACHE = "g10_short_rates.parquet"      # OECD 3-month interbank, % p.a., monthly, month-end index.
+FX_CACHE = "g10_fx.parquet"                  # daily, USD per 1 unit of each foreign currency (yfinance).
 
-
-def _fred_csv(series_id: str, timeout: int = 30) -> pd.Series:
-    url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310 (trusted URL)
-        df = pd.read_csv(io.StringIO(resp.read().decode()))
-    df.columns = ["date", "value"]
-    df["date"] = pd.to_datetime(df["date"])
-    df["value"] = pd.to_numeric(df["value"], errors="coerce")
-    return df.set_index("date")["value"].dropna()
+# The data ends 2024-01 — OECD MEI (the rates source) was discontinued — so we pin the headline as-of to
+# the rates end, not the live calendar, and the published numbers never creep.
+DATA_AS_OF = "2024-01-31"
 
 
 def fetch_fx_rates(cache_dir: str = DEFAULT_CACHE, fetch: bool = False) -> dict:
-    """Return ``{'rates': DataFrame, 'fx': DataFrame}`` of monthly short rates and USD FX spot, cache-first.
+    """Return ``{'rates': DataFrame, 'fx': DataFrame}`` of monthly short rates and month-end USD FX spot.
 
-    Reads a cached ``greenback_fx.parquet`` if present; otherwise, only if ``fetch=True``, downloads short
-    rates from **FRED** and FX spot from **yfinance**, aligns them to month-end, caches, and returns.
-
-    **Pending-fetch note (Study 27 pattern).** FX spot from yfinance works in this sandbox, but the FRED
-    rates download **times out** here — so without a pre-populated cache this returns ``{}`` and the
-    study's real run is skipped. The offline synthetic core (:func:`synthetic_fx`) is the validated proof
-    meanwhile; the real-tape verdict is PENDING one networked FRED fetch (see ``docs/results.md``).
+    **Cache-first, offline.** Reads ``_cache/g10_short_rates.parquet`` (OECD 3-month interbank short rates,
+    % p.a., monthly, columns ``USD,JPY,GBP,EUR,CAD,AUD,CHF,SEK,NOK,NZD``) and ``_cache/g10_fx.parquet``
+    (daily FX, **USD per 1 unit** of nine foreign currencies). FX is resampled to month-end and both frames
+    are snapped to a month-end index so the carry accrual and the FX appreciation line up. Returns ``{}``
+    only if a cache parquet is genuinely missing — ``fetch`` is accepted for signature compatibility but the
+    real tape is the cache (no network is used).
     """
-    cache = os.path.join(cache_dir, "greenback_fx.parquet")
-    if os.path.exists(cache):
-        df = pd.read_parquet(cache)
-        rate_cols = [c for c in df.columns if c.startswith("rate_")]
-        fx_cols = [c for c in df.columns if c.startswith("fx_")]
-        rates = df[rate_cols].rename(columns=lambda c: c[5:])
-        fx = df[fx_cols].rename(columns=lambda c: c[3:])
-        return {"rates": rates, "fx": fx}
-    if not fetch:
+    rates_path = os.path.join(cache_dir, RATES_CACHE)
+    fx_path = os.path.join(cache_dir, FX_CACHE)
+    if not (os.path.exists(rates_path) and os.path.exists(fx_path)):
         return {}
-    rates = {}
-    for ccy, sid in FRED_RATES.items():
-        try:
-            rates[ccy] = _fred_csv(sid).resample("ME").last()
-        except Exception:
-            continue
-    if not rates:
-        return {}                                    # FRED timeout — the pending-fetch case in this sandbox
-    try:
-        import yfinance as yf
-    except Exception:
-        return {}
-    fx = {}
-    for ccy, tk in YF_FX.items():
-        try:
-            s = yf.download(tk, progress=False)["Close"].resample("ME").last()
-            fx[ccy] = s.squeeze()
-        except Exception:
-            continue
-    if not fx:
-        return {}
-    rates_df = pd.DataFrame(rates).sort_index()
-    fx_df = pd.DataFrame(fx).sort_index()
-    os.makedirs(cache_dir, exist_ok=True)
-    out = pd.concat([rates_df.add_prefix("rate_"), fx_df.add_prefix("fx_")], axis=1).dropna(how="all")
-    out.to_parquet(cache)
-    return {"rates": rates_df, "fx": fx_df}
+    rates = pd.read_parquet(rates_path).sort_index()
+    rates.index = pd.DatetimeIndex(rates.index) + pd.offsets.MonthEnd(0)
+    fx = pd.read_parquet(fx_path).sort_index()
+    fx_m = fx.resample("ME").last()
+    return {"rates": rates, "fx": fx_m}
+
+
+def build_carry_panel(rates: pd.DataFrame, fx: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Build the monthly ``(excess_returns, rate_diffs)`` carry panel for a USD investor, offline.
+
+    For each foreign currency present in **both** frames, the monthly **excess return** of holding 1 unit
+    funded in USD is ``Δlog(usd_per_unit) + (rate_foreign − rate_USD)/12`` (rates → decimal p.a.). The
+    **carry signal** (``rate_diffs``) is the rate differential ``rate_foreign − rate_USD`` — the forward
+    discount, high = high carry. Both frames are returned on the common monthly index after a ``dropna`` of
+    all-empty rows; USD is the funding leg (no USD column on either side of the output).
+    """
+    ccys = [c for c in fx.columns if c in rates.columns and c != "USD"]
+    r = rates[ccys] / 100.0 / MONTHS_PER_YEAR              # monthly decimal foreign rates
+    r_usd = rates["USD"] / 100.0 / MONTHS_PER_YEAR
+    fx_ret = np.log(fx[ccys]).diff()
+    rate_diffs = r.sub(r_usd, axis=0)                      # forward-discount carry signal vs USD
+    xret = (fx_ret + rate_diffs).dropna(how="all")
+    rate_diffs = rate_diffs.reindex(xret.index)
+    return xret, rate_diffs
+
+
+def load_real_panel(cache_dir: str = DEFAULT_CACHE, as_of: str | None = DATA_AS_OF
+                    ) -> tuple[pd.DataFrame, pd.DataFrame] | None:
+    """Convenience: read the cache and build the carry panel, pinned to ``as_of`` (the data end). Offline.
+
+    Returns ``(excess_returns, rate_diffs)`` or ``None`` if the cache is missing. Pins both frames to
+    ``as_of`` so the headline numbers don't creep past the rates' 2024-01 end.
+    """
+    tape = fetch_fx_rates(cache_dir=cache_dir)
+    if not tape:
+        return None
+    xret, rate_diffs = build_carry_panel(tape["rates"], tape["fx"])
+    if as_of is not None:
+        cut = pd.Timestamp(as_of)
+        xret = xret[xret.index <= cut]
+        rate_diffs = rate_diffs.reindex(xret.index)
+    return xret, rate_diffs

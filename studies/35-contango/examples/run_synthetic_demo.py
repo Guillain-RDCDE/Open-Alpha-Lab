@@ -5,7 +5,8 @@
 Builds the seeded synthetic term-structure panel (each commodity a persistent roll-yield state that
 predicts its return) and a disconnected null, runs the dollar-neutral carry book (long backwardated,
 short contangoed), and shows it recovers the premium GROSS — at low turnover, so costs are not the
-binding constraint. The real-tape verdict is PENDING a term-structure fetch (see ../docs/results.md).
+binding constraint. This is the **machinery proof**; the real energy run (USO/USL, UNG/UNL roll yield) is
+in ``examples/verify.py`` → ``../docs/results.md``.
 """
 
 from __future__ import annotations
@@ -45,11 +46,8 @@ def main() -> None:
     print(f"  carry Sharpe {c['carry_sharpe']:.2f}  momentum Sharpe {c['momentum_sharpe']:.2f}  "
           f"blend Sharpe {c['blend_sharpe']:.2f}  (corr {c['correlation']:+.2f})")
 
-    print("\nReal-tape (front + deferred contracts) is PENDING a term-structure fetch — see ../docs/results.md.")
-    basket = data.load_front_month_basket()
-    if not basket.empty:
-        print(f"(cached front-month basket present: {basket.shape[1]} commodities, "
-              f"{basket.index.min().date()}→{basket.index.max().date()} — front-month only, no curve.)")
+    print("\nThis is the machinery proof. The REAL energy roll-yield run (USO/USL & UNG/UNL ETF pairs) is in")
+    print("examples/verify.py → ../docs/results.md: contango is REAL (USO −76% vs USL +4%) but a MIRAGE to trade.")
 
 
 if __name__ == "__main__":

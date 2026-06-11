@@ -7,8 +7,8 @@ null where the same surprises are noise), runs the dollar-neutral long-positive/
 book, and shows it recovers the drift GROSS on the control and ~nothing on the null — plus the
 surprise-signed drift-decay curve (the PEAD shape) and the holding-period sweep.
 
-The real PEAD run needs a long history of earnings dates + surprises, which no free source supplies in
-this sandbox — see examples/verify.py and ../docs/results.md (the run is pre-registered and pending).
+This is the offline control that backs the test-suite. The real PEAD run (cached EDGAR SUEs × the S&P 500
+price panel) is in examples/verify.py and ../docs/results.md.
 """
 
 from __future__ import annotations
@@ -46,7 +46,7 @@ def main() -> None:
     print("\nDrift-decay curve (mean surprise-signed cumulative return), days since announcement:")
     for d in (0, 10, 20, 40, 60, 69):
         print(f"  day {d:2d}: {curve.iloc[d]:+.4f}")
-    print("\nReal-data verdict (PEAD on the tape) is PENDING an earnings-history fetch — see ../docs/results.md.")
+    print("\nReal-tape verdict (PEAD on cached EDGAR SUEs x the S&P 500 panel): see examples/verify.py and ../docs/results.md.")
 
 
 if __name__ == "__main__":

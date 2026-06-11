@@ -1,5 +1,5 @@
 """Data for the macro-momentum study — an offline synthetic cross-asset world driven by latent macro
-state, and the real hook that *would* pull FRED macro series + asset prices.
+state, and the REAL cross-asset book read from the desk's cached macro + ETF tape.
 
 Macro momentum is a slow, cross-asset premium: the *trend* in fundamental macro data (growth, inflation)
 predicts the next stretch of asset returns. Improving growth lifts pro-cyclical assets (equities,
@@ -7,8 +7,7 @@ commodities); rising inflation favours *real* assets (commodities, a TIPS/gold p
 bonds. The signal is the **change** in the (slow, persistent, regime-switching) macro state — not its
 level — and it must be lagged so it is causally tradable.
 
-The desk's offline/cache split, mirrored from Study 27 (Steamroller) because the real macro tape is, in
-this environment, **not reliably fetchable**:
+The desk's offline/cache split:
 
   * :func:`synthetic_macro` — fully **offline, deterministic**. A small cross-asset panel (equities,
     nominal bonds, commodities, a real-asset/TIPS proxy, gold) is driven by two latent macro state
@@ -16,23 +15,34 @@ this environment, **not reliably fetchable**:
     (one-period change) of each macro driver predicts next-period asset returns through fixed, signed
     betas, and rising-inflation regimes tilt the world toward real assets (the positive control).
     ``macro_strength`` sets how strongly macro momentum drives returns; ``macro_strength = 0`` is the
-    **null** (assets are pure noise — no macro predictability). Deterministic given ``seed``.
-  * :func:`fetch_macro` — the real hook. It *would* pull **FRED macro series** (growth: ``INDPRO`` /
-    ``PAYEMS``; inflation: ``CPIAUCSL`` / ``T10YIE``) plus asset proxies, align them monthly, and cache
-    the result. **Cache-first; network only behind ``fetch=True``.** Daily FRED rate series time out in
-    this sandbox and even the small monthly CPI series only succeeds intermittently, so on a cache-miss
-    this returns ``{}`` (Steamroller-style) and the synthetic core stands alone — see ``docs/results.md``.
+    **null** (assets are pure noise — no macro predictability). Deterministic given ``seed``. The
+    synthetic tests depend on this and on ``ASSETS`` / ``ASSET_ORDER``.
+  * :func:`fetch_macro` — the REAL book, **cache-first and offline**. It reads three cached parquets the
+    desk pre-fetched — ``macro_us.parquet`` (BLS CPI level, industrial-production index, unemployment
+    rate, monthly), ``us_treasury_yields.parquet`` (^IRX/^FVX/^TNX/^TYX daily yields in percent, the
+    ``y10y − y3m`` slope a clean daily growth proxy), and ``cross_asset_etfs.parquet`` (18 liquid ETFs,
+    adjusted close) — and returns an aligned **monthly** ``(asset-returns, macro-state)`` pair.
 
-Data choice, named up front: a **monthly** frequency. Macro releases are monthly and the signal is a
-slow trend, so monthly is the right (and the cleanly available) horizon; using one public source (FRED)
-for the macro state and liquid proxies for the assets keeps the panel internally consistent.
+Two data choices, stated up front.
+
+  * **Frequency = monthly.** Macro releases are monthly and the signal is a slow trend, so monthly is the
+    right horizon. The yield-curve slope (daily) is sampled to month-end.
+  * **Publication lag.** Macro data is released *after* the month it describes (CPI ~2 weeks, industrial
+    production ~2 weeks), so every macro driver is lagged **one month** (``PUBLICATION_LAG_M``) before it
+    can inform a position — a strict, causal floor on the release delay. The Treasury slope is observable
+    in real time but is lagged the same one month for a single clean alignment.
+
+**Sample span.** The real-asset ETFs that make the inflation hedge tradable only exist from the mid-2000s
+(DBC 2006-02, DBA/UUP/HYG 2007, SLV 2006, USO 2006, TIP 2003, GLD 2004), so the real book begins ~**2007**.
+The right edge is set by the macro series: the cached CPI runs to 2025-01 (industrial production only to
+2023-11, so it is reported as a robustness cross-check, not the primary growth driver), so after the
+one-month publication lag the book spans roughly **2007-02 → 2025-02** (~18 years, ~217 months). That is a
+**short, post-2007 sample** — long enough to test the mechanism, too short to nail the magnitude.
 """
 
 from __future__ import annotations
 
-import io
 import os
-import urllib.request
 from dataclasses import dataclass
 
 import numpy as np
@@ -43,6 +53,7 @@ REPO_ROOT = os.path.abspath(os.path.join(_HERE, "..", "..", ".."))
 DEFAULT_CACHE = os.path.join(REPO_ROOT, "_cache")
 
 MONTHS_PER_YEAR = 12
+PUBLICATION_LAG_M = 1   # macro data is released a month late → lag every driver by one month (causal)
 
 # The toy cross-asset world. Each asset has a sign on growth-momentum and on inflation-momentum, and a
 # flag for whether it is a *real* asset (the inflation hedge overweights these when inflation rises).
@@ -144,79 +155,102 @@ def synthetic_macro(n_months: int = 600, macro_strength: float = 1.0, growth_per
 
 
 # --------------------------------------------------------------------------- #
-# Real tape — FRED macro series + asset proxies (CSV, no API key). Network only behind fetch=True.
-# In THIS environment the daily rate series time out and even monthly CPI is intermittent, so the
-# cache-miss path returns {} and the synthetic core is the offline proof (Steamroller pattern).
+# Real tape — cached macro (BLS CPI / industrial production) + Treasury yields + 18 cross-asset ETFs.
+# Cache-first and fully offline: reads three parquets the desk pre-fetched. No network.
 # --------------------------------------------------------------------------- #
 
-# Growth and inflation macro drivers (monthly FRED ids). T10YIE is daily (breakeven inflation expectn).
-FRED_MACRO = {
-    "growth_indpro": "INDPRO",      # industrial production index (monthly)
-    "growth_payems": "PAYEMS",      # nonfarm payrolls (monthly)
-    "infl_cpi":      "CPIAUCSL",    # CPI, all urban consumers (monthly)  -- the small series we MAY try
-    "infl_be10y":    "T10YIE",      # 10y breakeven inflation (DAILY -- times out here)
+# The 18 cached cross-asset ETFs and their macro priors. Each carries a sign on growth-momentum and on
+# inflation-momentum, and a *real-asset* flag (the inflation hedge overweights these when inflation
+# rises). Priors, not fitted betas — the book never sees in-sample returns to set these:
+#   growth +  → pro-cyclical (equities, EM, REITs, HY, commodities);  growth − → long-duration nominal bonds
+#   infl   +  → real asset (commodities, energy, ags, metals, TIPS, REITs);  infl − → nominal bonds/credit
+REAL_ASSETS: dict[str, dict] = {
+    "SPY": {"g_beta": +1.0, "i_beta": -0.2, "real": False},  # US large cap
+    "QQQ": {"g_beta": +1.0, "i_beta": -0.3, "real": False},  # US tech (long-duration equity)
+    "IWM": {"g_beta": +1.0, "i_beta": -0.2, "real": False},  # US small cap
+    "EFA": {"g_beta": +0.8, "i_beta": -0.1, "real": False},  # developed-ex-US equity
+    "EEM": {"g_beta": +1.0, "i_beta": +0.2, "real": False},  # EM equity (commodity-linked)
+    "VNQ": {"g_beta": +0.6, "i_beta": +0.4, "real": True},   # REITs (real, pro-cyclical)
+    "HYG": {"g_beta": +0.6, "i_beta": -0.2, "real": False},  # high-yield credit
+    "LQD": {"g_beta": +0.1, "i_beta": -0.6, "real": False},  # investment-grade credit (rate-sensitive)
+    "TLT": {"g_beta": -0.7, "i_beta": -1.0, "real": False},  # long Treasuries (the nominal-bond loser)
+    "IEF": {"g_beta": -0.5, "i_beta": -0.7, "real": False},  # 7-10y Treasuries
+    "SHY": {"g_beta": -0.2, "i_beta": -0.3, "real": False},  # 1-3y Treasuries
+    "TIP": {"g_beta": -0.1, "i_beta": +0.7, "real": True},   # TIPS (inflation-linked)
+    "GLD": {"g_beta": -0.1, "i_beta": +0.8, "real": True},   # gold
+    "SLV": {"g_beta": +0.3, "i_beta": +0.7, "real": True},   # silver
+    "DBC": {"g_beta": +0.7, "i_beta": +1.0, "real": True},   # broad commodities
+    "USO": {"g_beta": +0.6, "i_beta": +0.9, "real": True},   # crude oil
+    "DBA": {"g_beta": +0.3, "i_beta": +0.7, "real": True},   # agriculture
+    "UUP": {"g_beta": -0.2, "i_beta": -0.3, "real": False},  # US dollar (rises when risk/infl falls)
 }
-# Liquid asset proxies (FRED has a few; the rest the real run would pull from yfinance via quantlab).
-FRED_ASSETS = {
-    "EQ":   "SP500",                # S&P 500 level (FRED, ~10y history only -- a known limitation)
-    "BOND": "DGS10",                # 10y Treasury yield (proxy; real run uses a total-return bond index)
-}
+REAL_ASSET_ORDER = list(REAL_ASSETS.keys())
+
+# Sample floor: the real-asset ETFs that make the inflation hedge tradable only exist from ~2007.
+REAL_SAMPLE_START = "2007-02-28"
+
+CACHE_MACRO = "macro_us.parquet"            # index month-end; cols [cpi, indpro, unrate]
+CACHE_YIELDS = "us_treasury_yields.parquet"  # index daily; cols [y3m, y5y, y10y, y30y] in percent
+CACHE_ETFS = "cross_asset_etfs.parquet"      # index daily; 18 ETF adjusted closes
 
 
-def _fred_csv(series_id: str, timeout: int = 8) -> pd.Series:
-    url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=timeout) as r:  # noqa: S310 (trusted URL)
-        df = pd.read_csv(io.StringIO(r.read().decode()))
-    df.columns = ["date", "value"]
-    df["date"] = pd.to_datetime(df["date"])
-    df["value"] = pd.to_numeric(df["value"], errors="coerce")
-    return df.set_index("date")["value"].dropna()
+def _macro_state(cache_dir: str, lag_m: int = PUBLICATION_LAG_M) -> pd.DataFrame:
+    """Monthly macro-state frame ``[growth, inflation, indpro_yoy]``, strictly lagged for publication.
 
+    * ``inflation`` = CPI year-over-year (12-month % change of the BLS CPI level) — the inflation trend.
+    * ``growth``    = the **yield-curve slope** ``y10y − y3m`` (in percent), sampled to month-end — a clean,
+      real-time growth/macro proxy (a steeper curve ↦ stronger expected growth).
+    * ``indpro_yoy`` = industrial-production YoY — a second growth read, reported as a robustness
+      cross-check (the cached series only runs to 2023-11, so it is *not* the primary growth driver).
 
-def fetch_macro(cache_dir: str = DEFAULT_CACHE, fetch: bool = False, timeout: int = 8,
-                retries: int = 2) -> dict:
-    """Return ``{'macro': DataFrame, 'assets': DataFrame}`` of monthly macro state + asset proxies,
-    cache-first. Returns ``{}`` on a cache-miss when the fetch is unavailable.
-
-    Reads a cached ``barometer_macro.parquet`` if present. Otherwise, only if ``fetch=True``, it *would*
-    download the FRED macro series (growth: INDPRO/PAYEMS; inflation: CPIAUCSL/T10YIE) and the asset
-    proxies, align them to month-end, cache and return.
-
-    **Honest network note.** In this sandbox the daily FRED rate/breakeven series (``T10YIE``, ``DGS10``)
-    reliably **time out**, and even the small monthly ``CPIAUCSL`` succeeds only intermittently. To keep
-    the verdict from depending on a flaky fetch, this *tries a single small series* (``CPIAUCSL``) with a
-    short timeout and a couple of retries; if that one succeeds it is cached for provenance, but the full
-    panel still needs the daily series, so a partial result is treated as a cache-miss and ``{}`` is
-    returned. The synthetic core (:func:`synthetic_macro`) is the validated offline proof meanwhile — see
-    ``docs/results.md``. This mirrors Study 27 (Steamroller)'s pending-fetch pattern exactly.
+    Every column is lagged ``lag_m`` month(s): macro data is published after the month it describes, so a
+    position formed at month-end can only use data through the prior month.
     """
-    cache = os.path.join(cache_dir, "barometer_macro.parquet")
-    if os.path.exists(cache):
-        df = pd.read_parquet(cache)
-        macro_cols = [c for c in df.columns if c.startswith("macro_")]
-        asset_cols = [c for c in df.columns if c.startswith("asset_")]
-        if macro_cols and asset_cols:
-            macro = df[macro_cols].rename(columns=lambda c: c[6:])
-            assets = df[asset_cols].rename(columns=lambda c: c[6:])
-            return {"macro": macro, "assets": assets}
-        return {}
-    if not fetch:
+    macro = pd.read_parquet(os.path.join(cache_dir, CACHE_MACRO))
+    yields = pd.read_parquet(os.path.join(cache_dir, CACHE_YIELDS))
+
+    cpi_yoy = macro["cpi"].pct_change(MONTHS_PER_YEAR)
+    indpro_yoy = macro["indpro"].pct_change(MONTHS_PER_YEAR)
+    slope = (yields["y10y"] - yields["y3m"]).resample("ME").last()
+
+    state = pd.DataFrame({"growth": slope, "inflation": cpi_yoy, "indpro_yoy": indpro_yoy})
+    state.index = state.index.to_period("M").to_timestamp(how="end")
+    state = state[~state.index.duplicated(keep="last")].sort_index()
+    return state.shift(lag_m)
+
+
+def _asset_returns(cache_dir: str) -> pd.DataFrame:
+    """Monthly returns of the 18 cross-asset ETFs (month-end adjusted-close % change)."""
+    etfs = pd.read_parquet(os.path.join(cache_dir, CACHE_ETFS))[REAL_ASSET_ORDER]
+    monthly = etfs.resample("ME").last()
+    monthly.index = monthly.index.to_period("M").to_timestamp(how="end")
+    return monthly.pct_change()
+
+
+def fetch_macro(cache_dir: str = DEFAULT_CACHE, fetch: bool = False) -> dict:
+    """Return ``{'macro': DataFrame, 'assets': DataFrame}`` — the REAL monthly macro state + ETF returns,
+    aligned, lagged and sliced to the post-2007 real-asset sample. Cache-first and offline.
+
+    Reads the three cached parquets (``macro_us``, ``us_treasury_yields``, ``cross_asset_etfs``), builds
+    the lagged monthly macro state (CPI-YoY inflation, yield-curve-slope growth, IndPro-YoY robustness) and
+    the 18-ETF return panel, and aligns them on the months where both the macro drivers and the real-asset
+    ETFs exist (``REAL_SAMPLE_START`` onward). ``fetch`` is accepted for interface parity but unused — the
+    tape is pre-cached, so the real run is fully offline. Returns ``{}`` if the cache parquets are absent.
+
+    ``macro`` carries ``[growth, inflation, indpro_yoy]``; ``assets`` carries the 18 ETF monthly returns in
+    :data:`REAL_ASSET_ORDER`. The publication lag is documented in this module's docstring.
+    """
+    paths = [os.path.join(cache_dir, f) for f in (CACHE_MACRO, CACHE_YIELDS, CACHE_ETFS)]
+    if not all(os.path.exists(p) for p in paths):
         return {}
 
-    # Best-effort: try ONE small monthly series so a transient success is captured for provenance, but
-    # never block the verdict on it. The full panel needs the daily series, which time out here.
-    got: dict[str, pd.Series] = {}
-    for attempt in range(retries + 1):
-        try:
-            got["infl_cpi"] = _fred_csv(FRED_MACRO["infl_cpi"], timeout=timeout).resample("ME").last()
-            break
-        except Exception:
-            continue
-    if got:
-        # Cache the one small series for provenance, but it is NOT a usable panel on its own.
-        os.makedirs(cache_dir, exist_ok=True)
-        probe = pd.DataFrame(got).add_prefix("probe_")
-        probe.to_parquet(os.path.join(cache_dir, "barometer_cpi_probe.parquet"))
-    # The full macro+asset panel is unavailable in this environment → treated as a cache-miss.
-    return {}
+    macro = _macro_state(cache_dir)
+    assets = _asset_returns(cache_dir)
+
+    # Align: months where the primary macro drivers (growth, inflation) exist AND the ETFs trade.
+    macro = macro.loc[REAL_SAMPLE_START:].dropna(subset=["growth", "inflation"])
+    common = macro.index.intersection(assets.index)
+    macro = macro.loc[common]
+    assets = assets.loc[common].dropna(how="all")
+    macro = macro.loc[assets.index]
+    return {"macro": macro, "assets": assets}

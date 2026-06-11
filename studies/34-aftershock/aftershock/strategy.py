@@ -80,6 +80,30 @@ def turnover(panel: pd.DataFrame, events: pd.DataFrame, holding_days: int = 50) 
     return float(w.diff().abs().sum(axis=1).mean())
 
 
+def newey_west_t(returns: pd.Series, lags: int = 20) -> float:
+    """HAC (Newey-West) *t*-statistic of the mean of a daily return series.
+
+    PEAD positions are held for weeks, so the book's daily returns are serially correlated and a plain
+    *t*-stat understates the standard error. The Newey-West estimator with Bartlett weights up to ``lags``
+    days corrects for that. ``quantlab.stats`` has no HAC helper, so this is computed locally; it reduces
+    to the plain *t*-stat at ``lags = 0``."""
+    r = pd.Series(returns).astype(float).dropna().to_numpy()
+    n = r.size
+    if n < 3:
+        return float("nan")
+    mean = r.mean()
+    u = r - mean
+    var = float(u @ u) / n                                      # gamma_0
+    for k in range(1, min(lags, n - 1) + 1):
+        w = 1.0 - k / (lags + 1.0)                              # Bartlett weight
+        gamma_k = float(u[k:] @ u[:-k]) / n
+        var += 2.0 * w * gamma_k
+    if var <= 0:
+        return float("nan")
+    se = np.sqrt(var / n)
+    return float(mean / se)
+
+
 def summary(returns: pd.Series, periods_per_year: int = TRADING_DAYS) -> dict:
     """Annualised Sharpe, CAGR, vol, max-drawdown, Calmar, skew for a daily return series."""
     r = pd.Series(returns).astype(float).dropna()

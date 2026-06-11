@@ -49,17 +49,18 @@
 
 ## The desk's own method — engine and reproducibility
 
-- **HAC / Newey–West inference** (Newey & West, *Econometrica* 1987) on the books' means.
-- **Data.** The real run uses monthly **G10 short rates from FRED** and **FX spot from yfinance**; pinned
+- **Bootstrap Sharpe CI** ([`quantlab.stats`](../../../quantlab/stats.py)) on the books' Sharpes (carry's
+  95% CI is [−0.17, +0.69], 14% of resamples negative — a real but thin premium).
+- **Data.** The real run uses monthly **OECD 3-month interbank short rates** (% p.a.) and **FX spot from
+  yfinance** (USD per 1 unit of nine foreign currencies), read offline from `_cache/g10_*.parquet`, pinned
   with [`quantlab.repro`](../../../quantlab/repro.py). The synthetic control bakes a partial-UIRP carry
   premium, a sticky two-state risk-off crash regime, and an independent autocorrelated trend for momentum.
 
 ## Caveats stated in the open (house rule)
 
-- **Real run is PENDING one network fetch.** The carry signal needs FRED short rates, whose download
-  **times out** in this environment; `examples/verify.py --fetch` populates it where FRED is reachable. The
-  committed verdict rests on the fully-validated synthetic control and the literature until then —
-  **Real-tape run? `PRE-REG`**.
+- **Real run done — offline from cache, as-of 2024-01-31, fingerprint `ef7450ae792e`.** OECD's MEI rates
+  source was discontinued at 2024-01, so the headline as-of is pinned to the rates' end (not the live FX
+  calendar). The verdict rests on the real G10 tape (2001–2024) plus the controlled synthetic machinery.
 - **Monthly horizon, USD base, spot (not forward) carry.** A stated simplification: spot FX plus the rate
   gap approximates the forward-based carry return and is the cleanly-available construction from public data.
 

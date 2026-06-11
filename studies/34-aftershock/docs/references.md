@@ -45,16 +45,18 @@
 
 ## Caveats stated in the open (house rule)
 
-- **Real run is pre-registered and pending an earnings-history fetch.** A credible PEAD cross-section
-  needs *years* of reported-earnings dates + surprises per name. No free source supplies that here:
-  yfinance exposes only ~6-8 reported quarters, and there is no reliable long free surprise history (the
-  same data wall the desk hit for options open-interest). So the committed verdict rests on the
-  fully-validated synthetic control and the long-run literature; the real measurement is wired as a stub
-  in [`examples/verify.py`](../examples/verify.py) (`--fetch`) and documented as pending in
-  [`docs/results.md`](results.md).
-- **SUE, total-return closes, daily horizon.** The surprise is a *standardised* unexpected-earnings
-  z-score (PEAD is a SUE statement, not a raw-EPS-miss one); returns are split/dividend-adjusted; the
-  book trades on a one-day lag — all stated decisions, not details.
+- **Survivorship bias.** The real run uses *today's* S&P 500 membership (cached price panel), so delisted
+  or dropped names are absent. PEAD is strongest in the small, troubled names that are likeliest to vanish,
+  so the missing losers bias the measured drift (and break-even) *upward*; the qualitative verdict — a
+  small, real drift whose break-even sits inside realistic costs — is robust, the precise magnitudes are
+  not, and we say so wherever a real number appears ([`docs/results.md`](results.md)).
+- **SUE = seasonal random walk, no analyst estimate.** With no estimate feed, the expectation is the
+  year-ago same-quarter EPS: ``surprise_q = eps_q − eps_{q−4}``, standardised by the stock's own trailing
+  dispersion. This is the classic Bernard-Thomas (1989) measure, but it differs from an estimate-relative
+  surprise — it is the *standardised* surprise, not a raw EPS miss.
+- **Earliest-filed announcement, total-return closes, daily lag.** The announcement date is the earliest
+  EDGAR filing per ``(ticker, period_end)`` (later filings repeat comparatives); returns are
+  split/dividend-adjusted closes; the book trades on a one-day lag — all stated decisions, not details.
 
 ---
 

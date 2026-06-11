@@ -7,8 +7,8 @@ both books earn ~0.
 
     python examples/run_synthetic_demo.py
 
-The real cross-asset/FRED verdict is PENDING a reliable FRED macro fetch (see docs/results.md and
-examples/verify.py --fetch).
+This is the offline *machinery* proof. The real cross-asset run (18 ETFs + cached CPI / yield-curve-slope
+macro, 2007-2025) is in examples/verify.py and docs/results.md.
 """
 
 import os
@@ -53,7 +53,7 @@ def main():
               f"falling {falling['sharpe']:+.2f} ({falling['ann_return_pct']:+.1f}%/yr)")
     print("\n  → the inflation-hedge book earns more in the rising-inflation regime (as designed); the\n"
           "    broader macro-momentum book, which also rides growth, is steadier across both.")
-    print("\nThe real cross-asset / FRED verdict is PENDING a reliable FRED macro fetch: examples/verify.py --fetch.")
+    print("\nThe real cross-asset run (18 ETFs + cached CPI/yield-slope macro, 2007-2025): examples/verify.py.")
 
 
 if __name__ == "__main__":

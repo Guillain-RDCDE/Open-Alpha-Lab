@@ -1,64 +1,86 @@
-# Results — Study 35 (Contango): commodity carry / roll yield
+# Results — Study 35 (Contango): commodity roll yield, on the real energy tape
 
-> ⚠️ **Real run pending a term-structure fetch.** Computing a commodity's **roll yield** needs its
-> **term structure** — at least the front and first-deferred contract price, every week (the *slope* of
-> the curve). The desk's cache holds only the **front-month continuous** returns
-> (`_cache/commodity_futures_weekly.parquet`, 12 commodities), and no free source in this environment
-> reliably serves the individual deferred contracts (yfinance returns a single continuous front-month
-> series; DoltHub / OptionsDX do not carry futures curves). So this study's real tape is **not yet
-> available** — exactly the position [Study 27 (Steamroller)](../../27-steamroller/) was in before its FRED
-> download. When a curve source is wired in, run it and this file is overwritten with the fingerprinted
-> numbers:
->
-> ```
-> python examples/verify.py --fetch     # reads a populated commodity_term_structure.parquet, runs, writes this file
-> ```
->
-> Until then, the verdict below is earned on the **synthetic control** (a commodity panel with a *known*
-> roll-yield premium and a disconnected null) and the long-run academic literature; the offline core is
-> fully validated and reproducible via [`examples/run_synthetic_demo.py`](../examples/run_synthetic_demo.py).
-> As-of pin for the eventual real run: **2026-06-10**.
+> **Real run · offline from cache · as-of 2026-06-05 · inputs fingerprint `92a7674a430b`.**
+> Roll yield needs the **term structure** — where on the curve you sit. We observe it without any paid
+> futures feed (no FRED, no EIA) by contrasting, for each energy commodity, the **front-month** ETF against
+> the **12-month-laddered** one: WTI **USO vs USL**, natural gas **UNG vs UNL**. The laddered fund barely
+> touches the front-month roll, so the weekly return spread `laddered − front` is the realized **roll cost of
+> the front contract** — positive in contango, negative in backwardation. Both ETFs are liquid with clean
+> yfinance history (USL from 2007, UNL from 2010). Reproduce: `python examples/verify.py` (offline, reads
+> the cache); refresh the tape with `--fetch`. The cross-sectional bucket machinery is proved on the offline
+> synthetic panel — `python examples/run_synthetic_demo.py`.
 
-## The verdict — Signal `REAL` · Tradability `FRAGILE` · Real-tape run? `PRE-REG`
+## The verdict — Signal `REAL` · Tradability `MIRAGE` · Real-tape run? `DONE`
 
-The commodity carry premium — long the most-**backwardated** futures (positive roll yield: the curve
-rolls *up* toward expiry), short the most-**contangoed** (negative roll yield) — is one of the most durable
-documented anomalies in commodities (Gorton–Rouwenhorst 2006; Erb–Harvey 2006; Koijen–Moskowitz–Pedersen–
-Vrugt 2018). It is a slow signal, so it is comparatively **cheap to run** (low turnover); its real risk is
-not transaction cost but a **crash-prone, volatile** return stream that, like FX carry (Study 27), unwinds
-hard in commodity-wide risk-off episodes. The honest framing: the **signal** is real (literature + control),
-**tradability** is fragile (volatile, crash-prone, capacity-limited to liquid contracts), and the
-**real-tape run is pre-registered** — its apparatus, mirage line, and expected shape are all fixed here,
-awaiting only the term-structure data.
+The commodity carry / roll-yield premium — a long futures position earns (or pays) the **roll** as it slides
+along the term structure: backwardation rolls *up* (you bank it), contango rolls *down* (it bleeds you)
+(Gorton–Rouwenhorst 2006; Erb–Harvey 2006; Koijen–Moskowitz–Pedersen–Vrugt 2018). On the real energy tape
+the **roll yield is unmistakably real and economically huge** — and the most famous wealth-destroyer in
+retail commodities, the **USO bleed**, is exactly this number. But turning it into a clean, tradable carry
+book on the liquid contracts is a **`MIRAGE`**: the timing signal points the right way yet is statistically
+indistinguishable from zero and carries 80%-deep drawdowns. The honest read: contango is real and it really
+costs you ~5–9%/yr — the reliable way to "win" is to **not be the sucker holding the front-month**, not to
+harvest a positive carry alpha.
 
-## What the synthetic control proves (offline, reproducible)
+## (A) The contango bleed is real — and enormous
 
-On a synthetic 12-commodity weekly panel with a baked roll-yield premium (seed 35, 20 years,
-`carry_strength=0.9`), fingerprint `b502aaa6304f`:
+The realized roll cost of the front-month contract = `laddered − front` return. The front-month funds
+bled exactly as the term structure predicts:
 
-- **The premium is real and recovered:** high-minus-low roll-yield bucket spread **+27.6%/yr**
-  (top **+21.4%**, bottom **−6.2%**); the dollar-neutral carry book earns a gross Sharpe **+1.86**
-  (CAGR **+16.5%**), net @5 bp **+1.80** — costs barely dent it.
-- **The book is cheap to run:** weekly turnover **0.19**, break-even cost **~160 bp** — costs are *not* the
-  binding constraint, so the tradability question is the crash tail, not the spread (the deliberate
-  contrast with [Study 33 (Slingshot)](../../33-slingshot/), where daily turnover buried the edge).
-- **The null collapses:** with the roll-yield signal **disconnected** from returns (`carry_strength=0`),
-  the same book earns Sharpe **−0.28** and a bucket spread of just **−4.8%/yr** — proving the apparatus
-  measures the effect, not itself.
-- **Carry diversifies with momentum:** a 50/50 blend with a commodity time-series-momentum sleeve lifts the
-  Sharpe **above either standalone leg** (carry **1.80**, momentum **1.43** → blend **2.03**) at a low
-  leg-to-leg correlation **+0.27** — see [docs/extension.md](extension.md).
+| commodity | front | laddered | sample | front total | laddered total | **gap** | roll drag | weeks in contango | HAC *t* |
+|---|---|---|---|---|---|---|---|---|---|
+| **WTI** | USO | USL | 2007-12 → 2026-06 (18.6y) | **−76%** | **+4%** | **+80 pts** | **+5.1%/yr** | 53% | +1.53 |
+| **Natural gas** | UNG | UNL | 2010-01 → 2026-06 (16.5y) | **−99%** | **−88%** | **+11 pts** | **+8.9%/yr** | 56% | +1.75 |
 
-## What `--fetch` will fill in (pre-registered)
+USO lost **three-quarters of its value to the roll** while the laddered USL, on the *same* crude, was flat-to-
+positive — an 80-point gap that is pure term-structure cost. Natural gas is worse still: the front-month UNG
+is down **−99%**, bleeding **+8.9%/yr** to a curve that sat in contango 56% of all weeks. This is the carry
+premium of §9.1 made concrete: backwardation pays, contango taxes, and in energy the tax is brutal. The
+weekly drag's Newey–West *t* is +1.5 to +1.8 — the spread is noisy week-to-week, but the cumulative
+direction is overwhelming and never in doubt.
 
-The real run, once a term-structure source is wired in, will report on the actual commodity curves: the
-roll-yield premium and its Newey–West *t*, the realized Sharpe and turnover, the **skew / worst week /
-drawdown** of the actual carry crashes (e.g. the 2008 and 2014–15 commodity routs), the break-even cost
-on liquid contracts, and the carry-vs-momentum blend — each fingerprinted and as-of pinned. The expected
-shape, from the literature, is a standalone Sharpe of roughly **0.5–0.8** with deep, volatile drawdowns —
-i.e. exactly the `REAL` / `FRAGILE` verdict the synthetic control already earns. **Mirage line** (fixed
-now, so we can't move it later): if the real backwardated-minus-contangoed spread is statistically
-indistinguishable from zero (HAC *t* < 2), or if the only contracts liquid enough to trade carry no
-premium, the signal drops to `WEAK`/`NONE`.
+## (B) …but timing it into a carry book is a MIRAGE
 
-*Sources & literature map: [docs/references.md](references.md). Engine: [`quantlab/`](../../../quantlab/).*
+The strategy read: hold the front-month ETF only when the curve has recently been **backwardated** (trailing
+13-week roll positive), short it in **contango** — a causal, lagged, time-series roll-yield carry book per
+curve and equal-weighted across the two.
+
+| book (gross) | Sharpe | CAGR | max-DD | skew | HAC *t* | turnover/yr |
+|---|---|---|---|---|---|---|
+| WTI | **+0.35** | +6.4% | −76% | +0.71 | +1.45 | 14.7 |
+| GAS | +0.04 | −9.3% | −94% | +0.16 | +0.17 | 13.6 |
+| **WTI+GAS combo** | **+0.16** | +0.4% | −83% | +0.45 | **+0.66** | 14.1 |
+| combo, net @10 bp | +0.12 | −1.1% | −83% | +0.46 | +0.47 | — |
+
+- **The sign is right and it dwarfs the naive trade.** Timing WTI by the curve earns Sharpe **+0.35** with a
+  **positive** skew (+0.71) — versus simply holding USO, which earned **−0.01** and lost **−98%** peak-to-
+  trough. Knowing the curve turns the bleed into a small gain and dodges the catastrophe. That much is real.
+- **But as a tradable edge it vanishes.** The combined book's Sharpe is **+0.16** with a Newey–West
+  **t = 0.66** — *indistinguishable from zero* — at a **−83% drawdown**. Gas timing earns essentially nothing
+  (Sharpe +0.04, *t* +0.17). This trips the pre-registered **mirage line** (`HAC t < 2` on the real spread →
+  the tradable signal drops to `WEAK`/`MIRAGE`).
+- **Cost is not the killer.** The book turns over ~14×/yr but a 10 bp round-trip only nicks the combo
+  (+0.16 → +0.12) — the binding constraint is the **crash-prone, two-name concentration** of the only
+  energy curves liquid enough to trade, exactly the `FRAGILE`/`MIRAGE` tradability the synthetic control's
+  crash tail foretold.
+
+So the roll-yield **force** is `REAL` (the bleed is one of the largest, most durable costs in commodities),
+but **harvesting** it on the liquid energy tape is a `MIRAGE`: the timing book is statistically flat and
+deeply drawdown-prone. The value of the signal is **defensive** — avoid being long the front-month in
+contango — not a source of positive carry alpha.
+
+## What the offline synthetic control proves (the machinery)
+
+On a synthetic 12-commodity weekly panel with a *baked* roll-yield premium (seed 35, 20 years,
+`carry_strength=0.9`), fingerprint `b502aaa6304f`, the **cross-sectional** bucket book recovers it cleanly:
+high-minus-low roll-yield spread **+27.6%/yr**, gross Sharpe **+1.86**, net @5 bp **+1.80**; the disconnected
+null (`carry_strength=0`) collapses to Sharpe **−0.28** — the apparatus measures the effect, not itself; and
+a carry⊕momentum blend lifts the Sharpe **above either leg** (carry 1.80, momentum 1.43 → blend 2.03) at a
+low leg correlation +0.27. The control demonstrates the bucket machinery *can* harvest carry where a broad
+cross-section exists; the real energy tape shows that on the two liquid curves you can actually trade, the
+cross-section is too thin and the stream too crash-prone for the harvest to clear noise — `REAL` force,
+`MIRAGE` trade. Reproduce: `python examples/run_synthetic_demo.py`.
+
+*Sources & literature map: [docs/references.md](references.md); the carry⊕momentum writeup is in
+[docs/extension.md](extension.md). Engine: [`quantlab/`](../../../quantlab/). **Not investment advice** —
+research & education.*

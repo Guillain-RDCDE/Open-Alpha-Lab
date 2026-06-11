@@ -4,6 +4,7 @@ more in rising- than falling-inflation regimes; turnover is low and the cost mac
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from barometer import costs, data, extension, strategy
 
@@ -69,5 +70,23 @@ def test_turnover_low_and_breakeven_high(control):
 
 
 def test_fetch_macro_cache_miss_returns_empty():
-    """Offline cache-miss path returns {} (Steamroller-style) — never blocks the verdict."""
+    """Offline cache-miss path returns {} — never blocks the verdict."""
     assert data.fetch_macro(cache_dir="/nonexistent_cache_dir_xyz", fetch=False) == {}
+
+
+def test_real_book_runs_on_cache_if_present():
+    """Cache-gated real smoke test: if the cached parquets exist, the real ETF book runs end-to-end,
+    is aligned/lagged to the post-2007 sample, and both books and the regime split produce finite stats."""
+    bundle = data.fetch_macro()
+    if not bundle:
+        pytest.skip("real macro/ETF cache not present in this environment")
+    macro, rets = bundle["macro"], bundle["assets"]
+    assert list(rets.columns) == data.REAL_ASSET_ORDER
+    assert {"growth", "inflation"}.issubset(macro.columns)
+    assert macro.index.equals(rets.index) and len(rets) > 100   # ~18y post-2007 monthly sample
+    spec = dict(assets=data.REAL_ASSETS, order=data.REAL_ASSET_ORDER)
+    for kind in ("macro_momentum", "inflation"):
+        s = strategy.summary(strategy.book_returns(rets, macro, kind=kind, cost_bps=5.0, **spec))
+        assert np.isfinite(s["sharpe"])
+    sp = extension.regime_split(rets, macro, kind="inflation", cost_bps=5.0, **spec)
+    assert {"rising", "falling"}.issubset(sp.index)

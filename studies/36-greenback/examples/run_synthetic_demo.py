@@ -7,8 +7,8 @@ correlate, with momentum dulling the carry crash. On the full-UIRP carry null, t
 
     python examples/run_synthetic_demo.py
 
-The real FX-carry verdict needs short rates from FRED, which time out in this sandbox — so the real run is
-PENDING one networked fetch (see examples/verify.py and ../docs/results.md).
+This is the controlled machinery proof. The real G10-tape verdict (OECD short rates + yfinance FX, offline
+from cache) is in examples/verify.py and ../docs/results.md.
 """
 
 from __future__ import annotations
@@ -66,7 +66,8 @@ def main() -> None:
     print("\nCost sweep on the combo:")
     print(costs.cost_sweep(xr, rd, which="combo").round(3).to_string())
 
-    print("\nThe real FX-carry verdict is PENDING one networked FRED fetch — see examples/verify.py --fetch.")
+    print("\nThis is the controlled machinery proof; the real G10-tape verdict is in examples/verify.py "
+          "(offline from cache) and ../docs/results.md.")
 
 
 if __name__ == "__main__":

@@ -4,10 +4,11 @@
     jupyter nbconvert --to notebook --execute --inplace \
         notebooks/01_for_the_curious.ipynb notebooks/02_for_the_quants.ipynb
 
-The executed path runs OFFLINE on the seeded synthetic FX panel (a carry premium + risk-off crashes + an
-independent trend the momentum sleeve rides). The real-tape G10 verdict is **PENDING** one networked FRED
-rates fetch (which times out in this sandbox) — see ../docs/results.md. Both notebooks walk the SAME seven
-desk beats. Greenback is the dollar-carry / carry⊕momentum-combo companion to Study 27 (Steamroller).
+The executed cells run on BOTH (a) the seeded synthetic FX panel — the controlled machinery proof — and
+(b) the **real G10 tape**, read OFFLINE from the two `_cache/g10_*.parquet` files (OECD 3-month short rates
++ yfinance FX, a USD-funded monthly book, 2001–2024, as-of 2024-01-31). The headline real numbers are in
+../docs/results.md (fingerprint ef7450ae792e). Both notebooks walk the SAME seven desk beats. Greenback is
+the dollar-carry / carry⊕momentum-combo companion to Study 27 (Steamroller).
 """
 
 from __future__ import annotations
@@ -30,16 +31,23 @@ import numpy as np, pandas as pd
 pd.set_option("display.float_format", lambda v: f"{v:,.3f}")
 from greenback import data, strategy, costs, extension
 
-# Offline synthetic control: a currency panel with a carry premium + risk-off crashes + an independent
-# trend for the momentum sleeve (the machinery) + a full-UIRP carry null. The real G10 verdict is PENDING
-# one networked FRED fetch — see ../docs/results.md.
+# (1) Offline synthetic control: a currency panel with a carry premium + risk-off crashes + an independent
+# PROFITABLE trend for the momentum sleeve (the machinery) + a full-UIRP carry null.
 xr, rd, truth = data.synthetic_fx(carry_strength=0.9, trend_strength=0.35, seed=36)
 x0, r0, _ = data.synthetic_fx(carry_strength=0.0, trend_strength=0.35, seed=36)
 print(f"synthetic control: {truth.n_ccy} currencies x {truth.n_months} months, "
       f"carry_strength {truth.carry_strength} (null=0), trend_strength {truth.trend_strength}")
+
+# (2) The REAL G10 tape, read offline from cache (OECD 3-month short rates + yfinance FX, USD-funded
+# monthly, as-of 2024-01-31). build_carry_panel does the carry math; load_real_panel pins the as-of.
+REAL = data.load_real_panel()
+if REAL is not None:
+    rxr, rrd = REAL
+    print(f"real G10 tape: {rxr.index.min().date()} -> {rxr.index.max().date()} "
+          f"({len(rxr)} months), currencies {list(rxr.columns)}")
 """
 
-# Synthetic control numbers (seed 36, net @10 bp) — these match the executed cells; the REAL G10 tape is PENDING.
+# Synthetic-CONTROL numbers (seed 36, net @10 bp) — these match the executed control cells.
 R = dict(
     hml="5.3", null_hml="0.8",
     carry_sh="1.18", carry_skew="-1.55", carry_dd="-60", carry_worst="-13.7",
@@ -50,17 +58,31 @@ R = dict(
     c0="1.75", c10="1.69", c25="1.59", c50="1.44", c100="1.13",
 )
 
+# REAL G10-tape numbers (OECD short rates + yfinance FX, USD-funded monthly, 2001–2024, as-of 2024-01-31,
+# fingerprint ef7450ae792e) — these match the executed real-tape cells.
+G = dict(
+    fp="ef7450ae792e", asof="2024-01-31", span="2001–2024",
+    hml="3.0", carry_sh="+0.22", carry_skew="-0.70", carry_dd="-27", carry_worst="-10.6",
+    ci_lo="-0.17", ci_hi="+0.69", frac_neg="14",
+    dollar_sh="+0.17", mom_sh="-0.14",
+    combo_sh="+0.06", combo_dd="-26", combo_skew="-0.57", combo_worst="-6.4", corr="+0.05",
+    combo_worst5="-3.0", carry_worst5="-7.6",
+    to_carry="0.55", to_mom="4.42", carry_be="13",
+    c0="+0.17", c10="+0.06", c25="-0.10",
+)
+
 BADGES = (
     "![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)\n"
     "![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)\n"
-    "![Real-tape run?: Pre-reg](https://img.shields.io/badge/Real--tape_run%3F-Pre--reg-8b949e?style=flat-square)\n\n"
+    "![Combo diversifies the crash?: Partial](https://img.shields.io/badge/Combo_diversifies_the_crash%3F-Partial-dab617?style=flat-square)\n\n"
 )
 
-PENDING = (
-    "> ⚠️ **Real run PENDING one fetch.** The carry signal needs **G10 short rates from FRED**, whose "
-    "download **times out** in this sandbox — so this notebook executes OFFLINE on the synthetic control "
-    "and the real-tape verdict is *pre-registered* in [`../docs/results.md`](../docs/results.md), awaiting "
-    "one networked `python examples/verify.py --fetch`."
+REALNOTE = (
+    "> ✅ **Real run · offline from cache · as-of {asof} · fingerprint `{fp}`.** This notebook executes on "
+    "BOTH the synthetic control (the machinery proof) AND the **real G10 tape** — OECD 3-month short rates "
+    "+ yfinance FX, a USD-funded monthly book over {span}, read offline from the two `_cache/g10_*.parquet` "
+    "files. Headline numbers in [`../docs/results.md`](../docs/results.md).".format(
+        asof=G['asof'], fp=G['fp'], span=G['span'])
 )
 
 
@@ -88,30 +110,33 @@ def build_curious():
             "> 📓 **Plain-language layer.** The three sleeves, the combo uplift, the leg correlation and the "
             "crash cushion are in **[02_for_the_quants.ipynb](02_for_the_quants.ipynb)** — same story, deeper.\n"
             ">\n"
-            "> ⚠️ **Not investment advice.** Charts below are generated by the code beside them; the core "
-            "runs on a **synthetic** currency panel, so the real G10 numbers (from "
-            "[`../docs/results.md`](../docs/results.md)) are PENDING one FRED fetch. House style in "
+            "> ⚠️ **Not investment advice.** Charts below are generated by the code beside them; the study "
+            "runs on BOTH a **synthetic** machinery control and the **real G10 tape** (offline from cache — "
+            "see [`../docs/results.md`](../docs/results.md)). House style in "
             "[METHODOLOGY.md](../../../METHODOLOGY.md)."
         ),
         code(BOOT),
+        md(REALNOTE),
 
         md(
-            "## The answer first 💵\n\n"
+            "## The answer first 💵 (on the real 2001–2024 G10 tape)\n\n"
             "| What we asked | The honest answer |\n"
             "|---|---|\n"
-            "| Do high-rate currencies out-earn? | 🟩 **Yes.** Carry high-minus-low **+{hml}%/yr**; carry "
-            "Sharpe **{cs}** (null is flat at +{nh}%/yr). |\n"
-            "| Is there a steamroller? | 🟨 **Yes.** Carry skew **{csk}**, max drawdown **{cdd}%** — the "
-            "negative-skew crash carry can't escape. |\n"
-            "| Does the carry⊕momentum combo help? | 🟩 **Yes.** Combo Sharpe **{cob}** beats carry **{cs}** "
-            "and momentum **{ms}** (legs correlate just **{corr}**), and the drawdown falls **{cdd}% → "
-            "{codd}%**. |\n"
-            "| Real G10 tape? | ⚪ **Pre-registered.** Needs FRED short rates (times out here) — PENDING one "
-            "fetch. |\n\n"
-            "> Desk shorthand: **Signal `REAL` · Tradability `FRAGILE` · Real-tape run? `PRE-REG`** — a real "
-            "premium, dulled (not de-fanged) by diversification.".format(
-                hml=R['hml'], cs=R['carry_sh'], nh=R['null_hml'], csk=R['carry_skew'], cdd=R['carry_dd'],
-                cob=R['combo_sh'], ms=R['mom_sh'], corr=R['corr'], codd=R['combo_dd'])
+            "| Do high-rate currencies out-earn? | 🟩 **Yes, thinly.** Carry high-minus-low **+{hml}%/yr**; "
+            "carry Sharpe **{cs}** (bootstrap CI [{lo}, {hi}], {fn}% of resamples negative). |\n"
+            "| Is there a steamroller? | 🟨 **Yes.** Carry skew **{csk}**, worst month **{cw}%** (Oct-2008), "
+            "max drawdown **{cdd}%** — the negative-skew crash carry can't escape. |\n"
+            "| Did FX momentum work? | 🟥 **No.** Momentum Sharpe **{ms}** over 2001–2024 — cross-sectional "
+            "FX momentum decayed to *negative* this sample. |\n"
+            "| Did the carry⊕momentum combo help? | 🟨 **Partly.** It *cushions* the crash (legs correlate "
+            "just **{corr}**; worst month **{cw}% → {kw}%**), but combo Sharpe **{cob}** can't beat carry "
+            "**{cs}** while momentum loses. |\n\n"
+            "> Desk shorthand: **Signal `REAL` · Tradability `FRAGILE` · Combo diversifies the crash? "
+            "`PARTIAL`** — a real (thin) premium, its crash *dulled* by diversification but its Sharpe not "
+            "lifted, because this sample's momentum had no edge to lend.".format(
+                hml=G['hml'], cs=G['carry_sh'], lo=G['ci_lo'], hi=G['ci_hi'], fn=G['frac_neg'],
+                csk=G['carry_skew'], cw=G['carry_worst'], cdd=G['carry_dd'], ms=G['mom_sh'],
+                corr=G['corr'], kw=G['combo_worst'], cob=G['combo_sh'])
         ),
 
         md(
@@ -180,41 +205,67 @@ def build_curious():
             "plt.legend(); plt.title('Carry crashes, momentum cushions — the combo grows steadier than either leg'); plt.yscale('log')"
         ),
 
-        md("## 5 · The verdict 🧾\n\n"
-           f"- **Signal `REAL`** — carry high-minus-low **+{R['hml']}%/yr**, carry Sharpe **{R['carry_sh']}**, "
-           f"momentum **{R['mom_sh']}**; the null is flat (**+{R['null_hml']}%/yr**).\n"
-           f"- **Tradability `FRAGILE`** — the steamroller: carry skew **{R['carry_skew']}**, drawdown "
-           f"**{R['carry_dd']}%**. The combo *dulls* it (DD **{R['carry_dd']}% → {R['combo_dd']}%**) but the "
-           "jump never fully goes away.\n"
-           "- **Real-tape run? `PRE-REG`** — pre-registered, PENDING one FRED fetch.\n\n"
+        md("### 4c · The same books on the REAL G10 tape (2001–2024)\n"
+           "The synthetic above shows the machinery *with a winning momentum leg*. Here is what actually "
+           "happened on the real tape — carry pays thinly with its crash, but momentum **lost** money this "
+           "sample, so the combo cushions the crash without beating carry on Sharpe:"),
+        code(
+            "rcarry = strategy.carry_returns(rxr, rrd, cost_bps=10.0)\n"
+            "rmom   = strategy.momentum_returns(rxr, cost_bps=10.0)\n"
+            "rcombo = strategy.combine(rcarry, rmom)\n"
+            "rdollar= strategy.dollar_carry_returns(rxr, rrd, cost_bps=10.0)\n"
+            "rows = {}\n"
+            "for nm, r in [('carry', rcarry), ('dollar-carry', rdollar), ('momentum', rmom), ('COMBO', rcombo)]:\n"
+            "    s = strategy.summary(r); rows[nm] = {'Sharpe': s['sharpe'], 'ret%': s['ann_return']*100, 'skew': s['skew'], 'maxDD%': s['max_drawdown']*100}\n"
+            "display(pd.DataFrame(rows).T.round(2))\n"
+            "rcc = extension.carry_crash(rxr, rrd, cost_bps=10.0)\n"
+            "print(f\"real: carry skew {rcc['carry_skew']:+.2f}, worst month {rcc['carry_worst_month_pct']:+.1f}%; \"\n"
+            "      f\"combo cushions to worst month {rcc['combo_worst_month_pct']:+.1f}% (leg corr +0.05)\")\n"
+            "for nm, r, c in [('carry', rcarry, '#c0392b'), ('momentum', rmom, '#8b949e'), ('combo', rcombo, '#2ea44f')]:\n"
+            "    plt.plot((1+r).cumprod(), label=nm, color=c, lw=1.1)\n"
+            "plt.legend(); plt.title('Real G10 tape (2001–2024): carry pays thinly with its crash; momentum lost; combo cushions')"
+        ),
+
+        md("## 5 · The verdict 🧾 (on the real tape)\n\n"
+           f"- **Signal `REAL`** — carry high-minus-low **+{G['hml']}%/yr**, carry Sharpe **{G['carry_sh']}** "
+           f"(thin: CI [{G['ci_lo']}, {G['ci_hi']}]); the steamroller is real (skew **{G['carry_skew']}**, "
+           f"worst month **{G['carry_worst']}%** in Oct-2008).\n"
+           f"- **Tradability `FRAGILE`** — thin and cost-sensitive: carry break-even only **≈{G['carry_be']} "
+           f"bp**, and the crash never leaves.\n"
+           f"- **Combo diversifies the crash? `PARTIAL`** — legs decorrelate (**{G['corr']}**) so the combo "
+           f"cushions the crash (worst month **{G['carry_worst']}% → {G['combo_worst']}%**), but combo Sharpe "
+           f"**{G['combo_sh']}** can't beat carry **{G['carry_sh']}** because momentum lost (**{G['mom_sh']}**) "
+           "this sample.\n\n"
            "> **The honest fix isn't a stop — it's a second trade.** Study 27 showed vol-targeting can't "
-           "dodge the carry crash. Pairing carry with decorrelated momentum can *cushion* it."),
+           "dodge the carry crash. Pairing carry with decorrelated momentum *does* cushion it — but only "
+           "lifts the Sharpe when momentum itself has an edge, which on 2001–2024 it didn't."),
 
         md("## 6 · Could you trade it? 💸\n\n"
-           f"- **Cheap to run.** Carry rebalances slowly (rate gaps crawl), so cost isn't the threat; "
-           f"momentum costs more (break-even ≈ {R['mom_be']} bp) but the combo's Sharpe decays gently "
-           f"(**{R['c0']} → {R['c100']}** from 0 to 100 bp).\n"
-           "- **The threat is the crash, not the cost.** Even diversified, the combo keeps a negative skew — "
-           "you must be *willing and able* to hold a crash-prone book through its worst months.\n"
-           "- **Capacity** is large (G10 FX is the deepest market on earth); the binding constraint is risk "
-           "tolerance, not liquidity. Hence `FRAGILE`, not `INVESTABLE`."),
+           f"- **Thin and cost-sensitive.** Carry turns over slowly (**{G['to_carry']}×/yr**) but its "
+           f"break-even is only **≈{G['carry_be']} bp**; the combo's net Sharpe decays **{G['c0']} (0bp) → "
+           f"{G['c10']} (10bp) → {G['c25']} (25bp)** — cost bites fast.\n"
+           "- **The threat is the crash *and* the thin edge.** Even diversified, the combo keeps a negative "
+           "skew — you must be *willing and able* to hold a crash-prone book through its worst months.\n"
+           "- **Capacity** is large (G10 FX is the deepest market on earth); the binding constraint is the "
+           "thin, crash-prone edge, not liquidity. Hence `FRAGILE`, not `INVESTABLE`."),
 
         md(
             "## 7 · Going further 🚪\n\n"
             "### Worked complement — the carry⊕momentum diversification ([`../docs/extension.md`](../docs/extension.md))\n"
-            "The headline of the study, made explicit:\n\n"
-            f"- The combo Sharpe **{R['combo_sh']}** beats carry **{R['carry_sh']}** and momentum "
-            f"**{R['mom_sh']}**, because the legs correlate only **{R['corr']}**.\n"
-            f"- Momentum cushions the steamroller: combo drawdown **{R['combo_dd']}%** vs carry "
-            f"**{R['carry_dd']}%**, and in carry's worst 5 months the combo lost **{R['combo_worst5']}%** vs "
-            f"carry **{R['carry_worst5']}%**.\n"
-            "- But the combo is still negatively skewed — diversification dulls the crash, it doesn't remove it.\n\n"
+            "The headline of the study, made explicit on the real tape:\n\n"
+            f"- The legs decorrelate (**{G['corr']}**) so the combo *cushions* the steamroller: worst month "
+            f"**{G['carry_worst']}% → {G['combo_worst']}%**, and in carry's worst 5 months the combo lost "
+            f"**{G['combo_worst5']}%** vs carry **{G['carry_worst5']}%**.\n"
+            f"- But the combo Sharpe **{G['combo_sh']}** can't beat carry **{G['carry_sh']}**, because FX "
+            f"momentum lost money (**{G['mom_sh']}**) over 2001–2024 — a losing leg can't lift the blend.\n"
+            "- On the synthetic control (where momentum is profitable *by construction*) the combo DOES beat "
+            f"both legs (**{R['combo_sh']}** vs **{R['carry_sh']}**/**{R['mom_sh']}**) — so the mechanism is "
+            "real; the real-tape `PARTIAL` is about *this sample's* dead momentum, not the combo idea.\n\n"
             "### Other forks\n"
             "- **Optimal combo weight** — sweep `w_carry` and risk-parity vs the realised crisis correlation.\n"
-            "- **Dollar-carry as a third leg** — add the LRV dollar factor (real tape, where the USD rate cycles).\n"
+            "- **Dollar-carry as a third leg** — add the LRV dollar factor (Sharpe +0.17 on the real tape).\n"
             "- **Crisis-conditional tilt** — lean toward momentum when global FX vol is rising.\n\n"
-            "PRs welcome — and the real G10 numbers land the moment someone runs `examples/verify.py --fetch` "
-            "where FRED is reachable."
+            "PRs welcome."
         ),
     ]
     nb = new_notebook(cells=cells, metadata=_meta())
@@ -230,31 +281,38 @@ def build_quants():
             "The deep companion to the [notebook for the curious](01_for_the_curious.ipynb) — *same seven "
             "beats, every claim with its number.* The steelman: FX carry is a real premium (§8.3/§8.4 of "
             "Kakushadze-Serur), and the **carry⊕momentum combo** beats either leg because the two "
-            "decorrelate. We confirm carry is `REAL` (high-minus-low +5.3%/yr, Sharpe +1.18, null flat), "
-            "that it carries the `FRAGILE` steamroller (skew −1.55, DD −60%), and that the combo lifts the "
-            "Sharpe to +1.69 while halving-plus the drawdown — building on Study 27 (Steamroller), not "
-            "repeating it.\n\n"
-            "> ⚠️ **Not investment advice.** The core executes on a synthetic FX panel; the real G10 run is "
-            "PENDING one FRED fetch in [`../docs/results.md`](../docs/results.md), sources in "
+            "decorrelate. The synthetic control confirms the machinery (carry Sharpe +1.18, null flat, "
+            "combo +1.69 with a winning momentum leg). On the **real G10 tape (2001–2024)** carry is "
+            "`REAL`-but-thin (Sharpe +0.22) with its `FRAGILE` steamroller (skew −0.70, worst month −10.6% "
+            "in Oct-2008), FX momentum **decayed to −0.14**, and so the combo `PARTIAL`-ly delivers: it "
+            "cushions the crash (decorrelated legs +0.05) but can't out-Sharpe carry — building on Study 27, "
+            "not repeating it.\n\n"
+            "> ⚠️ **Not investment advice.** Executes on BOTH a synthetic control and the **real G10 tape** "
+            "(offline from cache); the fingerprinted real numbers are in "
+            "[`../docs/results.md`](../docs/results.md), sources in "
             "[`../docs/references.md`](../docs/references.md).\n"
             ">\n"
             "> 💡 **The `💡 In plain words` notes** translate each result back to intuition."
         ),
         code(BOOT),
+        md(REALNOTE),
 
         md(
-            "## Beat 0 · Verdict\n\n"
+            "## Beat 0 · Verdict (on the real 2001–2024 G10 tape)\n\n"
             "| Axis | Stamp | Why |\n"
             "|---|---|---|\n"
-            f"| **Signal** — carry & momentum real? | 🟢 `REAL` | High-minus-low **+{R['hml']}%/yr**, carry "
-            f"Sharpe **{R['carry_sh']}**, momentum **{R['mom_sh']}**; null flat (**+{R['null_hml']}%/yr**). |\n"
-            f"| **Tradability** | 🟡 `FRAGILE` | Carry skew **{R['carry_skew']}**, DD **{R['carry_dd']}%**; "
-            f"the combo dulls it (**{R['carry_dd']}% → {R['combo_dd']}%**) but the jump remains. |\n"
-            "| **Real-tape run?** | ⚪ `Pre-reg` | Needs FRED short rates (time out here) — PENDING one fetch. |\n\n"
-            "> **In one sentence:** a real FX carry premium with a brutal negative-skew crash, *cushioned* "
-            "(not removed) by blending in decorrelated momentum — the combo Sharpe **+1.69** beats either "
-            "leg and the drawdown falls to **−20%**.\n\n"
-            "*(This notebook executes on the synthetic control; the real G10 numbers are PENDING in "
+            f"| **Signal** — carry real? | 🟢 `REAL` | High-minus-low **+{G['hml']}%/yr**, carry Sharpe "
+            f"**{G['carry_sh']}** (CI [{G['ci_lo']}, {G['ci_hi']}], {G['frac_neg']}% negative) — thin but "
+            "real. |\n"
+            f"| **Tradability** | 🟡 `FRAGILE` | Carry skew **{G['carry_skew']}**, worst month "
+            f"**{G['carry_worst']}%**, break-even only **≈{G['carry_be']} bp**; thin and crash-prone. |\n"
+            f"| **Combo diversifies the crash?** | 🟡 `PARTIAL` | Legs decorrelate (**{G['corr']}**) so the "
+            f"combo cushions the crash (worst month **{G['carry_worst']}% → {G['combo_worst']}%**), but combo "
+            f"Sharpe **{G['combo_sh']}** < carry **{G['carry_sh']}** because momentum lost (**{G['mom_sh']}**). |\n\n"
+            "> **In one sentence:** a real-but-thin FX carry premium with a brutal negative-skew crash, "
+            "*cushioned* (not out-Sharpe'd) by blending in decorrelated momentum — because over 2001–2024 FX "
+            "momentum itself lost money, the combo dulls the jump without lifting the Sharpe.\n\n"
+            "*(Both the synthetic control and the real G10 tape execute below; fingerprinted real numbers in "
             "[`../docs/results.md`](../docs/results.md).)*"
         ),
 
@@ -286,12 +344,13 @@ def build_quants():
             "Lustig-Roussanov-Verdelhan (2011) show carry and the dollar factor are *priced* currency risk "
             "premia; Asness-Moskowitz-Pedersen (2013) and Koijen et al (2018) show carry/value and momentum "
             "are negatively correlated *everywhere*, so combining them is the single highest-Sharpe move in "
-            "factor investing. The pre-registered prediction: the combo beats either leg and momentum leans "
-            "*against* the carry crash. Beats 4-7 test that head-on."
+            "factor investing. The prediction: the legs decorrelate and momentum leans *against* the carry "
+            "crash. Beats 4-7 test that head-on — and find the decorrelation holds on the real tape, but the "
+            "Sharpe uplift needs a *winning* momentum leg, which 2001–2024 didn't provide."
         ),
 
         md(
-            "## Beat 3 · Pre-registered protocol\n\n"
+            "## Beat 3 · Protocol\n\n"
             "1. **Real?** `carry_premium_by_bucket` + `carry_returns` (gross) on control vs null.\n"
             "2. **Crash?** the carry book's `skew`, worst month, `max_drawdown` (`extension.carry_crash`).\n"
             "3. **Combo?** `extension.diversification` — combo Sharpe vs legs, the leg correlation.\n"
@@ -316,7 +375,7 @@ def build_quants():
             "> 💡 **In plain words.** Carry and momentum both earn — but carry crashes (skew −1.55, DD −60%) "
             "and momentum doesn't (DD −18%). The dollar-carry tilt is weak *on this synthetic* because the "
             "average rate gap is near-constant by construction; on the real tape, where the USD rate cycles, "
-            "it's a genuine separate premium (that's what `--fetch` measures)."
+            "it's a genuine separate premium (Sharpe +0.17 — shown in 4d)."
         ),
 
         md("### 4b · The combo beats the legs, and the legs decorrelate (the REAL diversification call)"),
@@ -348,43 +407,83 @@ def build_quants():
             "negative — the jump is *dulled*, not gone. That's exactly why tradability is `FRAGILE`."
         ),
 
-        md("## Beat 5 · The verdict\n\n"
-           f"- **`REAL`** (4a/4b): high-minus-low +{R['hml']}%/yr, carry Sharpe {R['carry_sh']}, combo {R['combo_sh']}; null flat.\n"
-           f"- **`FRAGILE`** (4c): carry skew {R['carry_skew']}, DD {R['carry_dd']}%; combo dulls to {R['combo_dd']}% but keeps a negative skew.\n"
-           "- **Real-tape run? `PRE-REG`**: PENDING one FRED fetch.\n\n"
-           "> **Signal `REAL` · Tradability `FRAGILE` · Real-tape run? `PRE-REG`** — the dollar-carry / "
-           "carry⊕momentum-combo companion to Study 27."),
+        md("### 4d · The same books on the REAL G10 tape (2001–2024) — the earned verdict\n"
+           "Synthetic 4a–4c showed the machinery *with a winning momentum leg by construction*. Now the real "
+           "tape: carry pays thinly with its crash, momentum **lost** money, and the combo cushions the "
+           "crash without out-Sharpe-ing carry. Both books from the same functions, no re-fit."),
+        code(
+            "rcarry = strategy.carry_returns(rxr, rrd, cost_bps=10.0)\n"
+            "rmom   = strategy.momentum_returns(rxr, cost_bps=10.0)\n"
+            "rcombo = strategy.combine(rcarry, rmom)\n"
+            "rdollar= strategy.dollar_carry_returns(rxr, rrd, cost_bps=10.0)\n"
+            "rows = {}\n"
+            "for nm, r in [('carry', rcarry), ('dollar-carry', rdollar), ('momentum', rmom), ('COMBO', rcombo)]:\n"
+            "    s = strategy.summary(r)\n"
+            "    rows[nm] = {'Sharpe': s['sharpe'], 'ret%': s['ann_return']*100, 'vol%': s['vol_ann']*100, 'skew': s['skew'], 'maxDD%': s['max_drawdown']*100}\n"
+            "display(pd.DataFrame(rows).T.round(2))\n"
+            "rd_ = extension.diversification(rxr, rrd, cost_bps=10.0)\n"
+            "rcc = extension.carry_crash(rxr, rrd, cost_bps=10.0)\n"
+            "print(f\"real carry premium (high-minus-low): {strategy.carry_premium_by_bucket(rxr, rrd)['hml_ann_pct']:+.1f}%/yr\")\n"
+            "print(f\"leg correlation {rd_['leg_correlation']:+.2f}; combo beats best leg: {rd_['combo_beats_legs']}\")\n"
+            "print(f\"crash cushion — carry worst month {rcc['carry_worst_month_pct']:+.1f}% vs combo {rcc['combo_worst_month_pct']:+.1f}%; \"\n"
+            "      f\"in carry's worst 5 months combo {rcc['combo_in_carry_worst5_pct']:+.1f}% vs carry {rcc['carry_worst5_mean_pct']:+.1f}%\")\n"
+            "fig, ax = plt.subplots()\n"
+            "for nm, r, c in [('carry', rcarry, '#c0392b'), ('momentum', rmom, '#8b949e'), ('combo', rcombo, '#2ea44f')]:\n"
+            "    ax.plot((1+r).cumprod(), label=nm, color=c, lw=1.1)\n"
+            "ax.legend(); ax.set_title('Real G10 tape: carry pays thinly with its crash, momentum lost, combo cushions but does not out-Sharpe')"
+        ),
+        md(
+            "> 💡 **In plain words.** The decorrelation thesis *holds* on the real tape (leg corr +0.05, the "
+            "combo's worst month halves) — the diversification is real. But the Sharpe uplift needs a "
+            "*winning* momentum leg, and 2001–2024 FX momentum lost money, so the combo cushions the crash "
+            "without beating carry. That is the honest `PARTIAL`."
+        ),
+
+        md("## Beat 5 · The verdict (real tape)\n\n"
+           f"- **`REAL`** (4d): high-minus-low +{G['hml']}%/yr, carry Sharpe {G['carry_sh']} (CI [{G['ci_lo']}, {G['ci_hi']}]); thin but real.\n"
+           f"- **`FRAGILE`** (4d): carry skew {G['carry_skew']}, worst month {G['carry_worst']}%, break-even ≈{G['carry_be']} bp; crash + thin edge.\n"
+           f"- **Combo diversifies the crash? `PARTIAL`**: legs decorrelate ({G['corr']}), combo cushions ({G['carry_worst']}% → {G['combo_worst']}% worst month) but Sharpe {G['combo_sh']} < carry {G['carry_sh']} (momentum {G['mom_sh']}).\n\n"
+           "> **Signal `REAL` · Tradability `FRAGILE` · Combo diversifies the crash? `PARTIAL`** — the "
+           "dollar-carry / carry⊕momentum-combo companion to Study 27."),
 
         md("## Beat 6 · Could you trade it?\n\n"
-           f"- **Cheap to run.** Carry turns over slowly; momentum's break-even is ≈{R['mom_be']} bp; the "
-           f"combo's Sharpe decays gently ({R['c0']} → {R['c100']} from 0 to 100 bp).\n"
-           "- **The binding risk is the crash, not the cost or the capacity** (G10 FX is the deepest market "
-           "on earth). Even diversified, the combo keeps negative skew.\n"
-           "- **The real fragility line** (real tape): a 2008-style crash deepening rather than dulling — "
-           "tested the moment `--fetch` runs."),
+           f"- **Thin and cost-sensitive.** Carry turns over slowly ({G['to_carry']}×/yr) but break-even is "
+           f"only ≈{G['carry_be']} bp; the combo's net Sharpe decays {G['c0']} → {G['c10']} → {G['c25']} "
+           "from 0 to 25 bp — cost bites fast.\n"
+           "- **The binding risk is the crash *and* the thin edge** (G10 FX capacity itself is the deepest "
+           "market on earth). Even diversified, the combo keeps negative skew.\n"
+           "- **The real fragility line** (confirmed real tape): the steamroller hits in Oct-2008 (−10.6%) "
+           "and Mar-2020 (−9.1%) — the GFC and COVID risk-offs."),
 
         md("## Beat 7 · Going further\n\n"
            "### 7a · Worked complement — the carry⊕momentum diversification ([`../docs/extension.md`](../docs/extension.md))\n"
-           "The cost sweep below confirms the combo survives realistic costs; the diversification itself "
-           "(beats 4b/4c) is the complement. Real-tape version PENDING `--fetch`."),
+           "The cost sweep below confirms (on the synthetic control) the combo's cost behaviour; the "
+           "diversification itself (beats 4b/4d) is the complement. On the real tape the decorrelation holds "
+           "but momentum's lost edge makes the combo `PARTIAL`."),
         code(
+            "print('SYNTHETIC control combo cost sweep:')\n"
             "cs = costs.cost_sweep(xr, rd, which='combo')\n"
             "display(cs.round(3))\n"
+            "print('REAL G10 combo cost sweep:')\n"
+            "rcs = costs.cost_sweep(rxr, rrd, which='combo')\n"
+            "display(rcs.round(3))\n"
             "fig, ax = plt.subplots(); ax.axhline(0, color='#999', lw=.8)\n"
-            "ax.plot(cs.index, cs['sharpe'], marker='o', color='#2ea44f')\n"
-            "ax.set_xlabel('cost (bp per unit traded)'); ax.set_ylabel('net Sharpe'); ax.set_title('The combo survives realistic costs (synthetic) — the threat is the crash, not the spread')\n"
-            "print('momentum break-even:', round(costs.breakeven_cost_bps(xr, rd, which='momentum'), 1), 'bp')"
+            "ax.plot(cs.index, cs['sharpe'], marker='o', color='#8b949e', label='synthetic control')\n"
+            "ax.plot(rcs.index, rcs['sharpe'], marker='s', color='#2ea44f', label='real G10')\n"
+            "ax.legend(); ax.set_xlabel('cost (bp per unit traded)'); ax.set_ylabel('net Sharpe'); ax.set_title('Combo cost decay — real G10 edge is thin, crossing zero by ~25 bp')\n"
+            "print('real carry break-even:', round(costs.breakeven_cost_bps(rxr, rrd, which='carry'), 1), 'bp')"
         ),
         md(
             "### 7b · Other forks\n"
             "- **Optimal combo weight** — sweep `w_carry`, risk-parity vs the realised crisis correlation.\n"
-            "- **Dollar-carry as a third leg** — add the LRV dollar factor (real tape, where the USD rate cycles).\n"
+            "- **Dollar-carry as a third leg** — the LRV dollar factor earns Sharpe +0.17 on the real tape.\n"
             "- **Crisis-conditional tilt** — lean toward momentum when global FX vol (Brunnermeier-Nagel-"
             "Pedersen) is rising.\n\n"
-            "**The result.** On the synthetic control the carry premium is `REAL` and recovered, the "
-            "steamroller is present, and the carry⊕momentum combo `FRAGILE`-but-better lifts the Sharpe and "
-            "cushions the crash — exactly the §8.3/§8.4 thesis, building on Study 27. The fingerprinted real "
-            "G10 verdict is **PENDING** one `examples/verify.py --fetch`; full writeups in "
+            "**The result.** On the synthetic control the carry premium is `REAL` and recovered and the "
+            "combo beats both legs *with a winning momentum leg*. On the **real G10 tape (2001–2024)** carry "
+            "is `REAL`-but-thin with its `FRAGILE` steamroller, FX momentum decayed to negative, and the "
+            "combo `PARTIAL`-ly delivers — cushioning the crash (decorrelated legs) without lifting the "
+            "Sharpe. Exactly the §8.3/§8.4 thesis, building on Study 27. Fingerprinted writeups in "
             "[`../docs/results.md`](../docs/results.md) and [`../docs/extension.md`](../docs/extension.md)."
         ),
     ]

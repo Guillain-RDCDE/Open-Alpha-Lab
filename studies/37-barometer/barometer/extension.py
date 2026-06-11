@@ -37,14 +37,16 @@ def inflation_regime(macro: pd.DataFrame, smooth: int = 3) -> pd.Series:
 
 
 def regime_split(returns: pd.DataFrame, macro: pd.DataFrame, kind: str = "inflation",
-                 cost_bps: float = 5.0, smooth: int = 3) -> pd.DataFrame:
+                 cost_bps: float = 5.0, smooth: int = 3, assets: dict | None = None,
+                 order: list | None = None) -> pd.DataFrame:
     """Split a book's net return by inflation regime: rising vs falling inflation.
 
     Returns a frame indexed by regime (``rising`` / ``falling``) with the book's annualised Sharpe, mean
     return, and the month count in each regime. The inflation-hedge book should earn its premium in the
-    *rising* row.
+    *rising* row. Pass ``assets``/``order`` to run on the real ETF panel.
     """
-    r = book_returns(returns, macro, kind=kind, cost_bps=cost_bps, smooth=smooth)
+    r = book_returns(returns, macro, kind=kind, cost_bps=cost_bps, smooth=smooth,
+                     assets=assets, order=order)
     reg = inflation_regime(macro, smooth=smooth).reindex(r.index).fillna(0.0)
     rows = {}
     for label, mask in (("rising", reg > 0), ("falling", reg < 0)):
@@ -58,7 +60,30 @@ def regime_split(returns: pd.DataFrame, macro: pd.DataFrame, kind: str = "inflat
 
 
 def regime_split_both(returns: pd.DataFrame, macro: pd.DataFrame, cost_bps: float = 5.0,
-                      smooth: int = 3) -> dict:
+                      smooth: int = 3, assets: dict | None = None, order: list | None = None) -> dict:
     """Convenience: the regime split for both books, so the notebook can show the contrast."""
-    return {kind: regime_split(returns, macro, kind=kind, cost_bps=cost_bps, smooth=smooth)
+    return {kind: regime_split(returns, macro, kind=kind, cost_bps=cost_bps, smooth=smooth,
+                               assets=assets, order=order)
             for kind in ("inflation", "macro_momentum")}
+
+
+def raw_real_minus_nominal(returns: pd.DataFrame, macro: pd.DataFrame, assets: dict, order: list,
+                           smooth: int = 3, nominal=("TLT", "IEF")) -> pd.DataFrame:
+    """Regime split of the *raw* (always-long) real-asset-minus-nominal-bond spread.
+
+    The inflation tilt times the real-vs-nominal basket by inflation momentum; this strips the timing out
+    and asks the barest question — does an always-long real basket simply *out-earn* nominal bonds in
+    rising-inflation months? — to show the directional effect the momentum book then trades around.
+    """
+    real_cols = [a for a in order if assets[a]["real"]]
+    nom_cols = [a for a in nominal if a in order]
+    spread = (returns[real_cols].mean(axis=1) - returns[nom_cols].mean(axis=1)).rename("real_minus_nominal")
+    reg = inflation_regime(macro, smooth=smooth).reindex(spread.index).fillna(0.0)
+    rows = {}
+    for label, mask in (("rising", reg > 0), ("falling", reg < 0)):
+        s = summary(spread[mask])
+        rows[label] = {"sharpe": s["sharpe"], "ann_return_pct": 100.0 * s["ann_return"],
+                       "n_months": int(mask.sum())}
+    out = pd.DataFrame(rows).T
+    out.index.name = "inflation_regime"
+    return out

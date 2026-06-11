@@ -1,9 +1,9 @@
 # Beat 7 — worked complement: does the inflation hedge pay when it's supposed to? (Study 37)
 
-> ⚠️ **Real run pending a reliable FRED macro fetch.** This is the beat-7 regime split on the **synthetic
-> control**; the real-tape version (the actual rising-inflation episodes — the 1970s, 2008, 2021–22) is
-> PENDING a reliable FRED macro fetch, exactly as in [`results.md`](results.md). The synthetic control
-> below is the validated proof of the mechanism.
+> **Real tape + synthetic control.** This beat-7 regime split runs on **both** the real cross-asset tape
+> (18 ETFs + cached CPI / yield-curve macro, 2007-2025, lagged one month — see [`results.md`](results.md))
+> and the synthetic control. The control proves the mechanism; the real tape tests whether it survives a
+> short, noisy, post-2007 sample.
 
 ## The conditional claim the hedge has to answer
 
@@ -17,6 +17,28 @@ says it should.
 We label each month rising- vs falling-inflation from that month's inflation momentum (a regime
 *attribution*, not a trading signal — it conditions only on the same-month realized macro state, exactly
 what an ex-post regime study does), and report each book's Sharpe and annualised return in each regime.
+
+## The real tape (18 ETFs + cached CPI/yield-slope macro, 2007-02 → 2025-02, net @5 bp)
+
+| inflation-hedge book | rising inflation | falling inflation |
+|---|---|---|
+| Sharpe | **−0.08** | −0.16 |
+| ann. return | **−0.5%/yr** | −0.9%/yr |
+| months | 104 | 107 |
+
+The timed inflation book is **less bad when inflation is rising** (the right-sided shape) but the slow
+monthly-momentum signing whipsaws it under water in both regimes over this short sample. Strip the timing
+out and the directional mechanism is unambiguous — an always-long real-asset basket vs nominal bonds
+(TLT/IEF):
+
+| raw real-minus-nominal spread | rising inflation | falling inflation |
+|---|---|---|
+| Sharpe | **+0.10** | −0.01 |
+| ann. return | **+1.8%/yr** | −0.3%/yr |
+
+**Real assets out-earn nominal bonds specifically in rising-inflation months (+1.8%/yr), not in falling
+ones (−0.3%/yr)** — the inflation-hedge mechanism, confirmed on the real tape in *direction*. What is
+`FRAGILE` is monetising it with a slow monthly timing rule on one short cycle.
 
 ## The synthetic control (seed 37, 50 years, gross of cost)
 
@@ -40,7 +62,9 @@ inflation cycle — so it does not depend on inflation rising to make money.
 the inflation hedge is `FRAGILE`: it is an **episodic** premium that concentrates in rising-inflation
 regimes. The honest framing — and the fork for the next contributor — is to use the inflation tilt as a
 *conditional overlay* (size it up only when inflation momentum is clearly positive) rather than a permanent
-sleeve, and to combine it with the always-on macro-momentum book for diversification. The real-tape version
-(via `--fetch`) tests the same split on the actual historical inflation episodes.
+sleeve, and to combine it with the always-on macro-momentum book for diversification. The real tape
+sharpens the point: the *direction* survives (real assets beat nominal bonds when inflation rises) but the
+*timed monthly book* does not clear noise on one short post-2007 cycle — so the honest use is as a slow,
+conditional overlay sized off a clear inflation-momentum signal, not a standalone Sharpe source.
 
 *Engine: [`quantlab/`](../../../quantlab/). Not investment advice — research and education.*

@@ -43,6 +43,8 @@ def drift_decay_curve(panel: pd.DataFrame, events: pd.DataFrame, window: int = 7
         seg = mat[loc:hi, col[tk]] * np.sign(row["surprise"])
         if len(seg) < window:
             continue
+        if np.isnan(seg).any():                 # real panels have per-name data gaps; skip incomplete windows
+            continue
         acc += np.cumsum(seg)
         n += 1
     out = pd.Series(acc / max(n, 1), index=pd.RangeIndex(window, name="days_since_event"),

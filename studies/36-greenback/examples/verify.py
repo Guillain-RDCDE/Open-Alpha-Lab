@@ -1,21 +1,16 @@
-"""Real-data run — is the dollar-carry / carry⊕momentum combo real on G10, cache-first.
+"""Real-data run — the dollar-carry / carry⊕momentum combo on the G10 tape, OFFLINE from cache.
 
-    python examples/verify.py            # cache-only (offline); prints if the FX/rates cache is present
-    python examples/verify.py --fetch    # download short rates (FRED) + FX spot (yfinance), cache, run
+    python examples/verify.py            # reads _cache/g10_short_rates.parquet + _cache/g10_fx.parquet
 
-Runs the carry, dollar-carry, momentum and combo books on the real tape and prints the carry premium, the
-combo's Sharpe uplift over either leg, the leg correlation, and the carry crash — fingerprinted and
-as-of pinned, writing ../docs/results.md.
-
-**Pending-fetch note (Study 27 pattern).** This study's carry signal needs **short rates from FRED**,
-whose download **times out in this sandbox**. FX spot from yfinance works, but without the rates there is
-no carry signal — so with no pre-populated cache this prints a skip and the offline synthetic core
-(run_synthetic_demo.py) is the validated proof. The real-tape verdict is PENDING one networked FRED fetch.
+Builds the carry, dollar-carry, momentum and combo books on the real tape (OECD 3-month short rates +
+yfinance FX, a USD-funded monthly book), prints the carry premium and its negative-skew crash, the
+momentum sleeve, and the carry⊕momentum combo's Sharpe vs each leg + the leg correlation — fingerprinted
+and **as-of pinned to the rates' 2024-01 end** (OECD MEI was discontinued there). Pass nothing: it is
+fully offline. Re-run and match the fingerprint to hold the exact data behind the published numbers.
 """
 
 from __future__ import annotations
 
-import argparse
 import os
 import sys
 
@@ -28,49 +23,70 @@ _STUDY = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, _STUDY)
 sys.path.insert(0, os.path.abspath(os.path.join(_STUDY, "..", "..")))
 
-from greenback import data, strategy, extension  # noqa: E402
+from greenback import costs, data, extension, strategy  # noqa: E402
 
 COST_BPS = 10.0
 
 
-def main(fetch: bool) -> None:
-    tape = data.fetch_fx_rates(fetch=fetch)
-    if not tape:
-        print("[skip] no cached G10 FX/rates. This study's carry signal needs short rates from FRED,")
-        print("       whose download is unavailable (times out) in this environment — see docs/results.md.")
-        print("       Run `python examples/verify.py --fetch` where FRED is reachable to populate the cache.")
-        print("       The offline synthetic core (run_synthetic_demo.py) is the validated proof meanwhile.")
+def main() -> None:
+    panel = data.load_real_panel()
+    if panel is None:
+        print("[skip] missing _cache/g10_short_rates.parquet or _cache/g10_fx.parquet.")
+        print("       The offline synthetic core (run_synthetic_demo.py) is the validated machinery proof.")
         return
-
-    rates, fx = tape["rates"], tape["fx"]
+    xr, rate_diffs = panel
+    as_of = data.DATA_AS_OF
     try:
-        from quantlab.repro import DEFAULT_AS_OF, as_of, fingerprint
-        rates, fx = as_of(rates, DEFAULT_AS_OF), as_of(fx, DEFAULT_AS_OF)
+        from quantlab.repro import fingerprint
+        from quantlab.stats import sharpe_ci_bootstrap
+        fp = fingerprint(xr.round(6))
+        carry_ci = sharpe_ci_bootstrap(
+            strategy.carry_returns(xr, rate_diffs, cost_bps=COST_BPS), periods_per_year=12, seed=36)
     except Exception:
-        DEFAULT_AS_OF, fingerprint = None, lambda d: "n/a"
+        fp, carry_ci = "n/a", None
 
-    # build excess returns and rate differentials from the real tape
-    import numpy as np
-    import pandas as pd
-    r = rates / 100.0 / 12.0
-    rbar = r.mean(axis=1)
-    fx_ret = np.log(fx).diff()
-    cols = [c for c in fx.columns if c in r.columns]
-    xr = pd.DataFrame({c: (r[c] - rbar) + fx_ret[c] for c in cols}).dropna(how="all")
-    rate_diffs = (r[cols].sub(rbar, axis=0)).reindex(xr.index)
+    span = f"{xr.index.min().date()} -> {xr.index.max().date()} ({len(xr)} months)"
+    print(f"G10 real tape (USD-funded, monthly): {span}; currencies {list(xr.columns)}")
+    print(f"as-of {as_of} · fingerprint {fp}\n")
 
     carry = strategy.carry_returns(xr, rate_diffs, cost_bps=COST_BPS)
     mom = strategy.momentum_returns(xr, cost_bps=COST_BPS)
     combo = strategy.combine(carry, mom)
+    dollar = strategy.dollar_carry_returns(xr, rate_diffs, cost_bps=COST_BPS)
+    print("The three sleeves and the combo (net @10 bp, vol-scaled to 8%):")
+    for nm, r in [("carry", carry), ("dollar-carry", dollar), ("momentum", mom), ("COMBO", combo)]:
+        s = strategy.summary(r)
+        print(f"  {nm:14} Sharpe {s['sharpe']:+5.2f}  ret {s['ann_return']*100:+5.1f}%  "
+              f"vol {s['vol_ann']*100:4.1f}%  skew {s['skew']:+5.2f}  maxDD {s['max_drawdown']*100:4.0f}%")
+
+    pb = strategy.carry_premium_by_bucket(xr, rate_diffs)
+    print(f"\nCarry premium (high-minus-low rate bucket): {pb['hml_ann_pct']:+.1f}%/yr")
+    if carry_ci is not None:
+        print(f"Carry Sharpe bootstrap 95% CI [{carry_ci['ci_low']:+.2f}, {carry_ci['ci_high']:+.2f}]; "
+              f"{carry_ci['frac_negative']*100:.0f}% of resamples negative")
+
     d = extension.diversification(xr, rate_diffs, cost_bps=COST_BPS)
+    print(f"\nDiversification (carry⊕momentum): carry {d['carry_sharpe']:+.2f}, momentum "
+          f"{d['momentum_sharpe']:+.2f}, combo {d['combo_sharpe']:+.2f}; leg corr {d['leg_correlation']:+.2f}; "
+          f"combo beats best leg: {d['combo_beats_legs']}")
+
     cc = extension.carry_crash(xr, rate_diffs, cost_bps=COST_BPS)
-    print(f"carry Sharpe {d['carry_sharpe']:+.2f}, momentum {d['momentum_sharpe']:+.2f}, combo {d['combo_sharpe']:+.2f}; "
-          f"leg corr {d['leg_correlation']:+.2f}; carry skew {cc['carry_skew']:+.2f}, DD {cc['carry_max_dd_pct']:.0f}%")
-    print(f"as-of {DEFAULT_AS_OF} · fingerprint {fingerprint(xr.round(6))}")
-    print("(would write ../docs/results.md with the fingerprinted G10 numbers)")
+    print(f"\nThe carry crash (the steamroller): carry skew {cc['carry_skew']:+.2f}, worst month "
+          f"{cc['carry_worst_month_pct']:+.1f}%, max DD {cc['carry_max_dd_pct']:.0f}%.")
+    print(f"  Combo cushions it: skew {cc['combo_skew']:+.2f}, worst month {cc['combo_worst_month_pct']:+.1f}%, "
+          f"max DD {cc['combo_max_dd_pct']:.0f}%; in carry's worst 5 months the combo lost "
+          f"{cc['combo_in_carry_worst5_pct']:+.1f}% vs carry {cc['carry_worst5_mean_pct']:+.1f}%.")
+
+    worst = carry.nsmallest(3)
+    print("  Worst carry months: " + ", ".join(f"{d_.date()} {v*100:+.1f}%" for d_, v in worst.items()))
+
+    to_c = strategy.turnover_ann(strategy.carry_weights(rate_diffs))
+    to_m = strategy.turnover_ann(strategy.momentum_weights(xr))
+    be_c = costs.breakeven_cost_bps(xr, rate_diffs, which="carry")
+    print(f"\nTurnover: carry {to_c:.2f}x/yr, momentum {to_m:.2f}x/yr; carry break-even ≈ {be_c:.0f} bp.")
+    print("Cost sweep on the combo (net Sharpe):")
+    print(costs.cost_sweep(xr, rate_diffs, which="combo").round(3).to_string())
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--fetch", action="store_true")
-    main(ap.parse_args().fetch)
+    main()

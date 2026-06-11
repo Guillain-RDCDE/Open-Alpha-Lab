@@ -1,9 +1,10 @@
 # Beat-7 worked complement — the carry⊕momentum diversification (Study 36)
 
-> ⚠️ **Real run PENDING one fetch.** This is the beat-7 complement on the synthetic control; the real-G10
-> version needs the FRED rates download, which times out in this sandbox. Run
-> `python examples/verify.py --fetch` where FRED is reachable to fill in the fingerprinted real-tape
-> comparison. Until then the synthetic control below is the validated proof. **Real-tape run? `PRE-REG`.**
+> ✅ **Real run done — offline from cache, as-of 2024-01-31, fingerprint `ef7450ae792e`.** The synthetic
+> control (below) is the controlled machinery proof; the **real G10 tape (2001–2024)** result follows it.
+> The headline: on the real tape the diversification *mechanics* fire (decorrelated legs cushion the crash)
+> but the Sharpe uplift does **not**, because FX momentum decayed to negative this sample — so the combo
+> thesis is `PARTIAL`, not the control's unconditional win.
 
 ## The idea — two premia that pay at different times
 
@@ -31,6 +32,26 @@ crash, cushioning the drawdown carry alone can't escape.
 - **The crash doesn't vanish.** The combo is still negatively skewed (−1.62): diversification *dulls* the
   steamroller, it doesn't remove it. That is the honest reason tradability stays `FRAGILE`, not
   `INVESTABLE` — you still need to be willing and able to hold a crash-prone book through its worst months.
+
+## The result on the real G10 tape (OECD short rates + yfinance FX, 2001–2024, net @10 bp)
+
+| | carry (cross-sectional) | momentum (12-1m) | **carry⊕momentum combo** |
+|---|---|---|---|
+| Sharpe | **+0.22** | **−0.14** | +0.06 |
+| monthly skew | −0.70 | +0.39 | −0.57 |
+| worst month | −10.6% (Oct-2008) | — | −6.4% |
+| max drawdown | −27% | −47% | −26% |
+
+- **The legs decorrelate exactly as the literature says** — carry↔momentum correlation **+0.05** on the
+  real tape — so the diversification *mechanics* are intact: the combo's **worst month halves** (−10.6% →
+  −6.4%), its **skew improves** (−0.70 → −0.57), and in carry's **worst 5 months the combo lost just −3.0%
+  vs carry's −7.6%**. Momentum *is* leaning the other way in the GFC/COVID risk-offs.
+- **But the Sharpe uplift fails** — combo **+0.06** is *below* carry **+0.22**, because **FX momentum lost
+  money** over 2001–2024 (Sharpe **−0.14**; the well-documented post-2000s erosion of cross-sectional FX
+  momentum). A losing leg can't lift a blend, however nicely it decorrelates.
+- **So the combo thesis is `PARTIAL` on the real tape:** the crash cushion is real and earned, the Sharpe
+  uplift is not — the diversification only pays in full when *both* legs have an edge, as the synthetic
+  control (where momentum is profitable by construction) shows it can.
 
 ## Why this is the right beat-7 for Greenback (and not a repeat of Study 27)
 

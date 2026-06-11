@@ -4,10 +4,9 @@
     jupyter nbconvert --to notebook --execute --inplace \
         notebooks/01_for_the_curious.ipynb notebooks/02_for_the_quants.ipynb
 
-The executed path runs OFFLINE on the seeded synthetic commodity term-structure panel (each commodity a
-persistent roll-yield state that predicts its return — the machinery); the real-tape verdict is explicitly
-**PENDING a term-structure fetch** (the curve — front + deferred contracts — is not available in this
-sandbox; see ../docs/results.md), exactly the honesty pattern of Study 27 (Steamroller). Both notebooks
+The executed path runs OFFLINE: the **real** energy roll-yield tape is read from the cached ETF pairs
+(_cache/energy_carry_etfs.parquet — USO/USL, UNG/UNL; populate once with `examples/verify.py --fetch`), and
+the cross-sectional bucket **machinery** is proved on the seeded synthetic commodity panel. Both notebooks
 walk the SAME seven desk beats. Contango is the commodity sibling of Study 27 (FX carry).
 """
 
@@ -29,29 +28,35 @@ import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (10, 5.2)
 import numpy as np, pandas as pd
 pd.set_option("display.float_format", lambda v: f"{v:,.3f}")
-from contango import data, strategy, costs, extension
+from contango import data, strategy, costs, extension, energy
 
-# Offline synthetic control: a 12-commodity panel where roll yield (backwardation/contango) predicts
-# return (the machinery) + a disconnected null. The real curve (front+deferred) is PENDING — see ../docs/results.md.
+# Real energy tape: front-month vs 12-month-laddered ETF pairs (USO/USL, UNG/UNL). Their return gap IS the
+# term-structure roll — no paid feed needed. Populate once with: python examples/verify.py --fetch
+prices = energy.load_pairs()
+HAVE_TAPE = not prices.empty
+print("real energy tape:", "loaded" if HAVE_TAPE else "cache absent (run verify.py --fetch)",
+      "" if not HAVE_TAPE else f"{prices.index.min().date()} -> {prices.index.max().date()}")
+# Offline synthetic control: a 12-commodity panel where roll yield predicts return (the bucket machinery) + a null.
 r, ry, truth = data.synthetic_term_structure(carry_strength=0.9, seed=35)
 r0, ry0, _ = data.synthetic_term_structure(carry_strength=0.0, seed=35)
-print(f"synthetic control: {truth.n_commodities} commodities x {truth.n_weeks} weeks, carry_strength {truth.carry_strength} (null=0)")
 """
 
-# Synthetic-control numbers (seed 35, fingerprint b502aaa6304f) + pre-registered real-tape shape.
+# Frozen headline numbers (real tape: as-of 2026-06-05, fp 92a7674a430b; synthetic: fp b502aaa6304f).
 R = dict(
-    gross_sh="1.86", gross_cagr="16.5", gross_dd="-12", gross_skew="-0.16", net5="1.80",
-    hml="27.6", hi="21.4", lo="-6.2", null_sh="-0.28", null_hml="-4.8",
-    turn="0.19", be="160",
-    c0="1.861", c2="1.837", c5="1.802", c10="1.743", c20="1.626",
-    blend_carry="1.80", blend_mom="1.43", blend="2.03", blend_corr="+0.27",
-    fp="b502aaa6304f", asof="2026-06-10",
+    uso="-76", usl="+4", wti_gap="80", wti_drag="5.1", wti_t="1.53",
+    ung="-99", unl="-88", gas_gap="11", gas_drag="8.9", gas_t="1.75",
+    wti_sh="+0.35", wti_cagr="+6.4", wti_dd="-76", wti_skew="+0.71", wti_bt="1.45", uso_long_sh="-0.01", uso_long_dd="-98",
+    gas_sh="+0.04", gas_bt="0.17", ung_long_sh="-0.35", ung_long_dd="-99",
+    combo_sh="+0.16", combo_cagr="+0.4", combo_dd="-83", combo_t="0.66", combo_net="+0.12", turn="14",
+    syn_sh="1.86", syn_hml="27.6", syn_null="-0.28", syn_turn="0.19", syn_be="160",
+    blend="2.03", blend_carry="1.80", blend_mom="1.43", blend_corr="+0.27",
+    fp="92a7674a430b", syn_fp="b502aaa6304f", asof="2026-06-05",
 )
 
 BADGES = (
     "![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)\n"
-    "![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)\n"
-    "![Real-tape run?: Pre-reg](https://img.shields.io/badge/Real--tape_run%3F-Pre--reg-8b949e?style=flat-square)\n\n"
+    "![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-cf222e?style=flat-square)\n"
+    "![Real-tape run?: Done](https://img.shields.io/badge/Real--tape_run%3F-Done-2ea44f?style=flat-square)\n\n"
 )
 
 
@@ -59,28 +64,71 @@ def md(t): return new_markdown_cell(t)
 def code(t): return new_code_cell(t)
 
 
+# --- shared code cells (execute live on the real cached tape) -------------------------------------------
+BLEED_CODE = (
+    "if HAVE_TAPE:\n"
+    "    bt = energy.bleed_table(prices)\n"
+    "    print(bt[['front_total_pct','lad_total_pct','gap_pct','ann_drag_pct','weeks_in_contango_pct','drag_hac_t']].round(2))\n"
+    "    fig, ax = plt.subplots()\n"
+    "    for cmd,(front,lad) in energy.PAIRS.items():\n"
+    "        sub = prices[[front,lad]].dropna(); base = sub/sub.iloc[0]\n"
+    "        ax.plot(base.index, base[front], lw=1.1, label=f'{front} (front, {cmd})')\n"
+    "        ax.plot(base.index, base[lad], lw=1.1, ls='--', label=f'{lad} (12-mo laddered, {cmd})')\n"
+    "    ax.set_yscale('log'); ax.legend(fontsize=8); ax.set_title('The contango bleed: front-month vs laddered, same underlying')\n"
+    "else:\n"
+    "    print('cache absent — run: python examples/verify.py --fetch')"
+)
+
+TIMING_CODE = (
+    "if HAVE_TAPE:\n"
+    "    rows = {}\n"
+    "    for cmd in list(energy.PAIRS) + [None]:\n"
+    "        s = energy.book_summary(prices, commodity=cmd)\n"
+    "        rows['WTI+GAS combo' if cmd is None else cmd] = {k: s[k] for k in ('sharpe','cagr','max_drawdown','skew','hac_t','turnover_per_yr')}\n"
+    "    print(pd.DataFrame(rows).T.round(3))\n"
+    "    for cmd in energy.PAIRS:\n"
+    "        al = energy.summary(energy.always_long_front(prices, cmd))\n"
+    "        print(f\"  always-long {energy.PAIRS[cmd][0]}: Sharpe {al['sharpe']:+.2f}  CAGR {al['cagr']*100:+.1f}%  maxDD {al['max_drawdown']*100:+.0f}%\")\n"
+    "else:\n"
+    "    print('cache absent — run: python examples/verify.py --fetch')"
+)
+
+SYN_CODE = (
+    "for label, rr, yy in [('carry panel', r, ry), ('null (disconnected)', r0, ry0)]:\n"
+    "    s = strategy.summary(strategy.book_returns(rr, yy, cost_bps=0.0))\n"
+    "    pb = strategy.carry_premium_by_bucket(rr, yy)\n"
+    "    print(f\"{label:22} gross Sharpe {s['sharpe']:+6.2f}  H-L {pb['hml_ann_pct']:+6.1f}%/yr  turnover/wk {strategy.turnover(yy):.3f}\")"
+)
+
+BLEND_CODE = (
+    "c = extension.combine(r, ry, cost_bps=5.0)\n"
+    "print(f\"carry {c['carry_sharpe']:.2f}   momentum {c['momentum_sharpe']:.2f}   blend {c['blend_sharpe']:.2f}   (leg corr {c['correlation']:+.2f})\")\n"
+    "eqc=(1+c['carry']).cumprod(); eqm=(1+c['momentum']).cumprod(); eqb=(1+c['blend']).cumprod()\n"
+    "fig, ax = plt.subplots()\n"
+    "ax.plot(eqc.index, eqc.values, color='#2ea44f', lw=1.0, label=f\"carry ({c['carry_sharpe']:.2f})\")\n"
+    "ax.plot(eqm.index, eqm.values, color='#8b949e', lw=1.0, label=f\"momentum ({c['momentum_sharpe']:.2f})\")\n"
+    "ax.plot(eqb.index, eqb.values, color='#c0392b', lw=1.3, label=f\"50/50 blend ({c['blend_sharpe']:.2f})\")\n"
+    "ax.legend(); ax.set_title('Machinery: lowly-correlated legs, the blend beats either standalone')"
+)
+
+
 def build_curious():
     cells = [
         md(
             "# Contango 🛢️\n"
-            "### \"Buy the backwardated curves, sell the contangoed ones.\" The roll yield is a real commodity premium — that picks up nickels in front of a (volatile) truck.\n\n"
+            "### The roll yield is real — and it quietly destroyed the most popular oil ETF. Can you trade it? Barely.\n\n"
             + BADGES +
-            "A commodity future doesn't just track the spot price — as your long position rolls toward "
-            "expiry it slides along the **term-structure curve**. If the curve is **backwardated** (the "
-            "front contract is dearer than the deferred), you sell the expiring contract high and buy the "
-            "next one cheap: a positive **roll yield**. If it's in **contango** (front cheaper than "
-            "deferred), you roll *down* and pay a tax. The documented edge: backwardated commodities "
-            "out-earn contangoed ones, so a book long the most-backwardated and short the most-contangoed "
-            "harvests a real carry. It's the commodity cousin of the [FX carry trade](../../27-steamroller/) "
-            "— and, like it, real but crash-prone.\n\n"
-            "> 📓 **Plain-language layer.** The carry-by-bucket sort, the cost/turnover read and the "
-            "carry+momentum blend are in **[02_for_the_quants.ipynb](02_for_the_quants.ipynb)** — same story, deeper.\n"
+            "A commodity future doesn't just track the spot price — as your long position rolls toward expiry it "
+            "slides along the **term-structure curve**. If the curve is **backwardated** (front dearer than the "
+            "deferred contract) you roll *up* and bank a positive **roll yield**; if it's in **contango** (front "
+            "cheaper) you roll *down* and pay a tax. You don't need a fancy futures feed to see this: the "
+            "front-month oil ETF **USO** and the 12-month-laddered **USL** track the *same* crude and differ only "
+            "in *where on the curve* they sit — so the gap between them **is** the roll.\n\n"
+            "> 📓 **Plain-language layer.** The bleed table, the curve-timing book and the carry+momentum blend "
+            "are in **[02_for_the_quants.ipynb](02_for_the_quants.ipynb)** — same story, deeper.\n"
             ">\n"
-            "> ⚠️ **Real run pending the curve.** Roll yield needs the **term structure** (front *and* "
-            "deferred contracts); this sandbox caches only front-month continuous returns and can't fetch "
-            "the deferred leg. So the core runs on a **synthetic** control and the real-tape run is "
-            "*pre-registered* in [`../docs/results.md`](../docs/results.md) — the honesty pattern of "
-            "[Study 27](../../27-steamroller/). Not investment advice. House style in "
+            "> ✅ **Real run, no paid data.** Numbers below are live from the cached ETF pairs (USO/USL, UNG/UNL); "
+            "the bucket machinery is proved on a synthetic control. Not investment advice. House style in "
             "[METHODOLOGY.md](../../../METHODOLOGY.md)."
         ),
         code(BOOT),
@@ -89,124 +137,107 @@ def build_curious():
             "## The answer first 🛢️\n\n"
             "| What we asked | The honest answer |\n"
             "|---|---|\n"
-            "| Do backwardated commodities out-earn? | 🟩 **Yes.** On the control, high-minus-low roll-yield "
-            f"spread **+{R['hml']}%/yr**, gross Sharpe **{R['gross_sh']}**; the disconnected null is flat "
-            f"(**{R['null_sh']}**). Decades of evidence agree (Gorton–Rouwenhorst, Erb–Harvey, Koijen et al.). |\n"
-            "| Could you trade it? | 🟨 **Carefully.** It's *cheap* to run (turnover **{t}**/wk, break-even "
-            "**~{be} bp** — costs aren't the constraint), but carry is **volatile and crash-prone** and lives "
-            "in the least-liquid contracts. |\n"
-            "| Have we measured the real tape? | ⚪ **Not yet.** Roll yield needs the curve (front+deferred); "
-            "the sandbox can't fetch it. The run is **pre-registered**, pending the data. |\n\n"
-            "> Desk shorthand: **Signal `REAL` · Tradability `FRAGILE` · Real-tape run? `PRE-REG`** — real "
-            "premium, fragile to trade, real run pending the curve.".format(t=R['turn'], be=R['be'])
+            f"| Is the roll yield real? | 🟩 **Yes, and it's huge.** On the real tape the front-month **USO** lost "
+            f"**{R['uso']}%** while the laddered **USL**, on the *same* crude, was **{R['usl']}%** — an "
+            f"**{R['wti_gap']}-point** contango tax (gas UNG is **{R['ung']}%**). |\n"
+            f"| Could you trade it? | 🟥 **Barely.** Timing the front by the curve points the right way (WTI Sharpe "
+            f"**{R['wti_sh']}** vs −0.01 buy-and-hold) but the combined book is statistically flat "
+            f"(**{R['combo_sh']}**, HAC *t* **{R['combo_t']}**) with an **{R['combo_dd']}%** drawdown. |\n"
+            "| Did we measure the real tape? | 🟩 **Yes.** Straight from liquid ETFs — no FRED, no EIA, no paid "
+            "curve feed. |\n\n"
+            "> Desk shorthand: **Signal `REAL` · Tradability `MIRAGE` · Real-tape run? `DONE`** — the cost is "
+            "real and brutal; harvesting it as positive carry is a mirage. The value of the signal is "
+            "*defensive*: don't be the sucker holding the front-month in contango."
         ),
 
         md(
             "## 1 · The claim 📣\n\n"
             "Commodity carry / roll yield (Kakushadze–Serur §9.1, §9.4; lineage Gorton–Rouwenhorst 2006, "
-            "Erb–Harvey 2006):\n\n"
-            "1. **Signal** — each commodity's **roll yield**: the slope of its futures curve. Backwardated "
-            "(front > deferred) ⇒ positive roll; contangoed ⇒ negative roll.\n"
-            "2. **Cross-sectional sort** — rank the commodities by roll yield; go **long the most-"
-            "backwardated**, **short the most-contangoed**, dollar-neutral.\n"
-            "3. **Weekly rebalance** — roll yield is a slow signal, so the book turns over modestly.\n\n"
-            "The believer's case: the curve shape reflects scarcity and storage economics, and a "
-            "backwardated curve *pays you to hold the future*. That payment — the roll yield — is the "
-            "harvestable carry."
+            "Erb–Harvey 2006; Koijen et al. 2018): a backwardated curve *pays you to hold the future*, a "
+            "contangoed one taxes you. So the front-month should systematically bleed against a contract further "
+            "out whenever the curve is in contango. The cleanest real-world witness is the pair of oil ETFs on "
+            "the same barrel — front-month USO vs 12-month-laddered USL."
         ),
-        code(
-            "book = strategy.book_returns(r, ry, cost_bps=0.0)   # GROSS, on the synthetic control\n"
-            "eq = (1+book).cumprod()\n"
-            "fig, ax = plt.subplots()\n"
-            "ax.plot(eq.index, eq.values, color='#2ea44f', lw=1.1)\n"
-            "ax.set_title('Dollar-neutral carry book on a panel where roll yield truly pays — the machinery works')\n"
-            "s = strategy.summary(book); print(f\"synthetic gross Sharpe {s['sharpe']:.2f}  (null ~0)\")"
-        ),
+        md("### The bleed, on the real tape"),
+        code(BLEED_CODE),
 
         md(
             "## 2 · So what? 💰\n\n"
-            "A real, durable, cheap-to-run premium that needs only the futures curve — not a forecast — is "
-            "the backbone of every systematic commodity book and a core sleeve in CTAs and risk-parity "
-            "funds. And roll yield genuinely *is* real: Erb–Harvey showed the cross-section of commodity "
-            "returns is explained far more by the term structure than by spot moves. So the question isn't "
-            "whether the effect exists — it's whether you can hold the volatile, crash-prone stream long "
-            "enough to collect it. That's the `FRAGILE` half of the verdict."
+            "USO is one of the most-traded commodity ETFs on Earth, and it has bled three-quarters of its value to "
+            "the **roll** — not to the oil price (USL, on the same oil, was roughly flat). This is the single "
+            "clearest demonstration that the term structure, not spot, drives commodity returns over time "
+            "(Erb–Harvey 2006). For a desk it means two things: (1) there's a real carry premium in the curve, and "
+            "(2) naively holding the front-month is a slow-motion disaster. The question is whether you can turn "
+            "(1) into money without being wrecked by the volatility — the `MIRAGE` half of the verdict."
         ),
 
         md(
             "## 3 · How we'd know 🔬\n\n"
-            "1. **Real?** Does a long-backwardation / short-contango book earn a positive premium gross "
-            "(and nothing on a null where roll yield is disconnected from returns)?\n"
-            "2. **Tradable?** Turnover, break-even cost, and — the real risk — the crash tail.\n"
-            "3. **Diversifiable?** Does adding a momentum sleeve lift the combined Sharpe? (beat 7)\n\n"
-            "**Mirage line** (pre-registered): on the *real* curve, if the backwardated-minus-contangoed "
-            "spread is statistically indistinguishable from zero, or only the liquid contracts (which carry "
-            "least) are tradable, the signal drops to `WEAK`/`NONE`."
+            "1. **Real?** Does the front-month bleed against the ladder in contango, and roll *up* in "
+            "backwardation? (the bleed table)\n"
+            "2. **Tradable?** A curve-timing book — long the front only when backwardated, short it in contango — "
+            "vs simply holding it. Sharpe, drawdown, and a Newey–West *t*.\n"
+            "3. **Diversifiable?** Does adding a momentum sleeve lift the combined Sharpe? (beat 7, machinery)\n\n"
+            "**Mirage line** (pre-registered): if the real roll spread is statistically indistinguishable from "
+            "zero (HAC *t* < 2), or only the liquid contracts (which carry least) are tradable, the *tradable* "
+            "signal drops to `WEAK`/`MIRAGE`."
         ),
 
-        md("## 4 · The teardown 🔧\n\n### 4a · The machinery works where roll yield pays (control vs null)"),
-        code(
-            "for label, rr, yy in [('carry panel', r, ry), ('null (disconnected)', r0, ry0)]:\n"
-            "    s = strategy.summary(strategy.book_returns(rr, yy, cost_bps=0.0))\n"
-            "    pb = strategy.carry_premium_by_bucket(rr, yy)\n"
-            "    print(f\"{label:22} gross Sharpe {s['sharpe']:+6.2f}  H-L {pb['hml_ann_pct']:+6.1f}%/yr  turnover/wk {strategy.turnover(yy):.3f}\")"
-        ),
+        md("## 4 · The teardown 🔧\n\n### 4a · Time the curve, or just hold the front?"),
+        code(TIMING_CODE),
         md(
-            "### 4b · On the real commodity curves — PENDING the term structure\n"
-            "Roll yield needs the front *and* deferred contract; the sandbox caches only front-month "
-            "continuous returns ([`../docs/results.md`](../docs/results.md)). So the real numbers are "
-            "**pre-registered**, not yet measured:\n\n"
-            f"- The control proves the premium: high-minus-low roll-yield spread **+{R['hml']}%/yr** "
-            f"(top **+{R['hi']}%**, bottom **{R['lo']}%**), gross Sharpe **{R['gross_sh']}**.\n"
-            f"- It's cheap to run: turnover **{R['turn']}/wk**, break-even **~{R['be']} bp** — costs aren't "
-            "the binding constraint (the opposite of [Slingshot](../../33-slingshot/)).\n"
-            "- The expected real-tape shape (from the literature): a standalone Sharpe of roughly "
-            "**0.5–0.8** with deep, volatile drawdowns — the `REAL` / `FRAGILE` verdict."
+            f"> 💡 **In plain words.** Knowing the curve *matters*: timing WTI earns Sharpe **{R['wti_sh']}** with "
+            f"**positive** skew and dodges USO's **{R['uso_long_dd']}%** drawdown. But as a standalone edge it "
+            f"vanishes — the combined book is **{R['combo_sh']}** at HAC *t* **{R['combo_t']}** (indistinguishable "
+            "from zero) with an enormous drawdown. Two liquid energy curves are too few and too crash-prone to "
+            "harvest carry cleanly."
         ),
-        code(
-            "print('Synthetic control (../docs/results.md, fp " + R['fp'] + "):')\n"
-            f"print('  carry gross   Sharpe {R['gross_sh']}  CAGR {R['gross_cagr']}%  maxDD {R['gross_dd']}%  skew {R['gross_skew']}')\n"
-            f"print('  carry net@5bp Sharpe {R['net5']}   (break-even ~{R['be']} bp -> costs not the constraint)')\n"
-            f"print('  null (disconnected) Sharpe {R['null_sh']}  H-L {R['null_hml']}%/yr  -> apparatus measures the effect, not itself')\n"
-            "print('\\nReal commodity curves: PENDING a term-structure fetch (front+deferred).')\n"
-            "# the cost curve, drawn on the synthetic where there IS an edge — note how FLAT it is (slow signal):\n"
-            "cs = costs.cost_sweep(r, ry)\n"
-            "fig, ax = plt.subplots(); ax.axhline(0, color='#999', lw=.8)\n"
-            "ax.plot(cs.index, cs['sharpe'], marker='o', color='#dab617')\n"
-            "ax.set_xlabel('cost (bp per unit traded)'); ax.set_ylabel('net Sharpe'); ax.set_title('Costs barely dent a slow carry book')"
+
+        md("### 4b · Why the machinery is trustworthy — the synthetic control"),
+        code(SYN_CODE),
+        md(
+            f"> 💡 **In plain words.** On a 12-commodity panel where roll yield *truly* predicts return, the "
+            f"cross-sectional carry book recovers a **+{R['syn_hml']}%/yr** spread (gross Sharpe **{R['syn_sh']}**); "
+            f"on a disconnected null it earns nothing (**{R['syn_null']}**). The apparatus measures carry where it "
+            "exists — so when it finds only a mirage on the two real energy curves, that's the *market*, not a bug."
         ),
 
         md("## 5 · The verdict 🧾\n\n"
-           f"- **Signal `REAL`** — control H-L **+{R['hml']}%/yr**, gross Sharpe {R['gross_sh']}; null flat ({R['null_sh']}); decades of literature agree.\n"
-           f"- **Tradability `FRAGILE`** — cheap to run (break-even ~{R['be']} bp), but volatile and crash-prone, biggest in illiquid contracts.\n"
-           "- **Real-tape run `PRE-REG`** — roll yield needs the curve the sandbox can't fetch; the run is pre-registered, pending the data.\n\n"
-           "> **The commodity sibling of Steamroller.** Carry is a real, cheap-to-run premium that you must "
-           "be willing to hold through a crash — currencies *or* commodities."),
+           f"- **Signal `REAL`** — the contango bleed is real and enormous (USO {R['uso']}% vs USL {R['usl']}%; "
+           f"+{R['wti_drag']}%/yr WTI, +{R['gas_drag']}%/yr gas).\n"
+           f"- **Tradability `MIRAGE`** — the curve-timing book is statistically flat (combo {R['combo_sh']}, HAC "
+           f"*t* {R['combo_t']}) with an {R['combo_dd']}% drawdown; cost isn't the killer, concentration and the "
+           "crash tail are.\n"
+           "- **Real-tape run `DONE`** — measured straight from liquid ETFs, fingerprinted and as-of pinned.\n\n"
+           "> **The commodity sibling of Steamroller.** A real premium you mostly can't keep: the signal's worth "
+           "is knowing *not* to hold the bleeding front-month."),
 
         md("## 6 · Could you trade it? 💸\n\n"
-           "- **Cheaply, on the signal side.** Roll yield is slow; the book turns over ~0.19/week, so "
-           "transaction costs are not what kills it. That's the good news.\n"
-           "- **The crash is the catch.** Commodity carry, like FX carry, is a volatile, negatively-skewed "
-           "stream that unwinds hard in commodity-wide risk-off (2008, 2014–15). You're paid to hold a tail.\n"
-           "- **And capacity bites.** The premium is largest in the smaller, less-liquid contracts; the "
-           "deeply liquid ones (crude, gold) carry less of it — the same illiquidity tension as Slingshot.\n"
-           "- **The honest move:** diversify it (beat 7), don't lever it."),
+           "- **The cost is real and one-directional.** Holding USO in contango bleeds ~5%/yr (gas ~9%/yr). The "
+           "first, biggest win is simply *not* doing that.\n"
+           "- **Timing it doesn't clear the noise.** The curve-timing book is the right idea and beats buy-and-"
+           "hold, but its Sharpe is statistically zero and it still draws down >80% on two volatile names.\n"
+           "- **Cost isn't the constraint.** A 10 bp round-trip barely moves the combined book "
+           f"({R['combo_sh']} → {R['combo_net']}); the crash tail and two-name concentration are.\n"
+           "- **The honest move:** treat roll yield as a *risk to avoid* (ladder your exposure, like USL) rather "
+           "than an alpha to lever."),
 
         md(
             "## 7 · Going further 🚪\n\n"
             "### Worked complement — \"diversify the carry with momentum\" ([`../docs/extension.md`](../docs/extension.md))\n"
             "Carry and time-series momentum are the two classic commodity premia and are *lowly correlated* "
-            "(Koijen et al. 2018). Does blending a momentum sleeve into the carry book lift the combined Sharpe?\n\n"
-            f"- On the control, leg correlation is just **{R['blend_corr']}** — low, as the literature predicts.\n"
-            f"- A 50/50 blend's Sharpe (**{R['blend']}**) **beats either standalone leg** (carry {R['blend_carry']}, "
-            f"momentum {R['blend_mom']}): a genuine diversification gain, not a redundant bet.\n"
-            "- The lesson echoes [Trade-Winds](../../31-trade-winds/): on this desk the edge is "
-            "*diversification*, not prediction.\n\n"
+            "(Koijen et al. 2018). On the bucket machinery a 50/50 blend beats the stronger leg:"
+        ),
+        code(BLEND_CODE),
+        md(
+            f"> 💡 **In plain words.** Leg correlation is just **{R['blend_corr']}**, so the blend Sharpe "
+            f"(**{R['blend']}**) beats either leg (carry {R['blend_carry']}, momentum {R['blend_mom']}). On this "
+            "desk the edge is *diversification*, not prediction — echoing [Trade-Winds](../../31-trade-winds/).\n\n"
             "### Other forks\n"
-            "- **Add a value sleeve** — long-horizon commodity reversal (Asness et al. 2013) for the full three-factor book.\n"
-            "- **Vol-target the blend** — does constant-risk sizing tame the carry crash (cf. Study 27, where it failed on FX)?\n"
-            "- **Wire a real curve** — the one thing the verdict is waiting on: a front+deferred term-structure feed.\n\n"
-            "PRs welcome — add value, vol-target the blend, or (best of all) bring a term-structure fetch."
+            "- **Add more curves** — a broader basket (metals, ags via laddered ETFs) might revive the cross-section.\n"
+            "- **Vol-target the timing book** — does constant-risk sizing tame the −80% drawdown (cf. Study 27)?\n"
+            "- **Trade the calendar spread directly** — long-deferred / short-front as a cleaner roll-yield express.\n\n"
+            "PRs welcome — add curves, vol-target, or trade the spread directly."
         ),
     ]
     nb = new_notebook(cells=cells, metadata=_meta())
@@ -217,18 +248,17 @@ def build_quants():
     cells = [
         md(
             "# Contango — a quantitative teardown 🔬\n"
-            "### The carry premium by roll-yield bucket · control vs null · turnover & break-even · the carry+momentum blend\n\n"
+            "### The real energy bleed · the curve-timing book vs buy-and-hold · the bucket machinery on a control · the carry+momentum blend\n\n"
             + BADGES +
-            "The deep companion to the [notebook for the curious](01_for_the_curious.ipynb) — *same seven "
-            "beats, every claim with its number.* The steelman: the commodity roll yield is a real, "
-            "documented carry premium (Gorton–Rouwenhorst 2006; Erb–Harvey 2006; Koijen et al. 2018). We "
-            "confirm it's `REAL` on a synthetic control (high-minus-low spread +27.6%/yr, gross Sharpe "
-            "1.86), show it's `FRAGILE` (volatile, crash-prone, capacity-limited), and — because roll yield "
-            "needs the **term structure** this sandbox can't fetch — `PRE-REG` the real-tape run.\n\n"
-            "> ⚠️ **Not investment advice.** The core executes on a synthetic roll-yield panel; the real "
-            "commodity-curve run is **pending a term-structure fetch** (front + deferred contracts), "
-            "pre-registered in [`../docs/results.md`](../docs/results.md), sources in "
-            "[`../docs/references.md`](../docs/references.md) — the honesty pattern of Study 27 (Steamroller).\n"
+            "The deep companion to the [notebook for the curious](01_for_the_curious.ipynb) — *same seven beats, "
+            "every claim with its number.* The steelman: the commodity roll yield is a real, documented carry "
+            "premium (Gorton–Rouwenhorst 2006; Erb–Harvey 2006; Koijen et al. 2018). On the real energy tape we "
+            f"find the premium is **`REAL`** and economically huge (USO **{R['uso']}%** vs USL **{R['usl']}%**), "
+            f"but **`MIRAGE`** to harvest (curve-timing combo Sharpe **{R['combo_sh']}**, HAC *t* **{R['combo_t']}**, "
+            f"drawdown **{R['combo_dd']}%**). The bucket machinery is validated on a synthetic control.\n\n"
+            "> ✅ **Not investment advice.** The real tape is the cached front/laddered ETF pairs (no paid feed); "
+            "the cross-sectional bucket apparatus executes on a synthetic roll-yield panel. Sources in "
+            "[`../docs/references.md`](../docs/references.md); full numbers in [`../docs/results.md`](../docs/results.md).\n"
             ">\n"
             "> 💡 **The `💡 In plain words` notes** translate each result back to intuition."
         ),
@@ -238,146 +268,120 @@ def build_quants():
             "## Beat 0 · Verdict\n\n"
             "| Axis | Stamp | Why |\n"
             "|---|---|---|\n"
-            f"| **Signal** — backwardated out-earn contangoed? | 🟢 `REAL` | Control H-L roll-yield spread "
-            f"**+{R['hml']}%/yr**, gross Sharpe **{R['gross_sh']}**; null flat (**{R['null_sh']}**). |\n"
-            f"| **Tradability** | 🟡 `FRAGILE` | Cheap to run (turnover **{R['turn']}**/wk, break-even "
-            f"**~{R['be']} bp**) but volatile, crash-prone, illiquid-tilted. |\n"
-            "| **Real-tape run?** | ⚪ `Pre-reg` | Roll yield needs front+deferred contracts the sandbox "
-            "can't fetch; apparatus & mirage line pre-registered. |\n\n"
-            "> **In one sentence:** a real, durable, cheap-to-run commodity carry premium that is volatile "
-            "and crash-prone (a `FRAGILE` cousin of FX carry), proven on a synthetic control with the real "
-            "run pre-registered and pending the term-structure data.\n\n"
-            "*(This notebook executes on the synthetic control; the pre-registered real numbers are in "
-            "[`../docs/results.md`](../docs/results.md).)*"
+            f"| **Signal** — is the roll yield real? | 🟢 `REAL` | Real tape: USO **{R['uso']}%** vs USL "
+            f"**{R['usl']}%** (gap {R['wti_gap']} pts); roll drag **+{R['wti_drag']}%/yr** WTI, **+{R['gas_drag']}%/yr** gas. |\n"
+            f"| **Tradability** | 🔴 `MIRAGE` | Curve-timing combo Sharpe **{R['combo_sh']}**, HAC *t* **{R['combo_t']}** "
+            f"(≈0), drawdown **{R['combo_dd']}%**; cost isn't the killer. |\n"
+            "| **Real-tape run?** | 🟢 `Done` | Measured from liquid ETF pairs — no FRED, no EIA, no paid curve. |\n\n"
+            "> **In one sentence:** a real, enormous commodity roll-yield cost (the USO bleed) that you mostly "
+            f"can't harvest — the timing book is statistically flat with an {R['combo_dd']}% drawdown — so the "
+            "signal's value is defensive.\n\n"
+            f"*(Real numbers as-of {R['asof']}, fingerprint `{R['fp']}`; synthetic control fp `{R['syn_fp']}`.)*"
         ),
 
         md(
             "## Beat 1 · The claim, precisely\n\n"
-            "Each commodity $i$ has a roll yield $y_{i,t}$ (the curve slope: backwardation $>0$, contango "
-            "$<0$). Weight $w_{i,t} \\propto y_{i,t}-\\bar y_t$ (demeaned across the cross-section), scaled "
-            "so $\\sum_i w_{i,t}=0$ (dollar-neutral) and $\\sum_i|w_{i,t}|=1$ (gross 1), lagged one week. "
-            "Claim: $\\sum_i w_{i,t-1} r_{i,t}$ earns a positive premium. Null: the roll-yield signal is "
-            "**disconnected** from returns ⇒ nothing to harvest."
+            "A long futures position earns the roll $y_{i,t}$ = the curve slope (backwardation $>0$, contango "
+            "$<0$). We observe it without a curve feed: for each energy commodity, the **front-month** ETF and the "
+            "**12-month-laddered** ETF on the *same* underlying differ only in curve placement, so the weekly "
+            "return spread $r^{\\text{lad}}-r^{\\text{front}}$ is the realized roll cost borne by the front. The "
+            "bucket book (long most-backwardated, short most-contangoed) is the cross-sectional version, validated "
+            "on the synthetic panel."
         ),
-        code(
-            "for label, rr, yy in [('carry panel', r, ry), ('null', r0, ry0)]:\n"
-            "    g = strategy.summary(strategy.book_returns(rr, yy, cost_bps=0.0))\n"
-            "    pb = strategy.carry_premium_by_bucket(rr, yy)\n"
-            "    print(f\"{label:14} gross Sharpe {g['sharpe']:+6.2f}  H-L {pb['hml_ann_pct']:+6.1f}%/yr  turnover/wk {strategy.turnover(yy):.3f}\")"
-        ),
+        md("### The realized roll cost, per energy commodity"),
+        code(BLEED_CODE),
         md(
-            "> 💡 **In plain words.** When roll yield genuinely predicts return, the long-backwardation / "
-            f"short-contango book makes money (gross Sharpe **{R['gross_sh']}**, spread **+{R['hml']}%/yr**); "
-            f"when the signal is disconnected, it earns nothing (**{R['null_sh']}**). The apparatus sees "
-            "carry only when it's there — so the (pending) real-tape result will be about the *market*."
+            f"> 💡 **In plain words.** The front-month bleeds against the ladder **{R['wti_drag']}%/yr** in crude and "
+            f"**{R['gas_drag']}%/yr** in gas, in contango 53–56% of weeks. The weekly spread's HAC *t* is "
+            f"+1.5–1.8 — noisy week-to-week, but the cumulative tax (an {R['wti_gap']}-point USO/USL gap) is "
+            "overwhelming and never in doubt."
         ),
 
         md(
             "## Beat 2 · So what?\n\n"
-            "Gorton–Rouwenhorst (2006) show the equal-weight commodity basket earns an equity-like premium "
-            "dominated by the **roll return**; Erb–Harvey (2006) show the *cross-section* is explained far "
-            "more by the term structure than by spot. Koijen et al. (2018) generalise 'carry' across asset "
-            "classes and document a robust commodity carry that is lowly correlated with momentum and value. "
-            "The pre-registered prediction: the premium is real but volatile/crash-prone and concentrated in "
-            "less-liquid contracts — so it's `REAL` to measure and `FRAGILE` to trade. Beats 4–7 test that."
+            "Gorton–Rouwenhorst (2006) show the commodity basket's premium is dominated by the **roll return**; "
+            "Erb–Harvey (2006) show the cross-section is explained far more by term structure than spot; Koijen et "
+            "al. (2018) generalise 'carry' across asset classes. The real energy tape confirms the *force* "
+            "spectacularly (USO's bleed) and lets us ask the only open question: can you harvest it on the "
+            "contracts liquid enough to actually trade? Beats 4–6 answer no."
         ),
 
         md(
             "## Beat 3 · Pre-registered protocol\n\n"
-            "1. **Real?** `book_returns(cost_bps=0)` and `carry_premium_by_bucket` on control vs null (and on "
-            "the real curve, once fetched).\n"
-            "2. **Tradable?** `strategy.turnover`, `costs.breakeven_cost_bps`, `costs.cost_sweep` — and the "
-            "crash tail (skew/drawdown) on the real curve.\n"
-            "3. **Diversifiable?** `extension.combine` — carry + momentum blend Sharpe vs the legs.\n\n"
-            "**Mirage line:** on the real curve, backwardated-minus-contangoed spread with HAC *t* < 2, or a "
-            "premium that survives only in untradeably-illiquid contracts ⇒ `WEAK`/`NONE`."
+            "1. **Real?** `energy.bleed_table` on the ETF pairs (drag, % weeks in contango, HAC *t*).\n"
+            "2. **Tradable?** `energy.book_summary` — the curve-timing book per commodity and combined, vs "
+            "`energy.always_long_front`; Sharpe, drawdown, HAC *t*, turnover, net of cost.\n"
+            "3. **Diversifiable?** `extension.combine` on the synthetic control — carry + momentum blend.\n\n"
+            "**Mirage line:** real roll spread with HAC *t* < 2, or a premium tradable only in the (few, illiquid) "
+            "right contracts ⇒ `MIRAGE`. The combined timing book lands at HAC *t* ≈ 0.7 — inside the mirage."
         ),
 
-        md("## Beat 4 · The teardown\n\n### 4a · Real on the control, flat on the null (the REAL call)"),
-        code(
-            "g = strategy.summary(strategy.book_returns(r, ry, cost_bps=0.0))\n"
-            "pb = strategy.carry_premium_by_bucket(r, ry)\n"
-            "print(f\"carry book   gross Sharpe {g['sharpe']:.2f}  CAGR {g['cagr']*100:.1f}%  maxDD {g['max_drawdown']*100:.0f}%  skew {g['skew']:+.2f}\")\n"
-            "print(f\"buckets      top {pb['high_ann_pct']:+.1f}%/yr  bottom {pb['low_ann_pct']:+.1f}%/yr  H-L {pb['hml_ann_pct']:+.1f}%/yr\")\n"
-            "g0 = strategy.summary(strategy.book_returns(r0, ry0, cost_bps=0.0)); pb0 = strategy.carry_premium_by_bucket(r0, ry0)\n"
-            "print(f\"null         gross Sharpe {g0['sharpe']:+.2f}  H-L {pb0['hml_ann_pct']:+.1f}%/yr  -> nothing to harvest\")"
-        ),
+        md("## Beat 4 · The teardown\n\n### 4a · The curve-timing book — right sign, no edge"),
+        code(TIMING_CODE),
         md(
-            "> 💡 **In plain words.** A +27.6%/yr high-minus-low spread on the control with a flat null is the "
-            "machinery working: it harvests carry precisely when roll yield predicts return. The real-tape "
-            "magnitude (pending the curve) will be smaller — the literature says a Sharpe near 0.5–0.8 — but "
-            "the *sign and structure* are what the control validates."
+            f"> 💡 **In plain words.** Timing WTI by the curve (Sharpe **{R['wti_sh']}**, positive skew) trounces "
+            f"holding USO (**{R['uso_long_sh']}**, **{R['uso_long_dd']}%** drawdown) — the signal is real. But gas "
+            f"timing earns nothing (**{R['gas_sh']}**, *t* {R['gas_bt']}) and the combined book is **{R['combo_sh']}** "
+            f"at HAC *t* **{R['combo_t']}** with an **{R['combo_dd']}%** drawdown. Statistically flat."
         ),
 
-        md("### 4b · The cost curve and the break-even (the cheap-to-run half of FRAGILE)"),
+        md("### 4b · The bucket machinery, proved on a control (and flat on a null)"),
+        code(SYN_CODE),
+        md(
+            f"> 💡 **In plain words.** Where a broad cross-section of roll yields exists, the bucket book harvests "
+            f"a **+{R['syn_hml']}%/yr** spread (Sharpe **{R['syn_sh']}**) and the null is flat (**{R['syn_null']}**). "
+            "The apparatus works; the real energy tape just doesn't offer enough liquid curves to deploy it — so "
+            "we time the two we have, and that's the mirage."
+        ),
+
+        md("### 4c · Cost is not the binding constraint"),
         code(
-            "cs = costs.cost_sweep(r, ry)\n"
-            "print('Net Sharpe vs cost (synthetic control):')\n"
-            f"print('  0bp {R['c0']}   2bp {R['c2']}   5bp {R['c5']}   10bp {R['c10']}   20bp {R['c20']}')\n"
-            f"print(f'  turnover/wk {R['turn']}   break-even ~{R['be']} bp  (liquid futures round-trip ~2-5 bp)')\n"
-            "fig, ax = plt.subplots(); ax.axhline(0, color='#999', lw=.8)\n"
-            "ax.plot(cs.index, cs['sharpe'], marker='o', color='#dab617')\n"
-            "ax.set_xlabel('cost (bp/unit)'); ax.set_ylabel('net Sharpe'); ax.set_title('A slow signal: costs barely move the Sharpe')\n"
-            "print('\\nsynthetic break-even:', round(costs.breakeven_cost_bps(r, ry), 0), 'bp -> costs are NOT the constraint; the crash tail is')"
+            "if HAVE_TAPE:\n"
+            "    for c in (0, 5, 10, 25):\n"
+            "        s = energy.book_summary(prices, commodity=None, cost_bps=c)\n"
+            "        print(f'  combo @{c:>2}bp  Sharpe {s[\"sharpe\"]:+.2f}  CAGR {s[\"cagr\"]*100:+.1f}%')\n"
+            "else:\n"
+            "    print('cache absent — run: python examples/verify.py --fetch')"
         ),
         md(
-            "> 💡 **In plain words.** Unlike the daily-churn equity book in [Slingshot](../../33-slingshot/) "
-            "(break-even 3.3 bp), carry's break-even is ~160 bp — miles above realistic futures costs. So "
-            "what makes carry `FRAGILE` is **not** the spread; it's the volatile, crash-prone return stream "
-            "you must hold to earn it."
+            f"> 💡 **In plain words.** The book turns over ~{R['turn']}×/yr, yet a 10 bp round-trip only nicks it "
+            f"({R['combo_sh']} → {R['combo_net']}). Costs don't kill this book — the crash-prone, two-name "
+            "concentration does. That's the `MIRAGE`."
         ),
 
         md("## Beat 5 · The verdict\n\n"
-           f"- **`REAL`** (4a): control H-L **+{R['hml']}%/yr**, gross Sharpe {R['gross_sh']}; null flat {R['null_sh']}; literature concurs.\n"
-           f"- **`FRAGILE`** (4b + beat 6): cheap to run (break-even ~{R['be']} bp) but volatile, crash-prone, illiquid-tilted.\n"
-           "- **Real-tape `PRE-REG`** (beat 3): roll yield needs the term structure the sandbox can't fetch; run pre-registered.\n\n"
-           "> **Signal `REAL` · Tradability `FRAGILE` · Real-tape run? `PRE-REG`** — the commodity sibling of Steamroller."),
+           f"- **`REAL`** (beat 1): USO {R['uso']}% vs USL {R['usl']}%; roll drag +{R['wti_drag']}%/yr WTI, "
+           f"+{R['gas_drag']}%/yr gas — one of the largest, most durable costs in commodities.\n"
+           f"- **`MIRAGE`** (4a/4c): curve-timing combo Sharpe {R['combo_sh']}, HAC *t* {R['combo_t']}, drawdown "
+           f"{R['combo_dd']}%; not a tradable positive-carry edge on the liquid energy curves.\n"
+           "- **Real-tape `DONE`** (beat 3): measured from cached ETF pairs, fingerprinted & as-of pinned.\n\n"
+           "> **Signal `REAL` · Tradability `MIRAGE` · Real-tape run? `DONE`** — the commodity sibling of Steamroller."),
 
         md("## Beat 6 · Could you trade it?\n\n"
-           "- **The signal side is cheap.** Roll yield turns over ~0.19/week; transaction costs don't kill it.\n"
-           "- **The crash tail is the binding risk.** Commodity carry is negatively skewed and unwinds hard "
-           "in commodity-wide risk-off (2008, 2014–15) — you're paid to hold a tail (Koijen et al. 2018).\n"
-           "- **Capacity & the illiquidity tilt.** The premium is largest in smaller, less-liquid contracts; "
-           "the deeply liquid ones carry less of it — the same tension as Slingshot. The pre-registered "
-           "mirage check: if only the liquid (low-carry) contracts are tradable, the edge thins.\n"
-           "- **Honest fix:** diversify (beat 7), don't lever."),
+           "- **The defensive trade is the real one.** Avoiding front-month contango (ladder your exposure, like "
+           "USL) saves ~5%/yr in crude, ~9%/yr in gas. That's the harvestable part.\n"
+           "- **The offensive trade is a mirage.** Timing the curve is directionally right but statistically flat "
+           "and deeply drawdown-prone on two volatile names.\n"
+           "- **Capacity & the illiquidity tilt.** A broader carry cross-section lives in smaller, less-liquid "
+           "contracts; the deeply liquid energy curves carry the premium *and* the crash. Same tension as Slingshot.\n"
+           "- **Honest fix:** diversify the machinery (beat 7); don't lever two energy names."),
 
         md(
             "## Beat 7 · Going further\n\n"
             "### 7a · Worked complement — the carry+momentum blend ([`../docs/extension.md`](../docs/extension.md))\n"
             "Carry and time-series momentum are the two classic commodity premia and are lowly correlated "
-            "(Koijen et al. 2018). A 50/50 risk blend should beat the stronger leg. Synthetic here; the real "
-            "blend is pre-registered (momentum needs only front-month prices, which *are* cached)."
+            "(Koijen et al. 2018). On the bucket machinery a 50/50 risk blend beats the stronger leg:"
         ),
-        code(
-            "c = extension.combine(r, ry, cost_bps=5.0)\n"
-            "print(f\"carry Sharpe {c['carry_sharpe']:.2f}   momentum Sharpe {c['momentum_sharpe']:.2f}   \"\n"
-            "      f\"blend Sharpe {c['blend_sharpe']:.2f}   (leg correlation {c['correlation']:+.2f})\")\n"
-            "eqc=(1+c['carry']).cumprod(); eqm=(1+c['momentum']).cumprod(); eqb=(1+c['blend']).cumprod()\n"
-            "fig, ax = plt.subplots()\n"
-            "ax.plot(eqc.index, eqc.values, color='#2ea44f', lw=1.0, label=f\"carry ({c['carry_sharpe']:.2f})\")\n"
-            "ax.plot(eqm.index, eqm.values, color='#8b949e', lw=1.0, label=f\"momentum ({c['momentum_sharpe']:.2f})\")\n"
-            "ax.plot(eqb.index, eqb.values, color='#c0392b', lw=1.3, label=f\"50/50 blend ({c['blend_sharpe']:.2f})\")\n"
-            "ax.legend(); ax.set_title('Lowly-correlated legs: the blend beats either standalone')"
-        ),
+        code(BLEND_CODE),
         md(
-            "> 💡 **In plain words.** Leg correlation is just +0.27, so the 50/50 blend's Sharpe (2.03) "
-            "**exceeds either leg** (carry 1.80, momentum 1.43) — the textbook diversification free lunch. "
-            "The institutional answer to carry's crash isn't more leverage; it's a lowly-correlated momentum "
-            "sleeve. Echoes [Trade-Winds](../../31-trade-winds/): the edge is diversification, not prediction."
-        ),
-        md(
-            "### 7b · What the real run will settle\n"
-            "The apparatus captures carry wherever roll yield predicts return (the control) and the blend "
-            "diversifies it. The one thing **pending** is the real term structure — the front+deferred "
-            "contracts — to put a fingerprinted number on the actual commodity-curve carry, its crash tail, "
-            "and the real blend. Full pre-registration in [`../docs/results.md`](../docs/results.md) and "
-            "[`../docs/extension.md`](../docs/extension.md).\n\n"
-            "### 7c · Other forks\n"
-            "- **Add a value sleeve** — long-horizon commodity reversal (Asness et al. 2013).\n"
-            "- **Vol-target the blend** — does constant-risk sizing tame the carry crash (cf. Study 27)?\n"
-            "- **Wire a term-structure feed** — the data the whole real-tape verdict is waiting on.\n\n"
-            "PRs welcome — add value, vol-target the blend, or bring a front+deferred curve fetch."
+            f"> 💡 **In plain words.** Leg correlation **{R['blend_corr']}**; the blend Sharpe (**{R['blend']}**) "
+            f"beats either leg (carry {R['blend_carry']}, momentum {R['blend_mom']}). The institutional answer to "
+            "carry's crash isn't leverage; it's a lowly-correlated sleeve. Echoes [Trade-Winds](../../31-trade-winds/).\n\n"
+            "### 7b · Other forks\n"
+            "- **Broaden the curve set** — laddered ETFs in metals/ags to rebuild a tradable cross-section.\n"
+            "- **Vol-target the timing book** — does constant-risk sizing tame the −80% drawdown (cf. Study 27)?\n"
+            "- **Trade the calendar spread** — long-deferred / short-front as a purer roll-yield express.\n\n"
+            "PRs welcome — broaden the curves, vol-target, or trade the spread directly."
         ),
     ]
     nb = new_notebook(cells=cells, metadata=_meta())

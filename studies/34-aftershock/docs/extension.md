@@ -4,9 +4,9 @@
 the **drift-decay curve** look like — does the surprise-signed cumulative abnormal return rise steadily
 and then flatten, the Bernard-Thomas (1989) signature? and (2) does the drift persist long enough, and
 pay enough, to clear the cost of holding the book? Both are exercised on the synthetic control by
-[`aftershock/extension.py`](../aftershock/extension.py); on the real tape they are run by
-[`examples/verify.py`](../examples/verify.py) once an earnings-history feed is wired (see
-[`results.md`](results.md) — the real run is pre-registered and pending).*
+[`aftershock/extension.py`](../aftershock/extension.py) and **measured on the real tape** by
+[`examples/verify.py`](../examples/verify.py) (cached EDGAR EPS → SUE × the S&P 500 price panel — see
+[`results.md`](results.md) for the fingerprinted run).*
 
 ## The drift-decay curve — the shape *is* the anomaly
 
@@ -44,14 +44,22 @@ book has banked most of the cumulative drift at low turnover, and the net Sharpe
 frontier plateaus. The sweet spot is "hold for about a quarter," precisely the window over which the
 drift-decay curve was still rising.
 
-## Why this is the real tradability lever — and why the real tape will be harsher
+## On the real tape — the drift is there, and slow, and too small to pay
 
-On the synthetic control the holding-period frontier clears costs comfortably (break-even ~57 bp), because
-the baked drift is clean and turnover is low. **The real tape will be harsher, and predictably so:** the
-literature is unanimous that genuine PEAD is *small* and *concentrates in illiquid, high-cost, small-cap
-names* (Chordia et al. 2009), so the real break-even cost is expected to fall inside the realistic equity
-round-trip band — and the scalable, liquid slice carries almost no drift. That is the pre-registered
-mirage-line, and the reason the desk's honest Tradability stamp is `FRAGILE` ahead of the fetch.
+Run on real EDGAR SUEs × the S&P 500 price panel (see [`results.md`](results.md)), the same two diagnostics
+tell the honest story:
+
+- **The drift-decay curve `CONFIRMED`** on real earnings: the surprise-signed CAR rises monotonically from
+  **+0.0014 (day 0) to +0.0115 (day 69)** — Bernard-Thomas's shape, on the tape, not just the control.
+- **The holding-period sweep** shows you must hold the full quarter: net @5 bp is **−0.66 at a 5-day hold**
+  (all turnover, no drift) and only reaches break-even **(+0.05) at a 60-day hold** — the drift is genuine
+  but so slow and small that even the optimal horizon barely clears 5 bp.
+
+On the synthetic control the holding-period frontier clears costs comfortably (break-even ~57 bp) because
+the baked drift is clean. **The real tape is far harsher, and predictably so:** real PEAD is *small* and on
+a liquid large-cap universe its **break-even cost is only 6.0 bp** — *inside* the realistic equity
+round-trip band, and that is before correcting the **survivorship bias** that inflates it. The drift is
+real; harvesting it net is a `MIRAGE`.
 
 ## Forks worth a PR
 

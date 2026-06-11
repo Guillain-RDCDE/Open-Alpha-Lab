@@ -2,10 +2,16 @@
 ~0 on the full-UIRP null; carry carries the crash signature (negative skew); the carry⊕momentum combo
 beats either leg and the legs decorrelate; the signals are causal; the cost machinery behaves. FAST."""
 
+import os
+
 import numpy as np
 import pandas as pd
+import pytest
 
 from greenback import costs, data, extension, strategy
+
+_CACHE_PRESENT = (os.path.exists(os.path.join(data.DEFAULT_CACHE, data.RATES_CACHE))
+                  and os.path.exists(os.path.join(data.DEFAULT_CACHE, data.FX_CACHE)))
 
 
 def test_panel_deterministic_and_has_carry(fx_xr, fx):
@@ -74,3 +80,19 @@ def test_cost_behaviour_and_breakeven(fx_xr, fx_rd):
 def test_dollar_carry_runs(fx_xr, fx_rd):
     s = strategy.summary(strategy.dollar_carry_returns(fx_xr, fx_rd))
     assert np.isfinite(s["sharpe"])                                 # the dollar-carry tilt produces a stream
+
+
+@pytest.mark.skipif(not _CACHE_PRESENT, reason="G10 cache parquets absent")
+def test_real_panel_smoke():
+    """Cache-gated: the real G10 panel builds, the carry book carries its negative-skew crash, and the legs
+    decorrelate — the earned real-tape shape (Sharpe values themselves live in docs/results.md)."""
+    panel = data.load_real_panel()
+    assert panel is not None
+    xr, rd = panel
+    assert xr.index.max() <= pd.Timestamp(data.DATA_AS_OF)          # as-of pinned to the rates' end
+    assert xr.shape[1] == 9 and "USD" not in xr.columns            # 9 foreign currencies, USD is the funding leg
+    carry = strategy.carry_returns(xr, rd, cost_bps=10.0)
+    assert strategy.summary(carry)["sharpe"] > 0.0                 # carry pays (thinly) on the real tape
+    assert carry.skew() < 0.0                                      # the steamroller: negative skew
+    d = extension.diversification(xr, rd, cost_bps=10.0)
+    assert abs(d["leg_correlation"]) < 0.5                         # carry & momentum decorrelate

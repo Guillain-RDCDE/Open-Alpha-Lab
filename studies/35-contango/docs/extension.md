@@ -1,10 +1,10 @@
 # Beat-7 worked complement — "does adding a momentum sleeve diversify the carry book?"
 
-> ⚠️ **Real-tape numbers pending a term-structure fetch.** The carry leg needs roll yield, which needs the
-> term structure the desk does not yet cache (see [`results.md`](results.md)). The momentum sleeve needs
-> only front-month prices (which *are* cached), so the *combine* machinery is fully exercised on the
-> synthetic control below; the real blend is pre-registered and runs once a curve source is wired in via
-> [`examples/verify.py`](../examples/verify.py).
+> ℹ️ **This blend is the cross-sectional machinery proof, on the synthetic control.** The real energy run
+> ([`results.md`](results.md)) has only two liquid curves (WTI, gas) — too thin for a cross-sectional
+> carry⊕momentum bucket book — so the diversification claim is demonstrated here on the seeded 12-commodity
+> panel, where a broad cross-section exists. It shows what the blend *does* when the cross-section is wide
+> enough to deploy it; the real tape instead times the two curves we have.
 
 ## The idea
 
@@ -35,8 +35,9 @@ The worked complement sharpens the verdict: commodity carry is `REAL` but `FRAGI
 crash-prone) — and the standard institutional fix is **not** to lever carry harder but to **diversify it**
 with a lowly-correlated momentum sleeve, which lifts the combined Sharpe and softens the carry crash. This
 mirrors the lesson of [Study 31 (Trade-Winds)](../../31-trade-winds/): on this desk the edge is
-diversification, not prediction. The real-tape blend (pre-registered here) is expected to show the same
-qualitative shape — a positive, lowly-correlated diversification gain — on the actual commodity curves.
+diversification, not prediction. On the real energy tape the cross-section is too thin to run this blend
+(two curves), which is exactly why the real-tape verdict is `MIRAGE`: the carry force is real, but the
+liquid contracts are too few to diversify it into a tradable book.
 
 ## Forks worth a PR
 

@@ -3,8 +3,11 @@ drift gross on the control and finds ~nothing on the null; the signal is dollar-
 causal; the surprise-signed cumulative-abnormal-return curve rises then flattens (the PEAD shape); and the
 cost / break-even / holding-period machinery behaves. Fast — no network."""
 
+import os
+
 import numpy as np
 import pandas as pd
+import pytest
 
 from aftershock import costs, data, extension, strategy
 
@@ -80,3 +83,48 @@ def test_holding_period_sweep(control):
     assert list(hp.columns) == ["gross_sharpe", "net_sharpe", "turnover_per_day"]
     assert len(hp) == 3
     assert hp["turnover_per_day"].loc[90] < hp["turnover_per_day"].loc[10]   # longer hold ⇒ less turnover
+
+
+# --------------------------------------------------------------------------- #
+# Cache-gated real-data smoke test — skips cleanly if the EDGAR/panel cache is absent.
+# --------------------------------------------------------------------------- #
+
+def _has_real_cache() -> bool:
+    cd = data.DEFAULT_CACHE
+    return (os.path.exists(os.path.join(cd, data.EDGAR_CACHE))
+            and os.path.exists(os.path.join(cd, data.PANEL_CACHE)))
+
+
+@pytest.mark.skipif(not _has_real_cache(), reason="real EDGAR/panel cache absent")
+def test_real_sue_book_runs_and_is_causal():
+    """The real SUE book assembles from the cache, runs the same functions as the synthetic path, and is
+    strictly causal. We assert structure (not a magnitude), so it is robust to data revisions."""
+    eps = pd.read_parquet(os.path.join(data.DEFAULT_CACHE, data.EDGAR_CACHE))
+    deduped = data._dedupe_announcements(eps)
+    # earliest-filed dedupe: never more rows than the raw, one row per (ticker, period_end)
+    assert len(deduped) <= len(eps)
+    assert not deduped.duplicated(["ticker", "period_end"]).any()
+
+    events = data.build_sue_events(eps)
+    assert list(events.columns) == ["date", "ticker", "surprise"]
+    assert np.isfinite(events["surprise"]).all()
+
+    bundle = data.fetch_earnings_panel()           # cache-first, offline
+    panel, ev = bundle["panel"], bundle["events"]
+    assert panel.shape[1] > 100 and len(ev) > 1000
+
+    # Subset to keep the smoke test fast (the per-event loops are O(events)); structure is what matters.
+    names = sorted(ev["ticker"].unique())[:30]
+    sub_ev = ev[ev["ticker"].isin(names)].reset_index(drop=True)
+    sub_panel = panel[names]
+
+    # the book runs and is dollar-neutral + causal on the real frame
+    w = strategy.pead_weights(sub_panel, sub_ev, holding_days=60)
+    assert w.sum(axis=1).abs().max() < 1e-9
+    p2 = sub_panel.copy(); p2.iloc[-1] *= -3.0
+    w2 = strategy.pead_weights(p2, sub_ev, holding_days=60)
+    assert w.iloc[:-1].equals(w2.iloc[:-1])        # weights depend only on the past
+
+    # the drift-decay curve is NaN-safe on the real panel (which has per-name gaps)
+    car = extension.drift_decay_curve(sub_panel, sub_ev, window=70)
+    assert np.isfinite(car.to_numpy()).all()
