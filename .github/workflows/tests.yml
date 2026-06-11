@@ -26,8 +26,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # Core only — no network/yfinance needed for the test-suite.
-          pip install numpy pandas matplotlib pyarrow pytest
+          # Offline test-suite: no network/yfinance. scipy/statsmodels/arch/scikit-learn back the
+          # econometrics and ML studies (12 Paper-Prophet, 13 Crimson-Hour, 17 Glass-Ceiling,
+          # 22 Crystal-Ball, 39 Black-Box); real-data tests stay cache-gated and skip when absent.
+          pip install numpy pandas matplotlib pyarrow pytest scipy statsmodels arch scikit-learn
 
       - name: Study-construction gate (every published study, same construction)
         run: python tools/check_study_completeness.py
