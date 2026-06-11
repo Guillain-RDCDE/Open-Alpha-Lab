@@ -175,6 +175,9 @@ jobs:
       - name: Study 47 — Paper-Moon test-suite
         run: pytest -q studies/47-paper-moon/tests
 
+      - name: Study 48 — Groundhog test-suite
+        run: pytest -q studies/48-groundhog/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
