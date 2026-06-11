@@ -61,15 +61,14 @@ RR = dict(
     mm_sh="-0.05", mm_cagr="-0.7", mm_dd="-29", mm_turn="7.3", mm_t="-0.22",
     inf_sh="-0.12", inf_t="-0.42",
     reg_up_sh="-0.08", reg_up_ann="-0.5", reg_dn_sh="-0.16", reg_dn_ann="-0.9",
-    raw_up_sh="0.10", raw_up_ann="1.8", raw_dn_sh="-0.01", raw_dn_ann="-0.3",
+    raw_up_sh="0.10", raw_up_ann="1.8", raw_dn_sh="-0.01", raw_dn_ann="-0.3", raw_up_t="0.3",
     bench_ew_sh="0.57", bench_ew_cagr="5.2", bench_6040_sh="0.84", bench_6040_cagr="7.8",
 )
 
 BADGES = (
-    "![Signal: Real on direction](https://img.shields.io/badge/Signal-Real_on_direction-2ea44f?style=flat-square)\n"
-    "![Signal: Weak on size](https://img.shields.io/badge/Signal-Weak_on_size-dab617?style=flat-square)\n"
+    "![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)\n"
     "![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)\n"
-    "![Real-tape run?: Done](https://img.shields.io/badge/Real--tape_run%3F-Done-2ea44f?style=flat-square)\n\n"
+    "![Real-tape run?: Done](https://img.shields.io/badge/Real--tape_run%3F-Done-8b949e?style=flat-square)\n\n"
 )
 
 
@@ -81,7 +80,7 @@ def build_curious():
     cells = [
         md(
             "# Barometer 🌡️\n"
-            "### \"Read the macro weather, trade the trend.\" A *real* cross-asset premium — slow, modest, and only a storm-hedge when it storms.\n\n"
+            "### \"Read the macro weather, trade the trend.\" A premium that points the right way in every cut — and never clears the statistics. Slow, modest, and only a storm-hedge when it storms.\n\n"
             + BADGES +
             "The idea is old and intuitive: the economy has weather. When **growth** is improving, "
             "pro-cyclical assets (stocks, commodities) do well; when **inflation** is rising, *real* "
@@ -104,9 +103,11 @@ def build_curious():
             "## The answer first 🌡️\n\n"
             "| What we asked | The honest answer (real tape, 2007-2025) |\n"
             "|---|---|\n"
-            "| Do real assets beat nominal bonds *when inflation rises*? | 🟩 **Yes — the direction is real.** "
-            f"An always-long real-asset basket out-earns Treasuries by **+{RR['raw_up_ann']}%/yr** in "
-            f"rising-inflation months and **{RR['raw_dn_ann']}%/yr** in falling ones. |\n"
+            "| Do real assets beat nominal bonds *when inflation rises*? | 🟨 **The direction lands the right "
+            f"way — but it's small and uncertified.** An always-long real-asset basket out-earned Treasuries by "
+            f"**+{RR['raw_up_ann']}%/yr** in rising-inflation months and **{RR['raw_dn_ann']}%/yr** in falling "
+            f"ones — yet that spread is Sharpe **+{RR['raw_up_sh']}**, *t* ≈ **{RR['raw_up_t']}** over 104 "
+            "rising months: nowhere near the desk's bar. |\n"
             "| Can you *trade* it with a monthly macro-momentum book? | 🟨 **Barely — it's weak & slow.** "
             f"On the short post-2007 tape the standalone book is flat: net Sharpe **{RR['mm_sh']}** (HAC "
             f"*t* {RR['mm_t']}), below a passive equal-weight hold (**{RR['bench_ew_sh']}**). |\n"
@@ -114,9 +115,12 @@ def build_curious():
             f"Sharpe **{RR['reg_up_sh']}** vs falling **{RR['reg_dn_sh']}** — right-sided, but the timed "
             "book whipsaws under water in both over one short cycle. |\n"
             "| Real cross-asset run? | 🟢 **Done** — 18 ETFs + cached macro, offline, fingerprinted. |\n\n"
-            "> Desk shorthand: **Signal `REAL`-on-direction / `WEAK`-on-size · Tradability `FRAGILE` · "
-            "Real-tape run? `DONE`** — a real, slow, diversifying premium whose *direction* survives the "
-            "real tape but whose *timed monthly book* doesn't clear noise on one short post-2007 cycle."
+            "> Desk shorthand: **Signal `WEAK` · Tradability `FRAGILE` · Real-tape run? `DONE`** — every cut "
+            "of the real tape lands on the side the theory predicts, and not one of them clears the desk's "
+            "significance bar (the biggest *t* in the study is ≈ 0.3). A slow, diversifying premium the "
+            "literature supports and one short post-2007 cycle cannot certify. (One construction honesty: "
+            "our \"growth\" driver is the yield-curve slope — a *market price*, not a fundamental macro "
+            "release like CPI.)"
         ),
 
         md(
@@ -187,8 +191,10 @@ def build_curious():
         md(
             "### 4c · On the real tape (18 ETFs + cached macro, 2007-2025)\n"
             "The machinery works on the control; now the **real** book. On the short post-2007 sample the "
-            "timed monthly macro-momentum book is **flat-to-negative** and below a passive hold — but the "
-            "*directional* inflation effect is real: real assets out-earn nominal bonds when inflation rises."
+            "timed monthly macro-momentum book is **flat-to-negative** and below a passive hold — and the "
+            "*directional* inflation effect lands the right way (real assets out-earn nominal bonds when "
+            "inflation rises), though too small to clear the statistics. (Note the \"growth\" driver here is "
+            "the yield-curve slope — a market price, not a fundamental macro release.)"
         ),
         code(
             "if R is not None:\n"
@@ -206,17 +212,18 @@ def build_curious():
         ),
 
         md("## 5 · The verdict 🧾\n\n"
-           f"- **Signal `REAL` on direction / `WEAK` on size** — on the real tape real assets beat nominal "
-           f"bonds by +{RR['raw_up_ann']}%/yr *when inflation rises* (vs {RR['raw_dn_ann']}%/yr when it "
-           f"falls), but the timed standalone book is flat (net Sharpe {RR['mm_sh']}, HAC *t* {RR['mm_t']}); "
-           f"the control shows the same `REAL`/`WEAK` split (Sharpe {S['mm_sh']} vs null {S['mm_null']}).\n"
+           f"- **Signal `WEAK`** — on the real tape real assets beat nominal bonds by +{RR['raw_up_ann']}%/yr "
+           f"*when inflation rises* (vs {RR['raw_dn_ann']}%/yr when it falls), the right-sided shape — but "
+           f"that spread is Sharpe +{RR['raw_up_sh']}, *t* ≈ {RR['raw_up_t']}, and the timed standalone book "
+           f"is flat (net Sharpe {RR['mm_sh']}, HAC *t* {RR['mm_t']}): nothing clears the bar. The control "
+           f"(Sharpe {S['mm_sh']} vs null {S['mm_null']}) proves the machinery, not the market.\n"
            f"- **Tradability `FRAGILE`** — cheap to run (turnover {RR['mm_turn']}×/yr), but gross of cost it "
            f"makes ~nothing on one short cycle and is beaten by a passive hold (Sharpe {RR['bench_ew_sh']}).\n"
            f"- **Real-tape run? `DONE`** — 18 ETFs + cached macro, 2007-2025, fingerprinted "
            "([`../docs/results.md`](../docs/results.md)).\n\n"
-           "> **A real but humble premium.** Macro momentum is diversifying and crisis-friendly — its value "
-           "is in a *portfolio*, not as a standalone Sharpe hero, and on a short tape it can simply fail to "
-           "clear noise."),
+           "> **A humble premium the tape can't certify.** Macro momentum is diversifying and crisis-friendly "
+           "— its value is in a *portfolio*, not as a standalone Sharpe hero — and on this short tape it "
+           "simply fails to clear noise: `WEAK`, with the direction as the encouraging part."),
 
         md("## 6 · Could you trade it? 💸\n\n"
            "- **Yes, cheaply — but patiently.** Low turnover means costs don't kill it (unlike most of this "
@@ -232,9 +239,10 @@ def build_curious():
             "We split the inflation book by regime — rising vs falling inflation — on the **real tape**:\n\n"
             f"- The timed inflation book is right-sided (rising Sharpe **{RR['reg_up_sh']}** vs falling "
             f"**{RR['reg_dn_sh']}**) but whipsaws under water in both over one short cycle.\n"
-            f"- Strip the timing out and the mechanism is clear: an always-long real-asset basket beats "
+            f"- Strip the timing out and the shape is right-sided: an always-long real-asset basket beat "
             f"nominal bonds by **+{RR['raw_up_ann']}%/yr when inflation rises** vs {RR['raw_dn_ann']}%/yr "
-            "when it falls — the inflation hedge's *direction* is real on the live tape.\n"
+            f"when it falls — though at Sharpe +{RR['raw_up_sh']} (*t* ≈ {RR['raw_up_t']}, 104 rising "
+            "months) even this, the study's strongest number, stays well under the significance bar.\n"
             f"- On the synthetic control the timed book also pays more rising (Sharpe **{S['reg_inf_up_sh']}**) "
             f"than falling (**{S['reg_inf_dn_sh']}**) — same conditional shape, cleaner because the signal is strong.\n\n"
             "### Other forks\n"
@@ -259,9 +267,10 @@ def build_quants():
             "beats, every claim with its number.* The steelman: the trend in fundamental macro data (growth, "
             "inflation) predicts asset returns across classes (Brooks–Moskowitz 2017), and tilting toward "
             "real assets when inflation rises hedges a portfolio in the regimes that hurt it (Neville et al. "
-            "2021). We confirm the macro-momentum premium is `REAL` on the control (Sharpe 1.09, null −0.17) "
-            "and `WEAK`/`FRAGILE` on the real tape, where the *direction* survives (real assets beat nominal "
-            "bonds when inflation rises) but the timed monthly book is flat over one short post-2007 cycle.\n\n"
+            "2021). The control proves the *machinery* recovers the premium when it exists (Sharpe 1.09, null "
+            "−0.17); the real tape stamps the signal `WEAK` and `FRAGILE`: the *direction* lands right-sided "
+            "in every cut (real assets beat nominal bonds when inflation rises) but its best statistic is "
+            "*t* ≈ 0.3, and the timed monthly book is flat over one short post-2007 cycle.\n\n"
             "> 🟢 **Real run done.** This notebook executes BOTH the synthetic control (machinery proof) AND "
             "the real book from the desk's cached tape — 18 cross-asset ETFs + CPI-YoY / yield-curve-slope "
             "macro, lagged one month, 2007-2025 ([`../docs/results.md`](../docs/results.md), fingerprint "
@@ -275,18 +284,21 @@ def build_quants():
             "## Beat 0 · Verdict\n\n"
             "| Axis | Stamp | Why |\n"
             "|---|---|---|\n"
-            f"| **Signal** — macro trend predicts returns? | 🟢 `REAL` on direction · 🟡 `WEAK` on size | "
-            f"Real tape: real assets beat nominal bonds by +{RR['raw_up_ann']}%/yr *when inflation rises* "
-            f"(vs {RR['raw_dn_ann']}%/yr falling), but the standalone book is flat (net Sharpe **{RR['mm_sh']}**, "
-            f"HAC *t* {RR['mm_t']}); control shows the same split (Sharpe **{S['mm_sh']}** vs null **{S['mm_null']}**). |\n"
+            f"| **Signal** — macro trend predicts returns? | 🟡 `WEAK` | Real tape: real assets beat nominal "
+            f"bonds by +{RR['raw_up_ann']}%/yr *when inflation rises* (vs {RR['raw_dn_ann']}%/yr falling) — "
+            f"right-sided, but only Sharpe +{RR['raw_up_sh']}, *t* ≈ {RR['raw_up_t']} (104 rising months), "
+            f"and the standalone book is flat (net Sharpe **{RR['mm_sh']}**, HAC *t* {RR['mm_t']}). Nothing "
+            f"clears *t* ≥ 2; the control (Sharpe **{S['mm_sh']}** vs null **{S['mm_null']}**) proves the "
+            "machinery, not the market. |\n"
             f"| **Tradability** | 🟡 `FRAGILE` | Slow book (turnover {RR['mm_turn']}×/yr) — cost is **not** the "
             f"threat; but gross it makes ~nothing on one short cycle, beaten by a passive hold (Sharpe {RR['bench_ew_sh']}). |\n"
             f"| **Real-tape run?** | 🟢 `Done` | 18 ETFs + cached macro, {RR['span']}, {RR['n']} months, "
             f"offline + fingerprinted `{RR['fp']}` ([`../docs/results.md`](../docs/results.md)). |\n\n"
-            "> **In one sentence:** a real, slow, diversifying cross-asset macro premium whose *direction* "
-            "survives the real tape (the inflation hedge pays when inflation rises) but whose *timed monthly "
-            "book* doesn't clear noise on one short post-2007 cycle — `REAL`-on-direction/`WEAK`-on-size, "
-            "`FRAGILE`, real run `DONE`."
+            "> **In one sentence:** a slow, diversifying cross-asset macro premium whose *direction* lands "
+            "the right way in every cut of the real tape (the inflation hedge pays when inflation rises) but "
+            "whose every statistic — spread *t* ≈ 0.3, book *t* −0.22 — stays under the desk's bar on one "
+            "short post-2007 cycle: `WEAK`, `FRAGILE`, real run `DONE`. (And one construction note: the "
+            "\"growth\" driver is the yield-curve slope, a market price, not a fundamental macro release.)"
         ),
 
         md(
@@ -334,7 +346,9 @@ def build_quants():
             "inflation, on the real tape.\n\n"
             "**Mirage line:** flat macro-momentum book on the *control*, *or* a raw real-minus-nominal spread "
             "that pays the same in both regimes ⇒ no conditional macro premium. (On the real tape the "
-            "*timed* book is allowed to be weak — the short sample is noisy; what must hold is the direction.)"
+            "*timed* book is allowed to be weak — the short sample is noisy; what must hold is the direction. "
+            "And to be explicit about the house bar: a right-sided direction at *t* < 2 earns `WEAK`, not "
+            "`REAL` — direction alone cannot upgrade the stamp.)"
         ),
 
         md("## Beat 4 · The teardown\n\n### 4a · Machinery: real gross macro-momentum, flat null (the control)"),
@@ -372,7 +386,7 @@ def build_quants():
         md(
             "> 💡 **In plain words.** On the short post-2007 tape the timed monthly macro book is **flat** "
             f"(net Sharpe **{RR['mm_sh']}**, HAC *t* {RR['mm_t']}) and below a passive hold (**{RR['bench_ew_sh']}**) "
-            "— `REAL` on direction (see Beat 7), but `WEAK` on size and standalone tradability."
+            "— right-sided in direction (see Beat 7) but under the bar everywhere: `WEAK`."
         ),
 
         md("### 4c · The (gentle) cost wall — cost is NOT the threat"),
@@ -385,22 +399,25 @@ def build_quants():
         ),
 
         md("## Beat 5 · The verdict\n\n"
-           f"- **`REAL` on direction / `WEAK` on size** (4a/4b): control Sharpe {S['mm_sh']} vs null "
-           f"{S['mm_null']}, but the real timed book is flat (net Sharpe {RR['mm_sh']}, HAC *t* {RR['mm_t']}) "
-           "on one short cycle; the *directional* inflation effect survives (Beat 7).\n"
+           f"- **`WEAK`** (4a/4b, Beat 7): the real timed book is flat (net Sharpe {RR['mm_sh']}, HAC *t* "
+           f"{RR['mm_t']}) and even the strongest cut — the raw real-minus-nominal spread in rising-inflation "
+           f"months — is only Sharpe +{RR['raw_up_sh']}, *t* ≈ {RR['raw_up_t']}. Right-sided everywhere, "
+           f"certified nowhere. The control (Sharpe {S['mm_sh']} vs null {S['mm_null']}) proves the "
+           "machinery, not the market.\n"
            f"- **`FRAGILE`** (4c): turnover {RR['mm_turn']}×/yr, cost is linear and not the threat — but gross "
            f"it makes ~nothing and is beaten by a passive hold (Sharpe {RR['bench_ew_sh']}).\n"
            f"- **Real-tape run? `DONE`** — {RR['span']}, fingerprint `{RR['fp']}`.\n\n"
-           "> **Signal `REAL`/`WEAK` · Tradability `FRAGILE` · Real-tape run? `DONE`** — a diversifying macro "
-           "premium real in direction, weak and slow to monetise on a short tape."),
+           "> **Signal `WEAK` · Tradability `FRAGILE` · Real-tape run? `DONE`** — a diversifying macro "
+           "premium that points the right way and stays under the bar on a short tape."),
 
         md("## Beat 6 · Could you trade it?\n\n"
            "- **Not as a standalone monthly book on this tape.** Gross of cost it makes ~nothing over one "
            "short post-2007 cycle and is beaten by a passive hold — the signal is too slow and the sample too short.\n"
            "- **Cost is not the obstacle.** Low turnover ⇒ the cost sweep is linear; the obstacle is the weak, "
            "slow edge itself and the long flat stretches.\n"
-           "- **The directional inflation hedge is the salvageable piece.** Real assets do beat nominal bonds "
-           "when inflation rises (Beat 7) — use it as a slow *conditional overlay*, not a timed monthly sleeve."),
+           "- **The directional inflation hedge is the salvageable piece.** Real assets did beat nominal bonds "
+           "when inflation rose (Beat 7 — +1.8%/yr, though only *t* ≈ 0.3) — if you use it at all, use it as a "
+           "slow *conditional overlay*, not a timed monthly sleeve."),
 
         md(
             "## Beat 7 · Going further\n\n"
@@ -424,10 +441,12 @@ def build_quants():
         md(
             "> 💡 **In plain words.** The *timed* inflation book is right-sided (rising Sharpe "
             f"**{RR['reg_up_sh']}** vs falling **{RR['reg_dn_sh']}**) but whipsaws under water in both over "
-            "one short cycle. Strip the timing out and the mechanism is unambiguous: an always-long "
-            f"real-asset basket beats nominal bonds by **+{RR['raw_up_ann']}%/yr when inflation rises** vs "
-            f"{RR['raw_dn_ann']}%/yr when it falls. The inflation hedge's *direction* is real on the live "
-            "tape — what's fragile is monetising it with a slow monthly timing rule."
+            "one short cycle. Strip the timing out and the shape stays right-sided: an always-long "
+            f"real-asset basket beat nominal bonds by **+{RR['raw_up_ann']}%/yr when inflation rises** vs "
+            f"{RR['raw_dn_ann']}%/yr when it falls — but that spread is Sharpe **+{RR['raw_up_sh']}**, *t* ≈ "
+            f"**{RR['raw_up_t']}** over 104 rising months, far below any significance bar (which is why the "
+            "desk's own short-sample caveat — *every t-stat here is small* — wins, and the stamp is `WEAK`). "
+            "The direction is encouraging; the certification isn't there."
         ),
 
         md(

@@ -17,10 +17,15 @@
 > to pin a magnitude or clear a significance bar — every t-stat below is small. Read the verdict as a
 > direction, not a tradable Sharpe.
 
-## The verdict — Signal `REAL` (direction) / `WEAK` (size) · Tradability `FRAGILE` · Real-tape run? `DONE`
+## The verdict — Signal `WEAK` · Tradability `FRAGILE` · Real-tape run? `DONE`
 
-The *trend* in fundamental macro data is a real, slow, cross-asset predictor — but on this short real tape
-it is **weak and noisy**, and neither macro book beats a passive hold of the same assets. The headline:
+The *trend* in macro data points the right way in every cut of this tape — and clears the desk's
+statistical bar in none of them. The short-sample caveat above is the verdict: every *t*-stat here is
+small, including the study's strongest number (the raw real-minus-nominal spread in rising-inflation
+months, Sharpe +0.10, *t* ≈ 0.3 — see below), so the honest stamp is `WEAK`, not `REAL`-on-direction.
+Neither macro book beats a passive hold of the same assets. One construction note, stated plainly: the
+"growth" driver is the **yield-curve slope — a market price**, not a fundamental macro release like CPI,
+so the growth leg is partly price-based macro, not pure fundamentals. The headline:
 
 | book (net @5 bp) | Sharpe | CAGR | maxDD | turnover | HAC *t* (NW, 6 lags) | break-even |
 |---|---|---|---|---|---|---|
@@ -48,17 +53,20 @@ on the right side of zero:
 The book is **less bad when inflation is rising** than falling — the conditional shape the steelman
 predicts — but the momentum-*timed* signing whipsaws enough to keep it under water in both. Strip the
 timing out and ask the barest question — does an always-long real-asset basket simply out-earn nominal
-bonds (TLT/IEF) when inflation rises? — and the effect is unambiguous:
+bonds (TLT/IEF) when inflation rises? — and the effect lands on the predicted side, though it is small:
 
 | raw real-minus-nominal spread (always long) | rising inflation | falling inflation |
 |---|---|---|
 | Sharpe | **+0.10** | −0.01 |
 | ann. return | **+1.8%/yr** | −0.3%/yr |
 
-**Real assets out-earn nominal bonds specifically in rising-inflation months (+1.8%/yr) and not in falling
-ones (−0.3%/yr).** That is the inflation-hedge mechanism, confirmed on the real tape — the *direction* is
-real. What's `FRAGILE` is harvesting it with a monthly-momentum timing rule: the signal is so slow and the
-sample so short that the timed book gives the raw edge back to noise.
+**Real assets out-earned nominal bonds in rising-inflation months (+1.8%/yr) and not in falling ones
+(−0.3%/yr)** — the inflation-hedge shape. But honesty about the size: a Sharpe of +0.10 over 104
+rising-inflation months is ***t* ≈ 0.3** (≈ SR×√years; no SE clears even 1), fully consistent with the
+short-sample caveat up top — so this, the study's strongest cut, supports the *direction* without
+certifying it, and the Signal stamp stays `WEAK`. What's `FRAGILE` on top is harvesting it with a
+monthly-momentum timing rule: the signal is so slow and the sample so short that the timed book gives the
+raw edge back to noise.
 
 ## What the synthetic control proves (offline, reproducible — the machinery)
 
@@ -76,10 +84,10 @@ through fixed signed betas (seed 37, 50 years, gross of cost):
 - **Cost is not the threat:** break-even **~91 bp** (macro momentum) / **~60 bp** (inflation) per unit —
   far above realistic cross-asset costs.
 
-The control proves the machinery *can* extract the premium when it is strong and clean; the real tape shows
-that, over one short post-2007 cycle, the live premium is too weak and slow to clear noise as a standalone
-dollar-neutral book — even as its core *directional* claim (real assets beat nominal bonds when inflation
-rises) holds.
+The control proves the machinery *can* extract the premium when it is strong and clean — it is a
+*machinery* proof, not market evidence. The real tape shows that, over one short post-2007 cycle, the live
+premium is too weak and slow to clear noise as a standalone dollar-neutral book — even as its core
+*directional* claim (real assets beat nominal bonds when inflation rises) lands right-sided, at *t* ≈ 0.3.
 
 ## Reproduce
 

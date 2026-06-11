@@ -54,9 +54,9 @@ R = dict(
 )
 
 BADGES = (
-    "![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)\n"
-    "![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-cf222e?style=flat-square)\n"
-    "![Real-tape run?: Done](https://img.shields.io/badge/Real--tape_run%3F-Done-2ea44f?style=flat-square)\n\n"
+    "![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)\n"
+    "![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-c0392b?style=flat-square)\n"
+    "![Real-tape run?: Done](https://img.shields.io/badge/Real--tape_run%3F-Done-8b949e?style=flat-square)\n\n"
 )
 
 
@@ -116,7 +116,7 @@ def build_curious():
     cells = [
         md(
             "# Contango 🛢️\n"
-            "### The roll yield is real — and it quietly destroyed the most popular oil ETF. Can you trade it? Barely.\n\n"
+            "### The roll drag quietly destroyed the most popular oil ETF — yet on this short, violent tape even that doesn't clear the desk's statistics. Can you trade it? Barely.\n\n"
             + BADGES +
             "A commodity future doesn't just track the spot price — as your long position rolls toward expiry it "
             "slides along the **term-structure curve**. If the curve is **backwardated** (front dearer than the "
@@ -137,17 +137,20 @@ def build_curious():
             "## The answer first 🛢️\n\n"
             "| What we asked | The honest answer |\n"
             "|---|---|\n"
-            f"| Is the roll yield real? | 🟩 **Yes, and it's huge.** On the real tape the front-month **USO** lost "
-            f"**{R['uso']}%** while the laddered **USL**, on the *same* crude, was **{R['usl']}%** — an "
-            f"**{R['wti_gap']}-point** contango tax (gas UNG is **{R['ung']}%**). |\n"
+            f"| Is the roll yield real? | 🟨 **The direction is enormous; the statistics fall short.** The front-month "
+            f"**USO** lost **{R['uso']}%** while the laddered **USL**, on the *same* crude, was **{R['usl']}%** — an "
+            f"**{R['wti_gap']}-point** contango tax (gas UNG is **{R['ung']}%**). But the weekly roll spread's HAC *t* "
+            f"is only **+{R['wti_t']}** (WTI) / **+{R['gas_t']}** (gas) — below the desk's *t* ≥ 2 bar on this short, "
+            "violent tape, so the stamp is `WEAK`, not `REAL`. |\n"
             f"| Could you trade it? | 🟥 **Barely.** Timing the front by the curve points the right way (WTI Sharpe "
             f"**{R['wti_sh']}** vs −0.01 buy-and-hold) but the combined book is statistically flat "
             f"(**{R['combo_sh']}**, HAC *t* **{R['combo_t']}**) with an **{R['combo_dd']}%** drawdown. |\n"
             "| Did we measure the real tape? | 🟩 **Yes.** Straight from liquid ETFs — no FRED, no EIA, no paid "
             "curve feed. |\n\n"
-            "> Desk shorthand: **Signal `REAL` · Tradability `MIRAGE` · Real-tape run? `DONE`** — the cost is "
-            "real and brutal; harvesting it as positive carry is a mirage. The value of the signal is "
-            "*defensive*: don't be the sucker holding the front-month in contango."
+            "> Desk shorthand: **Signal `WEAK` · Tradability `MIRAGE` · Real-tape run? `DONE`** — the cumulative "
+            "cost is brutal and economically unmistakable, but two noisy energy curves can't certify it "
+            "statistically (the synthetic control's +27.6%/yr is a *machinery* proof — the premium is wired in "
+            "there). The value of the signal is *defensive*: don't be the sucker holding the front-month in contango."
         ),
 
         md(
@@ -179,8 +182,8 @@ def build_curious():
             "vs simply holding it. Sharpe, drawdown, and a Newey–West *t*.\n"
             "3. **Diversifiable?** Does adding a momentum sleeve lift the combined Sharpe? (beat 7, machinery)\n\n"
             "**Mirage line** (pre-registered): if the real roll spread is statistically indistinguishable from "
-            "zero (HAC *t* < 2), or only the liquid contracts (which carry least) are tradable, the *tradable* "
-            "signal drops to `WEAK`/`MIRAGE`."
+            "zero (HAC *t* < 2), or only the liquid contracts (which carry least) are tradable, the signal drops "
+            "to `WEAK` and the trade to `MIRAGE`. (Spoiler: both halves of that line end up tripped — beat 4.)"
         ),
 
         md("## 4 · The teardown 🔧\n\n### 4a · Time the curve, or just hold the front?"),
@@ -203,22 +206,28 @@ def build_curious():
         ),
 
         md("## 5 · The verdict 🧾\n\n"
-           f"- **Signal `REAL`** — the contango bleed is real and enormous (USO {R['uso']}% vs USL {R['usl']}%; "
-           f"+{R['wti_drag']}%/yr WTI, +{R['gas_drag']}%/yr gas).\n"
+           f"- **Signal `WEAK`** — the contango bleed is economically enormous and one-directional (USO {R['uso']}% "
+           f"vs USL {R['usl']}%; +{R['wti_drag']}%/yr WTI, +{R['gas_drag']}%/yr gas), but the weekly roll spread's "
+           f"HAC *t* is only +{R['wti_t']} / +{R['gas_t']} — under the desk's *t* ≥ 2 bar, our own pre-registered "
+           "line. The literature (Gorton–Rouwenhorst, Erb–Harvey, Koijen et al.) carries the existence case; this "
+           "two-curve tape alone can't.\n"
            f"- **Tradability `MIRAGE`** — the curve-timing book is statistically flat (combo {R['combo_sh']}, HAC "
            f"*t* {R['combo_t']}) with an {R['combo_dd']}% drawdown; cost isn't the killer, concentration and the "
            "crash tail are.\n"
            "- **Real-tape run `DONE`** — measured straight from liquid ETFs, fingerprinted and as-of pinned.\n\n"
-           "> **The commodity sibling of Steamroller.** A real premium you mostly can't keep: the signal's worth "
-           "is knowing *not* to hold the bleeding front-month."),
+           "> **The commodity sibling of Steamroller.** A premium you mostly can't keep — and on this tape can't "
+           "even certify: the signal's worth is knowing *not* to hold the bleeding front-month."),
 
         md("## 6 · Could you trade it? 💸\n\n"
-           "- **The cost is real and one-directional.** Holding USO in contango bleeds ~5%/yr (gas ~9%/yr). The "
+           "- **The cost is one-directional and cumulative.** Holding USO in contango bled ~5%/yr (gas ~9%/yr). The "
            "first, biggest win is simply *not* doing that.\n"
            "- **Timing it doesn't clear the noise.** The curve-timing book is the right idea and beats buy-and-"
            "hold, but its Sharpe is statistically zero and it still draws down >80% on two volatile names.\n"
            "- **Cost isn't the constraint.** A 10 bp round-trip barely moves the combined book "
            f"({R['combo_sh']} → {R['combo_net']}); the crash tail and two-name concentration are.\n"
+           "- **One cost we did *not* model is asymmetric:** the short legs borrow USO/UNG (hard-to-borrow fees in "
+           "stressed tapes) and the funds' expense ratios (~0.6–1%/yr) drag the long legs — both would shave the "
+           "timing book further.\n"
            "- **The honest move:** treat roll yield as a *risk to avoid* (ladder your exposure, like USL) rather "
            "than an alpha to lever."),
 
@@ -252,9 +261,10 @@ def build_quants():
             + BADGES +
             "The deep companion to the [notebook for the curious](01_for_the_curious.ipynb) — *same seven beats, "
             "every claim with its number.* The steelman: the commodity roll yield is a real, documented carry "
-            "premium (Gorton–Rouwenhorst 2006; Erb–Harvey 2006; Koijen et al. 2018). On the real energy tape we "
-            f"find the premium is **`REAL`** and economically huge (USO **{R['uso']}%** vs USL **{R['usl']}%**), "
-            f"but **`MIRAGE`** to harvest (curve-timing combo Sharpe **{R['combo_sh']}**, HAC *t* **{R['combo_t']}**, "
+            "premium (Gorton–Rouwenhorst 2006; Erb–Harvey 2006; Koijen et al. 2018). On the real energy tape the "
+            f"drag is economically huge (USO **{R['uso']}%** vs USL **{R['usl']}%**) but statistically under the "
+            f"desk's bar (weekly spread HAC *t* **+{R['wti_t']}** / **+{R['gas_t']}** < 2 ⇒ Signal **`WEAK`**), and "
+            f"it is **`MIRAGE`** to harvest (curve-timing combo Sharpe **{R['combo_sh']}**, HAC *t* **{R['combo_t']}**, "
             f"drawdown **{R['combo_dd']}%**). The bucket machinery is validated on a synthetic control.\n\n"
             "> ✅ **Not investment advice.** The real tape is the cached front/laddered ETF pairs (no paid feed); "
             "the cross-sectional bucket apparatus executes on a synthetic roll-yield panel. Sources in "
@@ -268,14 +278,16 @@ def build_quants():
             "## Beat 0 · Verdict\n\n"
             "| Axis | Stamp | Why |\n"
             "|---|---|---|\n"
-            f"| **Signal** — is the roll yield real? | 🟢 `REAL` | Real tape: USO **{R['uso']}%** vs USL "
-            f"**{R['usl']}%** (gap {R['wti_gap']} pts); roll drag **+{R['wti_drag']}%/yr** WTI, **+{R['gas_drag']}%/yr** gas. |\n"
+            f"| **Signal** — is the roll yield real? | 🟡 `WEAK` | The drag is economically huge — USO **{R['uso']}%** vs USL "
+            f"**{R['usl']}%** (gap {R['wti_gap']} pts); **+{R['wti_drag']}%/yr** WTI, **+{R['gas_drag']}%/yr** gas — but its "
+            f"weekly HAC *t* is only **+{R['wti_t']}** / **+{R['gas_t']}**, under the desk's *t* ≥ 2 bar on this short, "
+            "noisy two-curve tape. The literature carries the existence case. |\n"
             f"| **Tradability** | 🔴 `MIRAGE` | Curve-timing combo Sharpe **{R['combo_sh']}**, HAC *t* **{R['combo_t']}** "
             f"(≈0), drawdown **{R['combo_dd']}%**; cost isn't the killer. |\n"
             "| **Real-tape run?** | 🟢 `Done` | Measured from liquid ETF pairs — no FRED, no EIA, no paid curve. |\n\n"
-            "> **In one sentence:** a real, enormous commodity roll-yield cost (the USO bleed) that you mostly "
-            f"can't harvest — the timing book is statistically flat with an {R['combo_dd']}% drawdown — so the "
-            "signal's value is defensive.\n\n"
+            "> **In one sentence:** an economically enormous roll-yield cost (the USO bleed) that this short, violent "
+            f"tape can't statistically certify (*t* < 2 ⇒ `WEAK`) and that you mostly can't harvest — the timing book "
+            f"is statistically flat with an {R['combo_dd']}% drawdown — so the signal's value is defensive.\n\n"
             f"*(Real numbers as-of {R['asof']}, fingerprint `{R['fp']}`; synthetic control fp `{R['syn_fp']}`.)*"
         ),
 
@@ -293,8 +305,9 @@ def build_quants():
         md(
             f"> 💡 **In plain words.** The front-month bleeds against the ladder **{R['wti_drag']}%/yr** in crude and "
             f"**{R['gas_drag']}%/yr** in gas, in contango 53–56% of weeks. The weekly spread's HAC *t* is "
-            f"+1.5–1.8 — noisy week-to-week, but the cumulative tax (an {R['wti_gap']}-point USO/USL gap) is "
-            "overwhelming and never in doubt."
+            f"+1.5–1.8 — *below the desk's t ≥ 2 bar*. The cumulative tax (an {R['wti_gap']}-point USO/USL gap) points "
+            "one way and is economically hard to dismiss, but week-to-week noise means this tape alone cannot "
+            "certify it — which is exactly why the Signal stamp is `WEAK` rather than `REAL`."
         ),
 
         md(
@@ -313,7 +326,9 @@ def build_quants():
             "`energy.always_long_front`; Sharpe, drawdown, HAC *t*, turnover, net of cost.\n"
             "3. **Diversifiable?** `extension.combine` on the synthetic control — carry + momentum blend.\n\n"
             "**Mirage line:** real roll spread with HAC *t* < 2, or a premium tradable only in the (few, illiquid) "
-            "right contracts ⇒ `MIRAGE`. The combined timing book lands at HAC *t* ≈ 0.7 — inside the mirage."
+            "right contracts ⇒ the signal drops to `WEAK` and the trade to `MIRAGE`. **Applied:** the real roll "
+            f"spread lands at HAC *t* +{R['wti_t']} / +{R['gas_t']} (< 2) ⇒ Signal `WEAK`; the combined timing book "
+            "lands at HAC *t* ≈ 0.7 ⇒ Tradability `MIRAGE`. We hold ourselves to the line as written."
         ),
 
         md("## Beat 4 · The teardown\n\n### 4a · The curve-timing book — right sign, no edge"),
@@ -350,18 +365,24 @@ def build_quants():
         ),
 
         md("## Beat 5 · The verdict\n\n"
-           f"- **`REAL`** (beat 1): USO {R['uso']}% vs USL {R['usl']}%; roll drag +{R['wti_drag']}%/yr WTI, "
-           f"+{R['gas_drag']}%/yr gas — one of the largest, most durable costs in commodities.\n"
+           f"- **`WEAK`** (beat 1, beat 3 applied): USO {R['uso']}% vs USL {R['usl']}%; roll drag +{R['wti_drag']}%/yr WTI, "
+           f"+{R['gas_drag']}%/yr gas — economically one of the largest costs in commodities, but at weekly HAC *t* "
+           f"+{R['wti_t']} / +{R['gas_t']} it sits under the desk's *t* ≥ 2 bar on this tape; the documented "
+           "premium's existence case rests on the literature's broad cross-sections, not these two curves.\n"
            f"- **`MIRAGE`** (4a/4c): curve-timing combo Sharpe {R['combo_sh']}, HAC *t* {R['combo_t']}, drawdown "
            f"{R['combo_dd']}%; not a tradable positive-carry edge on the liquid energy curves.\n"
            "- **Real-tape `DONE`** (beat 3): measured from cached ETF pairs, fingerprinted & as-of pinned.\n\n"
-           "> **Signal `REAL` · Tradability `MIRAGE` · Real-tape run? `DONE`** — the commodity sibling of Steamroller."),
+           "> **Signal `WEAK` · Tradability `MIRAGE` · Real-tape run? `DONE`** — the commodity sibling of Steamroller."),
 
         md("## Beat 6 · Could you trade it?\n\n"
            "- **The defensive trade is the real one.** Avoiding front-month contango (ladder your exposure, like "
-           "USL) saves ~5%/yr in crude, ~9%/yr in gas. That's the harvestable part.\n"
+           "USL) saved ~5%/yr in crude, ~9%/yr in gas on this tape. That's the harvestable part.\n"
            "- **The offensive trade is a mirage.** Timing the curve is directionally right but statistically flat "
            "and deeply drawdown-prone on two volatile names.\n"
+           "- **And our cost model is, if anything, kind to it.** The 10 bp sweep covers commissions/spread only: "
+           "shorting USO/UNG pays a borrow fee (these get hard-to-borrow in stressed tapes) and the funds' expense "
+           "ratios (~0.6–1%/yr) drag the long legs — asymmetric costs we did **not** model, all of which point the "
+           "same way: down.\n"
            "- **Capacity & the illiquidity tilt.** A broader carry cross-section lives in smaller, less-liquid "
            "contracts; the deeply liquid energy curves carry the premium *and* the crash. Same tension as Slingshot.\n"
            "- **Honest fix:** diversify the machinery (beat 7); don't lever two energy names."),

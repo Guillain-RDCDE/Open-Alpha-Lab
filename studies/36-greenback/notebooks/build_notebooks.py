@@ -63,6 +63,7 @@ R = dict(
 G = dict(
     fp="ef7450ae792e", asof="2024-01-31", span="2001–2024",
     hml="3.0", carry_sh="+0.22", carry_skew="-0.70", carry_dd="-27", carry_worst="-10.6",
+    carry_t="1.0",
     ci_lo="-0.17", ci_hi="+0.69", frac_neg="14",
     dollar_sh="+0.17", mom_sh="-0.14",
     combo_sh="+0.06", combo_dd="-26", combo_skew="-0.57", combo_worst="-6.4", corr="+0.05",
@@ -72,7 +73,7 @@ G = dict(
 )
 
 BADGES = (
-    "![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)\n"
+    "![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)\n"
     "![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)\n"
     "![Combo diversifies the crash?: Partial](https://img.shields.io/badge/Combo_diversifies_the_crash%3F-Partial-dab617?style=flat-square)\n\n"
 )
@@ -98,7 +99,7 @@ def build_curious():
     cells = [
         md(
             "# Greenback 💵\n"
-            "### \"Borrow cheap, lend dear\" earns a real premium — and rents you a spot in front of a steamroller. The fix isn't a stop-loss; it's a second, decorrelated trade.\n\n"
+            "### \"Borrow cheap, lend dear\" earns a premium the literature calls real — our 23-year tape reads it weak — and rents you a spot in front of a steamroller. The fix isn't a stop-loss; it's a second, decorrelated trade.\n\n"
             + BADGES +
             "This builds on [Steamroller](../../27-steamroller/), which showed the FX **carry** premium is "
             "real but crash-prone, and that vol-targeting *can't* dodge the crash. Greenback asks the next "
@@ -122,8 +123,10 @@ def build_curious():
             "## The answer first 💵 (on the real 2001–2024 G10 tape)\n\n"
             "| What we asked | The honest answer |\n"
             "|---|---|\n"
-            "| Do high-rate currencies out-earn? | 🟩 **Yes, thinly.** Carry high-minus-low **+{hml}%/yr**; "
-            "carry Sharpe **{cs}** (bootstrap CI [{lo}, {hi}], {fn}% of resamples negative). |\n"
+            "| Do high-rate currencies out-earn? | 🟨 **The literature says yes; this sample alone reads "
+            "weak.** Carry high-minus-low **+{hml}%/yr**; carry Sharpe **{cs}** — but that is only *t* ≈ 1.0 "
+            "over 22 years, and the bootstrap 95% CI **[{lo}, {hi}]** spans zero ({fn}% of resamples "
+            "negative). |\n"
             "| Is there a steamroller? | 🟨 **Yes.** Carry skew **{csk}**, worst month **{cw}%** (Oct-2008), "
             "max drawdown **{cdd}%** — the negative-skew crash carry can't escape. |\n"
             "| Did FX momentum work? | 🟥 **No.** Momentum Sharpe **{ms}** over 2001–2024 — cross-sectional "
@@ -131,8 +134,9 @@ def build_curious():
             "| Did the carry⊕momentum combo help? | 🟨 **Partly.** It *cushions* the crash (legs correlate "
             "just **{corr}**; worst month **{cw}% → {kw}%**), but combo Sharpe **{cob}** can't beat carry "
             "**{cs}** while momentum loses. |\n\n"
-            "> Desk shorthand: **Signal `REAL` · Tradability `FRAGILE` · Combo diversifies the crash? "
-            "`PARTIAL`** — a real (thin) premium, its crash *dulled* by diversification but its Sharpe not "
+            "> Desk shorthand: **Signal `WEAK` · Tradability `FRAGILE` · Combo diversifies the crash? "
+            "`PARTIAL`** — the stamp leans on three decades of literature for carry's existence; this "
+            "23-year sample alone reads weak. Its crash is *dulled* by diversification but its Sharpe not "
             "lifted, because this sample's momentum had no edge to lend.".format(
                 hml=G['hml'], cs=G['carry_sh'], lo=G['ci_lo'], hi=G['ci_hi'], fn=G['frac_neg'],
                 csk=G['carry_skew'], cw=G['carry_worst'], cdd=G['carry_dd'], ms=G['mom_sh'],
@@ -227,8 +231,10 @@ def build_curious():
         ),
 
         md("## 5 · The verdict 🧾 (on the real tape)\n\n"
-           f"- **Signal `REAL`** — carry high-minus-low **+{G['hml']}%/yr**, carry Sharpe **{G['carry_sh']}** "
-           f"(thin: CI [{G['ci_lo']}, {G['ci_hi']}]); the steamroller is real (skew **{G['carry_skew']}**, "
+           f"- **Signal `WEAK`** — carry high-minus-low **+{G['hml']}%/yr**, carry Sharpe **{G['carry_sh']}** "
+           f"at only Lo *t* ≈ {G['carry_t']}, bootstrap CI [{G['ci_lo']}, {G['ci_hi']}] spanning zero — this "
+           "sample can't certify the premium; three decades of literature (LRV 2011; Menkhoff et al. 2012) "
+           f"carry the existence case. The steamroller, at least, is unmistakable (skew **{G['carry_skew']}**, "
            f"worst month **{G['carry_worst']}%** in Oct-2008).\n"
            f"- **Tradability `FRAGILE`** — thin and cost-sensitive: carry break-even only **≈{G['carry_be']} "
            f"bp**, and the crash never leaves.\n"
@@ -263,7 +269,9 @@ def build_curious():
             "real; the real-tape `PARTIAL` is about *this sample's* dead momentum, not the combo idea.\n\n"
             "### Other forks\n"
             "- **Optimal combo weight** — sweep `w_carry` and risk-parity vs the realised crisis correlation.\n"
-            "- **Dollar-carry as a third leg** — add the LRV dollar factor (Sharpe +0.17 on the real tape).\n"
+            "- **Dollar-carry as a third leg** — add the LRV dollar factor (Sharpe +0.17 on the real tape; "
+            "note its cost model under-charges the basket's turnover, so that number is if anything "
+            "flattered).\n"
             "- **Crisis-conditional tilt** — lean toward momentum when global FX vol is rising.\n\n"
             "PRs welcome."
         ),
@@ -282,11 +290,12 @@ def build_quants():
             "beats, every claim with its number.* The steelman: FX carry is a real premium (§8.3/§8.4 of "
             "Kakushadze-Serur), and the **carry⊕momentum combo** beats either leg because the two "
             "decorrelate. The synthetic control confirms the machinery (carry Sharpe +1.18, null flat, "
-            "combo +1.69 with a winning momentum leg). On the **real G10 tape (2001–2024)** carry is "
-            "`REAL`-but-thin (Sharpe +0.22) with its `FRAGILE` steamroller (skew −0.70, worst month −10.6% "
-            "in Oct-2008), FX momentum **decayed to −0.14**, and so the combo `PARTIAL`-ly delivers: it "
-            "cushions the crash (decorrelated legs +0.05) but can't out-Sharpe carry — building on Study 27, "
-            "not repeating it.\n\n"
+            "combo +1.69 with a winning momentum leg). On the **real G10 tape (2001–2024)** carry reads "
+            "`WEAK` (Sharpe +0.22, Lo *t* ≈ 1.0, bootstrap CI spanning zero — the literature, not this "
+            "sample, carries the existence case) with its `FRAGILE` steamroller (skew −0.70, worst month "
+            "−10.6% in Oct-2008), FX momentum **decayed to −0.14**, and so the combo `PARTIAL`-ly delivers: "
+            "it cushions the crash (decorrelated legs +0.05) but can't out-Sharpe carry — building on Study "
+            "27, not repeating it.\n\n"
             "> ⚠️ **Not investment advice.** Executes on BOTH a synthetic control and the **real G10 tape** "
             "(offline from cache); the fingerprinted real numbers are in "
             "[`../docs/results.md`](../docs/results.md), sources in "
@@ -301,17 +310,19 @@ def build_quants():
             "## Beat 0 · Verdict (on the real 2001–2024 G10 tape)\n\n"
             "| Axis | Stamp | Why |\n"
             "|---|---|---|\n"
-            f"| **Signal** — carry real? | 🟢 `REAL` | High-minus-low **+{G['hml']}%/yr**, carry Sharpe "
-            f"**{G['carry_sh']}** (CI [{G['ci_lo']}, {G['ci_hi']}], {G['frac_neg']}% negative) — thin but "
-            "real. |\n"
+            f"| **Signal** — carry real? | 🟡 `WEAK` | High-minus-low **+{G['hml']}%/yr**, carry Sharpe "
+            f"**{G['carry_sh']}** — but Lo *t* ≈ **{G['carry_t']}** and the bootstrap CI **[{G['ci_lo']}, "
+            f"{G['ci_hi']}]** spans zero ({G['frac_neg']}% of resamples negative): this 23-year sample alone "
+            "can't certify the premium; the stamp's existence case is the literature's three decades. |\n"
             f"| **Tradability** | 🟡 `FRAGILE` | Carry skew **{G['carry_skew']}**, worst month "
             f"**{G['carry_worst']}%**, break-even only **≈{G['carry_be']} bp**; thin and crash-prone. |\n"
             f"| **Combo diversifies the crash?** | 🟡 `PARTIAL` | Legs decorrelate (**{G['corr']}**) so the "
             f"combo cushions the crash (worst month **{G['carry_worst']}% → {G['combo_worst']}%**), but combo "
             f"Sharpe **{G['combo_sh']}** < carry **{G['carry_sh']}** because momentum lost (**{G['mom_sh']}**). |\n\n"
-            "> **In one sentence:** a real-but-thin FX carry premium with a brutal negative-skew crash, "
-            "*cushioned* (not out-Sharpe'd) by blending in decorrelated momentum — because over 2001–2024 FX "
-            "momentum itself lost money, the combo dulls the jump without lifting the Sharpe.\n\n"
+            "> **In one sentence:** an FX carry premium the literature calls real but this 23-year sample "
+            "stamps `WEAK` (*t* ≈ 1.0, CI spanning zero), with a brutal negative-skew crash, *cushioned* "
+            "(not out-Sharpe'd) by blending in decorrelated momentum — because over 2001–2024 FX momentum "
+            "itself lost money, the combo dulls the jump without lifting the Sharpe.\n\n"
             "*(Both the synthetic control and the real G10 tape execute below; fingerprinted real numbers in "
             "[`../docs/results.md`](../docs/results.md).)*"
         ),
@@ -324,7 +335,11 @@ def build_quants():
             "vol-scaled to a common target, then the **combo** is $\\tfrac12 c_t+\\tfrac12 m_t$. Claim: "
             "$\\text{Sharpe}(\\text{combo})>\\max(\\text{Sharpe}(c),\\text{Sharpe}(m))$ and "
             "$\\text{corr}(c,m)$ is low. Null: full UIRP ⇒ no carry premium (the spot exactly offsets the "
-            "rate gap)."
+            "rate gap).\n\n"
+            "Two construction notes, stated plainly: the momentum sleeve is a **12-month trend** — the "
+            "trailing 12-month return with *no* skip month (a 12-0 signal, not the academic 12-1 "
+            "convention that drops the most recent month); and the rate-bucket table below is a same-month "
+            "*descriptive* sort (unlagged), unlike the tradable sleeves whose weights are lagged one month."
         ),
         code(
             "for label, (xx, rr) in [('carry panel', (xr, rd)), ('null', (x0, r0))]:\n"
@@ -440,10 +455,13 @@ def build_quants():
         ),
 
         md("## Beat 5 · The verdict (real tape)\n\n"
-           f"- **`REAL`** (4d): high-minus-low +{G['hml']}%/yr, carry Sharpe {G['carry_sh']} (CI [{G['ci_lo']}, {G['ci_hi']}]); thin but real.\n"
+           f"- **`WEAK`** (4d): high-minus-low +{G['hml']}%/yr, carry Sharpe {G['carry_sh']} — but Lo *t* ≈ "
+           f"{G['carry_t']} and bootstrap CI [{G['ci_lo']}, {G['ci_hi']}] spanning zero: below the desk's "
+           "robust-inference bar. The stamp leans on three decades of literature for existence; this sample "
+           "alone reads weak.\n"
            f"- **`FRAGILE`** (4d): carry skew {G['carry_skew']}, worst month {G['carry_worst']}%, break-even ≈{G['carry_be']} bp; crash + thin edge.\n"
            f"- **Combo diversifies the crash? `PARTIAL`**: legs decorrelate ({G['corr']}), combo cushions ({G['carry_worst']}% → {G['combo_worst']}% worst month) but Sharpe {G['combo_sh']} < carry {G['carry_sh']} (momentum {G['mom_sh']}).\n\n"
-           "> **Signal `REAL` · Tradability `FRAGILE` · Combo diversifies the crash? `PARTIAL`** — the "
+           "> **Signal `WEAK` · Tradability `FRAGILE` · Combo diversifies the crash? `PARTIAL`** — the "
            "dollar-carry / carry⊕momentum-combo companion to Study 27."),
 
         md("## Beat 6 · Could you trade it?\n\n"
@@ -476,12 +494,15 @@ def build_quants():
         md(
             "### 7b · Other forks\n"
             "- **Optimal combo weight** — sweep `w_carry`, risk-parity vs the realised crisis correlation.\n"
-            "- **Dollar-carry as a third leg** — the LRV dollar factor earns Sharpe +0.17 on the real tape.\n"
+            "- **Dollar-carry as a third leg** — the LRV dollar factor earns Sharpe +0.17 on the real tape "
+            "(its cost term under-charges the basket's turnover by roughly the basket width, so that "
+            "non-headline number is if anything flattered).\n"
             "- **Crisis-conditional tilt** — lean toward momentum when global FX vol (Brunnermeier-Nagel-"
             "Pedersen) is rising.\n\n"
-            "**The result.** On the synthetic control the carry premium is `REAL` and recovered and the "
-            "combo beats both legs *with a winning momentum leg*. On the **real G10 tape (2001–2024)** carry "
-            "is `REAL`-but-thin with its `FRAGILE` steamroller, FX momentum decayed to negative, and the "
+            "**The result.** On the synthetic control the carry premium is recovered and the combo beats "
+            "both legs *with a winning momentum leg* — the machinery proof. On the **real G10 tape "
+            "(2001–2024)** carry reads `WEAK` (*t* ≈ 1.0, CI spanning zero — the literature carries the "
+            "existence case) with its `FRAGILE` steamroller, FX momentum decayed to negative, and the "
             "combo `PARTIAL`-ly delivers — cushioning the crash (decorrelated legs) without lifting the "
             "Sharpe. Exactly the §8.3/§8.4 thesis, building on Study 27. Fingerprinted writeups in "
             "[`../docs/results.md`](../docs/results.md) and [`../docs/extension.md`](../docs/extension.md)."

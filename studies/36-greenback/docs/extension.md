@@ -35,7 +35,7 @@ crash, cushioning the drawdown carry alone can't escape.
 
 ## The result on the real G10 tape (OECD short rates + yfinance FX, 2001–2024, net @10 bp)
 
-| | carry (cross-sectional) | momentum (12-1m) | **carry⊕momentum combo** |
+| | carry (cross-sectional) | momentum (12-month trend, no skip) | **carry⊕momentum combo** |
 |---|---|---|---|
 | Sharpe | **+0.22** | **−0.14** | +0.06 |
 | monthly skew | −0.70 | +0.39 | −0.57 |

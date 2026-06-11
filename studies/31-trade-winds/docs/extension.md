@@ -16,6 +16,13 @@ standalone `FRAGILE` verdict was, in large part, a breadth limitation: with a br
 *timing* clears the bar the narrow one couldn't. The crisis alpha survives the widening
 (+16.7%/yr in the worst equity months, correlation −0.03).
 
+**Read the comparison with care — it is not apples-to-apples.** The 0.55 runs on a *different
+universe and a different period* (27 ETFs, 1993–2026) than the benchmarks it is set against (18
+futures and their basket/60/40, 2000–2026), and the ETF backtest takes short positions and leverage
+**without charging financing or borrow costs** — costs a futures book embeds in the price but an ETF
+book pays explicitly. The honest reading is the breadth *direction* (Sharpe rises monotonically with
+the market count), not a like-for-like benchmark beat.
+
 ## Data stamp
 
 - **Universe**: 27 ETFs, 1993-02-01 → 2026-06-10, 8397 days, inputs fingerprint `78f6e1add375`
@@ -40,9 +47,9 @@ and breadth is the dial.
 ## What it does (and doesn't) change
 
 - **Standalone tradability** moves from `FRAGILE` toward the edge of investable on the wider
-  universe (0.55 vs benchmarks ~0.50). We do **not** restamp the headline verdict — the main study's
-  18-futures result stands as published, and the honest reading is *"fragile narrow, competitive
-  wide."*
+  universe (0.55 vs benchmarks ~0.50 — with the universe/period/financing caveat above). We do
+  **not** restamp the headline verdict — the main study's 18-futures result stands as published,
+  and the honest reading is *"fragile narrow, competitive wide."*
 - **The core thesis is unchanged and reinforced.** Whether at 18 or 27 markets, the value is the
   decorrelated, positive-payoff-in-crises return stream — a portfolio diversifier. Breadth raises the
   standalone Sharpe; it doesn't turn trend into a market-timing crystal ball.

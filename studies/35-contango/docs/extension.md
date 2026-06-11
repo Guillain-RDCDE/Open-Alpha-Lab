@@ -31,8 +31,9 @@ A 50/50 blend of the carry book and a 26-week cross-sectional momentum sleeve, n
 
 ## What it means
 
-The worked complement sharpens the verdict: commodity carry is `REAL` but `FRAGILE` (volatile,
-crash-prone) — and the standard institutional fix is **not** to lever carry harder but to **diversify it**
+The worked complement sharpens the verdict: commodity carry is economically forceful but `WEAK` on the
+liquid tape (HAC *t* < 2) and volatile, crash-prone to hold — and the standard institutional fix is
+**not** to lever carry harder but to **diversify it**
 with a lowly-correlated momentum sleeve, which lifts the combined Sharpe and softens the carry crash. This
 mirrors the lesson of [Study 31 (Trade-Winds)](../../31-trade-winds/): on this desk the edge is
 diversification, not prediction. On the real energy tape the cross-section is too thin to run this blend

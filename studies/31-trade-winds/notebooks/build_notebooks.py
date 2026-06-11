@@ -39,6 +39,7 @@ print(f"synthetic control: {truth.n_markets} markets x {truth.n_days} days, tren
 # Real-tape numbers (../docs/results.md, 18 futures 2000-2026, as-of 2026-06-10, fp efab160ee1f0)
 R = dict(fp="efab160ee1f0", asof="2026-06-10", days="6546", n="18",
          ts_sh="0.30", ts_cagr="2.8", ts_dd="-35", ts_skew="+1.50",
+         ts_t="1.6", t12_sh="0.65", t12_t="3.3", span_alpha="3.3", span_t="1.6",
          lob_sh="0.51", b6040_sh="0.48",
          crisis="+23.6", rest="+1.1", corr="-0.07", ncrisis="31",
          eq_sh="0.43", eq_dd="-57", eqtr_sh="0.52", eqtr_dd="-33",
@@ -49,7 +50,7 @@ R = dict(fp="efab160ee1f0", asof="2026-06-10", days="6546", n="18",
          br1="0.20", br8="0.46", br16="0.51", br27="0.55")
 
 BADGES = (
-    "![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)\n"
+    "![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)\n"
     "![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)\n"
     "![Crisis alpha?: Confirmed](https://img.shields.io/badge/Crisis_alpha%3F-Confirmed-8b949e?style=flat-square)\n\n"
 )
@@ -66,14 +67,17 @@ def build_curious():
     cells = [
         md(
             "# Trade-Winds 🌬️\n"
-            "### \"The trend is your friend\" — the one trading cliché that actually survives the data. But how do you *get paid* for it?\n\n"
+            "### \"The trend is your friend\" — the cliché with a century of evidence behind it. On our 26-year tape it reads weaker than the legend — but the portfolio case survives.\n\n"
             + BADGES +
-            "Almost every clever strategy this desk tests turns out to be a mirage. Here's the exception. "
-            "Ask each market — stocks, bonds, oil, gold, the euro — one dumb question: *has it been going "
-            "up or down lately?* Ride the ones going up, short the ones going down, spread your risk evenly "
-            "across all of them. It's the engine of the entire managed-futures industry, and it has a "
-            "century of evidence behind it. The twist: on its own it *won't* beat just owning a basket — "
-            "but it makes money exactly when stocks crash, and **that** turns out to be worth a great deal.\n\n"
+            "Almost every clever strategy this desk tests turns out to be a mirage. This one comes closest "
+            "to an exception. Ask each market — stocks, bonds, oil, gold, the euro — one dumb question: "
+            "*has it been going up or down lately?* Ride the ones going up, short the ones going down, "
+            "spread your risk evenly across all of them. It's the engine of the entire managed-futures "
+            "industry, with a century of evidence behind it. Two twists: on our own 26-year tape the "
+            "headline book is too thin to certify statistically (the desk stamps it `WEAK`, leaning on the "
+            "classic 12-month leg and the literature for existence) — and on its own it *won't* beat just "
+            "owning a basket. Yet it makes money exactly when stocks crash, and **that** turns out to be "
+            "worth a great deal.\n\n"
             "> 📓 **This is the plain-language layer.** The cost & lookback sweeps, the decay, and the "
             "crisis-alpha decomposition are in **[02_for_the_quants.ipynb](02_for_the_quants.ipynb)** — same story, deeper.\n"
             ">\n"
@@ -88,15 +92,21 @@ def build_curious():
             "## The answer first 🎯\n\n"
             "| What we asked | The honest answer |\n"
             "|---|---|\n"
-            "| Is trend-following real? | ✅ **Yes.** It pays across every lookback, recovers on our control "
-            f"(Sharpe {R['syn_prem']} vs the null's {R['syn_null']}), and has a fat *right* tail (skew {R['ts_skew']}). |\n"
+            "| Is trend-following real? | 🟡 **The literature says yes; this tape alone can't certify it.** "
+            f"It pays across every lookback and has a fat *right* tail (skew {R['ts_skew']}), but the headline "
+            "blend's net Sharpe **{ts}** is only *t* ≈ {tst} over ~26 years — below the desk's bar. The classic "
+            "12-month leg does clear it (Sharpe {t12}, *t* ≈ {t12t}). |\n"
             "| Does it beat just owning the basket? | 🟡 **No, on its own.** Net Sharpe **{ts}** trails the "
             "always-long basket (**{lob}**) and 60/40 (**{b}**). |\n"
-            "| So why run it? | ⚪ **Crisis alpha.** It makes **{cr}%/yr when stocks crash** (corr **{c}**); "
-            "a 30% sleeve lifts a 60/40's Sharpe **{bs}→{bts}** and halves its drawdown **{bd}%→{btd}%**. |\n\n"
-            "> Desk shorthand: **Signal `REAL` · Tradability `FRAGILE` · Crisis alpha? `CONFIRMED`** — the "
-            "edge isn't prediction, it's diversification.".format(
-                ts=R['ts_sh'], lob=R['lob_sh'], b=R['b6040_sh'], cr=R['crisis'], c=R['corr'],
+            "| So why run it? | ⚪ **Crisis alpha.** It made **{cr}%/yr in the {nc} worst equity months** (corr "
+            "**{c}**) — an in-sample split, read it as a description, not a tested effect; a 30% sleeve lifts "
+            "a 60/40's Sharpe **{bs}→{bts}** and halves its drawdown **{bd}%→{btd}%**. |\n\n"
+            "> Desk shorthand: **Signal `WEAK` (on this tape) · Tradability `FRAGILE` · Crisis alpha? "
+            "`CONFIRMED`** — the edge isn't prediction, it's diversification. (Our control recovers Sharpe "
+            f"{R['syn_prem']} vs the null's {R['syn_null']} — a *machinery* proof, the premium is wired in "
+            "there by construction.)".format(
+                ts=R['ts_sh'], tst=R['ts_t'], t12=R['t12_sh'], t12t=R['t12_t'], lob=R['lob_sh'],
+                b=R['b6040_sh'], cr=R['crisis'], nc=R['ncrisis'], c=R['corr'],
                 bs=R['b_sh'], bts=R['btr_sh'], bd=R['b_dd'], btd=R['btr_dd'])
         ),
 
@@ -146,14 +156,17 @@ def build_curious():
             "    print(f\"{label:20} Sharpe {s['sharpe']:+.2f}  skew {s['skew']:+.2f}\")"
         ),
         md(
-            "### 4b · On the real tape — fragile alone, but real crisis alpha\n"
+            "### 4b · On the real tape — weak alone, but real crisis alpha\n"
             "On 18 real futures, 2000–2026 ([`../docs/results.md`](../docs/results.md)):\n\n"
             f"- Standalone net Sharpe **{R['ts_sh']}** — *below* the always-long basket (**{R['lob_sh']}**) "
-            f"and 60/40 (**{R['b6040_sh']}**). The timing alone doesn't clear the bar.\n"
-            f"- But it earns **{R['crisis']}%/yr in the worst {R['ncrisis']} equity months** vs {R['rest']}% "
-            f"the rest of the time, at **{R['corr']}** correlation to stocks — textbook crisis alpha.\n"
+            f"and 60/40 (**{R['b6040_sh']}**), and at only *t* ≈ {R['ts_t']} (Lo SE) over ~26 years it doesn't "
+            "clear the desk's significance bar either. The classic 12-month leg does (Sharpe "
+            f"{R['t12_sh']}, *t* ≈ {R['t12_t']}).\n"
+            f"- But it earned **{R['crisis']}%/yr in the worst {R['ncrisis']} equity months** vs {R['rest']}% "
+            f"the rest of the time, at **{R['corr']}** correlation to stocks — the textbook crisis-alpha "
+            "shape (an in-sample split over 31 months; no significance test is possible at that n).\n"
             f"- Sub-period Sharpe **{R['sub1']} / {R['sub2']} / {R['sub3']}** — it worked, endured the "
-            "2010s drought, then revived. A real premium with real lean years."
+            "2010s drought, then revived. A premium with a century of literature behind it, and real lean years."
         ),
 
         md("### 4c · The payoff — trend as a portfolio diversifier"),
@@ -177,12 +190,17 @@ def build_curious():
 
         md(
             "## 5 · The verdict 🧾\n\n"
-            f"- **Real premium** — control Sharpe {R['syn_prem']} vs null {R['syn_null']}; positive across lookbacks; +skew.\n"
+            f"- **Weak signal on this tape** — the headline blend's net Sharpe {R['ts_sh']} is *t* ≈ {R['ts_t']} "
+            f"over ~26 years, short of the desk's robust-inference bar; the 12-month leg clears it (*t* ≈ "
+            f"{R['t12_t']}) and the literature (a century of evidence) argues the premium exists. Positive "
+            "across lookbacks; +skew. (The control's Sharpe "
+            f"{R['syn_prem']} vs null {R['syn_null']} proves the *machinery*, not the market.)\n"
             f"- **Fragile standalone** — net Sharpe {R['ts_sh']} < long-only basket {R['lob_sh']}; a decade-long drought.\n"
             f"- **Crisis alpha confirmed** — {R['crisis']}%/yr in equity crises, corr {R['corr']}; a 30% sleeve "
-            f"lifts 60/40 Sharpe {R['b_sh']}→{R['btr_sh']}, drawdown {R['b_dd']}%→{R['btr_dd']}%.\n\n"
-            "> **Signal `REAL` · Tradability `FRAGILE` · Crisis alpha? `CONFIRMED`.** Not a standalone money "
-            "machine — decorrelated insurance that pays you to hold it."
+            f"lifts 60/40 Sharpe {R['b_sh']}→{R['btr_sh']}, drawdown {R['b_dd']}%→{R['btr_dd']}% (descriptive: "
+            "the crisis split is in-sample, n = 31 months).\n\n"
+            "> **Signal `WEAK` (on this tape) · Tradability `FRAGILE` · Crisis alpha? `CONFIRMED`.** Not a "
+            "standalone money machine — decorrelated insurance that pays you to hold it."
         ),
 
         md(
@@ -207,7 +225,10 @@ def build_curious():
             f"- The full wider book's standalone Sharpe is **{R['wide_sh']}** — *above* the basket (0.51) "
             "and 60/40 (0.48) that the narrow 18-market book trailed. **The `FRAGILE` standalone verdict "
             "was largely a breadth limitation** — and the curve is still rising at 27, which is why real "
-            "managed futures runs 50–100+ markets.\n\n"
+            "managed futures runs 50–100+ markets. (Caveat: that 0.55 is a *different universe and period* — "
+            "ETFs 1993–2026 vs futures 2000–2026 — and the ETF backtest charges no financing or borrow cost "
+            "on its shorts and leverage. Read it as the breadth *direction*, not a like-for-like upgrade on "
+            "the main study's benchmarks.)\n\n"
             "### Other forks\n"
             "- **More breadth still** — single-stock futures, more rates/FX; the sweep says Sharpe keeps climbing.\n"
             "- **Combine with carry** — trend + carry is the classic two-premium managed-futures core.\n"
@@ -230,8 +251,10 @@ def build_quants():
             + BADGES +
             "The deep companion to the [notebook for the curious](01_for_the_curious.ipynb) — *same seven "
             "beats, every claim with its number.* The steelman: cross-asset time-series momentum is a real, "
-            "century-tested premium with crisis alpha. We confirm it's real, show it's fragile *standalone*, "
-            "and that its value is as a decorrelated portfolio diversifier.\n\n"
+            "century-tested premium with crisis alpha. On our own 26-year tape the headline blend doesn't "
+            "clear robust inference (Lo *t* ≈ 1.6 ⇒ Signal `WEAK`, with the 12-month leg at *t* ≈ 3.3 and "
+            "the literature carrying the existence case), it's fragile *standalone*, and its value is as a "
+            "decorrelated portfolio diversifier.\n\n"
             "> ⚠️ **Not investment advice.** The core executes on a synthetic regime-switching trend panel; "
             "the real 18-futures run is in [`../docs/results.md`](../docs/results.md), sources in "
             "[`../docs/references.md`](../docs/references.md).\n"
@@ -244,14 +267,19 @@ def build_quants():
             "## Beat 0 · Verdict\n\n"
             "| Axis | Stamp | Why |\n"
             "|---|---|---|\n"
-            f"| **Signal** — is TSMOM real? | 🟢 `REAL` | Control Sharpe **{R['syn_prem']}** vs null "
-            f"**{R['syn_null']}**; positive across lookbacks; skew **{R['ts_skew']}**. |\n"
+            f"| **Signal** — is TSMOM real? | 🟡 `WEAK` (on this tape) | Headline blend net Sharpe "
+            f"**{R['ts_sh']}**, Lo/HAC *t* ≈ **{R['ts_t']}** over ~26 years — below the desk's bar. The "
+            f"12-month leg clears it (Sharpe {R['t12_sh']}, *t* ≈ {R['t12_t']}); positive across lookbacks, "
+            f"skew **{R['ts_skew']}**; existence leans on the literature. |\n"
             f"| **Tradability** — beats the basket standalone? | 🟡 `FRAGILE` | Net Sharpe **{R['ts_sh']}** < "
             f"long-only basket **{R['lob_sh']}** < ; 2010s drought (**{R['sub2']}**); break-even ~5 bp. |\n"
-            f"| **Crisis alpha?** | ⚪ `Confirmed` | **{R['crisis']}%/yr** in worst equity months, corr "
-            f"**{R['corr']}**; a 30% sleeve lifts 60/40 Sharpe **{R['b_sh']}→{R['btr_sh']}**. |\n\n"
-            "> **In one sentence:** a real, century-tested premium that under-earns a diversified basket on "
-            "its own, but is genuinely uncorrelated crisis insurance — its job is to be *in* a portfolio.\n\n"
+            f"| **Crisis alpha?** | ⚪ `Confirmed` | **{R['crisis']}%/yr** in the worst {R['ncrisis']} equity "
+            f"months (in-sample split, descriptive), corr **{R['corr']}**; a 30% sleeve lifts 60/40 Sharpe "
+            f"**{R['b_sh']}→{R['btr_sh']}**. |\n\n"
+            "> **In one sentence:** a century-tested premium that this 26-year, 18-market tape alone can't "
+            "certify (blend *t* ≈ 1.6; the 12-month leg clears at *t* ≈ 3.3) and that under-earns a "
+            "diversified basket on its own — but is genuinely uncorrelated crisis insurance; its job is to "
+            "be *in* a portfolio.\n\n"
             "*(This notebook executes on the synthetic control; the real numbers are in "
             "[`../docs/results.md`](../docs/results.md).)*"
         ),
@@ -280,17 +308,21 @@ def build_quants():
 
         md(
             "## Beat 3 · Pre-registered protocol\n\n"
-            "1. **Real?** `book_returns` on control vs null; `extension.lookback_sweep`.\n"
+            "1. **Real?** `book_returns` on control vs null; `extension.lookback_sweep`; and on the real "
+            "tape, autocorrelation-robust inference (Lo SE / Newey-West) on the net book — the house bar is "
+            "*t* ≥ 2.\n"
             "2. **Standalone edge?** vs `costs.long_only_basket` and 60/40.\n"
             "3. **Crisis alpha** (`costs.crisis_alpha`): return in worst equity months, corr to equities.\n"
             "4. **Decay** (`extension.subperiod_sharpe`) + **costs** (`costs.cost_sweep`).\n\n"
-            "**Fragile line:** standalone net Sharpe < the long-only basket of the same markets."
+            "**Fragile line:** standalone net Sharpe < the long-only basket of the same markets. "
+            "**Weak line:** real-tape *t* < 2 on the headline book ⇒ Signal `WEAK`, whatever the control says."
         ),
 
         md("## Beat 4 · The teardown\n\n### 4a · Standalone vs the basket (the FRAGILE call)"),
         code(
             "print('Real tape (../docs/results.md):')\n"
-            f"print('  TSMOM           Sharpe {R['ts_sh']}  CAGR {R['ts_cagr']}%  maxDD {R['ts_dd']}%  skew {R['ts_skew']}')\n"
+            f"print('  TSMOM           Sharpe {R['ts_sh']}  CAGR {R['ts_cagr']}%  maxDD {R['ts_dd']}%  skew {R['ts_skew']}  Lo t ~{R['ts_t']}')\n"
+            f"print('  12-month leg    Sharpe {R['t12_sh']}  Lo t ~{R['t12_t']} (the only leg that clears the t>=2 bar)')\n"
             f"print('  long-only basket Sharpe {R['lob_sh']}')\n"
             f"print('  60/40 (ES/ZN)    Sharpe {R['b6040_sh']}')\n"
             "# on the synthetic control the timing genuinely adds (trends are strong there):\n"
@@ -317,10 +349,15 @@ def build_quants():
         ),
 
         md("## Beat 5 · The verdict\n\n"
-           f"- **Real** (4a, Beat 1): control Sharpe {R['syn_prem']} vs null {R['syn_null']}; +skew; lookback-robust.\n"
+           f"- **Weak on this tape** (4a, Beat 3): headline blend Lo *t* ≈ {R['ts_t']} < 2; the 12-month leg "
+           f"clears (*t* ≈ {R['t12_t']}); +skew; lookback-robust; a spanning regression of the book on 60/40 "
+           f"gives alpha +{R['span_alpha']}%/yr at only *t* ≈ {R['span_t']}. Existence rests on the 12-month "
+           "leg and three decades of out-of-sample literature, not on this blend's own *t*. (Control Sharpe "
+           f"{R['syn_prem']} vs null {R['syn_null']} is the machinery proof.)\n"
            f"- **Fragile standalone** (4a): net {R['ts_sh']} < basket {R['lob_sh']}; drought {R['sub2']}.\n"
-           f"- **Crisis alpha confirmed** (4b): {R['crisis']}%/yr in crises; blend lifts Sharpe & cuts drawdown.\n\n"
-           "> **Signal `REAL` · Tradability `FRAGILE` · Crisis alpha? `CONFIRMED`.**"),
+           f"- **Crisis alpha confirmed** (4b): {R['crisis']}%/yr in crises (in-sample split, n = "
+           f"{R['ncrisis']} months — descriptive); blend lifts Sharpe & cuts drawdown.\n\n"
+           "> **Signal `WEAK` (on this tape) · Tradability `FRAGILE` · Crisis alpha? `CONFIRMED`.**"),
 
         md("## Beat 6 · Could you trade it?\n\n"
            "- **As a 20–40% sleeve, yes.** The diversification raises portfolio Sharpe and halves drawdown; "
@@ -353,7 +390,10 @@ def build_quants():
             f"more markets and it climbs monotonically. Widening from 18 futures to {R['wide_n']} ETFs "
             f"lifts the standalone book to **{R['wide_sh']}** — *past* the benchmarks the narrow book "
             "trailed. The `FRAGILE` stamp was largely a breadth limit; the curve is still rising at "
-            f"{R['wide_n']}, which is why real managed futures runs 50–100+ markets."
+            f"{R['wide_n']}, which is why real managed futures runs 50–100+ markets. Caveat: the {R['wide_sh']} "
+            "is a different universe *and* period (ETFs 1993–2026 vs futures 2000–2026), and the ETF backtest "
+            "charges no financing/borrow cost on shorts and leverage — read the sweep as the breadth "
+            "*direction*, not a like-for-like benchmark beat."
         ),
         md(
             "### 7b · The lookback sweep & the honest decay\n"
@@ -362,13 +402,15 @@ def build_quants():
         code(
             "print('Lookback sweep (synthetic):'); print(extension.lookback_sweep(r).round(3).to_string())\n"
             f"print('\\nReal sub-period Sharpe (../docs/results.md): {R['sub1']} / {R['sub2']} / {R['sub3']}')\n"
-            "print('Real lookback sweep: 1m 0.07, 3m 0.28, 6m 0.39, 12m 0.65, blend 0.30 -- positive across, strongest at 12m.')"
+            "print('Real lookback sweep: 1m 0.07, 3m 0.28, 6m 0.39, 12m 0.65, blend 0.30 -- positive across, strongest at 12m.')\n"
+            "print('Robust t (Lo SE, ~26y): blend ~1.6 (below the bar), 12m ~3.3 (clears) -- the Signal stamp is WEAK on this tape.')"
         ),
         md(
-            "**The result.** Breadth lifts the standalone Sharpe past the benchmarks (7a); the premium is "
-            "positive across every lookback (not a tuned parameter); and the sub-period Sharpe exposes the "
-            "real 2010s drought honestly. A real premium with real lean years, whose portfolio value "
-            "(crisis alpha) survives both. Full runs in [`../docs/results.md`](../docs/results.md) and "
+            "**The result.** Breadth lifts the standalone Sharpe past the benchmarks (7a, with the "
+            "universe/period caveat); the premium is positive across every lookback (not a tuned parameter); "
+            "and the sub-period Sharpe exposes the real 2010s drought honestly. A premium the literature "
+            "supports and this tape stamps `WEAK`, whose portfolio value (crisis alpha) survives both. Full "
+            "runs in [`../docs/results.md`](../docs/results.md) and "
             "[`../docs/extension.md`](../docs/extension.md).\n\n"
             "### 7c · Other forks\n"
             "- **More breadth still** — 50–100 markets; the sweep predicts the Sharpe keeps rising.\n"

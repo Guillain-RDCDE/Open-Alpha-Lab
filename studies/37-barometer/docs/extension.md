@@ -28,7 +28,7 @@ what an ex-post regime study does), and report each book's Sharpe and annualised
 
 The timed inflation book is **less bad when inflation is rising** (the right-sided shape) but the slow
 monthly-momentum signing whipsaws it under water in both regimes over this short sample. Strip the timing
-out and the directional mechanism is unambiguous — an always-long real-asset basket vs nominal bonds
+out and the direction lands the predicted way — an always-long real-asset basket vs nominal bonds
 (TLT/IEF):
 
 | raw real-minus-nominal spread | rising inflation | falling inflation |
@@ -36,9 +36,11 @@ out and the directional mechanism is unambiguous — an always-long real-asset b
 | Sharpe | **+0.10** | −0.01 |
 | ann. return | **+1.8%/yr** | −0.3%/yr |
 
-**Real assets out-earn nominal bonds specifically in rising-inflation months (+1.8%/yr), not in falling
-ones (−0.3%/yr)** — the inflation-hedge mechanism, confirmed on the real tape in *direction*. What is
-`FRAGILE` is monetising it with a slow monthly timing rule on one short cycle.
+**Real assets out-earned nominal bonds in rising-inflation months (+1.8%/yr), not in falling ones
+(−0.3%/yr)** — the inflation-hedge shape, on the right side of zero. But a Sharpe of +0.10 over 104
+rising months is only ***t* ≈ 0.3** — far below any significance bar — so the real tape supports the
+*direction* without certifying it (hence the study's Signal stamp: `WEAK`). What is `FRAGILE` on top is
+monetising it with a slow monthly timing rule on one short cycle.
 
 ## The synthetic control (seed 37, 50 years, gross of cost)
 
@@ -58,13 +60,14 @@ By contrast the broader **macro-momentum book is steadier across both regimes** 
 in the falling-inflation months), because it also rides the *growth* driver, which is independent of the
 inflation cycle — so it does not depend on inflation rising to make money.
 
-**Takeaway.** `WEAK`/`REAL` · `FRAGILE` survives the worked complement, and the complement sharpens *why*
+**Takeaway.** `WEAK` · `FRAGILE` survives the worked complement, and the complement sharpens *why*
 the inflation hedge is `FRAGILE`: it is an **episodic** premium that concentrates in rising-inflation
 regimes. The honest framing — and the fork for the next contributor — is to use the inflation tilt as a
 *conditional overlay* (size it up only when inflation momentum is clearly positive) rather than a permanent
 sleeve, and to combine it with the always-on macro-momentum book for diversification. The real tape
-sharpens the point: the *direction* survives (real assets beat nominal bonds when inflation rises) but the
-*timed monthly book* does not clear noise on one short post-2007 cycle — so the honest use is as a slow,
-conditional overlay sized off a clear inflation-momentum signal, not a standalone Sharpe source.
+sharpens the point: the *direction* lands right-sided (real assets beat nominal bonds when inflation
+rises, at *t* ≈ 0.3) but nothing — neither the spread nor the *timed monthly book* — clears noise on one
+short post-2007 cycle — so the honest use is as a slow, conditional overlay sized off a clear
+inflation-momentum signal, not a standalone Sharpe source.
 
 *Engine: [`quantlab/`](../../../quantlab/). Not investment advice — research and education.*

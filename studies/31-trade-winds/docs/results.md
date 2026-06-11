@@ -8,16 +8,37 @@ time-series momentum (blended 1/3/12-month sign, per-market vol-scaling, 10% por
 negative-WTI print). The offline core proves the machinery on a synthetic regime-switching trend panel;
 this is the measurement on the market. As-of **2026-06-10**; match the fingerprint below.*
 
-## The verdict, earned — Signal `REAL` · Tradability `FRAGILE` · Crisis alpha? `CONFIRMED`
+## The verdict, earned — Signal `WEAK` (on this tape) · Tradability `FRAGILE` · Crisis alpha? `CONFIRMED`
 
-Time-series momentum is a **real** premium — it pays across every lookback, recovers strongly on the
-synthetic control (Sharpe 2.4 vs the null's 0.2), and wears the trend-follower's positive skew (+1.5),
-a fat right tail. But as a **standalone** book it is `FRAGILE`: net Sharpe **0.30** trails the
-always-long diversified basket (**0.51**) and a plain 60/40 (**0.48**), it suffered the well-documented
-2010s drought, and it is cost-sensitive. Its real value is `CONFIRMED` **crisis alpha**: it earns
-**+23.6%/yr in the worst equity months** at a **−0.07** correlation to stocks — and a 30% trend sleeve
-lifts a 60/40's Sharpe **0.48 → 0.56** while halving its drawdown **−34% → −20%**. The edge is not
-prediction; it is decorrelated insurance you can blend into a portfolio.
+Time-series momentum pays across every lookback and wears the trend-follower's positive skew (+1.5),
+a fat right tail — but **on this 26-year, 18-market tape the headline blend does not clear the desk's
+robust-inference bar**: net Sharpe **0.30** is Lo/HAC *t* **≈ 1.6** (see the inference block below), so
+the honest stamp for *this sample* is `WEAK`. The classic 12-month leg does clear it (Sharpe **0.65**,
+*t* **≈ 3.3**), and three decades of out-of-sample literature (Moskowitz–Ooi–Pedersen 2012; Hurst–Ooi–
+Pedersen 2017) argue the premium exists — the stamp is about what this tape alone can certify. (The
+synthetic control's Sharpe 2.4 vs the null's 0.2 is a *machinery* proof — the premium is wired in there
+by construction — not market evidence.) As a **standalone** book it is `FRAGILE`: net Sharpe **0.30**
+trails the always-long diversified basket (**0.51**) and a plain 60/40 (**0.48**), it suffered the
+well-documented 2010s drought, and it is cost-sensitive. Its real value is `CONFIRMED` **crisis alpha**:
+it earned **+23.6%/yr in the worst equity months** at a **−0.07** correlation to stocks — and a 30%
+trend sleeve lifts a 60/40's Sharpe **0.48 → 0.56** while halving its drawdown **−34% → −20%**. The
+edge is not prediction; it is decorrelated insurance you can blend into a portfolio.
+
+## Robust inference — the numbers behind the Signal stamp
+
+Autocorrelation-robust *t*-stats on the net daily books (Lo-2002 SE; Newey–West on the mean agrees to
+the same decimal), computed on the cached tape (2000-07-18 → 2026-06-11, one day past the headline
+as-of; fingerprint `806ee001ea76`):
+
+| book | net Sharpe | Lo *t* | verdict vs the *t* ≥ 2 bar |
+|---|---|---|---|
+| TSMOM blend (1/3/12-month, the headline) | 0.30 | **1.6** | below |
+| 12-month leg alone | 0.65 | **3.3** | clears |
+| spanning alpha of the blend vs 60/40 | +3.3%/yr (β −0.07) | **1.6** | below |
+
+The Sharpe *lift* of the 70/30 blend over 60/40 comes from variance reduction (the −0.07 correlation),
+not from a significant mean — the spanning alpha's *t* matches the standalone book's. That is why the
+Signal stamp is `WEAK` on this tape, with the 12-month leg and the literature carrying the existence case.
 
 ## Data stamp
 
@@ -42,7 +63,10 @@ Standalone, the *timing* loses to simply holding the same markets. That's the `F
 | correlation to the equity sleeve | **−0.07** |
 
 A strategy that makes its money exactly when your stocks are falling, uncorrelated the rest of the time,
-with a positive-skew payoff — that is the textbook crisis-alpha signature, `CONFIRMED`.
+with a positive-skew payoff — that is the textbook crisis-alpha signature, `CONFIRMED`. One honest caveat:
+the split is **in-sample** (the 31 worst equity months are identified ex post) and at n = 31 no
+significance test is possible — read the +23.6%/yr as a description of this sample's shape, not a tested
+effect.
 
 ## The payoff — trend as a portfolio diversifier
 
@@ -55,13 +79,15 @@ with a positive-skew payoff — that is the textbook crisis-alpha signature, `CO
 
 Adding a trend sleeve **raises** the Sharpe of a normal portfolio *and* roughly halves its drawdown —
 the rare free-ish lunch of genuine diversification (a −0.07-correlated, positive-skew return stream).
-This is why managed futures exists, and why the honest verdict is `REAL` signal, `FRAGILE` standalone,
-`CONFIRMED` as the diversifier it's actually for.
+Note the lift is a *variance* effect, not a significant mean (spanning alpha *t* ≈ 1.6, inference block
+above). This is why managed futures exists, and why the honest verdict is `WEAK` signal on this tape,
+`FRAGILE` standalone, `CONFIRMED` as the diversifier it's actually for.
 
 ## Robustness — it isn't a tuned lookback, and the drought is real
 
 Lookback sweep (net Sharpe): 1-month **0.07**, 3-month **0.28**, 6-month **0.39**, 12-month **0.65**,
-blend **0.30** — positive across the board, strongest at the classic 12-month horizon.
+blend **0.30** — positive across the board, strongest at the classic 12-month horizon. Only the 12-month
+leg clears the robust-inference bar (*t* ≈ 3.3; the blend sits at ≈ 1.6 — see the inference block above).
 
 Sub-period Sharpe (the honest decay): **2000–2009 +0.83**, **2009–2017 −0.28** (the drought),
 **2017–2026 +0.29**. Cost sweep: Sharpe **0.47 / 0.39 / 0.30 / 0.05 / −0.37** at **0 / 1 / 2 / 5 / 10**

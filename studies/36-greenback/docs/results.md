@@ -8,7 +8,7 @@
 > creep with the calendar. Reproduce: `python examples/verify.py` (no network); the offline synthetic
 > machinery proof is `python examples/run_synthetic_demo.py`.
 
-## The verdict — Signal `REAL` · Tradability `FRAGILE` · Combo diversifies the crash? `PARTIAL`
+## The verdict — Signal `WEAK` · Tradability `FRAGILE` · Combo diversifies the crash? `PARTIAL`
 
 The FX carry premium — high-short-rate currencies out-earn low-rate ones, because uncovered interest-rate
 parity fails — is one of the most durable anomalies in macro (Lustig–Roussanov–Verdelhan 2011;
@@ -22,10 +22,14 @@ by the average rate gap; LRV's dollar factor).
 
 On the real 2001–2024 G10 tape the verdict splits honestly:
 
-- **Carry is real but thin** — Sharpe **+0.22**, +1.8%/yr, with the textbook negative-skew crash (**skew
-  −0.70**, worst months **Oct-2008 −10.6%** and **Mar-2020 −9.1%**). The bucket spread is **+3.0%/yr**, but
-  the Sharpe's bootstrap 95% CI is **[−0.17, +0.69]** (14% of resamples negative) — a real but weak
-  premium over this post-2000 sample, exactly as the literature finds carry decayed.
+- **Carry pays, but this sample alone can't certify it** — Sharpe **+0.22**, +1.8%/yr, with the textbook
+  negative-skew crash (**skew −0.70**, worst months **Oct-2008 −10.6%** and **Mar-2020 −9.1%**). The bucket
+  spread is **+3.0%/yr**, but the Sharpe is only **Lo *t* ≈ 1.0** and its bootstrap 95% CI is
+  **[−0.17, +0.69]** (14% of resamples negative) — below the desk's *t* ≥ 2 robust-inference bar, so the
+  Signal stamp is **`WEAK`**: it leans on three decades of literature for carry's existence, while this
+  23-year sample alone reads weak — exactly as the literature finds carry decayed post-2000. (The bucket
+  table itself is a same-month *descriptive* sort, unlagged; the tradable sleeves lag their weights one
+  month.)
 - **FX momentum *failed* this sample** — Sharpe **−0.14**, −1.1%/yr. Cross-sectional FX momentum, strong in
   the 1980s–90s, eroded to roughly zero-to-negative post-2008 (Menkhoff et al; the well-documented FX-mom
   decay). On this tape it lost money.
@@ -36,9 +40,10 @@ On the real 2001–2024 G10 tape the verdict splits honestly:
   months the combo lost only **−3.0% vs carry's −7.6%**. The cushion is real; the Sharpe uplift is not —
   *this sample's* momentum simply had no edge to lend. Hence **`PARTIAL`**.
 
-So: **Signal `REAL`** (carry pays, with its crash), **Tradability `FRAGILE`** (a thin, crash-prone, cost-
-sensitive premium), and the combo thesis is **`PARTIAL`** on the real tape — it cushions the steamroller
-exactly as designed, but cannot lift the Sharpe while its momentum leg is itself losing.
+So: **Signal `WEAK`** (carry pays here, with its crash, but at *t* ≈ 1.0 and a CI spanning zero this
+sample can't certify it — the literature carries the existence case), **Tradability `FRAGILE`** (a thin,
+crash-prone, cost-sensitive premium), and the combo thesis is **`PARTIAL`** on the real tape — it cushions
+the steamroller exactly as designed, but cannot lift the Sharpe while its momentum leg is itself losing.
 
 ## The real G10 books (net @10 bp, vol-scaled to 8%, USD-funded monthly, 2001–2024)
 
@@ -46,22 +51,26 @@ exactly as designed, but cannot lift the Sharpe while its momentum leg is itself
 |---|---|---|---|---|---|
 | carry (cross-sectional) | **+0.22** | +1.8% | 8.3% | **−0.70** | −27% |
 | dollar-carry tilt (LRV) | +0.17 | +1.5% | 8.9% | −0.44 | −45% |
-| momentum (12-1m trend) | **−0.14** | −1.1% | 8.0% | +0.39 | −47% |
+| momentum (12-month trend, no skip month) | **−0.14** | −1.1% | 8.0% | +0.39 | −47% |
 | **carry⊕momentum combo** | **+0.06** | +0.4% | 5.9% | −0.57 | −26% |
 
-- **Carry premium:** high-minus-low rate bucket spread **+3.0%/yr**; carry book Sharpe **+0.22**, bootstrap
-  95% CI **[−0.17, +0.69]**, 14% of resamples negative — real but statistically thin over this sample.
+- **Carry premium:** high-minus-low rate bucket spread **+3.0%/yr**; carry book Sharpe **+0.22**, Lo *t* ≈
+  **1.0**, bootstrap 95% CI **[−0.17, +0.69]**, 14% of resamples negative — statistically `WEAK` over this
+  sample; the existence case is the literature's.
 - **The steamroller is on the real tape:** carry skew **−0.70**, worst month **−10.6% (Oct 2008)**, next
   **−9.1% (Mar 2020)** then **−7.0% (Sep 2008)** — the GFC and COVID risk-offs, the crash the literature
   warns of.
-- **Momentum decayed:** the 12-1-month FX-momentum sleeve earned **−0.14** Sharpe on 2001–2024 — the
+- **Momentum decayed:** the 12-month-trend FX-momentum sleeve (trailing 12-month return with **no skip
+  month** — a 12-0 signal, not the academic 12-1 convention) earned **−0.14** Sharpe on 2001–2024 — the
   well-documented erosion of cross-sectional FX momentum after the mid-2000s.
 - **The combo diversifies but doesn't out-Sharpe:** combo **+0.06** < carry **+0.22** (`combo_beats_legs =
   False`) because momentum lost; but leg correlation is **+0.05**, the combo's worst month is **−6.4%** (vs
   carry's −10.6%) and in carry's worst 5 months it lost **−3.0%** vs carry's **−7.6%** — the crash *is*
   cushioned, the Sharpe uplift is not.
 - **The dollar-carry tilt is a separate, weak stream:** Sharpe **+0.17**, −45% DD — the LRV dollar factor
-  is present but, like static carry, thin and crash-exposed on this sample.
+  is present but, like static carry, thin and crash-exposed on this sample. (One honest accounting note:
+  this sleeve's cost term divides the basket flip's turnover across the nine legs, under-charging it by
+  roughly the basket width — the +0.17 is, if anything, overstated. It is not a headline number.)
 - **Cost behaviour (the FRAGILE call):** carry turns over slowly (**0.55×/yr**) but its **break-even is only
   ≈13 bp** — a thin gross edge; momentum turns over **4.4×/yr** and loses gross (break-even 0). The combo's
   net Sharpe decays from **+0.17 (0 bp)** to **+0.06 (10 bp)** to **−0.10 (25 bp)** — cost bites fast.
