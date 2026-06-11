@@ -166,6 +166,9 @@ jobs:
       - name: Study 44 — Growth-Spurt test-suite
         run: pytest -q studies/44-growth-spurt/tests
 
+      - name: Study 45 — Vanishing-Act test-suite
+        run: pytest -q studies/45-vanishing-act/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
