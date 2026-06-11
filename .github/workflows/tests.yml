@@ -151,6 +151,9 @@ jobs:
       - name: Study 39 — Black-Box test-suite
         run: pytest -q studies/39-black-box/tests
 
+      - name: Study 40 — Paper-Tiger test-suite
+        run: pytest -q studies/40-paper-tiger/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
