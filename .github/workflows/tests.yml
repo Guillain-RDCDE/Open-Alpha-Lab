@@ -169,6 +169,9 @@ jobs:
       - name: Study 45 — Vanishing-Act test-suite
         run: pytest -q studies/45-vanishing-act/tests
 
+      - name: Study 46 — Bargain-Bin test-suite
+        run: pytest -q studies/46-bargain-bin/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
