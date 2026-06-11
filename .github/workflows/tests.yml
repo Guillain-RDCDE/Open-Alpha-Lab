@@ -154,6 +154,9 @@ jobs:
       - name: Study 40 — Paper-Tiger test-suite
         run: pytest -q studies/40-paper-tiger/tests
 
+      - name: Study 41 — Hangover test-suite
+        run: pytest -q studies/41-hangover/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
