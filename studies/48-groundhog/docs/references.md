@@ -21,10 +21,12 @@
 ## Data
 
 - **Yahoo! Finance** — monthly total returns for current S&P 500 members with ≥20 years of history.
-  Honest caveats: the universe is **survivorship-biased and large-cap** (the effect is documented across
-  the size spectrum and is typically stronger in smaller names — the untradable end). The offline
-  synthetic panel injects a fixed (stock × calendar-month) bias (and a null) so the same-month-vs-control
-  logic is provable offline.
+  Honest caveats: the universe is **survivorship-biased twice over** (current membership × the
+  long-history filter) and large-cap — `groundhog/data.py` raises a `SurvivorshipBiasError` unless the
+  caller opts in with `allow_survivorship_bias=True`, and the Signal verdict carries the magnitude
+  caveat. The effect is documented across the size spectrum and is typically stronger in smaller names
+  — the untradable end. The offline synthetic panel injects a fixed (stock × calendar-month) bias (and
+  a null) so the same-month-vs-control logic is provable offline.
 
 *The one `REAL`/`CONFIRMED` of the recent bench — contrast with the mirages
 [44 Growth-Spurt](../../44-growth-spurt/), [45 Vanishing-Act](../../45-vanishing-act/),

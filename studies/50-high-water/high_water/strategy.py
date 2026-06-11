@@ -2,8 +2,9 @@
 
 George & Hwang (2004): rank stocks by **nearness to their 52-week high** (price ÷ trailing-12-month
 max), long the near, short the far. Their claim is that this beats — and is distinct from — ordinary
-**12-month momentum**. The tests: (1) does the nearness long-short pay, and (2) is it actually
-different from momentum, or 0.9-correlated to it (a relabelled factor)?
+momentum. The tests: (1) does the nearness long-short pay, and (2) is it actually different from the
+standard **12-2 momentum** control (Jegadeesh-Titman: trailing 12 months skipping the most recent,
+to dodge the 1-month reversal), or ~0.9-correlated to it (a relabelled factor)?
 """
 
 from __future__ import annotations
@@ -26,10 +27,13 @@ def nearness(returns: pd.DataFrame, window: int = MONTHS) -> pd.DataFrame:
     return p / p.rolling(window, min_periods=window).max()
 
 
-def momentum(returns: pd.DataFrame, window: int = MONTHS) -> pd.DataFrame:
-    """Trailing-``window``-month total return — the classic momentum signal, the control."""
+def momentum(returns: pd.DataFrame, window: int = MONTHS, skip: int = 1) -> pd.DataFrame:
+    """Standard **12-2 momentum**, the control: total return from ``window`` months back to ``skip``
+    months back (default 12 → 1), i.e. the trailing year *excluding the most recent month* — the
+    Jegadeesh-Titman convention that sidesteps the 1-month reversal. ``skip=0`` recovers the naive
+    trailing-12-month return."""
     p = _prices(returns)
-    return p / p.shift(window) - 1.0
+    return p.shift(skip) / p.shift(window) - 1.0
 
 
 def cross_section_hedge(returns: pd.DataFrame, signal: pd.DataFrame, q: float = 0.2,
@@ -50,15 +54,17 @@ def cross_section_hedge(returns: pd.DataFrame, signal: pd.DataFrame, q: float = 
 
 
 def signal_overlap(returns: pd.DataFrame) -> float:
-    """Correlation between the 52-week-high hedge and the momentum hedge — how redundant they are."""
+    """Correlation between the 52-week-high hedge and the 12-2 momentum hedge — how redundant they are."""
     h = cross_section_hedge(returns, nearness(returns))
     m = cross_section_hedge(returns, momentum(returns))
     df = pd.concat([h.rename("h"), m.rename("m")], axis=1).dropna()
     return float(df["h"].corr(df["m"])) if len(df) > 2 else np.nan
 
 
-def net_of_cost(hedge: pd.Series, cost_bps: float, turnover: float = 1.6) -> pd.Series:
-    """Net hedge after a per-trade cost (the book reshuffles ~fully each month)."""
+def net_of_cost(hedge: pd.Series, cost_bps: float, turnover: float = 3.2) -> pd.Series:
+    """Net hedge after a per **one-way** trade cost. ``turnover`` is the one-way traded notional per
+    month in NAV multiples: replacing ~80% of a two-sided book = 2 sides × 2 trades × 0.8 ≈ **3.2×
+    NAV one-way** (an earlier version charged 1.6×, treating the sweep as round-trip)."""
     return (hedge - turnover * cost_bps / 1e4).rename(hedge.name)
 
 

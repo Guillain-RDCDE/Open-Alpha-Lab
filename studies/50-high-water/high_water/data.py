@@ -5,7 +5,11 @@
     high *and* has positive momentum *and* tends to keep rising (nearness and momentum both predict,
     and they're correlated, by construction). ``trend = 0`` is the null. Pins the machinery offline.
   * :func:`fetch_panel` — monthly returns for current S&P 500 members with ≥20y history (Yahoo),
-    **cache-first**. Survivorship-biased, large-cap (stated). Fingerprinted run in ``docs/results.md``.
+    **cache-first** and **guarded**: the panel is the current survivor universe projected backwards
+    *and* filtered on ≥20y of history (double-conditioned on the future), so it raises
+    :class:`quantlab.hf_data.SurvivorshipBiasError` unless the caller opts in with
+    ``allow_survivorship_bias=True`` — the same pattern as ``quantlab.hf_data.load_panel``.
+    Fingerprinted run in ``docs/results.md``.
 """
 
 from __future__ import annotations
@@ -57,13 +61,34 @@ def synthetic_panel(
     return pd.DataFrame(R, index=idx, columns=cols), WorldTruth(trend)
 
 
-def fetch_panel(cache_dir: str = DEFAULT_CACHE, fetch: bool = False, min_months: int = 240) -> pd.DataFrame:
-    """Monthly returns of current S&P 500 members with long history, cache-first.
+def fetch_panel(
+    cache_dir: str = DEFAULT_CACHE, fetch: bool = False, min_months: int = 240,
+    allow_survivorship_bias: bool = False,
+) -> pd.DataFrame:
+    """Monthly returns of current S&P 500 members with long history, cache-first — **GUARDED**.
 
-    **Cache-only** unless ``fetch=True`` (Wikipedia membership + Yahoo monthly). Survivorship-biased
-    and large-cap — stated, since 52-week-high effects are documented across the size spectrum and this
-    is the tradable end.
+    This panel is **survivorship-biased twice over**: *current* S&P 500 membership (delisted losers
+    absent) filtered on at least ``min_months`` of history (a second condition on having survived).
+    For this study the bias is not a footnote — the short leg holds fallen names that we *know*
+    survived to rejoin today's index, so their rebounds are partly baked in and the hedge's negative
+    sign is partly manufactured. Like ``quantlab.hf_data.load_panel``, it refuses to hand the panel
+    over unless you pass ``allow_survivorship_bias=True`` and document the bias where you use it.
+    The bias is a property of the panel, not of the download, so the guard applies cache-first too.
+
+    **Cache-only** unless ``fetch=True`` (Wikipedia membership + Yahoo monthly).
     """
+    if not allow_survivorship_bias:
+        import sys
+        sys.path.insert(0, REPO_ROOT)
+        from quantlab.hf_data import SurvivorshipBiasError
+
+        raise SurvivorshipBiasError(
+            "Refusing to build/load the high-water panel: it is current S&P 500 membership "
+            "projected backwards, then filtered on >=20y of history — double-conditioned on the "
+            "future; the short leg's 'guaranteed rebounds' partly manufacture the hedge's sign. "
+            "Pass allow_survivorship_bias=True to override (and state the bias where the numbers "
+            "land)."
+        )
     cache = os.path.join(cache_dir, "high_water_panel.parquet")
     if os.path.exists(cache):
         return pd.read_parquet(cache)
@@ -74,7 +99,10 @@ def fetch_panel(cache_dir: str = DEFAULT_CACHE, fetch: bool = False, min_months:
     from quantlab.universe import sp500_symbols
     import yfinance as yf
 
-    syms = sp500_symbols()
+    try:  # the universe helper may carry the same opt-in guard — pass it through if so
+        syms = sp500_symbols(allow_survivorship_bias=True)
+    except TypeError:
+        syms = sp500_symbols()
     px = yf.download(syms, period="max", interval="1mo", auto_adjust=True, progress=False)["Close"]
     px.index = pd.DatetimeIndex(px.index).tz_localize(None)
     ret = px.resample("ME").last().pct_change()

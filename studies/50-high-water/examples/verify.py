@@ -21,7 +21,10 @@ from high_water import data, strategy as st  # noqa: E402
 
 
 def main(fetch: bool) -> None:
-    ret = data.fetch_panel(fetch=fetch)
+    # Opt-in stated: current S&P 500 membership + >=20y-history filter = survivor panel. For this
+    # study the bias cuts at the *sign*: the short leg (fallen names) is guaranteed survivors, so
+    # the negative hedge is partly manufactured; the momentum correlation is the bias-robust half.
+    ret = data.fetch_panel(fetch=fetch, allow_survivorship_bias=True)
     if ret.empty:
         print("No cached real data. Re-run with --fetch (needs network; the panel download is slow).")
         return
@@ -29,18 +32,18 @@ def main(fetch: bool) -> None:
     hi = st.cross_section_hedge(ret, st.nearness(ret))
     mo = st.cross_section_hedge(ret, st.momentum(ret))
     print(f"\n52-week-high vs momentum, {hi.index.min().date()}..{hi.index.max().date()} "
-          f"({len(hi)} months, {ret.shape[1]} names)\n")
+          f"({len(hi)} months, {ret.shape[1]} names; survivor panel — the sign is partly its artifact)\n")
     h, m = st.stats(hi), st.stats(mo)
     print(f"  52-week-high nearness: mean {h['mean_ann']:+.2%}/yr  Sharpe {h['sharpe']:+.2f}  (Lo t={h['tstat']:+.2f})  hit {h['hit_rate']:.0%}")
-    print(f"  12-month momentum:     mean {m['mean_ann']:+.2%}/yr  Sharpe {m['sharpe']:+.2f}  (Lo t={m['tstat']:+.2f})")
-    print(f"  corr(52w-high hedge, momentum hedge) = {st.signal_overlap(ret):+.2f}  <- ~1 ⇒ same factor")
+    print(f"  12-2 momentum:         mean {m['mean_ann']:+.2%}/yr  Sharpe {m['sharpe']:+.2f}  (Lo t={m['tstat']:+.2f})")
+    print(f"  corr(52w-high hedge, 12-2 momentum hedge) = {st.signal_overlap(ret):+.2f}  <- ~1 ⇒ same factor")
 
     print("\n  decay (52w-high Sharpe):")
-    for lab, sl in [("1999-2012", hi.loc[:"2012"]), ("2013-on", hi.loc["2013":])]:
+    for lab, sl in [("1996-2012", hi.loc[:"2012"]), ("2013-on", hi.loc["2013":])]:
         print(f"    {lab}: {st.stats(sl)['sharpe']:+.2f}")
-    print("  net Sharpe after costs:")
+    print("  net Sharpe after one-way costs (3.2x NAV traded/mo):")
     for c in (5, 10, 20):
-        print(f"    {c:2d} bp/trade: {st.stats(st.net_of_cost(hi, c))['sharpe']:+.2f}")
+        print(f"    {c:2d} bp one-way: {st.stats(st.net_of_cost(hi, c))['sharpe']:+.2f}")
 
     try:
         from quantlab import repro

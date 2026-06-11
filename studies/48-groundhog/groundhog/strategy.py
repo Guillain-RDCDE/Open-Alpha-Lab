@@ -2,9 +2,11 @@
 
 Heston & Sadka (2008): a stock's average return in a given calendar month forecasts its return in that
 same month in the future. Each month we score every stock by its mean return in the *upcoming calendar
-month* over the trailing (up to 20) years, go long the high-seasonal names and short the low. The
-decisive control: do the *other* months' history predict too? If only the same month works, it's a
-genuine seasonal — not generic momentum. We also charge turnover, because the book reshuffles monthly.
+month* over the trailing **up to** 20 years (as few as ``min_hist`` = 5 same-month observations are
+accepted, so the early sample ranks on 5–12 obs and only the later years use the full 20), go long the
+high-seasonal names and short the low. The decisive control: do the *other* months' history predict
+too? If only the same month works, it's a genuine seasonal — not generic momentum. We also charge
+turnover **one-way**: replacing ~80% of a two-sided book each month means ~3.2× NAV of one-way trades.
 """
 
 from __future__ import annotations
@@ -51,10 +53,26 @@ def seasonal_hedge(
     return pd.Series(out, name="seasonal" if same_month else "control")
 
 
-def net_of_cost(hedge: pd.Series, cost_bps: float, turnover: float = 1.6) -> pd.Series:
-    """Approximate net hedge after costs. The book reshuffles ~fully each month; ``turnover`` (legs ×
-    fraction replaced) times ``cost_bps`` is charged monthly. Default 1.6 ≈ 80% of a two-sided book."""
+def net_of_cost(hedge: pd.Series, cost_bps: float, turnover: float = 3.2) -> pd.Series:
+    """Approximate net hedge after costs, counted **one-way**.
+
+    ``cost_bps`` is a *per one-way trade* cost (half-spread + fees); ``turnover`` is the one-way
+    traded notional per month as a multiple of NAV. Replacing ~80% of a two-sided book means, per
+    leg, selling the old name *and* buying the new one: 2 sides × 2 trades × 0.8 ≈ **3.2× NAV
+    one-way per month** — the default. (An earlier version charged 1.6×, silently treating the
+    sweep as round-trip and under-counting costs ~2×.)
+    """
     return (hedge - turnover * cost_bps / 1e4).rename(hedge.name)
+
+
+def net_of_borrow(hedge: pd.Series, borrow_bps_per_year: float, short_notional: float = 1.0) -> pd.Series:
+    """Charge the short leg's stock-borrow fee against the hedge.
+
+    ``borrow_bps_per_year`` is the annual general-collateral borrow rate (large caps typically
+    ~25–50 bp/yr); ``short_notional`` the short leg's size in NAV multiples (1.0 for this book).
+    Charged monthly: ``borrow × notional / 12``.
+    """
+    return (hedge - short_notional * borrow_bps_per_year / 1e4 / MONTHS).rename(hedge.name)
 
 
 def stats(spread: pd.Series, periods_per_year: int = MONTHS) -> dict:
@@ -73,6 +91,7 @@ def stats(spread: pd.Series, periods_per_year: int = MONTHS) -> dict:
     }
 
 
-def breakeven_cost_bps(hedge: pd.Series, turnover: float = 1.6) -> float:
-    """The per-trade cost (bp) at which the net mean hedge return hits zero."""
+def breakeven_cost_bps(hedge: pd.Series, turnover: float = 3.2) -> float:
+    """The per **one-way** trade cost (bp) at which the net mean hedge return hits zero, given
+    ``turnover`` one-way traded NAV multiples per month (3.2 ≈ 80% of a two-sided book replaced)."""
     return float(pd.Series(hedge).astype(float).dropna().mean() * 1e4 / turnover)
