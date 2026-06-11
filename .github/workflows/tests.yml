@@ -181,6 +181,9 @@ jobs:
       - name: Study 49 — Black-Gold test-suite
         run: pytest -q studies/49-black-gold/tests
 
+      - name: Study 50 — High-Water test-suite
+        run: pytest -q studies/50-high-water/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
