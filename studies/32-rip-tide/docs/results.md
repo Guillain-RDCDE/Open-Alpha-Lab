@@ -4,49 +4,61 @@
 continuous futures** as Study 31 (Trade-Winds) — equities (ES, NQ, YM), rates (ZN, ZB, ZF),
 commodities (CL, GC, SI, HG, NG, ZC, ZS, ZW), FX (6E, 6J, 6B, 6A) — 2000–2026. The strategy is the exact
 mirror of the trend book: equal-risk, vol-targeted, but the signal is the **negative** sign of the
-blended 1/3/5-day trailing return (fade the recent move), 2 bp per unit traded. Daily returns are
-clipped to ±25% (continuous-feed roll glitches + the Apr-2020 negative-WTI print). The offline core
-proves the machinery on a synthetic mean-reverting (Ornstein-Uhlenbeck) panel; this is the measurement
-on the market. As-of **2026-06-10**; match the fingerprint below.*
+blended 1/3/5-day trailing return (fade the recent move), executed with **one** lag — the signal known at
+the close of day *t* earns the return of *t+1*. Costs are 2 bp per unit traded where charged, and every
+table below labels **gross** and **net** explicitly. Daily returns are clipped to ±25% (continuous-feed
+roll glitches + the Apr-2020 negative-WTI print). The offline core proves the machinery on a synthetic
+mean-reverting (Ornstein-Uhlenbeck) panel; this is the measurement on the market. As-of **2026-06-10**;
+match the fingerprint below.*
+
+> **Restated run.** An earlier cut of this study lagged the signal **twice** (once inside the signal,
+> once at execution), so the book traded the 1/3/5-day bounce at *t+2* — one day too late — and it quoted
+> the sub-period table's *net* Sharpes as if they were gross. Both are fixed here: one lag, and
+> gross/net labelled everywhere. The corrected gross is higher (+0.25 vs +0.08) but the verdict it earns
+> is the same.
 
 ## The verdict, earned — Signal `NONE` · Tradability `MIRAGE` · Rescue by slowing down? `BUSTED`
 
 Short-horizon contrarian trading — fade the market that just rose — is a textbook anomaly **in single
 stocks**, where it lives off bid-ask bounce and liquidity provision. On a basket of the world's deepest,
-most liquid futures it is **`NONE`**: gross of all costs the book earns a Sharpe of just **0.08** (CAGR
-+0.2%), indistinguishable from zero, and it is *negative in every one of the three sub-periods*. There is
-no reversion premium here to begin with. Tradability is therefore `MIRAGE` by a mile: the book flips
-almost every day (turnover **1.38**/day), so its **break-even cost is 0.24 bp** — below even the ~1 bp it
-costs to trade ES, and an order of magnitude below the cost a slow trend book shrugs off. Net of a
-realistic 2 bp the Sharpe is **−0.56** with an **−88%** drawdown. The obvious rescue — hold positions
-longer to cut turnover — is `BUSTED`: across holding periods of 1→21 days the *net* Sharpe never once
-pokes above zero, because slowing down dilutes a signal that was barely there. The mirror of Study 31 is
-the perfect contrast: same markets, same machinery, opposite sign — trend is a real (if fragile) premium
-on futures; short-term reversion simply is not.
+most liquid futures it is **`NONE`**: with the execution lag done right, the book earns a gross Sharpe of
+**+0.25** (CAGR +2.2%) — but the Newey-West *t* on the gross mean is **+1.29**, well short of
+significance, and the gross Sharpe by sub-period is **−0.00 / +0.70 / +0.09** — one decent decade
+(2009–2017) bracketed by nothing. A positive number you cannot distinguish from zero, concentrated in one
+epoch, is noise, not a premium. Tradability is `MIRAGE` by a mile: the book flips almost every day
+(turnover **1.41**/day), so its **break-even cost is 0.79 bp** — below even the ~1 bp it costs to trade
+ES, and an order of magnitude below the cost a slow trend book shrugs off. Net of a realistic 2 bp the
+Sharpe is **−0.39** with a **−79%** drawdown. The obvious rescue — hold positions longer to cut
+turnover — is `BUSTED`: slowing from 1 to 21 days cuts turnover >10× but the *gross* edge fades even
+faster (+0.25 → −0.14), so the net Sharpe never once pokes above zero. The mirror of Study 31 is the
+perfect contrast: same markets, same machinery, opposite sign — trend at least carries a century of
+literature and a 12-month leg that clears significance on this tape; short-term reversion has neither.
 
 ## Data stamp
 
-- **Basket**: 18 futures, 2000-07-18 → 2026-06-10, 6546 days, inputs fingerprint `efab160ee1f0`
-  *(identical tape to Study 31 — the only thing that changed is the sign of the signal)*
+- **Basket**: 18 futures, 2000-07-18 → 2026-06-10, 6546 days, inputs fingerprint `b8a35a878ebc`
+  *(same tape construction as Study 31 — the only thing that changed is the sign of the signal; the
+  fingerprint differs from earlier published runs because Yahoo revised a handful of historical closes)*
 
 ## The contrarian book vs just owning the basket
 
 | | Sharpe | CAGR | vol | max-DD | skew |
 |---|---|---|---|---|---|
-| **contrarian (gross, 0 bp)** | **0.08** | +0.2% | 11% | −51% | −1.03 |
-| contrarian (net @2 bp) | −0.56 | −6.5% | 11% | −88% | −1.06 |
-| long-only basket (do nothing clever) | **0.51** | +7.7% | 17% | −55% | −0.31 |
+| **contrarian (gross, 0 bp)** | **+0.25** | +2.2% | 11% | −36% | −1.93 |
+| contrarian (net @2 bp) | −0.39 | −4.8% | 11% | −79% | −2.05 |
+| long-only basket (do nothing clever) | **+0.51** | +7.6% | 17% | −55% | −0.31 |
 
-Even *gross* of costs the timing barely registers; net of costs it is destroyed; and the dumb
-always-long basket of the same markets beats it on every axis. That is the `NONE` / `MIRAGE` stamp.
+Gross book mean **+1.11 bp/day**, Newey-West *t* = **+1.29** — not significant. Even gross of costs the
+timing fails to beat the dumb always-long basket of the same markets; net of costs it is destroyed. That
+is the `NONE` / `MIRAGE` stamp.
 
 ## The cost wall — why turnover is the whole story
 
-| cost (bp/unit) | 0 | 1 | 2 | 5 | 10 |
+| cost (bp/unit) | 0 (= gross) | 1 | 2 | 5 | 10 |
 |---|---|---|---|---|---|
-| net Sharpe | 0.075 | −0.241 | −0.557 | −1.497 | −3.026 |
+| net Sharpe | +0.25 | −0.07 | −0.39 | −1.37 | −3.06 |
 
-Turnover is **1.38/day** (vs the trend book's slow monthly drift), so the **break-even cost is 0.24 bp** —
+Turnover is **1.41/day** (vs the trend book's slow monthly drift), so the **break-even cost is 0.79 bp** —
 you lose money at any realistic commission. Reversion's edge, where it exists, is precisely the
 compensation for *providing liquidity at high frequency*; on instruments this deep there is nothing left
 over once you pay to cross the spread.
@@ -55,17 +67,21 @@ over once you pay to cross the spread.
 
 | hold days | 1 | 2 | 5 | 10 | 21 |
 |---|---|---|---|---|---|
-| gross Sharpe | 0.08 | 0.20 | 0.03 | −0.05 | −0.15 |
-| **net Sharpe @2 bp** | −0.56 | **−0.17** | −0.18 | −0.16 | −0.20 |
-| turnover/day | 1.38 | 0.82 | 0.48 | 0.25 | 0.13 |
+| gross Sharpe | +0.25 | +0.07 | +0.02 | −0.12 | −0.14 |
+| **net Sharpe @2 bp** | −0.39 | **−0.30** | −0.19 | −0.22 | −0.20 |
+| turnover/day | 1.41 | 0.83 | 0.49 | 0.25 | 0.13 |
 
 Rebalancing less often does cut turnover roughly in proportion — but the net Sharpe **never crosses
-zero**. The gross edge fades as fast as the cost does, because there was no durable, slow-moving
-reversion to harvest in the first place. `BUSTED`.
+zero**, because the gross edge fades even faster than the cost. What little bounce exists is gone within
+a day or two; there is no durable, slow-moving reversion to harvest. `BUSTED`.
 
-## Robustness — it never worked, at any horizon or epoch
+## Robustness — gross and net, by horizon and by epoch
 
-Horizon sweep (net Sharpe @2 bp): 1-day **−1.01**, 3-day **−0.57**, 5-day **−0.26**, 10-day **−0.41**,
-blend **−0.56** — negative across every short lookback. Sub-period Sharpe: **2000–2009 −0.39**,
-**2009–2017 −0.89**, **2017–2026 −0.42** — it lost money in all three, with no sign of a vanished edge
-that was once there. This is a clean, durable `NONE`, not a decayed `WEAK`.
+Horizon sweep (Sharpe, gross / net @2 bp): 1-day **+0.42 / −0.70**, 3-day **+0.08 / −0.52**, 5-day
+**+0.22 / −0.21**, 10-day **−0.01 / −0.33**, blend **+0.25 / −0.39**. The 1-day horizon has the best
+gross — exactly the flavour that turns over fastest and nets the worst — and picking it *after* seeing
+this table would be selection, not signal.
+
+Sub-period Sharpe (gross / net @2 bp): **2000–2009 −0.00 / −0.45**, **2009–2017 +0.70 / −0.02**,
+**2017–2026 +0.09 / −0.69**. All of the gross lives in one decade, and even there the net rounds to
+zero. Not a decayed `WEAK` — a `NONE` that briefly flattered one epoch and never paid net anywhere.

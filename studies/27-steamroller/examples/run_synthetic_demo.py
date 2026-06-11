@@ -4,9 +4,13 @@ No network, deterministic. On the premium tape, high-rate currencies out-earn an
 real, significant premium — with a sharply negative skew (the steamroller). On the full-UIRP null,
 nothing. And vol-management lifts the Sharpe but does not dodge the (jump-like) crash.
 
+One stated limit of the control: each synthetic currency's rate is **constant**, so the ranking never
+changes and the book's turnover is exactly 0.0×/yr — the "cheap to run" claim is *exercised* only on the
+real tape (turnover ≈ 0.5×/yr there; see docs/results.md).
+
     python examples/run_synthetic_demo.py
 
-The real G10 verdict needs one networked fetch (FRED): see examples/verify.py.
+The real G10 verdict is in docs/results.md (offline from the shared desk cache; see examples/verify.py).
 """
 
 import os
@@ -37,9 +41,12 @@ def main():
     run("UIRP null", cs=0.0)
     xr, rates, _ = data.synthetic_carry(carry_strength=0.9, seed=27)
     cc = extension.crash_comparison(xr, rates, cost_bps=10.0)
-    print(f"\nrisk-managed: plain Sharpe {cc['plain']['sharpe']:+.2f} (drawdown {cc['plain']['max_drawdown_pct']:.0f}%) "
+    print(f"\nrisk-managed (shared {cc['n_months']}-month window, post burn-in): "
+          f"plain Sharpe {cc['plain']['sharpe']:+.2f} (drawdown {cc['plain']['max_drawdown_pct']:.0f}%) "
           f"-> vol-managed {cc['managed']['sharpe']:+.2f} (drawdown {cc['managed']['max_drawdown_pct']:.0f}%) "
-          f"-- the Sharpe lifts, the tail does not. The real G10 verdict is via examples/verify.py --fetch.")
+          f"-- the Sharpe lifts, the tail does not. (Plain Sharpe differs from the full-sample headline "
+          f"because the managed book only exists after its 12-month vol burn-in.)")
+    print("The real G10 verdict (premium, t-stat, 2008/2020 crashes, turnover) is in ../docs/results.md.")
 
 
 if __name__ == "__main__":

@@ -27,12 +27,16 @@ def _book_from_positions(pos: pd.DataFrame, returns: pd.DataFrame, cost_bps: flo
 
 def horizon_sweep(returns: pd.DataFrame, lookbacks_list=((1,), (3,), (5,), (10,), (1, 3, 5)),
                   cost_bps: float = 2.0, **kw) -> pd.DataFrame:
-    """Net Sharpe / CAGR of the book for several short-lookback choices (single horizons + the blend)."""
+    """Gross AND net Sharpe of the book for several short-lookback choices (single horizons + the
+    blend). ``gross_sharpe`` charges nothing; ``net_sharpe`` charges ``cost_bps`` per unit traded —
+    both labelled, so a gross signal question is never answered with a net number."""
     from .strategy import book_returns
     rows = {}
     for lb in lookbacks_list:
-        s = summary(book_returns(returns, lookbacks=lb, cost_bps=cost_bps, **kw))
-        rows["+".join(str(x) for x in lb)] = {"sharpe": s["sharpe"], "cagr": s["cagr"]}
+        g = summary(book_returns(returns, lookbacks=lb, cost_bps=0.0, **kw))
+        n = summary(book_returns(returns, lookbacks=lb, cost_bps=cost_bps, **kw))
+        rows["+".join(str(x) for x in lb)] = {"gross_sharpe": g["sharpe"], "net_sharpe": n["sharpe"],
+                                              "net_cagr": n["cagr"]}
     out = pd.DataFrame(rows).T
     out.index.name = "lookback_days"
     return out
@@ -62,15 +66,21 @@ def holding_period_sweep(returns: pd.DataFrame, holds=(1, 2, 5, 10, 21), cost_bp
 
 
 def subperiod_sharpe(returns: pd.DataFrame, n_splits: int = 3, cost_bps: float = 2.0, **kw) -> pd.DataFrame:
-    """Net Sharpe of the book across equal-length sub-periods — to expose decay as markets got faster."""
+    """Gross AND net Sharpe of the book across equal-length sub-periods — to expose decay as markets
+    got faster. ``gross_sharpe`` charges nothing (the *signal* question); ``net_sharpe`` charges
+    ``cost_bps`` per unit traded (the *tradability* question). An earlier cut of this study quoted the
+    net numbers as if they were gross — hence the explicit columns."""
     from .strategy import book_returns
-    book = book_returns(returns, cost_bps=cost_bps, **kw).dropna()
-    bounds = np.linspace(0, len(book), n_splits + 1).astype(int)
+    gross = book_returns(returns, cost_bps=0.0, **kw).dropna()
+    net = book_returns(returns, cost_bps=cost_bps, **kw).reindex(gross.index)
+    bounds = np.linspace(0, len(gross), n_splits + 1).astype(int)
     rows = {}
     for i in range(n_splits):
-        seg = book.iloc[bounds[i]:bounds[i + 1]]
-        s = summary(seg)
-        rows[f"{seg.index[0].date()} → {seg.index[-1].date()}"] = {"sharpe": s["sharpe"], "cagr": s["cagr"]}
+        gseg = gross.iloc[bounds[i]:bounds[i + 1]]
+        nseg = net.iloc[bounds[i]:bounds[i + 1]]
+        rows[f"{gseg.index[0].date()} → {gseg.index[-1].date()}"] = {
+            "gross_sharpe": summary(gseg)["sharpe"], "net_sharpe": summary(nseg)["sharpe"],
+            "net_cagr": summary(nseg)["cagr"]}
     out = pd.DataFrame(rows).T
     out.index.name = "sub_period"
     return out

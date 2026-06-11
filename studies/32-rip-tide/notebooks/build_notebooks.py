@@ -36,17 +36,20 @@ r0, _ = data.synthetic_reversion(revert_strength=0.0, seed=32)
 print(f"synthetic control: {truth.n_markets} markets x {truth.n_days} days, revert_strength {truth.revert_strength} (null=0)")
 """
 
-# Real-tape numbers (../docs/results.md, 18 futures 2000-2026, as-of 2026-06-10, fp efab160ee1f0)
-R = dict(fp="efab160ee1f0", asof="2026-06-10", days="6546", n="18",
-         gross_sh="0.08", net_sh="-0.56", gross_cagr="0.2", net_cagr="-6.5",
-         gross_dd="-51", net_dd="-88", skew="-1.03",
-         lob_sh="0.51", lob_cagr="7.7", lob_dd="-55",
-         turn="1.38", be="0.24",
-         c0="0.075", c1="-0.241", c2="-0.557", c5="-1.497", c10="-3.026",
-         h1="-0.56", h2="-0.17", h5="-0.18", h10="-0.16", h21="-0.20", h2g="0.20",
-         lb1="-1.01", lb3="-0.57", lb5="-0.26", lb10="-0.41", lbb="-0.56",
-         sub1="-0.39", sub2="-0.89", sub3="-0.42",
-         syn_gross="2.90", syn_net="2.08", syn_null="-0.09", syn_h21="1.75")
+# Real-tape numbers (../docs/results.md, 18 futures 2000-2026, as-of 2026-06-10, fp b8a35a878ebc).
+# One execution lag (signal at the close of t earns t+1); gross and net labelled everywhere.
+R = dict(fp="b8a35a878ebc", asof="2026-06-10", days="6546", n="18",
+         gross_sh="+0.25", gross_t="+1.29", net_sh="-0.39", gross_cagr="+2.2", net_cagr="-4.8",
+         gross_dd="-36", net_dd="-79", skew="-1.93",
+         lob_sh="+0.51", lob_cagr="+7.6", lob_dd="-55",
+         turn="1.41", be="0.79",
+         c0="+0.25", c1="-0.07", c2="-0.39", c5="-1.37", c10="-3.06",
+         h1="-0.39", h2="-0.30", h5="-0.19", h10="-0.22", h21="-0.20",
+         h1g="+0.25", h2g="+0.07", h5g="+0.02", h10g="-0.12", h21g="-0.14",
+         lb1g="+0.42", lb1="-0.70", lb3g="+0.08", lb3="-0.52", lb5g="+0.22", lb5="-0.21",
+         lb10g="-0.01", lb10="-0.33", lbbg="+0.25", lbb="-0.39",
+         sub1g="-0.00", sub1="-0.45", sub2g="+0.70", sub2="-0.02", sub3g="+0.09", sub3="-0.69",
+         syn_gross="3.35", syn_net="2.56", syn_null="+0.18", syn_h21="1.8")
 
 BADGES = (
     "![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)\n"
@@ -68,12 +71,12 @@ def build_curious():
             "# Rip-Tide 🌊\n"
             "### \"Buy the dip, sell the rip.\" It works for stocks. Does it work for oil, gold and the euro? No — and turnover is why.\n\n"
             + BADGES +
-            "This is the mirror of [Trade-Winds](../../31-trade-winds/), where *riding* the trend turned "
-            "out to be a real premium. Here we do the opposite: **fade** the move — short whatever just "
+            "This is the mirror of [Trade-Winds](../../31-trade-winds/), where *riding* the trend at "
+            "least had something to show for itself. Here we do the opposite: **fade** the move — short whatever just "
             "rose, buy whatever just fell — on the very same 18 futures, with the very same machinery. "
             "Short-term reversion is a famous, real anomaly… *in individual stocks*, where it's the rent "
-            "paid to whoever provides liquidity. On the world's deepest futures there's nothing to fade to "
-            "begin with, and the frantic daily trading it demands turns even that nothing into a loss.\n\n"
+            "paid to whoever provides liquidity. On the world's deepest futures the edge is statistically "
+            "nothing, and the frantic daily trading it demands turns even that nothing into a loss.\n\n"
             "> 📓 **This is the plain-language layer.** The cost wall, the break-even, the holding-period "
             "rescue and the horizon decay are in **[02_for_the_quants.ipynb](02_for_the_quants.ipynb)** — same story, deeper.\n"
             ">\n"
@@ -89,11 +92,12 @@ def build_curious():
             "| What we asked | The honest answer |\n"
             "|---|---|\n"
             "| Is short-term reversion real on futures? | 🟥 **No.** Gross of *all* costs the book Sharpes "
-            f"**{R['gross_sh']}** — a coin flip — and loses money in every sub-period. |\n"
+            f"**{R['gross_sh']}** — but the *t*-stat is **{R['gross_t']}** (noise), and the gross lives in "
+            "a single decade. |\n"
             "| Could you trade it anyway? | 🟥 **No.** It flips almost daily (turnover **{t}**), so it "
             "**breaks even at {be} bp** — cheaper than it costs to trade. Net of 2 bp: Sharpe **{ns}**. |\n"
-            "| Can you save it by trading slower? | ⚪ **No.** Holding longer cuts the cost *and* the "
-            "(tiny) edge in lockstep — net Sharpe never gets above zero. |\n\n"
+            "| Can you save it by trading slower? | ⚪ **No.** Holding longer cuts the cost but the (tiny) "
+            "gross edge fades even faster — net Sharpe never gets above zero. |\n\n"
             "> Desk shorthand: **Signal `NONE` · Tradability `MIRAGE` · Rescue? `BUSTED`** — same markets "
             "as Trade-Winds, opposite sign, opposite verdict.".format(t=R['turn'], be=R['be'], ns=R['net_sh'])
         ),
@@ -102,10 +106,13 @@ def build_curious():
             "## 1 · The claim 📣\n\n"
             "The contrarian, stated at full strength (Kakushadze-Serur *151 Trading Strategies* §10.3; the "
             "academic lineage is Jegadeesh 1990, Lehmann 1990):\n\n"
-            "1. **Signal** — for each market, the *negative* sign of its own trailing 1/3/5-day return. "
-            "Short if it just rose, long if it just fell.\n"
+            "1. **Signal** — for each market, the *negative* sign of its own trailing 1/3/5-day return, "
+            "known at the close of day *t*. Short if it just rose, long if it just fell.\n"
             "2. **Equal risk** — divide each position by its own volatility, exactly as the trend book does.\n"
-            "3. **Diversify** — hold all ~18 markets across four asset classes.\n\n"
+            "3. **Diversify** — hold all ~18 markets across four asset classes.\n"
+            "4. **One execution lag** — the position set at the close of *t* earns the return of *t+1*. "
+            "(A subtle trap we fell into and fixed: lag the signal *and* the position and you trade the "
+            "bounce a day late — the backtest then measures your plumbing, not the market.)\n\n"
             "The believer's case: markets overreact to short-term news and snap back, so fading the move "
             "harvests the correction. We give it the strongest possible apparatus — the one that *worked* "
             "for trend — and only flip the sign."
@@ -151,10 +158,11 @@ def build_curious():
             "    print(f\"{label:22} gross Sharpe {s['sharpe']:+.2f}  turnover/day {strategy.turnover(rr):.2f}\")"
         ),
         md(
-            "### 4b · On the real tape — nothing to fade, and turnover finishes the job\n"
+            "### 4b · On the real tape — statistically nothing to fade, and turnover finishes the job\n"
             "On 18 real futures, 2000–2026 ([`../docs/results.md`](../docs/results.md)):\n\n"
-            f"- **Gross** of all costs the book Sharpes just **{R['gross_sh']}** (CAGR {R['gross_cagr']}%) — "
-            f"a coin flip. The dumb always-long basket of the same markets Sharpes **{R['lob_sh']}**.\n"
+            f"- **Gross** of all costs the book Sharpes **{R['gross_sh']}** (CAGR {R['gross_cagr']}%) — but "
+            f"the *t*-stat on that mean is **{R['gross_t']}**: noise. The dumb always-long basket of the "
+            f"same markets Sharpes **{R['lob_sh']}**.\n"
             f"- It flips almost every day: **turnover {R['turn']}/unit per day**, so the **break-even cost "
             f"is {R['be']} bp** — below the ~1 bp it costs to trade the most liquid future alive.\n"
             f"- Net of a realistic 2 bp the Sharpe is **{R['net_sh']}** with an **{R['net_dd']}%** drawdown. "
@@ -174,16 +182,18 @@ def build_curious():
         ),
 
         md("## 5 · The verdict 🧾\n\n"
-           f"- **Signal `NONE`** — gross Sharpe {R['gross_sh']} on the real tape, negative in all three "
-           f"sub-periods ({R['sub1']} / {R['sub2']} / {R['sub3']}). No premium to begin with.\n"
+           f"- **Signal `NONE`** — gross Sharpe {R['gross_sh']} on the real tape, *t* {R['gross_t']}, and "
+           f"the gross by sub-period is {R['sub1g']} / {R['sub2g']} / {R['sub3g']} — one decade of flatter, "
+           "nothing either side. Statistically no premium.\n"
            f"- **Tradability `MIRAGE`** — turnover {R['turn']}/day, break-even {R['be']} bp, net Sharpe "
            f"{R['net_sh']}. Gone before the first commission.\n"
            f"- **Rescue `BUSTED`** — see beat 7: slowing down never lifts the net Sharpe above zero.\n\n"
-           "> **The mirror of Trade-Winds.** Same 18 futures, same machinery, opposite sign — trend is a "
-           "real (fragile) premium; short-term reversion on deep futures simply is not."),
+           "> **The mirror of Trade-Winds.** Same 18 futures, same machinery, opposite sign — trend at "
+           "least has a century of literature and a 12-month leg that clears significance on this tape; "
+           "short-term reversion on deep futures has neither."),
 
         md("## 6 · Could you trade it? 💸\n\n"
-           "- **No.** The break-even cost (0.24 bp) is *below* the real cost of trading even ES, the "
+           f"- **No.** The break-even cost ({R['be']} bp) is *below* the real cost of trading even ES, the "
            "single most liquid future on the planet. Every realistic account loses money from day one.\n"
            "- **Why it's real in stocks but not here.** Short-term reversal pays for *providing "
            "liquidity* — and it concentrates in illiquid single stocks (Avramov–Chordia–Goyal 2006; Nagel "
@@ -197,9 +207,9 @@ def build_curious():
             "The book dies on turnover, so the obvious fix is to hold each position longer. We swept the "
             "holding period from 1 to 21 days on the real tape:\n\n"
             f"- Turnover falls >10× (from {R['turn']}/day to ~0.13/day) — the cost side works perfectly.\n"
-            f"- But the **net Sharpe never crosses zero** ({R['h1']} → {R['h2']} → {R['h21']}). The gross "
-            "edge fades exactly as fast as the cost, because there was no slow-moving reversion to harvest. "
-            "`BUSTED`.\n"
+            f"- But the **net Sharpe never crosses zero** ({R['h1']} → {R['h2']} → {R['h21']}), because the "
+            f"gross edge fades even faster than the cost ({R['h1g']} → {R['h2g']} → {R['h21g']}): there was "
+            "no slow-moving reversion to harvest. `BUSTED`.\n"
             f"- On the synthetic control the *same* rescue keeps a net Sharpe above **{R['syn_h21']}** even "
             "at a 21-day hold — proof the method would work if a real slow reversion existed.\n\n"
             "### Other forks\n"
@@ -225,8 +235,11 @@ def build_quants():
             "The deep companion to the [notebook for the curious](01_for_the_curious.ipynb) — *same seven "
             "beats, every claim with its number.* The steelman: short-horizon contrarian trading is a "
             "robust, real anomaly. We confirm the apparatus captures it where it exists (synthetic "
-            "control), then show that on deep liquid futures there is **no gross premium** and the "
-            "turnover makes the net **a `MIRAGE`** — the exact mirror of Study 31's trend result.\n\n"
+            "control), then show that on deep liquid futures the gross premium is **statistically "
+            "indistinguishable from zero** and the turnover makes the net **a `MIRAGE`** — the exact "
+            "mirror of Study 31's trend result. One construction note, stated in the open: an earlier cut "
+            "of this study lagged the signal twice (trading the bounce at *t+2*) and quoted net sub-period "
+            "Sharpes as if gross; both are fixed here, and the verdict is earned on the corrected book.\n\n"
             "> ⚠️ **Not investment advice.** The core executes on a synthetic Ornstein-Uhlenbeck reverting "
             "panel; the real 18-futures run is in [`../docs/results.md`](../docs/results.md), sources in "
             "[`../docs/references.md`](../docs/references.md).\n"
@@ -239,14 +252,16 @@ def build_quants():
             "## Beat 0 · Verdict\n\n"
             "| Axis | Stamp | Why |\n"
             "|---|---|---|\n"
-            f"| **Signal** — reversion real on futures? | 🔴 `NONE` | Gross Sharpe **{R['gross_sh']}**; "
-            f"negative in all 3 sub-periods (**{R['sub1']}/{R['sub2']}/{R['sub3']}**). |\n"
+            f"| **Signal** — reversion real on futures? | 🔴 `NONE` | Gross Sharpe **{R['gross_sh']}** but "
+            f"NW *t* **{R['gross_t']}**; gross sub-periods **{R['sub1g']}/{R['sub2g']}/{R['sub3g']}** — one "
+            "decade carries it all. |\n"
             f"| **Tradability** | 🔴 `MIRAGE` | Turnover **{R['turn']}**/day ⇒ break-even **{R['be']} bp**; "
             f"net @2 bp Sharpe **{R['net_sh']}**, DD **{R['net_dd']}%**. |\n"
             f"| **Rescue by slowing down?** | ⚪ `Busted` | Net Sharpe across holds 1→21d never > 0 "
-            f"(**{R['h1']}→{R['h2']}→{R['h21']}**). |\n\n"
+            f"(**{R['h1']}→{R['h2']}→{R['h21']}**); the gross fades faster than the cost. |\n\n"
             "> **In one sentence:** a real stock-market anomaly that has no counterpart on the deepest "
-            "futures — gross-zero, and turnover-killed net — and that no amount of slowing down can save.\n\n"
+            "futures — gross-insignificant, and turnover-killed net — and that no amount of slowing down "
+            "can save.\n\n"
             "*(This notebook executes on the synthetic control; the real numbers are in "
             "[`../docs/results.md`](../docs/results.md).)*"
         ),
@@ -254,11 +269,14 @@ def build_quants():
         md(
             "## Beat 1 · The claim, precisely\n\n"
             "Per market $i$: signal $s_{i,t} = -\\mathrm{sign}\\!\\big(\\tfrac13\\sum_{L\\in\\{1,3,5\\}}"
-            "\\mathrm{sign}(P_{i,t}/P_{i,t-L}-1)\\big)$, lagged. Position $w_{i,t} = s_{i,t}\\cdot"
-            "\\min(\\sigma^\\star_{\\text{mkt}}/\\hat\\sigma_{i,t},\\,c)$, then the book is scaled to a "
-            "portfolio vol target. *Identical to Study 31 except for the leading minus sign.* Claim: the "
-            "portfolio earns a positive premium from fading short-horizon moves. Null: i.i.d. returns ⇒ "
-            "no autocorrelation to fade."
+            "\\mathrm{sign}(P_{i,t}/P_{i,t-L}-1)\\big)$, known at the close of day $t$. Position "
+            "$w_{i,t} = s_{i,t}\\cdot\\min(\\sigma^\\star_{\\text{mkt}}/\\hat\\sigma_{i,t},\\,c)$, then the "
+            "book is scaled to a portfolio vol target, and $w_{i,t}$ earns $r_{i,t+1}$ — **one** execution "
+            "lag, applied once at the book level. (Lag the signal *and* the position and a 1–5-day reversal "
+            "executes at $t+2$, skipping the bounce it claims to fade — the bug the earlier cut had.) "
+            "*Identical to Study 31 except for the leading minus sign.* Claim: the portfolio earns a "
+            "positive premium from fading short-horizon moves. Null: i.i.d. returns ⇒ no autocorrelation "
+            "to fade."
         ),
         code(
             "for label, rr in [('reverting panel', r), ('null', r0)]:\n"
@@ -293,6 +311,8 @@ def build_quants():
         code(
             "print('Real tape (../docs/results.md):')\n"
             f"print('  contrarian gross   Sharpe {R['gross_sh']}  CAGR {R['gross_cagr']}%  maxDD {R['gross_dd']}%  skew {R['skew']}')\n"
+            f"print('  gross mean +1.11 bp/day, Newey-West t = {R['gross_t']}  -- not significant')\n"
+            f"print('  gross by sub-period: {R['sub1g']} / {R['sub2g']} / {R['sub3g']}  -- one decade carries it all')\n"
             f"print('  contrarian net@2bp Sharpe {R['net_sh']}  CAGR {R['net_cagr']}%  maxDD {R['net_dd']}%')\n"
             f"print('  long-only basket   Sharpe {R['lob_sh']}  CAGR {R['lob_cagr']}%  maxDD {R['lob_dd']}%')\n"
             "# on the synthetic control the timing genuinely adds (reversion is strong there):\n"
@@ -302,8 +322,9 @@ def build_quants():
         ),
         md(
             "> 💡 **In plain words.** Where overshoot is real (the control) fading it beats owning the "
-            "basket; on the real, efficient futures tape there's no overshoot left, so the always-long "
-            "basket wins even *before* costs. The signal is `NONE` on the thing we actually care about."
+            "basket; on the real, efficient futures tape the gross is a *t* of 1.3 — a number you'd see "
+            "one run in five by luck — so the always-long basket wins even *before* costs. The signal is "
+            "`NONE` on the thing we actually care about."
         ),
 
         md("### 4b · The cost wall and the break-even (the MIRAGE call)"),
@@ -320,15 +341,16 @@ def build_quants():
         ),
 
         md("## Beat 5 · The verdict\n\n"
-           f"- **`NONE`** (4a, Beat 1): real gross Sharpe {R['gross_sh']}; control {R['syn_gross']} vs null {R['syn_null']}.\n"
+           f"- **`NONE`** (4a, Beat 1): real gross Sharpe {R['gross_sh']} at NW *t* {R['gross_t']}; "
+           f"control {R['syn_gross']} vs null {R['syn_null']}.\n"
            f"- **`MIRAGE`** (4b): break-even {R['be']} bp < real cost; net @2 bp {R['net_sh']}, DD {R['net_dd']}%.\n"
            f"- **Rescue `BUSTED`** (Beat 7): net Sharpe across holds never > 0.\n\n"
            "> **Signal `NONE` · Tradability `MIRAGE` · Rescue? `BUSTED`** — the exact mirror of Trade-Winds."),
 
         md("## Beat 6 · Could you trade it?\n\n"
-           "- **No.** Break-even 0.24 bp is below the real cost of trading even ES. There is no account "
+           f"- **No.** Break-even {R['be']} bp is below the real cost of trading even ES. There is no account "
            "structure — retail or institutional — that nets a positive return here.\n"
-           "- **Capacity is irrelevant** when the gross edge is zero; you can't scale nothing.\n"
+           "- **Capacity is irrelevant** when the gross edge is statistically zero; you can't scale nothing.\n"
            "- **Where the premium actually lives:** illiquid single stocks and crisis windows "
            "(Avramov–Chordia–Goyal 2006; Nagel 2012), not deep futures. That's the constructive lesson."),
 
@@ -345,8 +367,9 @@ def build_quants():
             "ax.plot(hp.index, hp['gross_sharpe'], marker='o', label='gross', color='#2ea44f')\n"
             "ax.plot(hp.index, hp['net_sharpe'], marker='o', label='net @2bp', color='#c0392b')\n"
             "ax.set_xlabel('holding period (days)'); ax.set_ylabel('Sharpe'); ax.legend(); ax.set_title('Holding-period rescue (synthetic — it WORKS when reversion is real)')\n"
-            "print('Real tape net Sharpe by hold (../docs/extension.md): '\n"
-            f"      '1d {R['h1']}, 2d {R['h2']}, 5d {R['h5']}, 10d {R['h10']}, 21d {R['h21']} -- never > 0. BUSTED.')"
+            "print('Real tape by hold (../docs/extension.md):')\n"
+            f"print('  gross Sharpe   1d {R['h1g']}, 2d {R['h2g']}, 5d {R['h5g']}, 10d {R['h10g']}, 21d {R['h21g']}')\n"
+            f"print('  net @2bp       1d {R['h1']}, 2d {R['h2']}, 5d {R['h5']}, 10d {R['h10']}, 21d {R['h21']} -- never > 0. BUSTED.')"
         ),
         md(
             "> 💡 **In plain words.** On the synthetic, slowing down keeps the net Sharpe high (>"
@@ -356,19 +379,24 @@ def build_quants():
         ),
         md(
             "### 7b · The horizon sweep & the honest sub-period decay\n"
-            "Not a mis-tuned lookback (negative across every short horizon), and negative in every epoch."
+            "Gross and net, labelled. Not a mis-tuned lookback — no horizon clears significance gross or "
+            "zero net — and the gross is confined to one epoch."
         ),
         code(
-            "print('Real horizon sweep (net Sharpe @2bp, ../docs/results.md):')\n"
-            f"print('  1d {R['lb1']}   3d {R['lb3']}   5d {R['lb5']}   10d {R['lb10']}   blend {R['lbb']}')\n"
-            f"print('\\nReal sub-period Sharpe: {R['sub1']} / {R['sub2']} / {R['sub3']} -- negative in all three.')\n"
+            "print('Real horizon sweep (Sharpe, gross / net @2bp, ../docs/results.md):')\n"
+            f"print('  1d {R['lb1g']} / {R['lb1']}   3d {R['lb3g']} / {R['lb3']}   5d {R['lb5g']} / {R['lb5']}   "
+            f"10d {R['lb10g']} / {R['lb10']}   blend {R['lbbg']} / {R['lbb']}')\n"
+            f"print('\\nReal sub-period Sharpe (gross / net @2bp): {R['sub1g']} / {R['sub1']},  "
+            f"{R['sub2g']} / {R['sub2']},  {R['sub3g']} / {R['sub3']}')\n"
+            "print('all of the gross sits in 2009-2017, and even there the net rounds to zero')\n"
             "print('\\nSynthetic horizon sweep (where the edge IS there):')\n"
             "print(extension.horizon_sweep(r).round(3).to_string())"
         ),
         md(
             "**The result.** The apparatus captures reversion wherever it exists (synthetic control, every "
-            "horizon, every holding period) — and finds **none** on 18 deep futures, at any horizon, in "
-            "any epoch, gross or net. A clean, durable `NONE`/`MIRAGE`, and a `BUSTED` rescue. Full runs "
+            "horizon, every holding period) — and on 18 deep futures finds a gross edge that fails "
+            "significance at every horizon, pays in only one of three epochs, and never nets a positive "
+            "Sharpe anywhere. A clean `NONE`/`MIRAGE`, and a `BUSTED` rescue. Full runs "
             "in [`../docs/results.md`](../docs/results.md) and [`../docs/extension.md`](../docs/extension.md).\n\n"
             "### 7c · Other forks\n"
             "- **Cross-sectional reversion** — relative winners within an asset class vs each market's own past.\n"

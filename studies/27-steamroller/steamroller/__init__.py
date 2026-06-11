@@ -7,9 +7,9 @@ high-rate currency does not depreciate enough to offset its yield. We run it thr
 The reusable pieces:
 
     * :mod:`data` — a synthetic G10 with a *baked* carry premium punctuated by joint risk-off crashes
-      (the steamroller), a full-UIRP null, plus a **FRED**-wired real reader (G10 short rates + USD FX).
-      *Network note:* the real reader needs internet; in an offline environment the real run is skipped
-      and the synthetic core is the proof.
+      (the steamroller), a full-UIRP null, plus the **real reader**: the desk's shared G10 cache (OECD
+      MEI 3-month short rates + yfinance FX, the same tape as Study 36), cache-first and offline; a
+      missing cache is refilled via ``tools/fetch_altdata.py`` behind ``fetch=True``.
     * :mod:`carry` — the signal (the interest rate) and the engine: the monthly excess-return
       construction and :func:`carry.carry_premium_by_bucket` -- do high-rate currencies out-earn?
     * :mod:`strategy` — the dollar-neutral carry book (long high-rate, short low-rate), monthly, net of

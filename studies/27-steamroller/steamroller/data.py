@@ -11,20 +11,22 @@ a short rate and a spot FX level, and the data layer keeps the desk's offline/ca
       together (the "steamroller" — carry's fat negative tail). ``carry_strength`` sets how much of UIRP
       fails (the premium); ``crash_size`` the depth of the risk-off crashes. ``carry_strength = 0`` is
       the **null**: full UIRP, spot exactly offsets the rate gap, no premium. Deterministic given ``seed``.
-    * :func:`fetch_carry` — pull real **G10 short rates and FX spot from FRED** (CSV download, no API
-      key). **Cache-only** unless ``fetch=True``. *Network note:* this requires internet; in a fully
-      offline environment the real run is skipped and the synthetic core stands alone.
+    * :func:`fetch_carry` — the **real G10 tape**, served from the repo-wide cache: OECD MEI 3-month
+      interbank short rates (via DBnomics) + yfinance FX spot, the *same two parquets* Study 36
+      (Greenback) runs on, so the two FX studies share one tape and one fingerprint lineage.
+      **Cache-first**; on a cache miss with ``fetch=True`` it calls the shared fetchers in
+      [`tools/fetch_altdata.py`](../../../tools/fetch_altdata.py) (no duplicated download code). In a
+      fully offline environment with no cache the real run is skipped and the synthetic core stands alone.
 
-Data choice, named up front: monthly 3-month interbank rates and end-of-month FX from FRED — the carry
-signal is a slow, rate-differential signal, so a monthly frequency is the right (and cleanly available)
-horizon, and using one public source keeps rates and FX internally consistent.
+Data choice, named up front: monthly 3-month interbank rates (OECD MEI, % p.a.) and end-of-month FX
+(yfinance, USD per 1 unit of foreign currency) — the carry signal is a slow, rate-differential signal, so
+a monthly frequency is the right horizon. OECD's MEI series was discontinued at **2024-01**, so the
+headline as-of is pinned there (:data:`DATA_AS_OF`) and the published numbers never creep.
 """
 
 from __future__ import annotations
 
-import io
 import os
-import urllib.request
 from dataclasses import dataclass
 
 import numpy as np
@@ -103,69 +105,51 @@ def synthetic_carry(n_ccy: int = 9, n_months: int = 600, carry_strength: float =
 
 
 # --------------------------------------------------------------------------- #
-# Real tape — G10 short rates + FX spot from FRED (CSV, no API key). Network only behind fetch=True.
+# Real tape — OECD MEI 3-month short rates (DBnomics) + yfinance FX, the SAME repo-wide cache as
+# Study 36 (Greenback). Cache-first; network only behind fetch=True, via tools/fetch_altdata.py.
 # --------------------------------------------------------------------------- #
 
-# 3-month interbank rates (% p.a., monthly) and USD FX (FRED ids). FX as USD-per-unit where noted.
-FRED_RATES = {  # ccy: 3-month or immediate interbank rate series
-    "USD": "IR3TIB01USM156N", "EUR": "IR3TIB01EZM156N", "JPY": "IR3TIB01JPM156N",
-    "GBP": "IR3TIB01GBM156N", "AUD": "IR3TIB01AUM156N", "CAD": "IR3TIB01CAM156N",
-    "CHF": "IR3TIB01CHM156N", "SEK": "IR3TIB01SEM156N", "NOK": "IR3TIB01NOM156N",
-}
-FRED_FX = {  # USD per 1 unit of foreign currency (so a rise = foreign appreciation). DEX* are mixed; handled below.
-    "EUR": ("DEXUSEU", False), "GBP": ("DEXUSUK", False), "AUD": ("DEXUSAL", False),
-    "JPY": ("DEXJPUS", True), "CAD": ("DEXCAUS", True), "CHF": ("DEXSZUS", True),
-    "SEK": ("DEXSDUS", True), "NOK": ("DEXNOUS", True),
-}
+RATES_CACHE = "g10_short_rates.parquet"   # OECD 3-month interbank, % p.a., monthly (cols incl. USD, NZD).
+FX_CACHE = "g10_fx.parquet"               # daily, USD per 1 unit of each foreign currency (yfinance).
 
-
-def _fred_csv(series_id: str, timeout: int = 30) -> pd.Series:
-    url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=timeout) as r:  # noqa: S310 (trusted URL)
-        df = pd.read_csv(io.StringIO(r.read().decode()))
-    df.columns = ["date", "value"]
-    df["date"] = pd.to_datetime(df["date"])
-    df["value"] = pd.to_numeric(df["value"], errors="coerce")
-    return df.set_index("date")["value"].dropna()
+# OECD MEI (the rates source) was discontinued at 2024-01 — pin the headline as-of to the data end,
+# not the live calendar, so the published numbers never creep.
+DATA_AS_OF = "2024-01-31"
 
 
 def fetch_carry(cache_dir: str = DEFAULT_CACHE, fetch: bool = False) -> dict:
-    """Return ``{'rates': DataFrame, 'fx': DataFrame}`` of monthly G10 rates and USD FX, cache-first.
+    """Return ``{'rates': DataFrame, 'fx': DataFrame}`` of monthly G10 rates and month-end USD FX,
+    cache-first.
 
-    Reads a cached ``carry_g10.parquet`` if present; otherwise, only if ``fetch=True``, downloads the
-    FRED series (rates + FX), aligns them to month-end, caches, and returns. **Requires network** when
-    fetching; in an offline environment this returns ``{}`` and the study's real run is skipped (the
-    synthetic core is the offline proof).
+    Reads ``_cache/g10_short_rates.parquet`` (OECD MEI 3-month interbank short rates, % p.a., monthly,
+    columns ``USD,JPY,GBP,EUR,CAD,AUD,CHF,SEK,NOK,NZD``) and ``_cache/g10_fx.parquet`` (daily FX,
+    **USD per 1 unit** of nine foreign currencies) — the same two parquets Study 36 (Greenback) runs on.
+    On a cache miss with ``fetch=True`` it **reuses** the shared fetchers in ``tools/fetch_altdata.py``
+    (one download path for the whole desk); with ``fetch=False`` it returns ``{}`` so offline runs never
+    touch the network. FX is resampled to month-end and the rates index is snapped to month-end so the
+    carry accrual and the FX appreciation line up.
     """
-    cache = os.path.join(cache_dir, "carry_g10.parquet")
-    if os.path.exists(cache):
-        df = pd.read_parquet(cache)
-        rate_cols = [c for c in df.columns if c.startswith("rate_")]
-        fx_cols = [c for c in df.columns if c.startswith("fx_")]
-        rates = df[rate_cols].rename(columns=lambda c: c[5:])
-        fx = df[fx_cols].rename(columns=lambda c: c[3:])
-        return {"rates": rates, "fx": fx}
-    if not fetch:
-        return {}
-    rates = {}
-    for ccy, sid in FRED_RATES.items():
+    rates_path = os.path.join(cache_dir, RATES_CACHE)
+    fx_path = os.path.join(cache_dir, FX_CACHE)
+    if not (os.path.exists(rates_path) and os.path.exists(fx_path)):
+        if not fetch:
+            return {}
+        import sys
+        tools_dir = os.path.join(REPO_ROOT, "tools")
+        if tools_dir not in sys.path:
+            sys.path.insert(0, tools_dir)
         try:
-            rates[ccy] = _fred_csv(sid).resample("ME").last()
+            import fetch_altdata  # the desk's shared fetchers — no duplicated download code here
+            if not os.path.exists(rates_path):
+                fetch_altdata.fetch_g10_short_rates()
+            if not os.path.exists(fx_path):
+                fetch_altdata.fetch_g10_fx()
         except Exception:
-            continue
-    fx = {}
-    for ccy, (sid, invert) in FRED_FX.items():
-        try:
-            s = _fred_csv(sid).resample("ME").last()
-            fx[ccy] = (1.0 / s) if invert else s          # to USD-per-foreign-unit
-        except Exception:
-            continue
-    if not rates or not fx:
-        return {}
-    rates_df = pd.DataFrame(rates).sort_index()
-    fx_df = pd.DataFrame(fx).sort_index()
-    os.makedirs(cache_dir, exist_ok=True)
-    out = pd.concat([rates_df.add_prefix("rate_"), fx_df.add_prefix("fx_")], axis=1).dropna(how="all")
-    out.to_parquet(cache)
-    return {"rates": rates_df, "fx": fx_df}
+            return {}
+        if not (os.path.exists(rates_path) and os.path.exists(fx_path)):
+            return {}
+    rates = pd.read_parquet(rates_path).sort_index()
+    rates.index = pd.DatetimeIndex(rates.index) + pd.offsets.MonthEnd(0)
+    fx = pd.read_parquet(fx_path).sort_index()
+    fx_m = fx.resample("ME").last()
+    return {"rates": rates, "fx": fx_m}

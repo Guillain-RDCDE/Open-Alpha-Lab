@@ -37,13 +37,19 @@ def excess_returns(rates: pd.DataFrame, fx: pd.DataFrame, base: str = "USD") -> 
 
 
 def carry_premium_by_bucket(xret: pd.DataFrame, rates: pd.DataFrame, n_buckets: int = 3) -> dict:
-    """Sort currencies by rate into ``n_buckets`` each month; read the average excess return per bucket.
+    """Sort currencies into ``n_buckets`` by the **prior month-end's** rate; read the average excess
+    return per bucket over the following month.
 
-    A **rising** profile (high-rate buckets out-earn low-rate ones) is the carry premium; the
-    high-minus-low spread (annualised) is its size. Under full UIRP (the null) the profile is flat.
+    The rate is lagged one month — the same information set as the investable book in
+    :func:`steamroller.strategy.carry_weights` — so the diagnostic never sorts month *t*'s return on a
+    rate only known at the end of month *t*. (On the synthetic tapes, where each currency's rate is
+    constant, the lag changes nothing; on the real tape it keeps the sort honest.) A **rising** profile
+    (high-rate buckets out-earn low-rate ones) is the carry premium; the high-minus-low spread
+    (annualised) is its size. Under full UIRP (the null) the profile is flat.
     """
-    common = xret.index.intersection(rates.index)
-    xr, rt = xret.loc[common], rates.loc[common]
+    rates_lag = rates.shift(1)                            # rate known at the END of the prior month
+    common = xret.index.intersection(rates_lag.index)
+    xr, rt = xret.loc[common], rates_lag.loc[common]
     bucket_ret = {b: [] for b in range(n_buckets)}
     for dt in common:
         row_r = rt.loc[dt].dropna()

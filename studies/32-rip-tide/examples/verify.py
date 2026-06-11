@@ -41,14 +41,24 @@ def main(fetch: bool) -> None:
               f"maxDD {s['max_drawdown']*100:5.0f}%  skew {s['skew']:+.2f}")
 
     print(f"\nDiversified futures, {r.index[0].date()} - {r.index[-1].date()} ({r.shape[1]} markets, {len(r)} days)\n")
-    line("contrarian (gross)", strategy.book_returns(r, cost_bps=0.0))
+    gross_book = strategy.book_returns(r, cost_bps=0.0)
+    line("contrarian (gross)", gross_book)
     line("contrarian (net @2bp)", strategy.book_returns(r, cost_bps=2.0))
     line("long-only basket", costs.long_only_basket(r))
+    try:
+        from quantlab.analytics import mean_tstat_hac
+        ht = mean_tstat_hac(gross_book.dropna())
+        print(f"\nGross book mean: {ht['mean_bps']:+.2f} bp/day, Newey-West t = {ht['tstat']:+.2f} "
+              f"({ht['lags']} lags, n={ht['n']})")
+    except Exception:
+        pass
     print(f"\nTurnover/day: {strategy.turnover(r):.2f}   Break-even cost: {costs.breakeven_cost_bps(r):.2f} bp")
-    print("\nCost sweep (bp -> Sharpe/CAGR):\n" + costs.cost_sweep(r).round(3).to_string())
-    print("\nHolding-period rescue:\n" + extension.holding_period_sweep(r).round(3).to_string())
-    print("\nHorizon sweep:\n" + extension.horizon_sweep(r).round(3).to_string())
-    print("\nSub-period Sharpe (decay):\n" + extension.subperiod_sharpe(r, n_splits=3).round(3).to_string())
+    print("\nCost sweep (bp -> NET Sharpe/CAGR):\n" + costs.cost_sweep(r).round(3).to_string())
+    print("\nHolding-period rescue (gross and net @2bp, both labelled):\n"
+          + extension.holding_period_sweep(r).round(3).to_string())
+    print("\nHorizon sweep (gross and net @2bp, both labelled):\n" + extension.horizon_sweep(r).round(3).to_string())
+    print("\nSub-period Sharpe (gross and net @2bp, both labelled):\n"
+          + extension.subperiod_sharpe(r, n_splits=3).round(3).to_string())
 
     try:
         from quantlab import repro

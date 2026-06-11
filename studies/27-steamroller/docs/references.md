@@ -33,19 +33,26 @@
 
 ## The desk's own method — engine and reproducibility
 
-- **HAC / Newey–West inference** (Newey & West, *Econometrica* 1987) on the carry portfolio's mean.
-- **Data.** The real run uses monthly **G10 3-month interbank rates and USD FX from FRED** (free, no API
-  key); pinned with [`quantlab.repro`](../../../quantlab/repro.py). The synthetic control bakes a partial-
-  UIRP premium with a sticky two-state risk-off crash regime.
+- **HAC / Newey–West inference** (Newey & West, *Econometrica* 1987) on the carry portfolio's mean, plus
+  a circular-block-bootstrap Sharpe CI ([`quantlab.stats`](../../../quantlab/stats.py)).
+- **Data.** The real run uses monthly **G10 3-month interbank short rates (OECD MEI, via DBnomics)** and
+  **USD FX from yfinance** — the desk's shared cache, the *same tape* as
+  [Study 36 (Greenback)](../../36-greenback/), fetched once by
+  [`tools/fetch_altdata.py`](../../../tools/fetch_altdata.py) and pinned with
+  [`quantlab.repro`](../../../quantlab/repro.py). The synthetic control bakes a partial-UIRP premium with
+  a sticky two-state risk-off crash regime.
 
 ## Caveats stated in the open (house rule)
 
-- **Real run needs one network fetch.** Unlike the desk's cached studies, the G10 tape is not
-  pre-populated; `examples/verify.py --fetch` downloads it from FRED. The committed verdict rests on the
-  fully-validated synthetic control and the long-run literature until then.
+- **The sample starts in 2001 and ends 2024-01.** OECD MEI (the rates source) was discontinued at
+  2024-01, and the FX history reaches back to ~2001 — so the fat carry decades of the 1980s–90s are out
+  of reach of this tape. The `WEAK` signal stamp is a statement about *this* post-2000 sample; the
+  literature's full-sample evidence is stronger.
 - **Monthly horizon, USD base, spot (not forward) carry.** The carry signal is the rate differential;
   using spot FX plus the rate gap approximates the forward-based carry return and is the cleanly-available
   construction from public data — a stated simplification.
+- **The synthetic control has zero turnover by construction** (constant per-currency rates → the ranking
+  never changes), so the "cheap to run" claim is exercised only on the real tape (turnover 0.55×/yr).
 
 ---
 

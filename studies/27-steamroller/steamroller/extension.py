@@ -39,9 +39,17 @@ def _profile(r, periods_per_year):
 
 def crash_comparison(xret: pd.DataFrame, rates: pd.DataFrame, cost_bps: float = 10.0,
                      periods_per_year: int = MONTHS_PER_YEAR, **kw) -> dict:
-    """Plain carry vs vol-managed carry — Sharpe, skew, worst month and drawdown side by side."""
+    """Plain carry vs vol-managed carry — Sharpe, skew, worst month and drawdown side by side.
+
+    Both books are profiled on the **same window**: the managed book only exists after its
+    ``vol_window``-month (default 12) trailing-vol burn-in, so the plain book is re-windowed to match.
+    That makes the comparison apples-to-apples — and it means the plain Sharpe quoted *here* can differ
+    slightly from the full-sample headline Sharpe (which includes the burn-in months). The returned
+    ``n_months`` says exactly which sample both columns share.
+    """
     plain = carry_returns(xret, rates, cost_bps=cost_bps, **kw)
     managed = vol_managed_carry(xret, rates, cost_bps=cost_bps, **kw)
     idx = plain.index.intersection(managed.index)
     return {"plain": _profile(plain.reindex(idx), periods_per_year),
-            "managed": _profile(managed.reindex(idx), periods_per_year)}
+            "managed": _profile(managed.reindex(idx), periods_per_year),
+            "n_months": int(len(idx))}
