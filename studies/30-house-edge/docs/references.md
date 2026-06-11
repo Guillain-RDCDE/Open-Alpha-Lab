@@ -23,19 +23,27 @@ true financing cost*, the package beats simply holding the index it trades.
 
 ## The honest counter — why the verdict is `REAL` / `MIRAGE` / `Busted`
 
-- **Financing is charged on the whole notional, not the excess.** A levered or CFD/futures position funds
-  its *entire* exposure at a money-market rate plus a markup, every day it is held — not merely the slice
-  above 100%. The convention of financing only `max(exposure − 1, 0)` (and ignoring the dividend a long
-  index position receives) is the single accounting choice that turns a losing levered backtest into a
-  winning-looking one. The cost-of-carry that makes this unavoidable is textbook: John Hull, *Options,
-  Futures, and Other Derivatives* (futures/forward pricing, the cost-of-carry relation).
-- **Volatility drag and the leverage tax.** Constant leverage compounds a volatility penalty
-  (≈ ½·(k²−k)·σ² for leverage *k*); levering a noisy series amplifies variance faster than mean. This is
-  why even a zero-markup funding rate leaves the levered book trailing the index (the sweep in
-  [`results.md`](results.md)).
-- **Risk management trades return for drawdown, ~1:1 here.** The identical Calmar (0.19) of strategy and
-  buy-and-hold is the crisp statement: per unit of max-drawdown survived, neither is ahead. Drawdown
-  protection is real and worth having (survival, leverage headroom), but it is *not* a free return edge.
+- **Two account types, each charging every dollar exactly once.** A *margin account* borrows only the
+  slice above 100% at the bill + markup and parks idle capital in bills; a *futures/CFD account* carries
+  its **entire notional** at the bill + markup while the capital itself stays in bills (the cost-of-carry
+  baked into a future's or swap's pricing is textbook: John Hull, *Options, Futures, and Other
+  Derivatives*). At a zero markup the two are algebraically identical; what separates them is only **where
+  the broker's markup lands** — the borrowed slice, or the whole position. (Beware the half-and-half
+  accounting that charges full-notional financing *and* credits cash interest only on the un-deployed
+  fraction: it pays the risk-free rate twice and manufactures a phantom ~`avg_exposure × rf` pts/yr drag.
+  An earlier version of this study did exactly that.)
+- **Sharpe in excess of the bill, both sides.** A financed strategy's net return already has funding in
+  it; quoting buy-and-hold's Sharpe on raw returns hands it the risk-free rate for free. Every Sharpe in
+  this study is computed on returns minus the T-bill, strategy and benchmark alike.
+- **Volatility drag and the gate's opportunity cost.** Levering a noisy series compounds a volatility
+  penalty (≈ ½·(k²−k)·σ² for constant leverage *k*), and time flattened by the trend gate forgoes the
+  equity premium — which is why even at a zero markup the book *ties* rather than beats the index
+  (−0.5 pts/yr in [`results.md`](results.md)). The return edge never existed; the markup turns a tie into
+  a structural loss.
+- **Risk management here is cheap insurance, not alpha.** A margin account pays ~0.7 pts/yr of markup
+  (plus the 0.5-pt structural shortfall) for a 31-point cut in max-drawdown and a doubled Calmar (0.38 vs
+  0.19). Worth having for survival and leverage headroom — but it out-earns nothing, and routed through a
+  CFD the same insurance costs 2.65 pts/yr because the markup hits the full notional.
 
 ## The desk's own method — engine and reproducibility
 
@@ -43,18 +51,18 @@ true financing cost*, the package beats simply holding the index it trades.
   T-bill) as the financing rate, daily, 1990–2026. Pinned with [`quantlab.repro`](../../../quantlab/repro.py)
   (as-of date + input fingerprint). The offline control is a seeded synthetic GARCH(1,1)-with-bear-regimes
   index (`house_edge.data.synthetic_market`).
-- **Cost models.** `house_edge.costs.net_returns(mode="idealized" | "honest")` — the two accountings,
-  applied to one exposure path so only the cost model varies.
+- **Cost models.** `house_edge.costs.net_returns(mode="margin" | "futures")` — the two account types,
+  applied to one exposure path so only the funding (and where the markup lands) varies.
 
 ## Caveats stated in the open (house rule)
 
 - **`^GSPC` auto-adjusted ≈ total return, not exact.** Yahoo's adjustment approximates dividend
   reinvestment; the honest model also credits an explicit constant dividend yield to the long, so the
   comparison is like-for-like on the total-return basis (stated, not hidden).
-- **One strategy parameterisation.** The headline uses `target_vol = 0.15`, `lev_cap = 2.0`; the financing
-  sweep and the synthetic control show the conclusion is not specific to the markup, and the verdict is a
-  structural one (volatility drag + full-notional carry), not a tuning artefact. Other parameterisations
-  move the numbers, not the sign.
+- **One strategy parameterisation.** The headline uses `target_vol = 0.15`, `lev_cap = 2.0`; the markup
+  sweep and the synthetic control show the conclusion is not specific to one fee assumption: the CAGR edge
+  vs buy-and-hold is negative in every row of the sweep, and the gap widens with the markup — fastest in
+  the CFD, where the markup hits the full notional. Other parameterisations move the numbers, not the sign.
 
 ---
 

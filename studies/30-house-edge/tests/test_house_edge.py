@@ -1,6 +1,8 @@
-"""The synthetic market is deterministic; the vol-targeted book cuts drawdown (the real part); honest
-full-notional financing costs more than the idealized accounting and never beats buy-and-hold (the
-mirage); and the exposure rules behave (trend gate flattens, vol-target caps)."""
+"""The synthetic market is deterministic; the vol-targeted book cuts drawdown (the real part);
+the two financing models coincide at a zero markup and charge each dollar exactly once (no
+double-charged risk-free rate); the CFD markup lands on the full notional while the margin
+account pays only on the borrowed slice (the house edge); and the levered book never out-earns
+buy-and-hold at any markup (the mirage)."""
 
 import numpy as np
 import pandas as pd
@@ -32,29 +34,65 @@ def test_drawdown_protection_is_real(price, rate):
     assert dd["drawdown_reduction"] > 0.03
 
 
-def test_honest_costs_more_than_idealized(price, rate):
+def test_models_coincide_at_zero_markup(price, rate):
+    """The keystone identity: margin and futures funding are the SAME at markup = 0 —
+    what differs between accounts is only where the broker's markup lands."""
     e = strategy.exposure(price)
-    he = costs.house_edge(e, price, rate)
-    assert he["cagr_idealized"] > he["cagr_honest"]                # full-notional financing costs more
-    assert he["house_edge_ann"] > 0.0
+    a = costs.net_returns(e, price, rate, mode="margin", markup=0.0)
+    b = costs.net_returns(e, price, rate, mode="futures", markup=0.0)
+    assert np.allclose(a.to_numpy(), b.to_numpy())
+
+
+def test_no_double_charged_riskfree():
+    """Exposure ≡ 1, zero markup, no dividends/spread → net return IS the price return.
+    (The bug this guards against: financing the full notional while crediting cash interest
+    only on the un-deployed fraction, which silently subtracts rf from a fully-invested book.)"""
+    idx = pd.bdate_range("2010-01-04", periods=300)
+    price = pd.Series(100 * np.cumprod(1 + 0.0003 * np.ones(300)), index=idx, name="price")
+    rate = pd.Series(0.04, index=idx, name="short_rate")          # a fat bill rate, to catch any leak
+    e = pd.Series(1.0, index=idx)
+    ret = price.pct_change().dropna()
+    for mode in ("margin", "futures"):
+        r = costs.net_returns(e, price, rate, mode=mode, markup=0.0, div_yield=0.0, spread_bps=0.0)
+        assert np.allclose(r.to_numpy(), ret.to_numpy()), mode
+
+
+def test_flat_book_earns_the_bill():
+    """Exposure ≡ 0 → the account is all cash and earns exactly the bill rate, both models."""
+    idx = pd.bdate_range("2010-01-04", periods=300)
+    price = pd.Series(np.linspace(100, 120, 300), index=idx, name="price")
+    rate = pd.Series(0.04, index=idx, name="short_rate")
+    e = pd.Series(0.0, index=idx)
+    for mode in ("margin", "futures"):
+        r = costs.net_returns(e, price, rate, mode=mode, div_yield=0.0, spread_bps=0.0)
+        assert np.allclose(r.to_numpy(), 0.04 / costs.TRADING_DAYS), mode
+
+
+def test_house_edge_is_the_markup_on_the_full_notional(price, rate):
+    """The CFD pays the markup on the whole notional, the margin account only on the borrowed
+    slice — so the CFD's bill is the bigger one, and ≈ avg_exposure × markup per year."""
+    e = strategy.exposure(price)
+    he = costs.house_edge(e, price, rate, markup=0.025)
+    assert he["house_edge_ann"] > he["margin_edge_ann"] >= 0.0
+    expected = he["avg_exposure"] * 0.025                          # the back-of-envelope identity
+    assert 0.6 * expected < he["house_edge_ann"] < 1.4 * expected
 
 
 def test_levered_book_does_not_beat_buy_and_hold(price, rate):
     e = strategy.exposure(price)
-    hon = strategy.summary(costs.net_returns(e, price, rate, mode="honest"))
-    bh = strategy.summary(costs.buy_and_hold(price))
-    assert hon["cagr"] < bh["cagr"]                                # the mirage: no return edge
+    marg = strategy.summary(costs.net_returns(e, price, rate, mode="margin"), rf=rate)
+    bh = strategy.summary(costs.buy_and_hold(price), rf=rate)
+    assert marg["cagr"] < bh["cagr"]                               # the mirage: no return edge
     sweep = extension.financing_sweep(price, rate)
-    assert (sweep["edge_vs_bh_cagr"] < 0).all()                    # negative at every markup
+    assert (sweep["margin_edge_cagr"] < 0).all()                   # negative at every markup…
+    assert (sweep["cfd_edge_cagr"] <= sweep["margin_edge_cagr"] + 1e-12).all()   # …and worse on a CFD
+    assert sweep["cfd_edge_cagr"].is_monotonic_decreasing          # the markup is the dial
 
 
-def test_idealized_and_honest_agree_when_unlevered_and_frictionless():
-    """With exposure ≡ 1, zero markup, no dividends/cash, both cost models collapse to the price return."""
-    idx = pd.bdate_range("2010-01-04", periods=300)
-    price = pd.Series(100 * np.cumprod(1 + 0.0003 * np.ones(300)), index=idx, name="price")
-    rate = pd.Series(0.0, index=idx, name="short_rate")
-    e = pd.Series(1.0, index=idx)
-    a = costs.net_returns(e, price, rate, mode="idealized", markup=0.0, div_yield=0.0, spread_bps=0.0)
-    b = costs.net_returns(e, price, rate, mode="honest", markup=0.0, div_yield=0.0, spread_bps=0.0,
-                          cash_earns=False)
-    assert np.allclose(a.to_numpy(), b.to_numpy())
+def test_excess_sharpe_convention(price, rate):
+    """summary(rf=...) computes the Sharpe on returns in excess of the bill — strictly lower
+    than the raw-return Sharpe whenever rates are positive — while CAGR stays total-return."""
+    bh = costs.buy_and_hold(price)
+    raw, ex = strategy.summary(bh), strategy.summary(bh, rf=rate)
+    assert ex["sharpe"] < raw["sharpe"]
+    assert ex["cagr"] == raw["cagr"]

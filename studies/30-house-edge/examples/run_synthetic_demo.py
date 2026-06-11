@@ -2,8 +2,9 @@
 
     python examples/run_synthetic_demo.py
 
-Builds the seeded synthetic index, runs the vol-targeted contrarian book under idealized vs honest
-financing, and prints the drawdown protection (real) and the return shortfall + house edge (mirage).
+Builds the seeded synthetic index, runs the vol-targeted contrarian book under both honest
+account types (margin: markup on the borrowed slice; futures/CFD: markup on the full notional),
+and prints the drawdown protection (real) and the markup bill — the house edge (mirage).
 """
 
 from __future__ import annotations
@@ -27,9 +28,10 @@ def main() -> None:
     e = strategy.exposure(price)
     print(f"Synthetic control: {truth.n_days} days, {truth.n_crashes} bear regimes, seed {truth.seed}\n")
     rows = {
-        "buy & hold (total return)": strategy.summary(costs.buy_and_hold(price)),
-        "strategy — idealized costs": strategy.summary(costs.net_returns(e, price, rate, mode="idealized")),
-        "strategy — HONEST costs": strategy.summary(costs.net_returns(e, price, rate, mode="honest")),
+        "buy & hold (total return)": strategy.summary(costs.buy_and_hold(price), rf=rate),
+        "strat — funded flat (0%)": strategy.summary(costs.net_returns(e, price, rate, mode="futures", markup=0.0), rf=rate),
+        "strat — margin @ 2.5%": strategy.summary(costs.net_returns(e, price, rate, mode="margin"), rf=rate),
+        "strat — CFD @ 2.5%": strategy.summary(costs.net_returns(e, price, rate, mode="futures"), rf=rate),
     }
     print(f"{'':28} {'CAGR':>6} {'Sharpe':>7} {'maxDD':>7} {'Calmar':>7}")
     for nm, s in rows.items():
@@ -38,8 +40,8 @@ def main() -> None:
     dd = extension.drawdown_protection(price, rate)
     print(f"\nReal:   drawdown {dd['bh_max_drawdown']*100:.0f}% -> {dd['strat_max_drawdown']*100:.0f}% "
           f"(a {dd['drawdown_reduction']*100:.0f}-pt reduction)")
-    print(f"Mirage: house edge {he['house_edge_ann']*100:.2f} pts/yr (idealized {he['cagr_idealized']*100:.1f}% "
-          f"vs honest {he['cagr_honest']*100:.1f}%), and the levered book trails buy & hold in return.")
+    print(f"Mirage: the markup. Funded flat the book makes {he['cagr_funded_flat']*100:.1f}%; the retail CFD "
+          f"markup takes {he['house_edge_ann']*100:.2f} pts/yr of it (margin account: {he['margin_edge_ann']*100:.2f}).")
 
 
 if __name__ == "__main__":

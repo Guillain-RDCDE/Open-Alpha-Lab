@@ -51,17 +51,30 @@ def exposure(price: pd.Series, target_vol: float = 0.15, lev_cap: float = 2.0,
     return e.clip(0, lev_cap).rename("exposure")
 
 
-def summary(returns: pd.Series, periods_per_year: int = TRADING_DAYS) -> dict:
-    """Annualised Sharpe, CAGR, vol, max-drawdown, Calmar for a daily return series."""
+def summary(returns: pd.Series, periods_per_year: int = TRADING_DAYS,
+            rf: pd.Series | None = None) -> dict:
+    """Annualised Sharpe, CAGR, vol, max-drawdown, Calmar for a daily return series.
+
+    **Sharpe convention:** if ``rf`` (an *annualised* short-rate series) is given, the Sharpe
+    is computed on returns in **excess of the bill** — the only convention that compares a
+    financed strategy and a buy-and-hold on the same footing (a strategy's net return already
+    has funding in it; a raw-return Sharpe hands buy-and-hold the risk-free rate for free).
+    CAGR, vol, max-drawdown and Calmar stay on the *total* return series — those are what the
+    account actually experiences.
+    """
     r = pd.Series(returns).astype(float).dropna()
     if len(r) < 2:
         return {k: np.nan for k in ("sharpe", "cagr", "vol_ann", "max_drawdown", "calmar", "n_days")}
-    mean, std = r.mean(), r.std(ddof=1)
+    if rf is not None:
+        ex = r - rf.reindex(r.index).ffill().fillna(0.0) / periods_per_year
+        mean, std = ex.mean(), ex.std(ddof=1)
+    else:
+        mean, std = r.mean(), r.std(ddof=1)
     eq = (1.0 + r).cumprod()
     dd = (eq / eq.cummax() - 1.0).min()
     years = len(r) / periods_per_year
     cagr = eq.iloc[-1] ** (1.0 / years) - 1.0 if eq.iloc[-1] > 0 else np.nan
     return {"sharpe": float(mean / std * np.sqrt(periods_per_year)) if std > 0 else np.nan,
-            "cagr": float(cagr), "vol_ann": float(std * np.sqrt(periods_per_year)),
+            "cagr": float(cagr), "vol_ann": float(r.std(ddof=1) * np.sqrt(periods_per_year)),
             "max_drawdown": float(dd), "calmar": float(cagr / abs(dd)) if dd < 0 else np.nan,
             "n_days": int(len(r))}

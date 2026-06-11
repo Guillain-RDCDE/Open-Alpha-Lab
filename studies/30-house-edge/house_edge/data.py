@@ -5,8 +5,8 @@ The desk's offline/cache split:
   * :func:`synthetic_market` — fully **offline, deterministic**. A daily equity index with
     realistic *volatility clustering* (a GARCH-like vol process) and occasional *crashes*, plus
     a slow upward drift. This is enough to demonstrate the whole point: a vol-targeted dip-buyer
-    cuts drawdown, and honest full-notional financing eats the return edge. Seeded — same seed,
-    same path.
+    cuts drawdown, and the broker's markup — full-notional on a CFD — eats the return. Seeded —
+    same seed, same path.
   * :func:`fetch_index` — the real S&P 500 (``^GSPC``, total-return proxy) and a short-rate
     (``^IRX``, 13-week T-bill) from Yahoo, **cache-first**; network only on an explicit cache miss
     with ``fetch=True``. The real 36-year run lives in ``docs/results.md``.
