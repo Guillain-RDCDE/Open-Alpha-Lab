@@ -16,7 +16,7 @@
 
 ## What we tested
 
-The **low-volatility anomaly** as an investable product: does the min-vol ETF (**USMV**) deliver the better risk-adjusted returns the academic effect ([Study 18 Dull-Roar](../../18-dull-roar/)) promises? We compare USMV to **SPY** over USMV's life (2011–2026), leg by leg — CAGR, Sharpe, volatility, drawdown — plus the spread and the volatility-reduction ratio. The offline control is a synthetic world where the min-vol sleeve has beta<1 (lower vol) and a tunable low-vol alpha (and a null).
+The **low-volatility anomaly** as an investable product: does the min-vol ETF (**USMV**) deliver the better risk-adjusted returns the academic effect ([Study 18 Dull-Roar](../18-dull-roar/)) promises? We compare USMV to **SPY** over USMV's life (2011–2026), leg by leg — CAGR, Sharpe, volatility, drawdown — plus the spread and the volatility-reduction ratio. The offline control is a synthetic world where the min-vol sleeve has beta<1 (lower vol) and a tunable low-vol alpha (and a null).
 
 ## The full teardown lives in the notebooks
 

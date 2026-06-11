@@ -8,11 +8,11 @@
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** — does hedging pressure predict commodity returns? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | Real and strong on our synthetic control (information coefficient HAC *t* > **11**) and in the long-run literature — but on the modern CFTC-COT + futures tape the IC is **−0.021** (*t* = **−1.4**) and the top-minus-bottom spread is *negative* (**−7.6%/yr**). |
-| **Tradability** — does it survive costs, capacity, scale? | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) | The dollar-neutral hedging-pressure factor *loses money*: Sharpe **−0.41** (Newey–West *t* = **−1.4**), negative across **every** signal-normalisation window, at **5.1×/yr** turnover. Long-only-top Sharpe **+0.16** vs the equal-weight basket **+0.67** — you'd have been better off just owning commodities. |
-| **Hedging-pressure premium today?** | ![Faded](https://img.shields.io/badge/Faded-8b949e?style=flat-square) | Sub-period Sharpes **−0.83 / −0.90 / +0.56**: negative through the bulk of 2015–2025 (a late bounce aside). A structural risk premium that a present-day trader cannot collect on the liquid commodities. |
+| **Signal** — does hedging pressure predict commodity returns? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | Real and strong on our synthetic control (information coefficient HAC *t* > **11**) and in the long-run literature — but on the modern CFTC-COT + futures tape the IC is **−0.020** (*t* = **−1.4**) and the top-minus-bottom spread is *negative* (**−7.7%/yr**). |
+| **Tradability** — does it survive costs, capacity, scale? | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) | The dollar-neutral hedging-pressure factor pays nothing: Sharpe **−0.42** (Newey–West *t* = **−1.4**, not significant), negative across **every** signal-normalisation window, at **5.1×/yr** turnover. Long-only-top Sharpe **+0.18** vs the equal-weight basket **+0.70** — you'd have been better off just owning commodities. |
+| **Hedging-pressure premium today?** | ![Faded](https://img.shields.io/badge/Faded-8b949e?style=flat-square) | Sub-period Sharpes **−0.79 / −0.99 / +0.60**: negative through the bulk of 2015–2025 (a late bounce aside). A structural risk premium that a present-day trader cannot collect on the liquid commodities. |
 
-> **In one sentence:** the toll producers supposedly pay speculators for absorbing their hedges is real in the long-run record and on our control, but on the modern, liquid commodity futures the booth is empty — the hedging-pressure factor loses money at every parameter.
+> **In one sentence:** the toll producers supposedly pay speculators for absorbing their hedges is real in the long-run record and on our control, but on the modern, liquid commodity futures the booth is empty — no detectable premium at any parameter we try (long-short *t* = −1.4, not significant).
 
 ## What we tested
 

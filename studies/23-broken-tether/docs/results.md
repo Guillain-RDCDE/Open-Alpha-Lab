@@ -9,7 +9,7 @@ fingerprint below. Split-only closes in log space — stated, not hidden.*
 ## The verdict, earned — Signal `WEAK` · Tradability `MIRAGE` · Stays tethered? `Breaks`
 
 Pairs trading works beautifully on a *truly* cointegrated pair — but real ETF pairs won't sit still.
-Across **45** candidate pairs, only **1** keep a positive Sharpe out of
+Across **45** candidate pairs, only **1** clears a 0.3 Sharpe out of
 sample: a pair that looks great in the first half almost always limps or breaks in the second. The
 poster child here is **QQQ/EWJ**, the best first-half pair at Sharpe
 **+0.61** — which falls to **+0.18** in the second half, while its

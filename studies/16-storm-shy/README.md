@@ -16,7 +16,7 @@
 
 ## What we tested
 
-The residual that kept surfacing as the *only* real thing inside the desk's fancier teardowns — the **vol-targeting overlay** [Study 12](../../12-paper-prophet/) caught hiding inside an ARIMA+GARCH stack — promoted to the lead. The steelman, at full strength (Moreira & Muir, *"Volatility-Managed Portfolios"*, **Journal of Finance** 2017): because expected returns barely move with recent volatility while volatility itself is strongly persistent, scaling exposure by `σ_target / σ̂` — a *past-only* position, no return forecast — raises the Sharpe and earns a spanning alpha. We run it through the full protocol on real SPY (since 1993) & QQQ (since 1999) daily total-return closes, and — keeping the desk honest on its first win — price the gain *and* its bound with a certainty-equivalent test at matched risk.
+The residual that kept surfacing as the *only* real thing inside the desk's fancier teardowns — the **vol-targeting overlay** [Study 12](../12-paper-prophet/) caught hiding inside an ARIMA+GARCH stack — promoted to the lead. The steelman, at full strength (Moreira & Muir, *"Volatility-Managed Portfolios"*, **Journal of Finance** 2017): because expected returns barely move with recent volatility while volatility itself is strongly persistent, scaling exposure by `σ_target / σ̂` — a *past-only* position, no return forecast — raises the Sharpe and earns a spanning alpha. We run it through the full protocol on real SPY (since 1993) & QQQ (since 1999) daily total-return closes, and — keeping the desk honest on its first win — price the gain *and* its bound with a certainty-equivalent test at matched risk.
 
 ## The full teardown lives in the notebooks
 

@@ -100,7 +100,7 @@ fingerprint below. Split-only closes in log space — stated, not hidden.*
 ## The verdict, earned — Signal `{signal}` · Tradability `{trad}` · Stays tethered? `{tether}`
 
 Pairs trading works beautifully on a *truly* cointegrated pair — but real ETF pairs won't sit still.
-Across **{d['n_pairs']}** candidate pairs, only **{d['n_survive']}** keep a positive Sharpe out of
+Across **{d['n_pairs']}** candidate pairs, only **{d['n_survive']}** clears a 0.3 Sharpe out of
 sample: a pair that looks great in the first half almost always limps or breaks in the second. The
 poster child here is **{d['best_pair']}**, the best first-half pair at Sharpe
 **{bi['first_half']:+.2f}** — which falls to **{bi['second_half']:+.2f}** in the second half, while its

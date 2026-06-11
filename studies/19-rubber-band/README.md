@@ -9,7 +9,7 @@
 | Axis | Stamp | Why |
 |---|---|---|
 | **Signal** — does a low close really bounce? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | Yes, unmistakably. Bucket days by Internal Bar Strength and a close near the low earns far more next session than one near the high — real-ETF basket gross Sharpe **+1.56**, Newey–West *t* = **+8.6**, with the synthetic random-walk null flat. |
-| **Tradability** — does it survive costs, capacity, scale? | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) | It trades **every day** (~170×/yr turnover), so the whole edge lives inside the bid-ask: basket break-even **8.1 bps**, and net of a tight 2 bp the **last-five-year** Sharpe is *negative*. The biggest bounce sits in the thinnest, widest-spread country ETFs — the names you can't trade cheaply. |
+| **Tradability** — does it survive costs, capacity, scale? | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) | It trades **every day** (~170×/yr turnover), so the whole edge lives inside the bid-ask: basket break-even **8.1 bps**, and net of a 3 bp round-trip the **last-five-year** Sharpe is **−0.37**. The biggest bounce sits in the thinnest, widest-spread country ETFs — the names you can't trade cheaply. |
 | **Still alive?** | ![Decayed](https://img.shields.io/badge/Decayed-8b949e?style=flat-square) | A once-strong, now-famous microstructure edge, competed away: gross Sharpe **+2.09 → +0.88** (first → second half), just **+0.40** over the last five years. |
 
 > **In one sentence:** a genuine one-day mean-reversion bounce — real at *t* > 8 gross — that turns over daily, lives entirely inside the spread, and has decayed to negative net returns in the modern sample.

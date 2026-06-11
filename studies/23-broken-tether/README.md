@@ -9,7 +9,7 @@
 | Axis | Stamp | Why |
 |---|---|---|
 | **Signal** — is the spread tradably mean-reverting? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | The half-life engine cleanly flags a *genuinely* cointegrated pair (synthetic spread half-life ~11 days, reverting), and the trade makes money there — but only thinly, and real ETF pairs are weakly, unstably cointegrated. |
-| **Tradability** — does it survive costs, capacity, scale? | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) | Of **45** real ETF pairs, only **1** keeps a positive Sharpe out of sample; the first-/second-half Sharpe rank correlation is **+0.17** (in-sample winners don't repeat). Picking pairs on past performance is picking noise. |
+| **Tradability** — does it survive costs, capacity, scale? | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) | Of **45** real ETF pairs, only **1** clears a 0.3 Sharpe out of sample; the first-/second-half Sharpe rank correlation is **+0.17** (in-sample winners don't repeat). Picking pairs on past performance is picking noise. |
 | **Stays tethered?** | ![Breaks](https://img.shields.io/badge/Breaks-8b949e?style=flat-square) | The best in-sample pair (**QQQ/EWJ**, Sharpe **+0.61**) collapses to **+0.18** out of sample, its hedge ratio drifting **87%** of its level; and **3%** of *independent random walks* look cointegrated by chance — the search itself is a trap. |
 
 > **In one sentence:** pairs trading is real on a stable cointegrated pair, but stable cointegration among liquid, already-arbitraged ETFs is rare, drifting, and mostly an artefact of selection — so the scanned-universe edge breaks out of sample.

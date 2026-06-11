@@ -12,7 +12,7 @@
 | **Tradability** — is there a low-vol premium to harvest? | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) | Negative gross and consistent (Sharpe −0.65 in both halves) — high-idio-vol growth survivors beat the calm names. |
 | **"Idio-vol puzzle on tradable large caps"?** | ![Busted](https://img.shields.io/badge/Busted-8b949e?style=flat-square) | The puzzle lives in small/micro caps; survivorship + the growth regime invert it on liquid stocks. |
 
-> **In one sentence:** the idiosyncratic-volatility puzzle — high-vol stocks should earn *less* — inverts decisively on tradable large caps (−12%/yr, t −3.1), the near-twin of the MAX effect ([Jackpot](../../53-jackpot/)), because idio-vol is a high-risk axis and the volatile growth survivors won the post-2009 market.
+> **In one sentence:** the idiosyncratic-volatility puzzle — high-vol stocks should earn *less* — inverts decisively on tradable large caps (−12%/yr, t −3.1), the near-twin of the MAX effect ([Jackpot](../53-jackpot/)), because idio-vol is a high-risk axis and the volatile growth survivors won the post-2009 market.
 
 ## What we tested
 

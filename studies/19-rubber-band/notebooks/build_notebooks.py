@@ -236,16 +236,18 @@ def build_curious():
             "(break-evens of 10–18 bps) whose *real* spreads are just as wide — so the names that pay "
             "are the names you can't trade cheaply, and the liquid names barely pay at all.\n\n"
             "> Tradability **`MIRAGE`**; \"still alive?\" **`DECAYED`** — the worked complement "
-            "([`../docs/extension.md`](../docs/extension.md)) shows almost no single name clears its own "
-            "spread."
+            "([`../docs/extension.md`](../docs/extension.md)) shows 9 of 14 names clear their own assumed "
+            "spread full-sample, but the clears sit in the thin country funds where the spread is itself "
+            "an optimistic guess — and the recent net edge is negative."
         ),
 
         md(
             "## 7 · Going further 🚪\n\n"
             "- **The realistic-spread test** (beat 7 of the quants notebook + "
             "[`../docs/extension.md`](../docs/extension.md)): charge each ETF its *own* plausible spread "
-            "and count how many clear — almost none do, and the recent-window edge is negative by a few "
-            "bps.\n"
+            "and count how many clear — 9 of 14 do over the full sample, but mostly the thin country "
+            "funds whose assumed spread is an optimistic guess, and the recent-window edge is negative "
+            "by a few bps.\n"
             "- **Intraday execution.** IBS is a close-to-close signal; entering on the close and exiting "
             "on the *open* (or mid) might dodge some cost — does any version survive at a real venue?\n"
             "- **Single names & longer history.** The bounce is strongest in volatile instruments; does "
@@ -416,15 +418,17 @@ def build_quants():
         code(
             "be_basket = decompose.breakeven_cost({'A': ohlc})\n"
             "print(f\"synthetic single-name break-even {be_basket['breakeven_bps']:.1f} bps (illustrative).\")\n"
-            "print('On the REAL basket (../docs/extension.md): almost no name clears its own spread, and')\n"
+            "print('On the REAL basket (../docs/extension.md): 9 of 14 names clear their own assumed spread full-sample --')\n"
+            "print('but the clears are the thin country funds where the spread is itself an optimistic guess, and')\n"
             f"print('the last-5y net Sharpe is negative by a few bps -- gross {R['last5']}, net@3bps {R['last5_net3']}.')"
         ),
         md(
             "**The result.** On the real basket the per-name table is decisive: the names with the "
             "biggest bounce (thin country ETFs, break-evens of 10–18 bps) are the ones with the *widest* "
             "real spreads, while the liquid names that *could* be traded tight carry a small edge and a "
-            f"low break-even ({R['spy_be']} bps for SPY). Granting each name its real spread, almost "
-            "nothing clears; and the last-five-year edge is already negative net of a tight cost. The "
+            f"low break-even ({R['spy_be']} bps for SPY). On the assumed spreads, 9 of 14 names clear "
+            "full-sample — but the clears are exactly where the spread is an optimistic guess and "
+            "capacity is tiny; and the last-five-year edge is already negative net of a tight cost. The "
             "constraint a real desk faces — paying the spread, every day — is exactly the one that turns "
             "this `REAL` signal into a `MIRAGE`. Full run in [`../docs/extension.md`](../docs/extension.md).\n\n"
             "### 7b · Other forks\n"

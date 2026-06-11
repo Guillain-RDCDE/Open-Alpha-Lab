@@ -8,7 +8,7 @@
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** — is residual momentum real? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | Strong on our synthetic control (alpha HAC *t* ≈ **16**); on the modern S&P 500 the residual winners-minus-losers factor earns **+6.2%/yr** (HAC *t* = **+1.2**) — slightly stronger than [Study 24](../../24-stampede/)'s total momentum (+4.4%, *t* +0.9), but still indistinguishable from zero. |
+| **Signal** — is residual momentum real? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | Strong on our synthetic control (alpha HAC *t* ≈ **16**); on the modern S&P 500 the residual winners-minus-losers factor earns **+6.2%/yr** (HAC *t* = **+1.2**) — slightly stronger than [Study 24](../24-stampede/)'s total momentum (+4.4%, *t* +0.9), but still indistinguishable from zero. |
 | **Tradability** — does it survive costs, capacity, scale? | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) | Thin standalone Sharpe (**+0.08**), fast turnover (**~12×/yr**), and you must short the losers — but it's the right *platform* for crash management. |
 | **Cleaner than total momentum?** | ![Confirmed](https://img.shields.io/badge/Confirmed-8b949e?style=flat-square) | Better-behaved tail: skew **−0.08** (vs total **+0.18**) and a higher alpha. A 1-factor residual only dents the drawdown alone (**−59%** vs **−61%**), but *stacked* with vol-management the drawdown collapses to **−25%** at a Sharpe of **+0.17**. |
 
@@ -16,7 +16,7 @@
 
 ## What we tested
 
-The desk's eighth idea from Kakushadze & Serur, *151 Trading Strategies* (strategy **§3.7**, residual momentum) — the natural sequel to [Study 24 (Stampede)](../../24-stampede/), which found total-return momentum real-in-principle but faint and crash-prone. The steelman (Blitz, Huij & Martens, *"Residual Momentum"*, **Journal of Empirical Finance** 2011): run 12-1 momentum on each stock's *residual* return — the part not explained by the market/factors — and you keep the premium while shedding the systematic, beta-driven crash. We prove the engine on a synthetic panel where momentum is baked into the residual (and a no-momentum null), then run a **1-factor (market) residual** version on the current S&P 500 — a stated simplification of the source's Fama-French 3-factor residual.
+The desk's eighth idea from Kakushadze & Serur, *151 Trading Strategies* (strategy **§3.7**, residual momentum) — the natural sequel to [Study 24 (Stampede)](../24-stampede/), which found total-return momentum real-in-principle but faint and crash-prone. The steelman (Blitz, Huij & Martens, *"Residual Momentum"*, **Journal of Empirical Finance** 2011): run 12-1 momentum on each stock's *residual* return — the part not explained by the market/factors — and you keep the premium while shedding the systematic, beta-driven crash. We prove the engine on a synthetic panel where momentum is baked into the residual (and a no-momentum null), then run a **1-factor (market) residual** version on the current S&P 500 — a stated simplification of the source's Fama-French 3-factor residual.
 
 ## The full teardown lives in the notebooks
 

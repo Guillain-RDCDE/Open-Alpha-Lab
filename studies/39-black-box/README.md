@@ -12,7 +12,7 @@
 | **Tradability** — does it survive costs, capacity, scale? | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) | There is no directional OOS edge for costs to erode; the book flips often and goes net-negative at realistic crypto costs (ETH/LTC/XRP already negative by 10 bp; BTC −0.18 at 20 bp). |
 | **Overfit?** | ![Confirmed](https://img.shields.io/badge/Confirmed-8b949e?style=flat-square) | The net memorises **randomly shuffled** labels in-sample at **0.66–0.69** training accuracy — identical to the **0.664** on true labels. The in-sample number is fitting capacity, not skill. |
 
-> **In one sentence:** an MLP fed crypto OHLCV scores a dazzling in-sample Sharpe (5.38) that collapses to a 51% coin-flip out-of-sample and turns negative after costs — the in-sample edge was the net memorising noise, proven by a shuffled-label control, exactly the backtest trap of [Study 22 (Crystal-Ball)](../../22-crystal-ball/).
+> **In one sentence:** an MLP fed crypto OHLCV scores a dazzling in-sample Sharpe (5.38) that collapses to a 51% coin-flip out-of-sample and turns negative after costs — the in-sample edge was the net memorising noise, proven by a shuffled-label control, exactly the backtest trap of [Study 22 (Crystal-Ball)](../22-crystal-ball/).
 
 ## What we tested
 
@@ -23,7 +23,7 @@ believer's case is that young, retail-driven crypto markets are full of nonlinea
 find — and in-sample, the net certainly looks like it does. We run the only honest test there is —
 **walk-forward** out-of-sample (fit on the past, predict the unseen next block, repeat) — on real daily
 BTC/ETH/LTC/XRP, with a synthetic positive control (a planted weak signal the net *should* recover) and a
-random-walk null. It is the machine-learning cousin of [Study 22 (Crystal-Ball)](../../22-crystal-ball/),
+random-walk null. It is the machine-learning cousin of [Study 22 (Crystal-Ball)](../22-crystal-ball/),
 the desk's other study about a **backtest trap** rather than a market effect.
 
 ## The full teardown lives in the notebooks

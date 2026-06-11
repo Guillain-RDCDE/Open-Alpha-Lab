@@ -191,13 +191,13 @@ def build_curious():
             "- **Scaling makes it worse, not better** — the more stocks you add, the more singular `C` "
             "becomes relative to your estimation window.\n\n"
             "> Tradability **`MIRAGE`**; the optimizer is **`BUSTED`** — the worked complement "
-            "([`../docs/extension.md`](../docs/extension.md)) shows even shrinkage only converges it to naive."
+            "([`../docs/results.md`](../docs/results.md)) shows even shrinkage only converges it to naive."
         ),
 
         md(
             "## 7 · Going further 🚪\n\n"
             "- **Does shrinkage rescue it?** (beat 7 of the quants notebook + "
-            "[`../docs/extension.md`](../docs/extension.md)): blending `C` toward its diagonal tames the "
+            "[`../docs/results.md`](../docs/results.md)): blending `C` toward its diagonal tames the "
             "weights but only climbs *toward* the naive book — at full shrink they're identical.\n"
             "- **Constrained optimization.** Gross-exposure, turnover and position limits (what real "
             "stat-arb desks actually impose) are the *real* fix for `C⁻¹`'s instability — does a "
@@ -333,7 +333,7 @@ def build_quants():
             "ax.set_xlabel('covariance shrinkage'); ax.set_ylabel('net Sharpe'); ax.legend()\n"
             "ax.set_title('Shrinkage only climbs the optimizer toward naive -- never past it')\n"
             "plt.show()\n"
-            f"print('Real S&P 500 (../docs/extension.md): optimized net {R['shrink0']} (shrink 0) -> {R['shrink1']} (shrink 1), naive {R['naive_net']}.')"
+            f"print('Real S&P 500 (../docs/results.md): optimized net {R['shrink0']} (shrink 0) -> {R['shrink1']} (shrink 1), naive {R['naive_net']}.')"
         ),
         md(
             "**The result.** Shrinkage tames the inverse and the optimizer's net Sharpe climbs as shrink "
@@ -341,7 +341,7 @@ def build_quants():
             "diagonal `C` makes `C⁻¹E ∝ E`). The best mean-variance optimization can do for this book is "
             "stop optimizing. That is the cleanest possible statement of Michaud's error-maximization: the "
             "covariance inversion has no tradable information to add, only noise to remove. Full run in "
-            "[`../docs/extension.md`](../docs/extension.md).\n\n"
+            "[`../docs/results.md`](../docs/results.md).\n\n"
             "### 7b · Other forks\n"
             "- **Constrained optimization** (gross/turnover/position limits) — the real-desk fix for "
             "`C⁻¹` instability; does it beat naive net of cost?\n"

@@ -40,7 +40,7 @@ R = dict(
     n_sec="11", lo="1998", hi="2026", fp="14d15151ea57",
     rot_sr="+0.43", ew_sr="+0.45", gain="-0.02", turn="7.3",
     alpha="+0.4", alpha_t="+0.3", beta="0.92", ls="-1.5", ls_t="-0.5",
-    topk_frac="33", best_k="1", sub1="+0.42", sub2="+0.33", sub3="+0.53",
+    topk_frac="17", best_k="1", sub1="+0.42", sub2="+0.33", sub3="+0.52",
 )
 
 BADGES = (

@@ -38,8 +38,8 @@ print(f"{truth.n_comm} synthetic commodities x {truth.n_weeks} weeks | baked hp_
 
 R = dict(
     n_comm="12", lo="2015", hi="2026", fp="ab3ff5e16b24", n_weeks="569",
-    ic="-0.021", ic_t="-1.4", tb="-7.6", ls_sr="-0.41", ls_t="-1.4", turn="5.1",
-    lo_top="+0.16", basket="+0.67", corr="+0.02", sub1="-0.83", sub2="-0.90", sub3="+0.56",
+    ic="-0.020", ic_t="-1.4", tb="-7.7", ls_sr="-0.42", ls_t="-1.4", turn="5.1",
+    lo_top="+0.18", basket="+0.70", corr="+0.02", sub1="-0.79", sub2="-0.99", sub3="+0.60",
 )
 
 BADGES = (

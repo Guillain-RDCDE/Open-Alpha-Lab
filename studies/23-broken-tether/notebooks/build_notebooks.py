@@ -87,7 +87,7 @@ def build_curious():
             "| Does the spread mean-revert? | 🟡 **If the pair is truly cointegrated, yes** — a short, "
             "clean half-life. But real ETF pairs are barely, unstably cointegrated. |\n"
             "| Does it survive out of sample? | 🚫 **Rarely.** Of "
-            f"**{R['n_pairs']}** real ETF pairs, **{R['n_survive']}** keeps a positive Sharpe in the "
+            f"**{R['n_pairs']}** real ETF pairs, **{R['n_survive']}** clears a 0.3 Sharpe in the "
             "second half. |\n"
             "| Is the cointegration even real? | ⚪ **Often selection.** "
             f"**{R['spur_fp']}%** of *independent random walks* look cointegrated by chance, and the "

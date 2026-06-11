@@ -10,7 +10,7 @@
 |---|---|---|
 | **Signal** — does CAPE forecast long-run returns? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | Yes, strongly. CAPE's correlation with the next-10-year real return is **−0.51** (R² **0.28**); cheap-CAPE decades returned **+10.2%/yr** real vs **+4.0%** for expensive ones — a monotone valuation ladder over 116 years. |
 | **Tradability** — can you time the market with it? | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) | Not really. At a *1-year* horizon R² collapses to **0.05** — an "expensive" market can keep rising for a decade (1995–2000, 2015–2021). It sets expectations, it doesn't time. |
-| **"Forecasts long-run returns"?** | ![Confirmed](https://img.shields.io/badge/Confirmed-8b949e?style=flat-square) | The valuation signal the [Fed Model](../../47-paper-moon/) only pretended to be — valuation carries the signal, the bond comparison didn't. |
+| **"Forecasts long-run returns"?** | ![Confirmed](https://img.shields.io/badge/Confirmed-8b949e?style=flat-square) | The valuation signal the [Fed Model](../47-paper-moon/) only pretended to be — valuation carries the signal, the bond comparison didn't. |
 
 > **In one sentence:** the Shiller CAPE genuinely forecasts the next decade's real returns (R² ~0.28, a monotone +10% / +4% cheap-to-expensive ladder) — a *real* and valuable signal — but it's a tide table, not a stopwatch: at a one-year horizon it's almost useless, so it calibrates expectations rather than timing the market.
 

@@ -64,7 +64,7 @@ R = dict(
 BADGES = (
     "![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)\n"
     "![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-c0392b?style=flat-square)\n"
-    "![Drift decays as predicted?: Confirmed](https://img.shields.io/badge/Drift_decays_as_predicted%3F-Confirmed-2ea44f?style=flat-square)\n\n"
+    "![Drift decays as predicted?: Confirmed](https://img.shields.io/badge/Drift_decays_as_predicted%3F-Confirmed-8b949e?style=flat-square)\n\n"
 )
 
 REALTAPE = (

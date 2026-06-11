@@ -25,7 +25,7 @@ The desk's ninth idea from Kakushadze & Serur, *151 Trading Strategies* (strateg
 | **[01_for_the_curious](notebooks/01_for_the_curious.ipynb)** | the curious | the story in plain language: a real but tiny daily bounce, the optimizer that makes it worse, and the cost that washes it all away |
 | **[02_for_the_quants](notebooks/02_for_the_quants.ipynb)** | quants | the machinery: the cross-sectional IC, optimized-vs-naive net Sharpe, the covariance condition number, gross-vs-net, and the shrinkage sweep |
 
-The real run — every fingerprinted, as-of'd S&P 500 number — is in [docs/results.md](docs/results.md); the **beat-7 worked complement** (does covariance *shrinkage* rescue the optimizer? — it only converges it to naive) is in [docs/extension.md](docs/extension.md). Reproduce offline via [examples/run_synthetic_demo.py](examples/run_synthetic_demo.py); on the real tape via [examples/verify.py](examples/verify.py) and [examples/extension.py](examples/extension.py) (`--fetch` once to populate the shared S&P 500 panel cache).
+The real run — every fingerprinted, as-of'd S&P 500 number — is in [docs/results.md](docs/results.md); the **beat-7 worked complement** (does covariance *shrinkage* rescue the optimizer? — it only converges it to naive) is the shrinkage table in the same [docs/results.md](docs/results.md). Reproduce offline via [examples/run_synthetic_demo.py](examples/run_synthetic_demo.py); on the real tape via [examples/verify.py](examples/verify.py) and [examples/extension.py](examples/extension.py) (`--fetch` once to populate the shared S&P 500 panel cache).
 
 ---
 

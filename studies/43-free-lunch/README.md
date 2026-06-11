@@ -10,7 +10,7 @@
 |---|---|---|
 | **Signal** — do low-beta assets beat the market? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | Barely. On a tradable ETF cross-section the beta-neutral BAB book's **gross** Sharpe is **0.47 — below SPY's 0.59**. The tilt exists but doesn't clear the simplest benchmark. |
 | **Tradability** — does it survive the leverage it needs? | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) | No. Beta-neutrality requires running the low-beta leg at **2.78×**; charge realistic financing and the Sharpe falls **0.47 → 0.20 (3%) → 0.02 (5%)** — at 5% it compounds *negatively*. |
-| **"Free lunch"?** | ![Busted](https://img.shields.io/badge/Busted-8b949e?style=flat-square) | The premium **is** the rent on the leverage. Pay the rent (cf. [Study 30 House-Edge](../../30-house-edge/)) and the lunch is gone. Gross edge also decayed: Sharpe **0.70 (1999–2012) → 0.28 (2013–on)**. |
+| **"Free lunch"?** | ![Busted](https://img.shields.io/badge/Busted-8b949e?style=flat-square) | The premium **is** the rent on the leverage. Pay the rent (cf. [Study 30 House-Edge](../30-house-edge/)) and the lunch is gone. Gross edge also decayed: Sharpe **0.70 (1999–2012) → 0.28 (2013–on)**. |
 
 > **In one sentence:** betting against beta is sold as a low-risk free lunch, but on a tradable cross-section it doesn't even beat the market *gross*, it needs ~3× leverage to be market-neutral, and a realistic financing rate halves and then erases the edge — the lunch was the leverage bill all along.
 
