@@ -83,23 +83,68 @@ def posterior_sensitivity(
     return df
 
 
+def _stationary_bootstrap_indices(rng: np.random.Generator, n: int, mean_block: float) -> np.ndarray:
+    """Row indices for one Politis-Romano (1994) stationary-bootstrap resample.
+
+    Blocks have geometric length with mean ``mean_block`` (restart probability
+    ``p = 1/mean_block``) and wrap around the end of the sample. Returns ``n``
+    indices into the original rows.
+    """
+    p = 1.0 / float(mean_block)
+    new_block = rng.random(n) < p
+    new_block[0] = True
+    start_pos = np.flatnonzero(new_block)
+    starts = rng.integers(0, n, start_pos.size)
+    block_id = np.cumsum(new_block) - 1
+    offsets = np.arange(n) - start_pos[block_id]
+    return (starts[block_id] + offsets) % n
+
+
 def reality_check(
     panel: pd.DataFrame,
     n_boot: int = 2000,
     periods_per_year: int = TRADING_DAYS_PER_YEAR,
     seed: int = 0,
+    mean_block: float | None = None,
+    method: str = "stationary",
 ) -> dict:
     """White (2000) Reality Check for the best overnight Sharpe in a universe.
 
     ``panel`` has one column per series (e.g. each market's overnight returns).
     H0: no series has predictive overnight return. We recentre every column to
-    mean zero (impose the null), iid-bootstrap the rows, and build the null
-    distribution of the **maximum** annualised Sharpe across columns. The
-    Reality-Check p-value is P(bootstrap max Sharpe >= observed max Sharpe).
+    mean zero (impose the null), resample whole *rows* of the panel, and build
+    the null distribution of the **maximum** annualised Sharpe across columns.
+    The Reality-Check p-value is P(bootstrap max Sharpe >= observed max Sharpe).
+
+    Resampling follows White's prescription: the **stationary bootstrap** of
+    Politis & Romano (1994) — blocks of geometrically distributed length
+    (mean ``mean_block``) that wrap circularly — so the serial dependence in
+    returns survives into the null distribution. An i.i.d. row bootstrap
+    understates the variance of the max-Sharpe null and yields p-values that
+    are too small on autocorrelated data. The *same* block index sequence is
+    applied to every column, preserving cross-sectional dependence. Recentring
+    each column on its sample mean is the "centered" variant of the test,
+    close in spirit to Hansen's (2005) SPA recentring.
+
+    Parameters
+    ----------
+    mean_block : float, optional
+        Mean block length. ``None`` (default) uses the simple n^(1/3) rate
+        rule, ``max(1, n ** (1/3))``; the value used is reported in the output
+        as ``mean_block_length``.
+    method : {'stationary', 'iid'}
+        ``'iid'`` reproduces the legacy independent row resampling (kept for
+        comparison; it is anti-conservative on dependent data).
     """
     X = panel.dropna(how="all").to_numpy(dtype=float)
     n, m = X.shape
     ann = np.sqrt(periods_per_year)
+
+    if method not in ("stationary", "iid"):
+        raise ValueError("method must be 'stationary' or 'iid'")
+    if mean_block is None:
+        mean_block = max(1.0, n ** (1.0 / 3.0))
+    mean_block = float(min(max(mean_block, 1.0), n))
 
     def col_sharpe(a):
         mu = np.nanmean(a, axis=0)
@@ -111,11 +156,14 @@ def reality_check(
     best_i = int(np.nanargmax(observed))
     observed_max = float(np.nanmax(observed))
 
-    Xc = X - np.nanmean(X, axis=0)  # impose mean-zero null
+    Xc = X - np.nanmean(X, axis=0)  # impose mean-zero null ("centered" variant)
     rng = np.random.default_rng(seed)
     boot_max = np.empty(n_boot)
     for b in range(n_boot):
-        idx = rng.integers(0, n, n)
+        if method == "iid":
+            idx = rng.integers(0, n, n)
+        else:
+            idx = _stationary_bootstrap_indices(rng, n, mean_block)
         boot_max[b] = np.nanmax(col_sharpe(Xc[idx]))
     p = float((boot_max >= observed_max).mean())
     return {
@@ -123,5 +171,8 @@ def reality_check(
         "best_series_index": best_i,
         "observed_max_sharpe": observed_max,
         "reality_check_pvalue": p,
+        "bootstrap_method": method,
+        "mean_block_length": float(mean_block) if method == "stationary" else 1.0,
+        "n_boot": int(n_boot),
         "naive_pvalue_note": "single-series 5% crit ~1.96 t; RC accounts for searching m series",
     }

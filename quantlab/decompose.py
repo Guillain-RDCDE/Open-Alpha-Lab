@@ -26,6 +26,27 @@ import pandas as pd
 TRADING_DAYS_PER_YEAR = 252
 
 
+def _excess_returns(returns, rf, periods_per_year: int) -> pd.Series:
+    """Subtract a risk-free rate from a per-period return series.
+
+    ``rf`` is either a scalar *annualised* rate (converted to per-period as
+    ``rf / periods_per_year``, a first-order approximation that is exact to
+    well under a basis point at realistic rates) or a *per-period* series
+    aligned (reindexed) on the returns' index. ``rf=0.0`` is a no-op.
+    """
+    s = pd.Series(returns).astype(float)
+    if np.ndim(rf) == 0:
+        rf = float(rf)
+        if rf != 0.0:
+            s = s - rf / float(periods_per_year)
+    else:
+        rf_s = pd.Series(rf).astype(float)
+        if not s.index.equals(rf_s.index):
+            rf_s = rf_s.reindex(s.index)
+        s = s - rf_s
+    return s
+
+
 def decompose(ohlc: pd.DataFrame) -> pd.DataFrame:
     """Split daily OHLC into overnight / intraday / close-close returns.
 
@@ -68,15 +89,30 @@ def decompose(ohlc: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def summary(dec: pd.DataFrame, periods_per_year: int = TRADING_DAYS_PER_YEAR) -> pd.DataFrame:
+def summary(
+    dec: pd.DataFrame,
+    periods_per_year: int = TRADING_DAYS_PER_YEAR,
+    rf: float | pd.Series = 0.0,
+) -> pd.DataFrame:
     """Headline stats per leg. Sharpe is the number that actually matters.
 
     Returns a DataFrame indexed by leg (overnight / intraday / close_close) with:
         cum_return     total compounded return over the sample
-        mean_bps_day   average daily return, in basis points
+        mean_bps_day   average daily return, in basis points (raw, not excess)
         vol_ann        annualised volatility
-        sharpe         annualised Sharpe (mean/std * sqrt(periods)), excess=0
+        sharpe         annualised Sharpe on *excess* returns,
+                       mean/std * sqrt(periods)
         n_days         number of observations
+
+    ``rf`` is the risk-free rate used for the Sharpe: a scalar annualised rate
+    or a per-period series aligned on the index (default 0, which reproduces
+    the historical behaviour exactly). With short rates near 4-5% (2023-26)
+    the omission is worth roughly 2 bps/day of excess return — material for a
+    thin overnight edge, negligible when rates were ~0.
+
+    Note the ``sqrt(periods)`` annualisation of the Sharpe assumes serially
+    uncorrelated returns; see ``analytics.lo_annualization_factor`` for the
+    Lo (2002) autocorrelation-adjusted factor.
     """
     legs = {
         "overnight": dec["r_overnight"],
@@ -87,11 +123,13 @@ def summary(dec: pd.DataFrame, periods_per_year: int = TRADING_DAYS_PER_YEAR) ->
     for name, r in legs.items():
         mean = r.mean()
         std = r.std(ddof=1)
+        ex = _excess_returns(r, rf, periods_per_year)
+        ex_mean, ex_std = ex.mean(), ex.std(ddof=1)
         rows[name] = {
             "cum_return": (1.0 + r).prod() - 1.0,
             "mean_bps_day": mean * 1e4,
             "vol_ann": std * np.sqrt(periods_per_year),
-            "sharpe": (mean / std * np.sqrt(periods_per_year)) if std > 0 else np.nan,
+            "sharpe": (ex_mean / ex_std * np.sqrt(periods_per_year)) if ex_std > 0 else np.nan,
             "n_days": int(r.shape[0]),
         }
     return pd.DataFrame(rows).T[

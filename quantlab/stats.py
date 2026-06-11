@@ -15,11 +15,21 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from .decompose import TRADING_DAYS_PER_YEAR
+from .decompose import TRADING_DAYS_PER_YEAR, _excess_returns
 
 
-def annualized_sharpe(returns: pd.Series, periods_per_year: int = TRADING_DAYS_PER_YEAR) -> float:
-    r = np.asarray(returns, dtype=float)
+def annualized_sharpe(
+    returns: pd.Series,
+    periods_per_year: int = TRADING_DAYS_PER_YEAR,
+    rf: float | pd.Series = 0.0,
+) -> float:
+    """Annualised Sharpe ratio, mean/std * sqrt(periods).
+
+    ``rf`` is a scalar annualised risk-free rate or a per-period series aligned
+    on the index (default 0 — historical behaviour). With short rates near
+    4-5% (2023-26), ignoring it overstates a thin edge by ~2 bps/day.
+    """
+    r = np.asarray(_excess_returns(returns, rf, periods_per_year), dtype=float)
     sd = r.std(ddof=1)
     return float(r.mean() / sd * np.sqrt(periods_per_year)) if sd > 0 else float("nan")
 
@@ -30,33 +40,88 @@ def sharpe_ci_bootstrap(
     alpha: float = 0.05,
     periods_per_year: int = TRADING_DAYS_PER_YEAR,
     seed: int = 0,
+    block_size: int | None = None,
+    method: str = "cbb",
+    rf: float | pd.Series = 0.0,
 ) -> dict:
-    """Bootstrap confidence interval for the annualised Sharpe ratio.
+    """Block-bootstrap confidence interval for the annualised Sharpe ratio.
 
-    Resamples daily returns with replacement ``n_boot`` times. Returns the point
-    estimate, the (1-alpha) percentile interval, and the share of resamples with
-    a *negative* Sharpe — a blunt p-value-like read on "could this be zero?".
+    Daily returns are not i.i.d. — volatility clusters — so an i.i.d.
+    bootstrap destroys the serial dependence and yields intervals that are
+    too narrow. The default is therefore a **circular block bootstrap**
+    (Politis & Romano 1994, "The Stationary Bootstrap", JASA 89; see also
+    Politis & White 2004 on block-length choice): each resample concatenates
+    blocks of ``block_size`` consecutive observations, with starts drawn
+    uniformly and indices wrapping around the end of the sample.
+
+    Parameters
+    ----------
+    block_size : int, optional
+        Block length. ``None`` (default) uses the simple rate-optimal rule
+        ``round(n ** (1/3))`` — the n^(1/3) growth rate of Politis-Romano —
+        which is crude but adequate for a percentile interval.
+    method : {'cbb', 'iid'}
+        ``'cbb'`` (default) is the circular block bootstrap; ``'iid'``
+        reproduces the legacy independent resampling (block length 1).
+    rf : float or Series
+        Scalar annualised risk-free rate, or per-period series aligned on the
+        index. Default 0 keeps historical behaviour; at 2023-26 short rates
+        the omission flatters a thin daily edge by ~2 bps/day.
+
+    Degenerate resamples (zero standard deviation, possible with constant
+    blocks) are excluded as NaN rather than recorded as Sharpe 0, which would
+    silently shrink the interval toward zero; ``n_boot_valid`` reports how
+    many resamples survived.
+
+    Returns the point estimate, the (1-alpha) percentile interval, and the
+    share of valid resamples with a *negative* Sharpe — a blunt p-value-like
+    read on "could this be zero?".
     """
-    r = np.asarray(returns, dtype=float)
+    r = np.asarray(_excess_returns(returns, rf, periods_per_year), dtype=float)
     r = r[np.isfinite(r)]
     n = r.size
     rng = np.random.default_rng(seed)
     point = annualized_sharpe(pd.Series(r), periods_per_year)
 
-    boots = np.empty(n_boot)
-    for b in range(n_boot):
-        sample = r[rng.integers(0, n, n)]
-        sd = sample.std(ddof=1)
-        boots[b] = sample.mean() / sd * np.sqrt(periods_per_year) if sd > 0 else 0.0
+    if method == "iid":
+        blk = 1
+    elif method == "cbb":
+        blk = int(block_size) if block_size is not None else max(1, round(n ** (1.0 / 3.0)))
+    else:
+        raise ValueError("method must be 'cbb' or 'iid'")
+    blk = max(1, min(blk, n))
 
-    lo, hi = np.percentile(boots, [100 * alpha / 2, 100 * (1 - alpha / 2)])
+    ann = np.sqrt(periods_per_year)
+    n_blocks = int(np.ceil(n / blk))
+    offsets = np.arange(blk)
+    boots = np.full(n_boot, np.nan)
+    for b in range(n_boot):
+        if blk == 1:
+            idx = rng.integers(0, n, n)
+        else:
+            starts = rng.integers(0, n, n_blocks)
+            idx = ((starts[:, None] + offsets[None, :]) % n).ravel()[:n]
+        sample = r[idx]
+        sd = sample.std(ddof=1)
+        if sd > 0:
+            boots[b] = sample.mean() / sd * ann
+
+    valid = boots[np.isfinite(boots)]
+    if valid.size == 0:
+        lo = hi = frac_neg = float("nan")
+    else:
+        lo, hi = np.percentile(valid, [100 * alpha / 2, 100 * (1 - alpha / 2)])
+        frac_neg = float((valid < 0).mean())
     return {
         "sharpe": point,
         "ci_low": float(lo),
         "ci_high": float(hi),
-        "frac_negative": float((boots < 0).mean()),
+        "frac_negative": frac_neg,
         "n_obs": int(n),
         "n_boot": int(n_boot),
+        "n_boot_valid": int(valid.size),
+        "block_size": int(blk),
+        "method": method,
     }
 
 

@@ -3,7 +3,12 @@
 Five questions that decide whether "overnight Sharpe 0.8" means anything:
 
   1. Is it significant once you stop pretending daily returns are i.i.d.?
-     -> ``mean_tstat_hac`` (Newey-West) and ``sharpe_with_se`` (Lo 2002).
+     -> ``mean_tstat_hac`` (Newey-West) for the mean, and ``sharpe_with_se``
+     for the Sharpe. Note: the default ``sharpe_with_se`` SE is the *i.i.d.*
+     delta-method formula (the i.i.d. case of Lo 2002) and understates the
+     uncertainty on autocorrelated or fat-tailed returns — pass
+     ``method='mertens'`` (skewness/kurtosis-adjusted) or ``method='lo'``
+     (autocorrelation-adjusted) for honest errors.
   2. Are we even comparing like with like? The overnight window spans ~17.5h on
      weekdays and ~65h over weekends; the intraday window is 6.5h. -> ``calendar_hours``
      and ``time_normalized_summary`` put both legs on a per-hour footing.
@@ -13,7 +18,7 @@ Five questions that decide whether "overnight Sharpe 0.8" means anything:
      -> ``capacity_estimate`` (square-root impact law).
 
 Everything is deterministic and unit-tested. Methods: Newey & West (1987),
-Lo (2002), Almgren et al. (2005). See docs/references.md.
+Lo (2002), Mertens (2002), Almgren et al. (2005). See docs/references.md.
 """
 
 from __future__ import annotations
@@ -21,7 +26,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from .decompose import TRADING_DAYS_PER_YEAR
+from .decompose import TRADING_DAYS_PER_YEAR, _excess_returns
 
 # NYSE regular session, in hours past midnight (local exchange time).
 _OPEN_H = 9.5
@@ -62,26 +67,109 @@ def mean_tstat_hac(returns: pd.Series, lags: int | None = None) -> dict:
     }
 
 
-def sharpe_with_se(returns: pd.Series, periods_per_year: int = TRADING_DAYS_PER_YEAR) -> dict:
-    """Annualised Sharpe with the Lo (2002) i.i.d. standard error and t-stat.
+def sharpe_with_se(
+    returns: pd.Series,
+    periods_per_year: int = TRADING_DAYS_PER_YEAR,
+    method: str = "iid",
+    q: int | None = None,
+    rf: float | pd.Series = 0.0,
+) -> dict:
+    """Annualised Sharpe with a delta-method standard error and t-stat.
 
-    Lo's delta-method SE for the per-period Sharpe SR is sqrt((1 + SR^2/2)/n).
+    The per-period Sharpe SR = mean/std has, under i.i.d. normal returns,
+    Var(SR) = (1 + SR^2/2)/n — this is the *i.i.d. case* of Lo (2002), and the
+    default here for backward compatibility. Real daily returns are fat-tailed
+    and autocorrelated, so the default **understates** the SE; prefer one of:
+
+    - ``method='mertens'`` — Mertens (2002) higher-moment correction,
+      Var(SR) = (1 + SR^2/2 - g3*SR + (g4-3)/4 * SR^2)/n, with g3 the sample
+      skewness and g4 the (non-excess) kurtosis. Robust to non-normality,
+      a good default for daily strategy returns.
+    - ``method='lo'`` — Lo (2002) autocorrelation correction: the variance of
+      the mean is inflated by the Bartlett-weighted long-run factor
+      1 + 2*sum_{k=1..q} (1 - k/(q+1)) rho_k over the first ``q`` estimated
+      autocorrelations (``q=None`` uses the Newey-West rule of thumb
+      ``floor(4*(n/100)^(2/9))``), giving Var(SR) = (factor + SR^2/2)/n.
+
+    ``rf`` is a scalar annualised risk-free rate or a per-period aligned
+    series (default 0 — historical behaviour); at 2023-26 short rates the
+    omission flatters a thin daily edge by ~2 bps/day.
+
     The t-stat (SR/SE) is invariant to annualisation. A |t| < ~2 means the
     Sharpe is not distinguishable from zero, however pretty the cumulative chart.
     """
-    r = np.asarray(returns, dtype=float)
+    r = np.asarray(_excess_returns(returns, rf, periods_per_year), dtype=float)
     r = r[np.isfinite(r)]
     n = r.size
     sd = r.std(ddof=1)
     sr = r.mean() / sd if sd > 0 else np.nan  # per-period
-    se = np.sqrt((1.0 + 0.5 * sr**2) / n)
+
+    d = r - r.mean()
+    used_q = None
+    if method == "iid":
+        var = (1.0 + 0.5 * sr**2) / n
+    elif method == "mertens":
+        m2 = float((d**2).mean())
+        g3 = float((d**3).mean()) / m2**1.5 if m2 > 0 else 0.0
+        g4 = float((d**4).mean()) / m2**2 if m2 > 0 else 3.0
+        var = (1.0 + 0.5 * sr**2 - g3 * sr + (g4 - 3.0) / 4.0 * sr**2) / n
+    elif method == "lo":
+        used_q = int(q) if q is not None else int(np.floor(4.0 * (n / 100.0) ** (2.0 / 9.0)))
+        g0 = float(d @ d) / n
+        factor = 1.0
+        for k in range(1, min(used_q, n - 1) + 1):
+            rho_k = (float(d[k:] @ d[:-k]) / n) / g0 if g0 > 0 else 0.0
+            factor += 2.0 * (1.0 - k / (used_q + 1.0)) * rho_k
+        var = (max(factor, 0.0) + 0.5 * sr**2) / n
+    else:
+        raise ValueError("method must be 'iid', 'mertens' or 'lo'")
+
+    se = np.sqrt(max(var, 0.0))
     ann = np.sqrt(periods_per_year)
     return {
         "sharpe_ann": sr * ann,
         "se_ann": se * ann,
         "tstat": sr / se if se > 0 else np.nan,
         "n": n,
+        "method": method,
+        "q": used_q,
     }
+
+
+def lo_annualization_factor(returns: pd.Series, q: int = TRADING_DAYS_PER_YEAR) -> float:
+    """Lo (2002) autocorrelation-adjusted Sharpe annualisation factor.
+
+    The usual ``SR_ann = sqrt(q) * SR`` assumes serially uncorrelated returns.
+    Lo's exact factor for aggregating ``q`` periods is
+
+        q / sqrt(q + 2 * sum_{k=1..q-1} (q - k) * rho_k)
+
+    with ``rho_k`` the lag-k return autocorrelation (estimated here, summed up
+    to ``min(q-1, n-2)`` lags). Positive autocorrelation makes the factor
+    *smaller* than sqrt(q) (the naive rule overstates the annual Sharpe);
+    negative autocorrelation makes it larger. For white noise it reduces to
+    sqrt(q). This is provided for citation/sensitivity — none of the library
+    defaults are changed by it. Returns NaN if the implied long-run variance
+    is non-positive (a degenerate estimate on short, strongly negatively
+    autocorrelated samples).
+    """
+    r = np.asarray(returns, dtype=float)
+    r = r[np.isfinite(r)]
+    n = r.size
+    if n < 3:
+        return float("nan")
+    d = r - r.mean()
+    g0 = float(d @ d) / n
+    if g0 <= 0:
+        return float("nan")
+    s = 0.0
+    for k in range(1, min(q - 1, n - 2) + 1):
+        rho_k = (float(d[k:] @ d[:-k]) / n) / g0
+        s += (q - k) * rho_k
+    denom = q + 2.0 * s
+    if denom <= 0:
+        return float("nan")
+    return float(q / np.sqrt(denom))
 
 
 # ---------------------------------------------------------------------------
