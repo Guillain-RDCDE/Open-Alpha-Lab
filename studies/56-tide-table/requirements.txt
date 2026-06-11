@@ -1,0 +1,5 @@
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
+# examples/verify.py --fetch downloads Shiller's series from the datahub mirror (stdlib urllib).
+# The offline core + tests need no network.
