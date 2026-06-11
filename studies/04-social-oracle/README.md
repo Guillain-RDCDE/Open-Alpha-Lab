@@ -10,13 +10,14 @@
 |---|---|---|
 | **Signal** — is the effect statistically real? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | A mention has **no abnormal edge over a random day**: excess +0.08% / +0.05% / **−0.66%** at 1d / 1wk / 1mo (p≈0.23 / 0.40 / 0.94 — i.e. *negative* by a month), and the clustering bootstrap straddles zero at every horizon. Not one lucky name (jackknife is flat). |
 | **Tradability** — does it survive costs, capacity, scale? | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) | Gross is **pure beta**: +0.72%/trade but only **+5 bps abnormal**; the **median trade is −1.3%**, net hits zero at a 25 bps spread and goes negative beyond, and the equal-weight sleeve runs **−44% with an −84% drawdown** (the 2022 pile-in). |
-| **Pump-and-fade?** — does the pop reverse? | ![Confirmed](https://img.shields.io/badge/Confirmed-8b949e?style=flat-square) | The month-ahead abnormal return is significantly *negative* vs a random day, the share of up-names falls to **45.7%** (vs 51.4% random), and a mention does **worse than a name that was simply already hot** (−1.06% at 1mo). The follower buys the bleed. |
+| **Pump-and-fade?** — does the pop reverse? | ![Directional only](https://img.shields.io/badge/Directional_only-8b949e?style=flat-square) | Every month-ahead arrow points *down* — excess **−0.66%**, up-names **45.7%** (vs 51.4% random), **−1.06%** vs a name that was simply already hot — but none of it clears the clustered bootstrap (p = 0.85 that the 1-mo excess ≤ 0, CI straddles zero). A direction, not a finding. |
 
 > **In one sentence:** on 1,468 real WallStreetBets viral surges, buying what the
-> crowd screams carries **no abnormal edge** — a tiny, insignificant one-day flicker
-> that fades to a *negative* month, gross "gains" that are just market beta the costs
-> erase, a median trade of −1.3%, and 42 of the most-viral names that literally
-> delisted. It's a pump you're late to, dressed as a signal.
+> crowd screams carries **no abnormal edge** — a tiny, insignificant one-day flicker,
+> a month-ahead drift that points negative without reaching significance, gross
+> "gains" that are just market beta the costs erase, a median trade of −1.3%, and 42
+> of the most-viral names that literally delisted. It's a pump you're late to,
+> dressed as a signal.
 
 ## What we tested
 

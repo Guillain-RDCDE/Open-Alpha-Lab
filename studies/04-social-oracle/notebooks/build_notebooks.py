@@ -7,12 +7,12 @@ here, rebuild the skeletons, then execute with nbconvert to embed figures/output
     jupyter nbconvert --to notebook --execute --inplace \
         notebooks/01_for_the_curious.ipynb notebooks/02_for_the_quants.ipynb
 
-Unlike Studies 01–03, this study ships **no live dataset** (a mention feed is
-third-party and licence-encumbered), so both notebooks run on the **offline synthetic
-universe** — a toy panel with a deliberately mild pump-and-fade baked in. They are a
-*worked method*, not a live verdict: every cell is exactly the code you'd run on a
-real feed, and the last beat shows the one-line swap to `data.load_feed(...)`. No
-network needed, ever.
+The executed path runs OFFLINE on the **seeded synthetic universe** — a toy panel with
+a deliberately wired pump-and-fade — so the cells prove the *machinery*, deterministically
+and with no network. The **verdict numbers are real**: the fingerprinted run on 1,468
+r/WallStreetBets surges lives in ../docs/results_wsb.md (built by examples/verify_wsb.py)
+and both heroes quote it from there, exactly like Studies 31–39. Never let a synthetic
+cell output masquerade as the real tape.
 
 Both notebooks follow the SAME seven desk beats (see ../../../METHODOLOGY.md):
   0 Verdict · 1 The Claim · 2 So What? · 3 How We'd Know · 4 The Teardown ·
@@ -38,14 +38,37 @@ import numpy as np, pandas as pd
 pd.set_option("display.float_format", lambda v: f"{v:,.4f}")
 from social_oracle import data, mentions, eventstudy, benchmark, backtest, robustness
 
-# No live feed ships with this study: we run the *method* on a synthetic universe
-# with a baked-in pump-and-fade. Swap the next line for data.load_feed('mentions.csv')
-# + data.build_panel(...) to run it for real.
+# SYNTHETIC CONTROL — the cells below run a seeded toy universe with a pump-and-fade
+# wired in, to prove the machinery offline and deterministically. The REAL numbers
+# (1,468 r/WallStreetBets surges) live in ../docs/results_wsb.md, built by
+# examples/verify_wsb.py — that run, not these cells, is the study's verdict.
 panel, feed = data.synthetic_panel(seed=0)
 events, coverage = mentions.to_events(feed, panel)
-print(f"{len(panel)} names, {len(feed)} mentions -> {len(events)} clean events")
+print(f"SYNTHETIC control: {len(panel)} names, {len(feed)} mentions -> {len(events)} clean events")
 print("coverage:", coverage)
 """
+
+# Real-tape numbers quoted in the heroes and beat-5 cells — from ../docs/results_wsb.md
+# (examples/verify_wsb.py, as-of 2026-06-01, price fingerprint 1a11c294eeba).
+R = dict(
+    fp="1a11c294eeba", asof="2026-06-01", n_events="1,468", n_names="224",
+    span="2021-01-11 → 2025-12-29", missing="42",
+    ex1="+0.08", p1="0.23", ex5="+0.05", p5="0.40", ex21="-0.66", p21="0.94",
+    boot21_p="0.85", boot21_lo="-1.94", boot21_hi="+0.62", boot5_p="0.45",
+    hot21="-1.06", hot21_p="0.97", pos21="45.7", pos21_rand="51.4",
+    gross="+0.72", abn="+0.05", med_net="-1.3", win="45.1", sleeve_sh="-0.006",
+    sleeve_dd="-84", sleeve_tot="-44", be_halfspread="25",
+)
+
+BANNER = (
+    "> 🧪 **What executes vs what's real.** The code cells below run the **synthetic "
+    "control** — a seeded toy universe with a pump-and-fade deliberately wired in, so the "
+    "machinery is proven offline and deterministically. The **real numbers** — the "
+    f"fingerprinted run on **{R['n_events']}** r/WallStreetBets surges (as-of {R['asof']}, "
+    f"fp `{R['fp']}`) — live in **[docs/results_wsb.md](../docs/results_wsb.md)** and are "
+    "quoted, sourced, wherever a verdict is called. Don't read a synthetic cell output as "
+    "the market."
+)
 
 
 def md(text):
@@ -67,38 +90,47 @@ def build_curious():
             "in plain English\n\n"
             "![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)\n"
             "![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-c0392b?style=flat-square)\n"
-            "![Pump--and--fade: Confirmed](https://img.shields.io/badge/Pump--and--fade-Confirmed-8b949e?style=flat-square)\n\n"
+            "![Pump--and--fade: Directional only](https://img.shields.io/badge/Pump--and--fade-Directional_only-8b949e?style=flat-square)\n\n"
             "Every cycle a retail-investing folk hero goes viral, and within weeks GitHub fills "
             "with bots that scrape her posts, pull out the `$TICKERS`, and score them as buy "
-            "signals — *her timeline front-runs the market, just buy what she mentions.* We test "
-            "that on **1,468 real WallStreetBets surges**: a mention carries **no abnormal edge "
-            "over a random day**, the gross 'gain' is pure market beta the costs erase, and the "
-            "one-day flicker fades to a *negative* month. It's a pump you're late to, dressed "
-            "as a signal.\n\n"
+            "signals — *her timeline front-runs the market, just buy what she mentions.* On the "
+            f"real tape — **{R['n_events']} r/WallStreetBets surges** "
+            "([docs/results_wsb.md](../docs/results_wsb.md)) — a mention carries **no abnormal "
+            f"edge over a random day** (excess {R['ex1']}% / {R['ex5']}% / {R['ex21']}% at "
+            f"1d/1wk/1mo, p = {R['p1']}/{R['p5']}/{R['p21']}), the gross 'gain' is market beta "
+            "the costs erase, and the month-ahead drift points *down* without ever reaching "
+            "significance. It's a pump you're late to, dressed as a signal.\n\n"
             "> 📓 **This is the plain-language layer.** Want the statistics, the microstructure "
             "and the capacity maths? That's the companion notebook, "
             "**[02_for_the_quants.ipynb](02_for_the_quants.ipynb)** — same story, deeper.\n"
             ">\n"
             "> ⚠️ **Not investment advice.** An educational, reproducible research tool: every "
             "chart below is generated by the code beside it. It tests a *phenomenon*, not a "
-            "person. House style in [METHODOLOGY.md](../../../METHODOLOGY.md)."
+            "person. House style in [METHODOLOGY.md](../../../METHODOLOGY.md).\n\n"
+            + BANNER
         ),
         code(BOOT),
 
         md(
-            "## The answer first 🎯\n\n"
-            "| What we asked | The honest answer (the desk's prior) |\n"
+            "## Beat 0 · Verdict (real tape) 🎯\n\n"
+            f"From the fingerprinted run on **{R['n_events']}** WSB surges, {R['span']} "
+            "([docs/results_wsb.md](../docs/results_wsb.md)):\n\n"
+            "| What we asked | The real-tape answer |\n"
             "|---|---|\n"
-            "| Does a name move after she mentions it? | ⚠️ **A little, briefly** — attention "
-            "does nudge price. But look *left* of the tweet: most of the move already happened. |\n"
-            "| Is that bump a free edge? | ❌ **No** — it *fades*, and you only see the tweet "
-            "*after* the pop, so you buy the start of the reversal. |\n"
-            "| Does \"mentioned\" beat \"already hot\"? | ❓ **Barely / not really** — strip out "
-            "the momentum the name already had and most of the signal goes with it. |\n"
-            "| Could a follower actually trade it? | ❌ **Not after costs** — these are \\$1–3 "
-            "names with huge spreads and tiny capacity. |\n\n"
-            "> Desk shorthand: **Signal `WEAK` · Tradability `MIRAGE`** — let's see the method "
-            "earn them."
+            f"| Does a mention beat a random day? | ❌ **No** — excess {R['ex1']}% at 1d "
+            f"(p = {R['p1']}), {R['ex5']}% at 1wk (p = {R['p5']}), {R['ex21']}% at 1mo "
+            f"(p = {R['p21']}). |\n"
+            f"| Does \"mentioned\" beat \"already hot\"? | ❌ **No** — by a month the mention does "
+            f"*{R['hot21']}%* relative to a name that was simply already running. |\n"
+            f"| Does the pop reverse? | ⚪ **It points down, but not significantly** — the clustered "
+            f"bootstrap p that the 1-mo excess ≤ 0 is {R['boot21_p']}, CI "
+            f"[{R['boot21_lo']}%, {R['boot21_hi']}%] straddling zero. A direction, not a finding. |\n"
+            f"| Could a follower trade it? | ❌ **Not after costs** — median trade {R['med_net']}%, "
+            f"sleeve Sharpe {R['sleeve_sh']}, max drawdown {R['sleeve_dd']}%, and {R['missing']} of "
+            "the most-viral names literally delisted. |\n\n"
+            "> Desk shorthand: **Signal `NONE` · Tradability `MIRAGE` · Pump-and-fade "
+            "`DIRECTIONAL ONLY`** — the cells below show the *method* that earned those stamps, "
+            "on the synthetic control."
         ),
 
         md(
@@ -161,10 +193,15 @@ def build_curious():
         md(
             "## 5 · The verdict ⚖️\n\n"
             "On the synthetic the method behaves exactly as designed: the mention path runs up "
-            "into the tweet, fades after, and **loses** to both a random day and a hot streak. "
-            "On a real feed the literature prior (attention → small pop → reversal) says expect "
-            "**Signal `WEAK`**, **Tradability `MIRAGE`**. The next beat is why a follower can't "
-            "even keep the `WEAK` part."
+            "into the tweet, fades after, and **loses** to both a random day and a hot streak — "
+            "the machinery catches a wired-in pump-and-fade.\n\n"
+            "On the **real tape** ([docs/results_wsb.md](../docs/results_wsb.md)) the same "
+            f"gauntlet finds *nothing to catch*: excess over a random day {R['ex1']}% / "
+            f"{R['ex5']}% / {R['ex21']}% at 1d/1wk/1mo (p = {R['p1']}/{R['p5']}/{R['p21']}), and "
+            "the month-ahead fade, while pointing down everywhere, never clears the clustered "
+            f"bootstrap (p = {R['boot21_p']}). **Signal `NONE` · Tradability `MIRAGE` · "
+            "Pump-and-fade `DIRECTIONAL ONLY`.** The next beat is why a follower loses even the "
+            "flicker."
         ),
 
         md(
@@ -181,11 +218,14 @@ def build_curious():
 
         md(
             "## 7 · Going further 🚪\n\n"
-            "- **The inversion:** if it's a pop-and-fade, the side that *might* pay is being "
+            "- **The inversion:** if the drift points down, the side that *might* pay is being "
             "**early or short the fade**, not the late follower — same punchline as Fear-Gauge "
-            "(*sell* the fear, don't buy it).\n"
-            "- **Bring a real feed:** the whole study is one `data.load_feed('mentions.csv')` "
-            "away from live numbers.\n"
+            "(*sell* the fear, don't buy it). On the real tape the fade is directional, not "
+            "significant — so even the inversion is unproven, and shorting \\$1–3 names costs "
+            "borrow.\n"
+            "- **Bring another feed:** the real WSB run is [docs/results_wsb.md](../docs/results_wsb.md) "
+            "(rebuild via `examples/verify_wsb.py`); the same `data.load_feed('mentions.csv')` "
+            "swap works for any guru's timeline you can export.\n"
             "- **Conviction & first-mention:** does a high-score or first-ever mention behave "
             "differently?\n\n"
             "The deep version — t-stats, clustering bootstrap, name jackknife, capacity — is in "
@@ -206,22 +246,42 @@ def build_quants():
             "control · the fade · clustering bootstrap · name jackknife · micro-cap capacity\n\n"
             "![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)\n"
             "![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-c0392b?style=flat-square)\n"
-            "![Pump--and--fade: Confirmed](https://img.shields.io/badge/Pump--and--fade-Confirmed-8b949e?style=flat-square)\n\n"
+            "![Pump--and--fade: Directional only](https://img.shields.io/badge/Pump--and--fade-Directional_only-8b949e?style=flat-square)\n\n"
             "The deep companion to the [notebook for the curious](01_for_the_curious.ipynb) — "
             "*same seven beats, every claim now carrying its standard error.* We take the "
             "social-trading claim seriously, then ask whether a public mention is anything more "
-            "than a **small, late, reversing attention bump** once you net out a random day, the "
+            "than a **small, late attention bump** once you net out a random day, the "
             "momentum the name already had, and realistic micro-cap costs.\n\n"
-            "> ⚠️ **Not investment advice.** Real run on **1,468** r/WallStreetBets surges "
-            "(CC-BY `youyanggu/yolostocks-data`); abnormal-return event study with a random-day "
-            "null, a momentum control, a calendar-block clustering bootstrap and a name "
-            "jackknife — references in [`docs/references.md`](../docs/references.md).\n"
+            "> ⚠️ **Not investment advice.** The verdict rests on the fingerprinted run on "
+            f"**{R['n_events']}** r/WallStreetBets surges (CC-BY `youyanggu/yolostocks-data`, "
+            f"as-of {R['asof']}, fp `{R['fp']}`) in "
+            "[`docs/results_wsb.md`](../docs/results_wsb.md): abnormal-return event study with a "
+            "random-day null, a momentum control, a calendar-block clustering bootstrap and a "
+            "name jackknife — references in [`docs/references.md`](../docs/references.md).\n"
             ">\n"
             "> 💡 **The `💡 In plain words` notes** translate each result back into intuition — "
             "so this notebook still reads even if you skim the maths. House style in "
-            "[METHODOLOGY.md](../../../METHODOLOGY.md)."
+            "[METHODOLOGY.md](../../../METHODOLOGY.md).\n\n"
+            + BANNER
         ),
         code(BOOT),
+
+        md(
+            "## Beat 0 · Verdict (real tape)\n\n"
+            f"From [docs/results_wsb.md](../docs/results_wsb.md) — {R['n_events']} events, "
+            f"{R['n_names']} names, {R['span']}:\n\n"
+            "| Axis | Stamp | The decisive numbers |\n"
+            "|---|---|---|\n"
+            f"| **Signal** | 🔴 `NONE` | Excess vs the random-day null {R['ex1']}% / {R['ex5']}% / "
+            f"{R['ex21']}% at h = 1/5/21 (p_greater = {R['p1']}/{R['p5']}/{R['p21']}); clustered "
+            f"bootstrap CIs straddle zero at every horizon. |\n"
+            f"| **Tradability** | 🔴 `MIRAGE` | Gross {R['gross']}%/trade is beta ({R['abn']}% "
+            f"abnormal); net hits zero at a {R['be_halfspread']} bps half-spread; median trade "
+            f"{R['med_net']}%; sleeve Sharpe {R['sleeve_sh']}, max DD {R['sleeve_dd']}%. |\n"
+            f"| **Pump-and-fade?** | ⚪ `DIRECTIONAL ONLY` | Month-ahead excess {R['ex21']}%, "
+            f"up-share {R['pos21']}% vs {R['pos21_rand']}% random, {R['hot21']}% vs already-hot — "
+            f"all pointing down, none significant (p_excess≤0 = {R['boot21_p']} at h=21). |\n"
+        ),
 
         md(
             "## 1 · The claim, as testable hypotheses\n\n"
@@ -281,11 +341,21 @@ def build_quants():
 
         md(
             "## 5 · The verdict, with the numbers\n\n"
-            "Collate the decisive cells: random-day `p_greater`, the momentum `gap` and its "
-            "p-value, the block-bootstrap `p_excess_le_0`, the fade-curve peak-vs-month, the "
-            "jackknife swing. On a real feed these fill the README's beat-5 stamps. Expected "
-            "shape: **Signal `WEAK`** (a real but small, run-up-contaminated bump) → "
-            "**Tradability `MIRAGE`** once beat 6 charges costs."
+            "The decisive cells are the random-day `p_greater`, the momentum `gap` and its "
+            "p-value, the block-bootstrap `p_excess_le_0`, the fade-curve peak-vs-month and the "
+            "jackknife swing. On the **real tape** ([docs/results_wsb.md](../docs/results_wsb.md)) "
+            "they read:\n\n"
+            f"- random-day null: excess {R['ex1']}% / {R['ex5']}% / {R['ex21']}% at h = 1/5/21, "
+            f"p_greater = {R['p1']}/{R['p5']}/{R['p21']} — never significant;\n"
+            f"- momentum control: {R['hot21']}% vs an already-hot name by a month "
+            f"(p = {R['hot21_p']});\n"
+            f"- clustered bootstrap at h=21: mean {R['ex21']}%, CI [{R['boot21_lo']}%, "
+            f"{R['boot21_hi']}%], p_excess≤0 = {R['boot21_p']} — the fade is a direction, not a "
+            "finding;\n"
+            "- jackknife: flat — no single name is carrying (or hiding) anything.\n\n"
+            "**Signal `NONE`** — the bump never clears either null — and **Tradability `MIRAGE` "
+            "regardless** once beat 6 charges costs. The pump-and-fade shape the synthetic cells "
+            "above display so cleanly is, on the real tape, only **directional**."
         ),
 
         md(
@@ -322,11 +392,14 @@ def build_quants():
 
         md(
             "## 7 · Going further\n\n"
-            "- **Short the fade** — test the inverted trade directly, net of micro-cap borrow.\n"
+            "- **Short the fade** — the month-ahead drift points down but isn't significant "
+            "([docs/results_wsb.md](../docs/results_wsb.md)); test the inverted trade directly, "
+            "net of micro-cap borrow, before believing it.\n"
             "- **Beta-estimated abnormal return** to replace the β=1 market adjustment.\n"
             "- **Conviction / first-mention / pile-on** splits of the feed.\n"
-            "- **A real, survivorship-clean feed** — the one input that turns this prior into a "
-            "verdict.\n\n"
+            f"- **A survivorship-clean feed** — the real run drops {R['missing']} delisted names "
+            "for lack of a price history; recovering them would make the month-ahead numbers "
+            "*worse*, not better, and might turn the directional fade into a finding.\n\n"
             "Engine: [`../../../quantlab/`](../../../quantlab/). Method: "
             "[`METHODOLOGY.md`](../../../METHODOLOGY.md)."
         ),
