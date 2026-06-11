@@ -19,11 +19,14 @@
 
 ## Data
 
-- **Yahoo! Finance** — WTI crude front future (CL=F) and the S&P 500 (^GSPC), monthly, 2000–2026.
-  Honest caveat: CL=F begins in 2000, so we cannot test Driesprong's original 1973–2003 window on free
-  data — but the strategy's value is its *out-of-sample* survival, and on all post-2000 (tradable) data
-  the effect is absent and the sign is wrong. The offline synthetic world injects a tunable
-  (negative-sign) oil→equity link and a null.
+- **Yahoo! Finance** — WTI crude front future (CL=F), the S&P 500 (^GSPC) and the 13-week T-bill
+  (^IRX, the cash leg), 2000–2026, **daily** closes resampled to month-end. We deliberately avoid
+  Yahoo's native monthly CL=F feed: it is full of holes (89 of 310 months missing on a 2026 pull),
+  which silently mis-lags a positional one-month shift by 2–3 months; the daily-resampled grid is
+  verified hole-free on every read. Honest caveat: CL=F begins in 2000, so we cannot test Driesprong's
+  original 1973–2003 window on free data — but the strategy's value is its *out-of-sample* survival,
+  and on all post-2000 (tradable) data the effect is absent. The offline synthetic world injects a
+  tunable (negative-sign) oil→equity link and a null.
 
 *The cross-asset entry on the debunk bench; companion in spirit to [47 Paper-Moon](../../47-paper-moon/)
 (a predictor whose logic doesn't hold) and the decay studies.*
