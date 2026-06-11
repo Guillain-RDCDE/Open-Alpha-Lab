@@ -184,6 +184,36 @@ jobs:
       - name: Study 50 — High-Water test-suite
         run: pytest -q studies/50-high-water/tests
 
+      - name: Study 51 — Blue-Chip test-suite
+        run: pytest -q studies/51-blue-chip/tests
+
+      - name: Study 52 — Smoke-Screen test-suite
+        run: pytest -q studies/52-smoke-screen/tests
+
+      - name: Study 53 — Jackpot test-suite
+        run: pytest -q studies/53-jackpot/tests
+
+      - name: Study 54 — Static test-suite
+        run: pytest -q studies/54-static/tests
+
+      - name: Study 55 — Summer-Lull test-suite
+        run: pytest -q studies/55-summer-lull/tests
+
+      - name: Study 56 — Tide-Table test-suite
+        run: pytest -q studies/56-tide-table/tests
+
+      - name: Study 57 — Yield-Trap test-suite
+        run: pytest -q studies/57-yield-trap/tests
+
+      - name: Study 58 — Bunker test-suite
+        run: pytest -q studies/58-bunker/tests
+
+      - name: Study 59 — Downhill test-suite
+        run: pytest -q studies/59-downhill/tests
+
+      - name: Study 60 — Long-Shot test-suite
+        run: pytest -q studies/60-long-shot/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
