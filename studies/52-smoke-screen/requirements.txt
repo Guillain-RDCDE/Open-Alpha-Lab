@@ -1,0 +1,6 @@
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
+yfinance>=0.2.40   # examples/verify.py --fetch only (annual returns)
+lxml>=4.9          # examples/verify.py --fetch only (S&P 500 membership via Wikipedia)
+# the offline core + tests need no network; the real run reads the shared EDGAR cache
