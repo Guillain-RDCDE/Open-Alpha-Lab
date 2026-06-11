@@ -172,6 +172,9 @@ jobs:
       - name: Study 46 — Bargain-Bin test-suite
         run: pytest -q studies/46-bargain-bin/tests
 
+      - name: Study 47 — Paper-Moon test-suite
+        run: pytest -q studies/47-paper-moon/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
