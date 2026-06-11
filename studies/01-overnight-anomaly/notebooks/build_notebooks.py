@@ -257,7 +257,9 @@ def build_curious():
             "## 6 · Could you actually trade it? (the money question)\n\n"
             "Suppose the night effect is real — and it partly is. Could *you* harvest it? "
             "Buying every close and selling every open means paying the bid-ask spread "
-            "**twice a day, ~250 days a year**. That's a lot of tolls. Let's see what "
+            "**twice a day, ~250 days a year**. That's a lot of tolls. We charge them on "
+            "the **synthetic toy tape** from beat 4 — the real-tape numbers live in the "
+            "quant notebook — but the arithmetic of the toll is identical. Let's see what "
             "survives realistic costs:"
         ),
         code(
@@ -353,7 +355,7 @@ def build_quants():
             "rest of the notebook is the evidence that earns them.\n\n"
             "| Axis | Stamp | Why (one line) |\n"
             "|---|---|---|\n"
-            "| **Signal** — is the effect statistically real? | `REAL` | SPY overnight mean carries a Newey-West *t* ≈ 5; confirmed across ~441 S&P 500 names. |\n"
+            "| **Signal** — is the effect statistically real? | `REAL` | SPY overnight mean carries a Newey-West *t* ≈ 5; confirmed across 497 S&P 500 names. |\n"
             "| **Tradability** — does it survive costs, capacity, scale? | `MIRAGE` | Mostly gap-risk **beta**; residual alpha below cost; it **decays** (5y Sharpe ~2→~0.5) and **doesn't scale** (capacity ~\\$10M). |\n"
             "| **Manipulation?** — does the pattern prove fraud? | `NOT SUPPORTED` | Bayesian posterior ≈ 2–3%; the discriminating evidence (foreign-ETF & China inversions, negative P&L at scale) favours microstructure. |\n\n"
             "> 💡 **In plain words** — the effect is *real*, but it's mostly a risk premium "
@@ -495,7 +497,7 @@ def build_quants():
         md(
             "The average SPY overnight window is **~28 hours** (weekends drag the mean "
             "up), versus 6.5 intraday. Per *session* the night out-earns the day by ~4×; "
-            "per *calendar hour* that collapses to **~1.3×**. **Most of the famous gap is "
+            "per *calendar hour* that collapses to **~1.4×**. **Most of the famous gap is "
             "just the night being longer** — a unit error dressed up as a mystery. A "
             "residual per-hour premium does survive (consistent with a genuine but modest "
             "overnight risk premium), but \"the day is dead, the night is magic\" is "
@@ -603,9 +605,11 @@ def build_quants():
         ),
         code(
             "from quantlab import universe\n"
-            "syms = universe.sp500_symbols()\n"
-            "panel = universe.download_panel(syms, start='2010-01-01')  # cached after first run\n"
-            "cs = universe.cross_section_decompose(panel, min_days=750)\n"
+            "# allow_survivorship_bias=True: explicit opt-in — current membership projected\n"
+            "# backwards, so cross-sectional magnitudes read as upper bounds (caveat above).\n"
+            "syms = universe.sp500_symbols(allow_survivorship_bias=True)\n"
+            "panel = universe.download_panel(syms, start='2010-01-01', allow_survivorship_bias=True)  # cached after first run\n"
+            "cs = universe.cross_section_decompose(panel, min_days=750, allow_survivorship_bias=True)\n"
             "per = cs['per_symbol']; N = cs['n_stocks']\n"
             "frac = cs['frac_overnight_wins']\n"
             "mon = per['overnight_sharpe'].median(); mid = per['intraday_sharpe'].median()\n"
@@ -660,7 +664,7 @@ def build_quants():
             "Full credit to Knuteson for publishing data and code.\n"
             "2. **H₂ — the magnitude is oversold.** Log-scale compounding, data artefacts, "
             "selection — and above all the **clock illusion**: per calendar hour the "
-            "night's edge is ~1.3×, not 4×. What's left is ~40% beta plus a residual alpha "
+            "night's edge is ~1.4×, not 4×. What's left is ~40% beta plus a residual alpha "
             "*below* trading cost, and the 5-year Sharpe has decayed from ~2 to ~0.5.\n"
             "3. **H₃ — manipulation is `NOT SUPPORTED`.** The headline pattern is "
             "*consistent* with manipulation, but it's equally consistent with risk premia "

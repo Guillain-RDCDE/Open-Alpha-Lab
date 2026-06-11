@@ -71,8 +71,13 @@ def fig_cross_section():
     if os.path.exists(path):
         per = pd.read_parquet(path)
     else:  # fallback: recompute on whatever panel is cached
-        syms = universe.sp500_symbols()
-        per = universe.cross_section_decompose(universe.download_panel(syms))["per_symbol"]
+        # Survivorship bias opted into explicitly: current membership projected
+        # backwards — the paper states the caveat next to the figure.
+        syms = universe.sp500_symbols(allow_survivorship_bias=True)
+        per = universe.cross_section_decompose(
+            universe.download_panel(syms, allow_survivorship_bias=True),
+            allow_survivorship_bias=True,
+        )["per_symbol"]
     fig, ax = plt.subplots()
     bins = np.linspace(-1.5, 1.5, 41)
     ax.hist(per["overnight_sharpe"].astype(float), bins=bins, alpha=.6, label="overnight", color="#2c7fb8")
