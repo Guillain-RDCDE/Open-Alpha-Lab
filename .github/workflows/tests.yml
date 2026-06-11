@@ -163,6 +163,9 @@ jobs:
       - name: Study 43 — Free-Lunch test-suite
         run: pytest -q studies/43-free-lunch/tests
 
+      - name: Study 44 — Growth-Spurt test-suite
+        run: pytest -q studies/44-growth-spurt/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
