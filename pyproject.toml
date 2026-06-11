@@ -46,3 +46,6 @@ packages = ["quantlab", "quantlab.brokers"]
 pythonpath = ["."]
 testpaths = ["tests"]
 addopts = "-q"
+markers = [
+    "network: test needs live network + optional deps (duckdb); skips when absent.",
+]

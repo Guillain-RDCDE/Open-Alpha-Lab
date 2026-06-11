@@ -3,6 +3,7 @@ pandas>=2.0
 matplotlib>=3.7
 yfinance>=0.2.40
 pyarrow>=14.0
+duckdb>=0.10   # quantlab.hf_data: push-down reads of the free PWB Stocks-Daily-Price table
 # dev / tests
 pytest>=8.0
 # optional, live trading template only (install manually):
