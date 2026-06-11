@@ -71,6 +71,8 @@ def fetch_panel(start: str = "2010-01-01", min_days: int = 2500, max_names: int 
 
     Capped at ``max_names`` (the most-complete histories) so the sample covariance is estimable — the
     point of the study is what happens to ``C^{-1}`` as the universe grows, not to drown in 500 names.
+    Survivorship bias is opted into explicitly (``allow_survivorship_bias=True``): current membership
+    projected backwards, so cross-sectional magnitudes read as upper bounds.
     """
     import sys
     if REPO_ROOT not in sys.path:
@@ -78,12 +80,14 @@ def fetch_panel(start: str = "2010-01-01", min_days: int = 2500, max_names: int 
     if cache_dir is not None:
         os.environ["OVERNIGHT_CACHE"] = cache_dir
     from quantlab import universe
-    symbols = universe.sp500_symbols(use_cache=True)
-    cache_file = os.path.join(os.environ.get("OVERNIGHT_CACHE", os.path.join(REPO_ROOT, "_cache")),
-                              f"panel_{len(symbols)}_{start}.parquet")
-    if not os.path.exists(cache_file) and not fetch:
+    symbols = universe.sp500_symbols(use_cache=True, allow_survivorship_bias=True)
+    cache_file = universe.panel_cache_path(symbols, start)
+    legacy = cache_file.with_name(f"panel_{len(symbols)}_{start}.parquet")
+    if not cache_file.exists() and not legacy.exists() and not fetch:
         return pd.DataFrame()
-    panel = universe.download_panel(symbols, start=start, use_cache=True)
+    panel = universe.download_panel(
+        symbols, start=start, use_cache=True, allow_survivorship_bias=True
+    )
     closes = {tk: o["Close"].dropna() for tk, o in panel.items() if len(o["Close"].dropna()) >= min_days}
     if not closes:
         return pd.DataFrame()

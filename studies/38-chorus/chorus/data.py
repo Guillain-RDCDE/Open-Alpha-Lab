@@ -122,6 +122,8 @@ def fetch_panel(start: str = "2010-01-01", min_days: int = 2500, fetch: bool = F
     Leans on :mod:`quantlab.universe`: reads the cached batched OHLC download, keeps names with at least
     ``min_days`` of (split/dividend-adjusted) closes, and differences to returns. **Cache-only by
     default**; ``fetch=True`` lets the engine hit Yahoo once. The network import stays lazy.
+    Survivorship bias is opted into explicitly (``allow_survivorship_bias=True``): current membership
+    projected backwards, so cross-sectional magnitudes read as upper bounds.
     """
     import sys
     if REPO_ROOT not in sys.path:
@@ -131,12 +133,14 @@ def fetch_panel(start: str = "2010-01-01", min_days: int = 2500, fetch: bool = F
 
     from quantlab import universe
 
-    symbols = universe.sp500_symbols(use_cache=True)
-    cache_file = os.path.join(os.environ.get("OVERNIGHT_CACHE", os.path.join(REPO_ROOT, "_cache")),
-                              f"panel_{len(symbols)}_{start}.parquet")
-    if not os.path.exists(cache_file) and not fetch:
+    symbols = universe.sp500_symbols(use_cache=True, allow_survivorship_bias=True)
+    cache_file = universe.panel_cache_path(symbols, start)
+    legacy = cache_file.with_name(f"panel_{len(symbols)}_{start}.parquet")
+    if not cache_file.exists() and not legacy.exists() and not fetch:
         return pd.DataFrame()
-    panel = universe.download_panel(symbols, start=start, use_cache=True)
+    panel = universe.download_panel(
+        symbols, start=start, use_cache=True, allow_survivorship_bias=True
+    )
     closes = {}
     for tk, ohlc in panel.items():
         c = ohlc["Close"].dropna()

@@ -61,6 +61,7 @@ def fetch_panel(cache_dir: str = DEFAULT_CACHE, fetch: bool = False, min_days: i
 
     **Cache-only** unless ``fetch=True``. Returns ``(daily, market)``; survivorship-biased and
     large-cap — the idio-vol puzzle is documented strongest in small/illiquid names.
+    The bias is opted into explicitly (``allow_survivorship_bias=True``): magnitudes are upper bounds.
     """
     pcache = os.path.join(cache_dir, "static_panel.parquet")
     mcache = os.path.join(cache_dir, "static_market.parquet")
@@ -73,7 +74,7 @@ def fetch_panel(cache_dir: str = DEFAULT_CACHE, fetch: bool = False, min_days: i
     from quantlab.universe import sp500_symbols
     import yfinance as yf
 
-    syms = sp500_symbols()
+    syms = sp500_symbols(allow_survivorship_bias=True)
     px = yf.download(syms + ["SPY"], period="max", interval="1d", auto_adjust=True, progress=False)["Close"]
     px.index = pd.DatetimeIndex(px.index).tz_localize(None)
     ret = px.pct_change().loc["1999-01-01":]

@@ -77,7 +77,11 @@ def fetch_panel(cache_dir: str = DEFAULT_CACHE, fetch: bool = False) -> tuple[pd
 
 
 def _crawl_edgar(cache_dir: str) -> None:  # pragma: no cover - network
-    """Rebuild the shared EDGAR caches (NetIncome, CFO, Assets) + annual returns. Slow; network."""
+    """Rebuild the shared EDGAR caches (NetIncome, CFO, Assets) + annual returns. Slow; network.
+
+    Uses *current* S&P 500 membership projected backwards (explicit
+    ``allow_survivorship_bias=True`` opt-in): magnitudes read as upper bounds.
+    """
     import json
     import sys
     import time
@@ -96,7 +100,7 @@ def _crawl_edgar(cache_dir: str) -> None:  # pragma: no cover - network
                 time.sleep(1.0)
         return None
 
-    syms = sp500_symbols()[:420]
+    syms = sp500_symbols(allow_survivorship_bias=True)[:420]
     t2c = {v["ticker"]: str(v["cik_str"]).zfill(10)
            for v in json.loads(get("https://www.sec.gov/files/company_tickers.json")).values()}
     concepts = ["NetIncomeLoss", "NetCashProvidedByUsedInOperatingActivities", "Assets"]

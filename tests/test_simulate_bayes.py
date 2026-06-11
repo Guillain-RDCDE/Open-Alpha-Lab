@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from quantlab import bayes, decompose, diagnostics, simulate, universe
 
@@ -84,7 +85,35 @@ def test_cross_section_decompose_on_synthetic_panel():
         panel[f"S{i}"] = diagnostics.synthetic_ohlc(
             overnight_bias_bps=4, intraday_bias_bps=-1, seed=i, n_days=1500
         )
-    cs = universe.cross_section_decompose(panel, min_days=750)
+    # Synthetic panel — no survivorship here; the flag is the explicit
+    # acknowledgment the guard demands (it cannot see panel provenance).
+    with pytest.warns(UserWarning, match="survivor"):
+        cs = universe.cross_section_decompose(
+            panel, min_days=750, allow_survivorship_bias=True
+        )
     assert cs["n_stocks"] == 6
     assert cs["frac_overnight_wins"] > 0.8  # by construction night beats day
     assert (1 + cs["ew_overnight"]).prod() > (1 + cs["ew_intraday"]).prod()
+
+
+# --- universe: survivorship guard + cache key (no network) -------------------
+def test_universe_guards_refuse_without_optin():
+    """All three cross-sectional entry points refuse without the opt-in,
+    BEFORE any cache or network IO (same pattern as quantlab.hf_data)."""
+    with pytest.raises(universe.SurvivorshipBiasError):
+        universe.sp500_symbols()
+    with pytest.raises(universe.SurvivorshipBiasError):
+        universe.download_panel(["AAPL", "MSFT"])
+    with pytest.raises(universe.SurvivorshipBiasError):
+        universe.cross_section_decompose({})
+
+
+def test_panel_cache_key_distinguishes_same_length_lists():
+    """The old key was panel_<len>_<start>: two different lists of the same
+    length silently shared one parquet. The hashed key must not collide."""
+    a = universe.panel_cache_path(["AAPL", "MSFT", "NVDA"], start="2010-01-01")
+    b = universe.panel_cache_path(["IBM", "GE", "XOM"], start="2010-01-01")
+    assert a != b
+    # ...and must be order-insensitive (the list is sorted before hashing).
+    c = universe.panel_cache_path(["NVDA", "AAPL", "MSFT"], start="2010-01-01")
+    assert a == c

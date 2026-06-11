@@ -161,6 +161,8 @@ def fetch_panel(
     distort a vol sort), and difference to daily returns. **Cache-only by default**: if the panel is
     not cached an empty frame is returned *unless* ``fetch=True``, which lets ``quantlab.universe`` hit
     Yahoo once. The network import stays lazy, so the offline core never imports ``yfinance``.
+    Survivorship bias is opted into explicitly (``allow_survivorship_bias=True``): the universe is
+    *current* membership projected backwards, so cross-sectional magnitudes are upper bounds.
     """
     import sys
     repo_root = os.path.abspath(os.path.join(_HERE, "..", "..", ".."))
@@ -172,15 +174,15 @@ def fetch_panel(
 
     from quantlab import universe  # lazy; pulls in the shared breadth engine
 
-    symbols = universe.sp500_symbols(use_cache=True)
-    cache_file = os.path.join(
-        os.environ.get("OVERNIGHT_CACHE", os.path.join(repo_root, "_cache")),
-        f"panel_{len(symbols)}_{start}.parquet",
-    )
-    if not os.path.exists(cache_file) and not fetch:
+    symbols = universe.sp500_symbols(use_cache=True, allow_survivorship_bias=True)
+    cache_file = universe.panel_cache_path(symbols, start)
+    legacy = cache_file.with_name(f"panel_{len(symbols)}_{start}.parquet")
+    if not cache_file.exists() and not legacy.exists() and not fetch:
         return pd.DataFrame()
 
-    panel = universe.download_panel(symbols, start=start, use_cache=True)
+    panel = universe.download_panel(
+        symbols, start=start, use_cache=True, allow_survivorship_bias=True
+    )
 
     closes = {}
     for tk, ohlc in panel.items():
