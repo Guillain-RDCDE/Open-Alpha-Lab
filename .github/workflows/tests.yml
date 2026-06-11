@@ -160,6 +160,9 @@ jobs:
       - name: Study 42 — Last-Call test-suite
         run: pytest -q studies/42-last-call/tests
 
+      - name: Study 43 — Free-Lunch test-suite
+        run: pytest -q studies/43-free-lunch/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
