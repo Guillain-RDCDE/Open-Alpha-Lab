@@ -157,6 +157,9 @@ jobs:
       - name: Study 41 — Hangover test-suite
         run: pytest -q studies/41-hangover/tests
 
+      - name: Study 42 — Last-Call test-suite
+        run: pytest -q studies/42-last-call/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
