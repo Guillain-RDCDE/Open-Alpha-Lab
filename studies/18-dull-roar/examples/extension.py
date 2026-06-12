@@ -75,8 +75,9 @@ As-of **{asof}**, {n_stocks} names, {n_days} sessions, fingerprint `{fp}`. Survi
 ## The one thing a real-money investor could keep
 
 The clean, beta-neutral anomaly needs shorting the high-vol decile — the names you can't cheaply
-borrow. Strip the short away and you're left with the **long-only** low-vol book. On this tape that
-slice is honest but thin:
+borrow, and which on this tape carried *positive* alpha (the anomaly inverts here; see
+[`results.md`](results.md)). Strip the short away and you're left with the **long-only** low-vol
+book. On this tape that slice is honest but thin:
 
 - Long-only low-vol **beta {tilt['low_beta']:.2f}** — it simply runs less market risk.
 - Its CAPM alpha is **{sd['alpha_defensive']:+.1f}%/yr** (HAC *t* = {sd['alpha_defensive_t']:+.1f}) —
@@ -99,9 +100,10 @@ a tradable spread:
 {var_rows}
 
 **Takeaway.** The most-cited anomaly in finance, on the modern large-cap tape, reduces to a
-*defensive tilt*: lower beta, shallower drawdowns, no free alpha — and its textbook long-short form is
-fragile to exactly the short-leg borrow it can't avoid. `WEAK` / `MIRAGE` / `BETA-TILT` survives the
-worked complement; if anything, the complement is what *earns* it.
+*defensive tilt*: lower beta, shallower drawdowns, no free alpha — and its textbook long-short form
+fails on *direction* here (the wild leg's alpha was positive) before the short-leg borrow it can't
+avoid even bites. `WEAK` / `MIRAGE` / `BETA-TILT` survives the worked complement; if anything, the
+complement is what *earns* it.
 """
     with open(path, "w", encoding="utf-8") as fh:
         fh.write(text)

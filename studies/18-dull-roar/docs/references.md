@@ -71,11 +71,14 @@
 
 - **Survivorship bias.** The real panel uses *current* S&P 500 membership, which excludes delisted
   names — biasing the surviving high-vol leg upward (today's wild winners survived; the wild losers
-  left). The qualitative low-minus-high ranking is robust; precise magnitudes are not. The long-run
-  academic effect lives in delisted-inclusive, all-cap data (a beat-7 fork).
-- **Window.** 2010→ is one regime (a long, high-beta-favouring bull). The `WEAK` stamp records that the
-  effect is real in theory and on our control but absent *here* — a statement about fragility, not a
-  clean refutation.
+  left). The sample is therefore **structurally hostile to this anomaly**: the blow-ups the short leg
+  is supposed to harvest are exactly the names the panel removed, which is part of why the per-leg
+  alphas *invert* here (wild leg positive). The long-run academic effect lives in delisted-inclusive,
+  all-cap data (a beat-7 fork).
+- **Window.** 2010→ is one regime (a long, high-beta-favouring bull), and the panel's start date —
+  set by data availability, not by us — excludes 2008-09, the very crash where defensive low-vol
+  earns its keep. The `WEAK` stamp records that the effect is real in theory and on our control but
+  absent-to-inverted *here* — a statement about fragility, not a clean refutation.
 
 ---
 

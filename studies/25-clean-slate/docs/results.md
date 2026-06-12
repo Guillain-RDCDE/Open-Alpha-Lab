@@ -5,55 +5,85 @@ current S&P 500 (≥2,500 sessions); the strategy is 12-1 momentum on **1-factor
 returns, long-top/short-bottom decile, monthly, 5 bp/unit. The offline core proves the
 machinery on a synthetic panel where momentum lives in the residual; this is the measurement on the
 market. As-of **2026-06-01**; match the fingerprint below. **Survivorship caveat:** current membership only.
-The 1-factor residual is a simplification of the source's Fama-French 3-factor residual.*
+The 1-factor residual is a simplification of the source's Fama-French 3-factor residual.
+**Harness calibration:** on no-momentum synthetic panels the residual-WML gross alpha is centred on
+≈ 0 across seeds (a single 16-year tape can draw ±3-4%/yr of pure noise; net of costs the null sits
+~0.7%/yr below zero by construction) — see notebook 02 and `decompose.null_alpha_battery`.*
 
-## The verdict, earned — Signal `WEAK` · Tradability `FRAGILE` · Cleaner than total momentum? `Confirmed`
+## The verdict, earned — Signal `WEAK` · Tradability `FRAGILE` · Cleaner than total momentum? `Unproven here`
 
-Residual momentum is the better-behaved cousin of [Study 24](../../24-stampede/)'s total-return momentum
-— but on the modern large-cap sample the improvement is incremental, not transformative. Stripping the
-market gives a slightly *stronger* premium (residual-WML alpha **+6.2%/yr**, HAC *t*
-= **+1.2**, vs total momentum's +4.4%/t+0.9) and a corrected skew (**-0.08**
-residual vs **+0.18** total) — yet a 1-factor residual barely dents the crash on its
-own (drawdown **-59%** vs total **-61%**),
-because the value-driven part of the momentum crash needs the factors (HML) we don't have here. The real
-win is the **stack**: residualise *and* vol-manage, and the drawdown collapses to
-**-25%** at a Sharpe of
-**+0.16**. A cleaner momentum, still faint, whose crash is the
-engineerable part.
+Residual momentum was supposed to be the better-behaved cousin of [Study 24](../../24-stampede/)'s
+total-return momentum. On this modern large-cap sample, that improvement **does not show up under a
+paired test**. The residual-WML CAPM alpha point estimate is higher (**+5.0%/yr**,
+HAC *t* = **+1.0**, vs total momentum's +4.4%, *t* +0.9) — but both are individually
+indistinguishable from zero, and comparing two insignificant point estimates proves nothing. The paired
+block-bootstrap of the *differences* on the books' common window settles it: skew gap (residual − total)
+**-0.19** with 95% CI **[-0.88, +0.44]**, Sharpe
+gap **-0.12** with 95% CI **[-0.28, +0.02]**
+— neither clears zero, and both point estimates lean the *wrong* way. A 1-factor residual also barely
+dents the crash on its own (drawdown **-70%** vs total
+**-67%**), because the value-driven part of the momentum crash needs
+the factors (HML) we don't have here. What demonstrably works is the **stack**: residualise *and*
+vol-manage, and the drawdown collapses to **-30%** at a
+Sharpe of **+0.16** — but that is vol-management's engineering as
+much as residualisation's. A faint momentum either way; "cleaner" is, on this tape, `Unproven here`.
 
 ## Data stamp
 
-- **Universe**: 263 names, 2010-01-05 → 2026-06-01, 4126 sessions, fingerprint `12af7604edc8`
+- **Universe**: 467 names, 2010-01-05 → 2026-06-01, 4126 sessions, fingerprint `cefc21b0fb14`
 
 ## Residual momentum vs total momentum
 
 | | residual-WML | total-WML |
 |---|---|---|
-| Sharpe | +0.07 | +0.10 |
-| monthly skew | -0.08 | +0.18 |
-| worst month | -22.1% | -22.5% |
-| max drawdown | -59% | -61% |
+| Sharpe | -0.01 | +0.10 |
+| monthly skew | -0.23 | -0.04 |
+| worst month | -22.3% | -22.2% |
+| max drawdown | -70% | -67% |
 
-- **Residual-WML CAPM alpha** **+6.2%/yr** (HAC *t* = **+1.2**), beta
-  **-0.26**, turnover **12×/yr**.
-- **Bootstrap Sharpe** **+0.07**, 95% CI **[-0.45, +0.59]**.
+- **Residual-WML CAPM alpha** **+5.0%/yr** (HAC *t* = **+1.0**), beta
+  **-0.29**, turnover **12×/yr**.
+- **Bootstrap Sharpe** **-0.01**, 95% CI **[-0.54, +0.50]**.
+- *Window note:* both books are compared on the **residual book's** active window (the rolling beta
+  needs a 252-day warm-up before the first residual score), so the total-WML numbers here differ
+  slightly from [Study 24](../../24-stampede/)'s full-window run on the same universe (e.g. monthly
+  skew -0.04 here vs +0.15 there) — a window difference, not a data one.
+
+## Cleaner than total? — the paired test
+
+*Same names, same days, so the difference gets a paired test: circular block bootstrap
+(6-month blocks, 2000 resamples) of the aligned monthly (residual, total)
+pairs over their common 174 months.*
+
+| difference (residual − total) | point | 95% CI | P(residual better) | significant? |
+|---|---|---|---|---|
+| monthly skew | -0.19 | [-0.88, +0.44] | 36% | no |
+| annualised Sharpe | -0.12 | [-0.28, +0.02] | 5% | no |
+
+Neither gap clears zero. The higher residual *alpha* reflects the residual book's more negative
+market beta (-0.29) in a rising market as much as any extra momentum content; head-to-head
+on the same months, the residual book was not measurably cleaner — and on Sharpe it leaned worse.
+That is why the third axis reads `Unproven here`, not `Confirmed`.
 
 ## Sub-sample decay
 
 | sub-period | residual-WML Sharpe |
 |---|---|
-| 2012-01-04 → 2016-10-19 | -0.10 |
-| 2016-10-20 → 2021-08-06 | -0.23 |
-| 2021-08-09 → 2026-06-01 | +0.49 |
+| 2012-01-04 → 2016-10-19 | +0.12 |
+| 2016-10-20 → 2021-08-06 | -0.41 |
+| 2021-08-09 → 2026-06-01 | +0.37 |
 
 ## The defence stack — residualise *and* vol-manage
 
 | book | Sharpe | skew | worst month | max drawdown |
 |---|---|---|---|---|
-| total momentum | +0.10 | +0.18 | -22.5% | -61% |
-| residual momentum | +0.07 | -0.08 | -22.1% | -59% |
-| residual + vol-managed | +0.16 | +0.26 | -6.6% | -25% |
+| total momentum | +0.10 | -0.04 | -22.2% | -67% |
+| residual momentum | -0.01 | -0.23 | -22.3% | -70% |
+| residual + vol-managed | +0.16 | +0.50 | -6.9% | -30% |
 
-Each defence shrinks the tail; together they cut the drawdown from **-61%**
-to **-25%** while *lifting* the Sharpe. Signal `WEAK`,
-Tradability `FRAGILE`, Cleaner than total momentum? `Confirmed`.
+The stack cuts the drawdown from **-67%** to
+**-30%** while lifting the Sharpe to
+**+0.16** — the tail is the engineerable part, though
+[Study 24](../../24-stampede/) shows vol-management alone achieves most of it on the total book
+(drawdown −61% → −32%). Signal `WEAK`, Tradability `FRAGILE`, Cleaner than total momentum?
+`Unproven here`.

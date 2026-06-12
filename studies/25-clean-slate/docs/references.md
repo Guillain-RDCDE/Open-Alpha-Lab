@@ -19,7 +19,7 @@
   Bonds"*, **Journal of Financial Economics** 1993 — the MKT/SMB/HML factors the source residualises
   against (we use a 1-factor market residual; see caveats).
 
-## Why the crash lives in the systematic part — `WEAK` / `FRAGILE` / `Confirmed`
+## Why the crash lives in the systematic part — `WEAK` / `FRAGILE` / `Unproven here`
 
 - **Momentum crashes are a systematic-exposure phenomenon.** Kent Daniel & Tobias Moskowitz, *"Momentum
   Crashes"*, **Journal of Financial Economics** 2016: after a market crash, past losers are high-beta and

@@ -3,7 +3,9 @@
 Three questions (the offline core proves the machine; this points it at the market):
 
   * **Do residual winners keep winning?** The residual-WML CAPM alpha (HAC) and decile profile.
-  * **Is it cleaner than total momentum?** Residual vs total: Sharpe, skew, worst month, drawdown.
+  * **Is it cleaner than total momentum?** Residual vs total: Sharpe, skew, worst month, drawdown —
+    and, because "cleaner" is a claim about a *difference*, a paired block-bootstrap of the skew and
+    Sharpe gaps on the books' common window. The third-axis stamp is decided by that paired test.
   * **Can the tail be tamed further?** Residualise *and* vol-manage (the defence stack).
 
     python examples/verify.py --fetch     # populate the S&P 500 panel cache (network)
@@ -43,6 +45,7 @@ def main():
     cmp = strategy.compare(rets, cost_bps=COST_BPS)
     a = decompose.capm_alpha(rets, cost_bps=COST_BPS)
     cc = decompose.crash_comparison(rets, cost_bps=COST_BPS)
+    pb = decompose.paired_crash_bootstrap(rets, n_boot=2000, seed=0, cost_bps=COST_BPS)
     sub = decompose.subsample_sharpe(rets, cost_bps=COST_BPS)
     boot = decompose.sharpe_bootstrap(rets, n_boot=2000, seed=0, cost_bps=COST_BPS)
     st = extension.defence_stack(rets, cost_bps=COST_BPS)
@@ -51,26 +54,36 @@ def main():
     print(f"residual WML alpha {a['alpha_ann_pct']:+.1f}% (t{a['alpha_t']:+.1f}); crash total DD "
           f"{cc['total']['max_drawdown_pct']:.0f}% vs residual {cc['residual']['max_drawdown_pct']:.0f}%; "
           f"stack DD -> {st['residual_vol_managed']['max_drawdown_pct']:.0f}%")
-    _write(OUT, dict(sp=sp, cmp=cmp, a=a, cc=cc, sub=sub, boot=boot, st=st, fp=fp,
+    print(f"paired (residual - total): skew diff {pb['skew_diff']:+.2f} "
+          f"[{pb['skew_ci_low']:+.2f}, {pb['skew_ci_high']:+.2f}], Sharpe diff {pb['sharpe_diff']:+.2f} "
+          f"[{pb['sharpe_ci_low']:+.2f}, {pb['sharpe_ci_high']:+.2f}]")
+    _write(OUT, dict(sp=sp, cmp=cmp, a=a, cc=cc, pb=pb, sub=sub, boot=boot, st=st, fp=fp,
                      lo=rets.index.min().date(), hi=rets.index.max().date(),
                      n_stocks=rets.shape[1], n_days=len(rets)), DEFAULT_AS_OF)
     print(f"\nwrote {OUT}")
 
 
 def _verdict(d):
-    a = d["a"]
+    a, pb = d["a"], d["pb"]
     signal = "REAL" if a["alpha_t"] > 2.0 else "WEAK"
     trad = "FRAGILE" if d["cmp"]["residual"]["sharpe"] < 0.5 else "INVESTABLE"
-    # cleaner than total: higher alpha & better skew & the stack tames the drawdown
-    cleaner = ("Confirmed" if (a["alpha_ann_pct"] > 0 and d["cc"]["residual"]["skew"] < d["cc"]["total"]["skew"]
-                               and d["st"]["residual_vol_managed"]["max_drawdown_pct"] >
-                               d["cc"]["total"]["max_drawdown_pct"]) else "Mixed")
+    # "Cleaner than total" is a claim about a *difference*, so it is decided by the paired
+    # block-bootstrap of that difference — never by comparing two standalone point estimates.
+    better_skew = pb["skew_significant"] and pb["skew_diff"] > 0
+    better_sharpe = pb["sharpe_significant"] and pb["sharpe_diff"] > 0
+    worse = (pb["skew_significant"] and pb["skew_diff"] < 0) or (pb["sharpe_significant"] and pb["sharpe_diff"] < 0)
+    if worse:
+        cleaner = "Busted"
+    elif better_skew or better_sharpe:
+        cleaner = "Confirmed"
+    else:
+        cleaner = "Unproven here"
     return signal, trad, cleaner
 
 
 def _write(path, d, asof):
     signal, trad, cleaner = _verdict(d)
-    cc, st, a, cmp = d["cc"], d["st"], d["a"], d["cmp"]
+    cc, st, a, cmp, pb = d["cc"], d["st"], d["a"], d["cmp"], d["pb"]
     sub_rows = "\n".join(f"| {r['start']} → {r['end']} | {r['sharpe']:+.2f} |" for _, r in d["sub"].iterrows())
     text = f"""# Results — Study 25 (Clean-Slate) on the real S&P 500 cross-section
 
@@ -79,21 +92,28 @@ current S&P 500 (≥2,500 sessions); the strategy is 12-1 momentum on **1-factor
 returns, long-top/short-bottom decile, monthly, {COST_BPS:.0f} bp/unit. The offline core proves the
 machinery on a synthetic panel where momentum lives in the residual; this is the measurement on the
 market. As-of **{asof}**; match the fingerprint below. **Survivorship caveat:** current membership only.
-The 1-factor residual is a simplification of the source's Fama-French 3-factor residual.*
+The 1-factor residual is a simplification of the source's Fama-French 3-factor residual.
+**Harness calibration:** on no-momentum synthetic panels the residual-WML gross alpha is centred on
+≈ 0 across seeds (a single 16-year tape can draw ±3-4%/yr of pure noise; net of costs the null sits
+~0.7%/yr below zero by construction) — see notebook 02 and `decompose.null_alpha_battery`.*
 
 ## The verdict, earned — Signal `{signal}` · Tradability `{trad}` · Cleaner than total momentum? `{cleaner}`
 
-Residual momentum is the better-behaved cousin of [Study 24](../../24-stampede/)'s total-return momentum
-— but on the modern large-cap sample the improvement is incremental, not transformative. Stripping the
-market gives a slightly *stronger* premium (residual-WML alpha **{a['alpha_ann_pct']:+.1f}%/yr**, HAC *t*
-= **{a['alpha_t']:+.1f}**, vs total momentum's +4.4%/t+0.9) and a corrected skew (**{cc['residual']['skew']:+.2f}**
-residual vs **{cc['total']['skew']:+.2f}** total) — yet a 1-factor residual barely dents the crash on its
-own (drawdown **{cc['residual']['max_drawdown_pct']:.0f}%** vs total **{cc['total']['max_drawdown_pct']:.0f}%**),
-because the value-driven part of the momentum crash needs the factors (HML) we don't have here. The real
-win is the **stack**: residualise *and* vol-manage, and the drawdown collapses to
-**{st['residual_vol_managed']['max_drawdown_pct']:.0f}%** at a Sharpe of
-**{st['residual_vol_managed']['sharpe']:+.2f}**. A cleaner momentum, still faint, whose crash is the
-engineerable part.
+Residual momentum was supposed to be the better-behaved cousin of [Study 24](../../24-stampede/)'s
+total-return momentum. On this modern large-cap sample, that improvement **does not show up under a
+paired test**. The residual-WML CAPM alpha point estimate is higher (**{a['alpha_ann_pct']:+.1f}%/yr**,
+HAC *t* = **{a['alpha_t']:+.1f}**, vs total momentum's +4.4%, *t* +0.9) — but both are individually
+indistinguishable from zero, and comparing two insignificant point estimates proves nothing. The paired
+block-bootstrap of the *differences* on the books' common window settles it: skew gap (residual − total)
+**{pb['skew_diff']:+.2f}** with 95% CI **[{pb['skew_ci_low']:+.2f}, {pb['skew_ci_high']:+.2f}]**, Sharpe
+gap **{pb['sharpe_diff']:+.2f}** with 95% CI **[{pb['sharpe_ci_low']:+.2f}, {pb['sharpe_ci_high']:+.2f}]**
+— neither clears zero, and both point estimates lean the *wrong* way. A 1-factor residual also barely
+dents the crash on its own (drawdown **{cc['residual']['max_drawdown_pct']:.0f}%** vs total
+**{cc['total']['max_drawdown_pct']:.0f}%**), because the value-driven part of the momentum crash needs
+the factors (HML) we don't have here. What demonstrably works is the **stack**: residualise *and*
+vol-manage, and the drawdown collapses to **{st['residual_vol_managed']['max_drawdown_pct']:.0f}%** at a
+Sharpe of **{st['residual_vol_managed']['sharpe']:+.2f}** — but that is vol-management's engineering as
+much as residualisation's. A faint momentum either way; "cleaner" is, on this tape, `{cleaner}`.
 
 ## Data stamp
 
@@ -111,6 +131,26 @@ engineerable part.
 - **Residual-WML CAPM alpha** **{a['alpha_ann_pct']:+.1f}%/yr** (HAC *t* = **{a['alpha_t']:+.1f}**), beta
   **{a['beta']:+.2f}**, turnover **{cmp['turnover_ann']:.0f}×/yr**.
 - **Bootstrap Sharpe** **{d['boot']['sharpe']:+.2f}**, 95% CI **[{d['boot']['ci_low']:+.2f}, {d['boot']['ci_high']:+.2f}]**.
+- *Window note:* both books are compared on the **residual book's** active window (the rolling beta
+  needs a 252-day warm-up before the first residual score), so the total-WML numbers here differ
+  slightly from [Study 24](../../24-stampede/)'s full-window run on the same universe (e.g. monthly
+  skew {cc['total']['skew']:+.2f} here vs +0.15 there) — a window difference, not a data one.
+
+## Cleaner than total? — the paired test
+
+*Same names, same days, so the difference gets a paired test: circular block bootstrap
+({pb['block_months']}-month blocks, {pb['n_boot']} resamples) of the aligned monthly (residual, total)
+pairs over their common {pb['n_months']} months.*
+
+| difference (residual − total) | point | 95% CI | P(residual better) | significant? |
+|---|---|---|---|---|
+| monthly skew | {pb['skew_diff']:+.2f} | [{pb['skew_ci_low']:+.2f}, {pb['skew_ci_high']:+.2f}] | {pb['skew_frac_residual_better']:.0%} | {'yes' if pb['skew_significant'] else 'no'} |
+| annualised Sharpe | {pb['sharpe_diff']:+.2f} | [{pb['sharpe_ci_low']:+.2f}, {pb['sharpe_ci_high']:+.2f}] | {pb['sharpe_frac_residual_better']:.0%} | {'yes' if pb['sharpe_significant'] else 'no'} |
+
+Neither gap clears zero. The higher residual *alpha* reflects the residual book's more negative
+market beta ({a['beta']:+.2f}) in a rising market as much as any extra momentum content; head-to-head
+on the same months, the residual book was not measurably cleaner — and on Sharpe it leaned worse.
+That is why the third axis reads `{cleaner}`, not `Confirmed`.
 
 ## Sub-sample decay
 
@@ -126,9 +166,12 @@ engineerable part.
 | residual momentum | {st['residual']['sharpe']:+.2f} | {st['residual']['skew']:+.2f} | {st['residual']['worst_month_pct']:+.1f}% | {st['residual']['max_drawdown_pct']:.0f}% |
 | residual + vol-managed | {st['residual_vol_managed']['sharpe']:+.2f} | {st['residual_vol_managed']['skew']:+.2f} | {st['residual_vol_managed']['worst_month_pct']:+.1f}% | {st['residual_vol_managed']['max_drawdown_pct']:.0f}% |
 
-Each defence shrinks the tail; together they cut the drawdown from **{st['total']['max_drawdown_pct']:.0f}%**
-to **{st['residual_vol_managed']['max_drawdown_pct']:.0f}%** while *lifting* the Sharpe. Signal `{signal}`,
-Tradability `{trad}`, Cleaner than total momentum? `{cleaner}`.
+The stack cuts the drawdown from **{st['total']['max_drawdown_pct']:.0f}%** to
+**{st['residual_vol_managed']['max_drawdown_pct']:.0f}%** while lifting the Sharpe to
+**{st['residual_vol_managed']['sharpe']:+.2f}** — the tail is the engineerable part, though
+[Study 24](../../24-stampede/) shows vol-management alone achieves most of it on the total book
+(drawdown −61% → −32%). Signal `{signal}`, Tradability `{trad}`, Cleaner than total momentum?
+`{cleaner}`.
 """
     with open(path, "w", encoding="utf-8") as fh:
         fh.write(text)

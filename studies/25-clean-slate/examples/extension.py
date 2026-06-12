@@ -60,13 +60,13 @@ own vol is high). Residualising attacks the first; vol-scaling attacks the secon
 {row("residual momentum", "residual")}
 {row("residual + vol-managed", "residual_vol_managed")}
 
-Residualising (a 1-factor, market residual) corrects the skew and lifts the alpha but only nibbles at the
-drawdown — the value-driven crash needs factors we don't have here. Vol-management does the heavy lifting
-on the tail. **Together** the drawdown falls from **{st['total']['max_drawdown_pct']:.0f}%** to
+Residualising (a 1-factor, market residual) lifts the alpha point estimate but on its own does not dent
+the drawdown — the value-driven crash needs factors we don't have here. Vol-management does the heavy
+lifting on the tail. **Stacked** the drawdown falls from **{st['total']['max_drawdown_pct']:.0f}%** to
 **{st['residual_vol_managed']['max_drawdown_pct']:.0f}%** while the Sharpe *rises* from
 **{st['total']['sharpe']:+.2f}** to **{st['residual_vol_managed']['sharpe']:+.2f}**.
 
-**Takeaway.** `WEAK` / `FRAGILE` / `Confirmed` survives the worked complement. The crash that made
+**Takeaway.** `WEAK` / `FRAGILE` / `Unproven here` survives the worked complement. The crash that made
 [Study 24](../../24-stampede/) `FRAGILE` is *engineerable* — two cheap, independent overlays compose to
 cut it by more than half. The part that doesn't yield to engineering is the one that matters most: the
 *premium itself* is faint on the modern large-cap sample, residual or not.

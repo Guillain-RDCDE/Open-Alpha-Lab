@@ -110,6 +110,11 @@ def beta_neutral_bab(
     leg by ``1/beta`` so the combination is beta-neutral; the result is the clean BAB factor. Returns
     its CAPM alpha (HAC), realised beta, Sharpe and the two leg betas. Charges the same costs as the
     naive book, including the short-leg borrow.
+
+    **In-sample betas, stated.** The leg betas used to set the leverage are estimated on the *full
+    sample* — a construction check on the anomaly's clean form, not a tradable book (a live BAB would
+    use trailing betas and re-lever as they drift). The realised-beta-≈-0 output confirms the
+    neutralisation worked; the alpha is the measurement.
     """
     b = build(panel, market=market, cost_bps=cost_bps, borrow_bps_ann=borrow_bps_ann, **build_kw)
     mkt = b["market"]
@@ -192,6 +197,12 @@ def leg_attribution(
     Each leg's CAPM alpha measures its own contribution. If the bulk sits in the high-vol leg's
     *negative* alpha — the names you'd have to short, and can't cheaply — then the harvestable
     long-only slice is the smaller, defensive one, and the tradability stamp must say so.
+
+    **Read the signs before the shares.** ``share_in_short_leg`` is a magnitude split
+    (``|a_high| / (|a_low| + |a_high|)``); it says nothing about direction. When the high-vol leg's
+    alpha is *positive* — as on the modern survivor large-cap tape — the anomaly hasn't merely
+    "concentrated in the unshortable leg", it has **inverted**: shorting the wild names would have
+    *cost* alpha, borrow fee or not. ``long_short_alpha_pct`` (low minus high) is the signed truth.
     """
     b = build(panel, market=market, cost_bps=cost_bps, **build_kw)
     mkt = b["market"]

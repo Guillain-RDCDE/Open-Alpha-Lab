@@ -8,11 +8,11 @@
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** — is residual momentum real? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | Strong on our synthetic control (alpha HAC *t* ≈ **16**); on the modern S&P 500 the residual winners-minus-losers factor earns **+6.2%/yr** (HAC *t* = **+1.2**) — slightly stronger than [Study 24](../24-stampede/)'s total momentum (+4.4%, *t* +0.9), but still indistinguishable from zero. |
-| **Tradability** — does it survive costs, capacity, scale? | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) | Thin standalone Sharpe (**+0.08**), fast turnover (**~12×/yr**), and you must short the losers — but it's the right *platform* for crash management. |
-| **Cleaner than total momentum?** | ![Confirmed](https://img.shields.io/badge/Confirmed-8b949e?style=flat-square) | Better-behaved tail: skew **−0.08** (vs total **+0.18**) and a higher alpha. A 1-factor residual only dents the drawdown alone (**−59%** vs **−61%**), but *stacked* with vol-management the drawdown collapses to **−25%** at a Sharpe of **+0.17**. |
+| **Signal** — is residual momentum real? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | Strong on our synthetic control (alpha HAC *t* ≈ **16**); on the modern S&P 500 the residual winners-minus-losers factor earns **+5.0%/yr** (HAC *t* = **+1.0**) — a higher point estimate than [Study 24](../24-stampede/)'s total momentum (+4.4%, *t* +0.9), but still indistinguishable from zero. |
+| **Tradability** — does it survive costs, capacity, scale? | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) | Thin standalone Sharpe (**−0.01**), fast turnover (**~12×/yr**), and you must short the losers — but it's the right *platform* for crash management. |
+| **Cleaner than total momentum?** | ![Unproven here](https://img.shields.io/badge/Unproven_here-8b949e?style=flat-square) | Two individually insignificant alphas can't certify a difference, so the gap gets a **paired block-bootstrap** on the books' common window: skew gap **−0.19** (95% CI **[−0.88, +0.44]**), Sharpe gap **−0.12** (95% CI **[−0.28, +0.02]**) — neither clears zero, and both lean the *wrong* way. The drawdown does collapse to **−30%** (Sharpe **+0.16**) once vol-management is stacked on top, but that is the overlay's engineering as much as the residual's. |
 
-> **In one sentence:** stripping the market out of momentum gives a slightly stronger, better-skewed premium and a clean platform for crash control — incremental alone on a 1-factor residual, decisive once you stack vol-management on top.
+> **In one sentence:** stripping the market out of momentum raises the alpha point estimate and gives a clean platform for crash control — but under a paired test the "cleaner cousin" advantage doesn't clear zero on this tape, and what reliably tames the crash is the vol-management stacked on top.
 
 ## What we tested
 
@@ -22,10 +22,10 @@ The desk's eighth idea from Kakushadze & Serur, *151 Trading Strategies* (strate
 
 | | For whom | Inside |
 |---|---|---|
-| **[01_for_the_curious](notebooks/01_for_the_curious.ipynb)** | the curious | the story in plain language: why stripping the market should tame the crash, the cleaner-but-still-faint premium, and the defence stack that finally collapses the drawdown |
-| **[02_for_the_quants](notebooks/02_for_the_quants.ipynb)** | quants | the machinery: the causal residualisation, the residual-WML CAPM alpha with HAC errors, the residual-vs-total crash comparison, and the defence stack |
+| **[01_for_the_curious](notebooks/01_for_the_curious.ipynb)** | the curious | the story in plain language: why stripping the market should tame the crash, the faint premium, the paired test the "cleaner cousin" claim fails here, and the defence stack that finally collapses the drawdown |
+| **[02_for_the_quants](notebooks/02_for_the_quants.ipynb)** | quants | the machinery: the causal residualisation, the residual-WML CAPM alpha with HAC errors, the null-harness calibration (seed battery), the paired residual-vs-total bootstrap, and the defence stack |
 
-The real run — every fingerprinted, as-of'd S&P 500 number — is in [docs/results.md](docs/results.md); the **beat-7 worked complement** (the *defence stack* — residualise *and* vol-manage, drawdown −61% → −25%) is in [docs/extension.md](docs/extension.md). Reproduce offline via [examples/run_synthetic_demo.py](examples/run_synthetic_demo.py); on the real tape via [examples/verify.py](examples/verify.py) and [examples/extension.py](examples/extension.py) (`--fetch` once to populate the shared S&P 500 panel cache).
+The real run — every fingerprinted, as-of'd S&P 500 number — is in [docs/results.md](docs/results.md); the **beat-7 worked complement** (the *defence stack* — residualise *and* vol-manage, drawdown −67% → −30%) is in [docs/extension.md](docs/extension.md). Reproduce offline via [examples/run_synthetic_demo.py](examples/run_synthetic_demo.py); on the real tape via [examples/verify.py](examples/verify.py) and [examples/extension.py](examples/extension.py) (`--fetch` once to populate the shared S&P 500 panel cache).
 
 ---
 
