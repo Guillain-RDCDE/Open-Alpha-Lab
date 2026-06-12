@@ -1,0 +1,6 @@
+# Development / testing extras (the runtime needs only requirements.txt)
+-r requirements.txt
+pytest
+nbformat
+nbconvert
+jupyter

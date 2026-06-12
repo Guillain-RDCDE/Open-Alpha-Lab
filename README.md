@@ -45,7 +45,7 @@ Almost everything ends up bottom-right; two chips are green — and neither one 
 ![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 72 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 87 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -125,6 +125,21 @@ teaching are in **[What 72 teardowns taught us](docs/bench.md)**.
 | **[70](studies/70-digital-gold/)** | **Digital-Gold** | Is bitcoin "digital gold" — a crash-and-inflation haven, or just a high-octane risk asset? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
 | **[71](studies/71-ambush/)** | **Ambush** | Four edges that each died to daily turnover (low IBS, turn-of-month, red close, VIX stress), gated to fire only at their rare confluence: does the overlay pay? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
 | **[72](studies/72-loaded-dice/)** | **Loaded-Dice** | The 5-minute SMA(5/10) crossover scalp — "a coin flip with the trend on your side": is the trend really on your side? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[73](studies/73-first-light/)** | **First-Light** | Does the 5-minute opening-range breakout earn the returns its viral 2023 backtest claims? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[74](studies/74-mind-the-gap/)** | **Mind-the-Gap** | Does an opening gap always get filled? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[75](studies/75-knee-jerk/)** | **Knee-Jerk** | Does Connors' RSI(2) oversold bounce still pay — or did publishing it wear it out? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[76](studies/76-rice-paper/)** | **Rice-Paper** | Do Japanese candlestick reversals predict anything a coin doesn't? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[77](studies/77-golden-mean/)** | **Golden-Mean** | Do Fibonacci levels and round numbers hold better than random price levels? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[78](studies/78-crossed-wires/)** | **Crossed-Wires** | Is the MACD crossover any more than a slower coin flip? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[79](studies/79-sleigh-ride/)** | **Sleigh-Ride** | Is the Santa Claus rally real — and does a failed one warn of trouble ahead? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[80](studies/80-cold-open/)** | **Cold-Open** | Does January's direction really call the rest of the year? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[81](studies/81-four-year-itch/)** | **Four-Year-Itch** | Is year three of the presidential cycle really the market's best? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[82](studies/82-witching-hour/)** | **Witching-Hour** | Does triple-witching expiry move the market, or just the volume? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[83](studies/83-half-life/)** | **Half-Life** | Does Bitcoin reliably pump after each four-year halving? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[84](studies/84-moon-math/)** | **Moon-Math** | Does the Stock-to-Flow model actually predict Bitcoin's price? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[85](studies/85-dr-copper/)** | **Dr-Copper** | Does the copper/gold ratio forecast the economy, or just echo it? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[86](studies/86-tail-radar/)** | **Tail-Radar** | Does the CBOE SKEW index see black swans coming? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[87](studies/87-center-line/)** | **Center-Line** | Does price really get pulled back to the intraday VWAP? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 > **Click any study** for the full teardown — two narrative notebooks (one for the curious,
 > one for the quant), reproducible code, and every number behind the two stamps.

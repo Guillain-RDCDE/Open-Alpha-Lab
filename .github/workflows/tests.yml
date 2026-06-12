@@ -252,6 +252,51 @@ jobs:
       - name: Study 72 — Loaded-Dice test-suite
         run: pytest -q studies/72-loaded-dice/tests
 
+      - name: Study 73 — First-Light test-suite
+        run: pytest -q studies/73-first-light/tests
+
+      - name: Study 74 — Mind-the-Gap test-suite
+        run: pytest -q studies/74-mind-the-gap/tests
+
+      - name: Study 75 — Knee-Jerk test-suite
+        run: pytest -q studies/75-knee-jerk/tests
+
+      - name: Study 76 — Rice-Paper test-suite
+        run: pytest -q studies/76-rice-paper/tests
+
+      - name: Study 77 — Golden-Mean test-suite
+        run: pytest -q studies/77-golden-mean/tests
+
+      - name: Study 78 — Crossed-Wires test-suite
+        run: pytest -q studies/78-crossed-wires/tests
+
+      - name: Study 79 — Sleigh-Ride test-suite
+        run: pytest -q studies/79-sleigh-ride/tests
+
+      - name: Study 80 — Cold-Open test-suite
+        run: pytest -q studies/80-cold-open/tests
+
+      - name: Study 81 — Four-Year-Itch test-suite
+        run: pytest -q studies/81-four-year-itch/tests
+
+      - name: Study 82 — Witching-Hour test-suite
+        run: pytest -q studies/82-witching-hour/tests
+
+      - name: Study 83 — Half-Life test-suite
+        run: pytest -q studies/83-half-life/tests
+
+      - name: Study 84 — Moon-Math test-suite
+        run: pytest -q studies/84-moon-math/tests
+
+      - name: Study 85 — Dr-Copper test-suite
+        run: pytest -q studies/85-dr-copper/tests
+
+      - name: Study 86 — Tail-Radar test-suite
+        run: pytest -q studies/86-tail-radar/tests
+
+      - name: Study 87 — Center-Line test-suite
+        run: pytest -q studies/87-center-line/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
