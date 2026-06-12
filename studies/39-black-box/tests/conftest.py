@@ -10,6 +10,9 @@ import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
+# This dir too: the test module does `from conftest import FAST, SEED, WF`, which under
+# pytest's importlib import-mode is a plain import and needs tests/ on sys.path.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from black_box import data
 

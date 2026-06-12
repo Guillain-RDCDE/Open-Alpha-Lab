@@ -16,7 +16,7 @@ carries.*
     `$SYMBOL`, stores to SQLite, pulls Yahoo daily charts, scores names 0–100.
   - `haskaomni/serenity-skill`, `muxuuu/serenity-skill`,
     `0xAgata-prog/serenity-skill` — the research framework distilled into a reusable
-    Codex/Claude skill ("supply-chain bottleneck → screen names → output a priority
+    LLM coding-agent skill ("supply-chain bottleneck → screen names → output a priority
     list").
 - We test the **phenomenon** the repos assume — *a public mention is followed by a
   capturable abnormal return* — not the person. See [the claim](../README.md#1--the-claim).

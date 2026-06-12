@@ -277,7 +277,8 @@ def mining_inflation(p_true: float, n_cond: int, n_candidates: int,
                      seed: int = 0) -> dict:
     """Monte-Carlo the *best* observed rate a prompt finds across many candidate confluences.
 
-    The honest model of "I gave Claude my API key and combined reports until one hit": you
+    The honest model of the viral post claiming an AI agent was handed an exchange API key
+    and combined reports until one hit: you
     evaluate ``n_candidates`` confluences, each selecting a small ``n_cond`` sessions whose true
     close-red probability is the *same modest* ``p_true`` (the real edge), and you quote the
     **maximum** observed rate. Returns the expected and 95th-percentile best rate, the inflation
