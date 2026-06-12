@@ -4,15 +4,25 @@
 deep-history US names (split-only prices — see the data-mode note in
 [`true_strength/data.py`](../true_strength/data.py)). Oscillators on default settings —
 **TSI 25/13/13**, **MACD 12/26/9**, **RSI 14** — each read as a zero-centred momentum level
-and z-scored within its own name. Round-trip turnover cost **10 bps**.
-As-of **2026-06-01**. Price fingerprint **`42590aa02dc9`** (174 names,
-1962-01-02 → 2026-06-01).*
+and z-scored within its own name. Turnover cost **10 bps per side** (a flat→long→flat
+round trip pays it twice, ≈ 20 bps). As-of **2026-06-01**. Price fingerprint **`fffa61248dc4`**
+(177 names, 1962-01-02 → 2026-06-01).
+**Survivorship caveat:** the 177-name cache is today's liquid survivors projected
+backwards — fine for comparing three oscillators on identical inputs, but any standalone
+return number reads as an upper bound.*
 
-> **Machinery sanity first.** On the offline synthetic universe (trend/cycle names hidden
-> among random walks) the three oscillators' positions agree **85%**
-> of the time on the *structured* names vs **82%** on the noise names —
-> so the comparison machinery recovers real shared structure where it is planted and doesn't
-> manufacture agreement out of noise. Whatever the real data says below is the market talking.
+> **The machinery control — and what it actually proves.** On the offline synthetic universe
+> (trend/cycle names hidden among random walks) the three positions agree a little more on the
+> *structured* names (85%) than on pure noise
+> (82%) — the trades line up best where there is a trend to agree
+> about. But the **level collinearity is mechanical**: the median TSI~MACD correlation on pure
+> random walks is 0.90 (structured 0.93),
+> and the spanning R² of z(TSI) on z(MACD)+z(RSI) is 0.86 on noise
+> (0.91 on structure) — as high as anything the real data shows
+> below. Three smoothings of the same one-bar price change co-move on *any* input; no market is
+> needed to produce the agreement. That doesn't weaken the verdict, it sharpens it: the TSI's
+> near-identity with the MACD is a property of the **filter**, so it cannot be a distinct
+> signal on any data.
 
 ## Headline 1 — are the three oscillators the same *shape*?
 *Per-name Pearson correlation between the z-scored momentum levels, pooled (median, IQR).*
@@ -20,43 +30,78 @@ As-of **2026-06-01**. Price fingerprint **`42590aa02dc9`** (174 names,
 ```
           n_names  median_corr    q25    q75
 pair                                        
-tsi~macd      173       0.8510 0.8110 0.8840
-tsi~rsi       174       0.8720 0.8640 0.8820
-macd~rsi      173       0.7510 0.7150 0.7780
+tsi~macd      176       0.8500 0.8050 0.8840
+tsi~rsi       177       0.8720 0.8640 0.8820
+macd~rsi      176       0.7500 0.7130 0.7770
 ```
 
 - **Is the TSI spanned by the other two?** Regress z(TSI) on z(MACD) and z(RSI): pooled
-  R² = **0.835**, median per-name R² = **0.849**
-  (174 names). The double smoothing's "true strength" is, to that R², a linear
-  combination of the MACD line and the RSI.
+  R² = **0.835**, median per-name R² = **0.848**
+  (177 names). The double smoothing's "true strength" is, to that R², a linear
+  combination of the MACD line and the RSI — and the synthetic control above shows that this
+  spanning is structural to the filters, not a fact the market supplied.
 
 ## Headline 2 — do the *positions* and *equity curves* agree?
 - sign agreement, **zero-cross** rule: `{'all_three': 0.84, 'tsi=macd': 0.994, 'tsi=rsi': 0.842, 'macd=rsi': 0.845}`
 - sign agreement, **signal-cross** rule: `{'all_three': 0.666, 'tsi=macd': 0.907, 'tsi=rsi': 0.726, 'macd=rsi': 0.699}`
-- equity-curve correlation (EW, long/short, net of 10 bps): `{'corr_tsi_macd': 0.994, 'corr_tsi_rsi': 0.848, 'corr_macd_rsi': 0.851, 'sharpe_tsi': 0.053, 'sharpe_macd': 0.047, 'sharpe_rsi': -0.291}`
+- equity-curve correlation (EW, zero-cross long/short, net of 10 bps/side): `{'corr_tsi_macd': 0.994, 'corr_tsi_rsi': 0.85, 'corr_macd_rsi': 0.853, 'sharpe_tsi': 0.053, 'sharpe_macd': 0.046, 'sharpe_rsi': -0.273}`
 
 ## The broker statement — default TSI crossover, EW universe, net of costs
 *The table QuantifiedStrategies quotes for their GLD backtest, recomputed honestly across the
 whole universe (signal-line crossover, long/flat).*
-`{'n_trades': 29796, 'cagr': 0.0633, 'sharpe': 0.6144, 'exposure': 0.4985, 'max_drawdown': -0.3544, 'profit_factor': 1.2739, 'win_rate': 0.3673, 'avg_gain': 0.0105}`
+`{'n_trades': 30596, 'cagr': 0.0648, 'sharpe': 0.6298, 'exposure': 0.4986, 'max_drawdown': -0.3568, 'profit_factor': 1.274, 'win_rate': 0.3672, 'avg_gain': 0.0106}`
+
+- **Same rule, beta stripped:** the *same* signal-cross book run long/**short** (so the
+  ~50%-long structural equity exposure cancels) earns a Sharpe of **-0.42**.
+  The long/flat **0.63** above is overwhelmingly the reward for being in
+  the market half the time, not for the TSI's timing. (The zero-cross long/short book — a
+  different rule, listed under Headline 2 — tells the same story at +0.05.)
 
 ## Reality Check — the best TSI of a 24-variant grid
-*White (2000): null distribution of the best Sharpe across the grid; p = P(luck ≥ observed).*
-`{'n_variants': 24, 'best_variant': 'tsi_40_21_13', 'best_sharpe': 0.7694, 'reality_check_pvalue': 0.0}`
+*White (2000), stationary bootstrap: null distribution of the best Sharpe across the grid;
+p = P(luck ≥ observed).*
 
-## Cost sweep — round-trip bps → mean net daily return & Sharpe
+- **long/flat grid** (embeds ~64 years of long equity drift on surviving names):
+  `{'n_variants': 24, 'long_short': False, 'benchmark': 'zero', 'best_variant': 'tsi_40_21_13', 'best_sharpe': 0.7807, 'reality_check_pvalue': 0.0}`
+- **same grid, returns in EXCESS of EW buy-and-hold** (the benchmark every long/flat
+  variant embeds; B&H Sharpe 0.98 on these survivors):
+  `{'n_variants': 24, 'long_short': False, 'benchmark': 'buy_and_hold', 'bh_sharpe': 0.9848, 'best_variant': 'tsi_40_21_13', 'best_sharpe': -0.8337, 'reality_check_pvalue': 1.0}`
+- **dollar-neutral grid** (long/short: the unconditional drift cancels inside the book):
+  `{'n_variants': 24, 'long_short': True, 'benchmark': 'zero', 'best_variant': 'tsi_40_21_13', 'best_sharpe': -0.2087, 'reality_check_pvalue': 0.9975}`
+
+The long/flat p ≈ 0.00 certifies only that *being long
+surviving US stocks for six decades* beats a mean-zero null — not the oscillator. Strip the
+beta either way and the story flips: in excess of buy-and-hold the best variant's Sharpe is
+**-0.83** (p = **1.00** — no variant times the market better than simply holding it),
+and the dollar-neutral grid's best Sharpe is **-0.21**
+(p = **1.00** — the timing content of the best variant does not clear the search).
+
+## Cost sweep — bps per side → mean net daily return & Sharpe
 ```
           mean_net_bps  sharpe  ann_turnover
 cost_bps                                    
-0               3.3490  0.7690       16.9880
-5               3.0120  0.6920       16.9880
-10              2.6750  0.6140       16.9880
-20              2.0010  0.4600       16.9880
-40              0.6530  0.1500       16.9880
+0               3.4020  0.7850       16.9760
+5               3.0660  0.7080       16.9760
+10              2.7290  0.6300       16.9760
+20              2.0550  0.4740       16.9760
+40              0.7080  0.1630       16.9760
 ```
 
-## The closing argument — trade the TSI's residual over MACD+RSI
+## The closing argument — the TSI's residual over MACD+RSI: information vs friction
 *Regress z(TSI) on z(MACD)+z(RSI) per name (full-sample, the generous steelman) and trade the
-**residual** long/short. If the part of the TSI the other two can't reproduce earns ≈ 0, its
-unique content is worthless — and the raw long/short TSI is already ≈ 0 (the 0.61 was beta).*
-`{'n_names': 174, 'residual_sharpe': -0.5629, 'residual_mean_net_bps': -2.833, 'raw_tsi_ls_sharpe': 0.0531, 'raw_tsi_ls_mean_net_bps': 0.3082}`
+**residual** long/short. The pre-declared criterion is on the **gross** Sharpe: if the part of
+the TSI the other two can't reproduce earns ≈ 0 before costs, its unique content carries no
+information.*
+`{'n_names': 177, 'residual_gross_sharpe': -0.0189, 'residual_gross_sharpe_se': 0.1174, 'residual_gross_mean_bps': -0.0945, 'residual_gross_hac_t': -0.1611, 'raw_tsi_ls_gross_sharpe': 0.1668, 'residual_net_sharpe': -0.5915, 'residual_net_mean_bps': -2.9559, 'raw_tsi_ls_net_sharpe': 0.0533, 'raw_tsi_ls_net_mean_bps': 0.3075, 'residual_ann_turnover': 72.1075, 'raw_ann_turnover': 16.4887}`
+
+- **Gross (the information question):** residual Sharpe **-0.02**
+  (Lo SE 0.12, HAC *t* on the mean
+  -0.2) vs raw long/short TSI gross
+  **+0.17**. The criterion **residual ≈ 0 is satisfied**:
+  the part of the TSI that MACD+RSI cannot reproduce contains no tradable information. That —
+  not any negative number — is the clean redundancy verdict.
+- **Net (the friction statement):** the residual book flips sign ~72×/yr
+  (vs ~16×/yr for the raw book), so at 10 bps/side a
+  zero-information signal is dragged to a net Sharpe of -0.59
+  (-2.96 bps/day). That is cost arithmetic on a busy
+  zero-mean signal — evidence of *worthlessness*, not of a tradable anti-signal.

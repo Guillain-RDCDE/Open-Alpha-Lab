@@ -4,8 +4,10 @@
 **method** claim, so we test it on markets whose truth we set. The **efficient null** is
 2000 binary markets whose price is the exact Bayesian posterior — a martingale, so the
 price is already the best estimate of the outcome and **no edge exists by construction**. The
-**planted wedge** adds a known favorite-longshot distortion. Bid/ask charged: **2¢
-round-trip**. As-of **2026-06-01** (synthetic seed, not a feed). Sample fingerprint **`585b80af7d53`**
+**planted wedge** adds a known favorite-longshot distortion (longshots trade rich, favorites
+cheap). Bid/ask quoted **2¢ wide**; a taker crosses it once, on entry, so each
+trade pays the **1¢ half-spread** (resolution pays face value — no exit trade).
+As-of **2026-06-01** (synthetic seed, not a feed). Sample fingerprint **`6b3d94fff8f1`**
 (2000 markets).*
 
 > **Read the null first.** Everything below the headline is measured on markets where the price
@@ -18,12 +20,11 @@ The **oracle** row is the most any method could capture given the true probabili
 fair market it is identically zero (there is no side that helps).*
 
 ```
-machine edge / trade : -0.678 pp   (HAC t = -0.77, n_active = 1142/2000)
+machine edge / trade : -0.448 pp   (HAC t = -0.51, n_active = 1141/2000)
 oracle  edge / trade : +0.000 pp   (no exploitable side exists on the null)
 ```
 
-The machine's directional edge is indistinguishable from zero (and if anything negative): a
-coin flip dressed as a signal.
+The machine's directional edge is indistinguishable from zero: a coin flip dressed as a signal.
 
 ## Noise, not signal — the raw Monte-Carlo "edge" vs history length
 *The chain's only output is ``raw_prob − price``. Real information would not shrink with more
@@ -32,11 +33,11 @@ data; estimation noise from a sparse transition matrix does.*
 ```
           mean_raw_edge_pp  std_raw_edge_pp  frac_positive
 hist_len                                                  
-20                  0.4655          19.7558         0.5325
-40                  0.3902          14.6335         0.4975
-60                  0.2919          11.9816         0.5000
-120                 0.2286           7.3910         0.5162
-250                 0.0141           2.0663         0.5062
+20                  0.4779          19.7451         0.5362
+40                  0.4013          14.6205         0.4975
+60                  0.2998          11.9632         0.5000
+120                 0.2326           7.3702         0.5050
+250                 0.0136           1.9030         0.5150
 ```
 
 The mean sits at zero throughout; the **spread of the "edge" collapses from ~20 pp
@@ -44,67 +45,92 @@ to ~2 pp** as history grows — the signature of pure estimation
 noise, not information.
 
 ## The chain is a noise *generator*, not a signal — and not inert either
-*Full pipeline vs ``raw_prob := price`` (no chain at all), and vs the pure calibration wedge
-``calibrate(price) − price`` (which never touches the price history).*
+*Full pipeline vs ``raw_prob := price`` (no chain at all). One identity worth knowing: with the
+chain deleted, the system edge **is** the pure calibration wedge ``calibrate(price) − price``,
+exactly — so a single correlation answers both "is the chain just the price?" and "is the edge
+just the table?".*
 
-`{'n': 2000, 'same_direction_frac': 0.612, 'edge_corr_full_vs_ablated': 0.3825, 'edge_corr_full_vs_biascurve': 0.3825, 'active_frac_full': 0.571, 'active_frac_ablated': 0.183}`
+`{'n': 2000, 'same_direction_frac': 0.6125, 'edge_corr_full_vs_ablated': 0.3653, 'active_frac_full': 0.5705, 'active_frac_ablated': 0.183}`
 
 The Monte-Carlo does not add signal — it adds **noise that triggers trades**: the full pipeline
 takes a position on **57%** of markets versus only **18%**
-for price-only, and its "edge" correlates just **0.38** with the
-price-only version (≈85% of it is Monte-Carlo noise).
+for price-only, and its "edge" correlates just **0.37** with the
+price-only version (≈87% of its variance is Monte-Carlo noise).
 So the chain roughly **triples the bet count** with coin-flip trades.
 
 ## Costed P&L on the null — Kelly-sized bets scored against truth
-`{'n_trades': 1142, 'mean_ret': -0.2619, 'median_ret': 0.0294, 'win_rate': 0.5158, 'per_trade_sharpe': -0.1205, 'sharpe_ci': (-0.5375965787414066, -0.032420525095822585), 'sharpe_frac_negative': 0.998, 'terminal_bankroll': 0.0003}`
+`{'n_trades': 1141, 'mean_ret': -0.2523, 'median_ret': 0.0293, 'win_rate': 0.5153, 'per_trade_sharpe': -0.1053, 'sharpe_ci': (-0.5393743080601796, -0.02781617455321403), 'sharpe_frac_negative': 0.997, 'terminal_bankroll': 0.0003}`
 
-The bankroll is destroyed — **0.0003×**
-after the 2¢ spread, and still **0.0017× at *zero*
-cost**. "Win every single trade" needs a 100% win rate; the realized rate is **52%**.
+No edge means no growth: the bankroll multiplies by **0.0003×**
+over 1141 quarter-Kelly bets once each pays the 1¢ entry toll
+(zero-cost bankroll: **0.0017×** — a martingale book has nothing
+to compound but variance drag). "Win every single trade" needs a 100% win rate; the realized
+rate is **52%**.
 
-### Why it loses *before* costs — the calibration ceiling
+### The calibration ceiling — a built-in reflex to short every strong favorite
 The article's table tops out at **0.958**, so any contract trading richer is handed a
 calibrated probability *below its own price* — a mechanical **BUY NO**. Here **568/2000**
-markets price above the ceiling, and the machine shorts **64%** of them.
-On a fair market, shorting a strong favorite loses about as often as the favorite wins:
+markets price above the ceiling and the machine shorts **64%** of them.
+On a *fair* market those shorts have zero expected value but lottery-ticket risk (stake ~2¢
+against a ~98% chance of losing it all), pure uncompensated variance for a Kelly book — and on
+any market where favorites are *underpriced* (the real-world favorite-longshot bias) they point
+exactly the wrong way, as the planted-wedge section shows. Gross per-trade return by price
+bucket:
 
 ```
                n  mean_ret  win_rate  frac_buy_no  mean_cal_prob
 bucket                                                          
-(0.0, 0.1]   164   -0.0258    0.9146       0.9939         0.0063
+(0.0, 0.1]   162   -0.0268    0.9136       0.9938         0.0060
 (0.1, 0.25]  147   -0.0314    0.8095       0.9388         0.0400
-(0.25, 0.5]  123   -0.0203    0.5772       0.7480         0.2279
-(0.5, 0.75]  132   -0.1522    0.5000       0.2197         0.7824
-(0.75, 0.9]  150    0.0790    0.8600       0.0400         0.9387
-(0.9, 1.0]   426   -0.3973    0.1268       0.8615         0.9579
+(0.25, 0.5]  123   -0.0203    0.5772       0.7480         0.2276
+(0.5, 0.75]  133   -0.1465    0.5038       0.2180         0.7811
+(0.75, 0.9]  150    0.0790    0.8600       0.0400         0.9385
+(0.9, 1.0]   426   -0.2769    0.1268       0.8615         0.9579
 ```
 
-The (0.9, 1.0] bucket carries the most trades and the worst return — the system reflexively
-shorts favorites it cannot price.
-
-## Cost sweep — spread → mean net return, win rate, terminal bankroll
+## Cost sweep — spread width → mean net return, win rate, terminal bankroll
 ```
         mean_ret  win_rate  terminal_bankroll
 spread                                       
-0.0000   -0.1653    0.5158             0.0017
-0.0100   -0.2283    0.5158             0.0007
-0.0200   -0.2619    0.5158             0.0003
-0.0400   -0.2999    0.5158             0.0001
-0.0800   -0.3396    0.5158             0.0000
+0.0000   -0.1201    0.5153             0.0017
+0.0100   -0.2103    0.5153             0.0007
+0.0200   -0.2523    0.5153             0.0003
+0.0400   -0.2957    0.5153             0.0001
+0.0800   -0.3385    0.4961             0.0000
 ```
 
 ## Planted favorite-longshot wedge — what's actually recoverable
-*A market where a real edge exists. The **oracle** knows the true probability; the **machine**
-runs the article's pipeline; "same-direction vs ablated" repeats the inertness check.*
+*Markets where a real edge exists: longshots trade **rich**, favorites **cheap** (the
+Thaler-Ziemba direction; at γ = 0.85 a fair 5.0¢ longshot trades at 7.6¢). Benchmarks, all
+scored against the realized outcome — ``*_pp`` are probability points captured per trade,
+``*_ret`` are returns on capital staked net of the 1¢ entry toll:*
 
-`{'machine_edge_pp_gross': -1.7801, 'machine_t': -1.9823, 'machine_mean_ret_net': -0.4402, 'machine_terminal_bankroll_net': 0.0, 'oracle_edge_pp_gross': 1.3776, 'oracle_mean_ret_net': -0.1356, 'same_direction_machine_vs_ablated': 0.6625}`
+`{'machine_edge_pp_gross': 1.8343, 'machine_t': 2.092, 'machine_mean_ret_net': -0.2201, 'machine_terminal_bankroll_net': 0.1504, 'machine_n_trades': 1231, 'ablated_edge_pp_gross': -0.4606, 'ablated_t': -20.185, 'ablated_n_trades': 275, 'oracle_forced_edge_pp_gross': 1.7477, 'oracle_forced_mean_ret_net': 0.0058, 'oracle_aware_n_trades': 1243, 'oracle_aware_frac': 0.6215, 'oracle_aware_edge_pp_gross': 3.0486, 'oracle_aware_mean_ret_net': 0.0227, 'oracle_aware_t': 1.9695, 'same_direction_machine_vs_ablated': 0.522}`
 
-Oracle gross edge by price bucket (pp) — it lives in the moderate-longshot band, not the extremes:
-`{'(0.0, 0.1]': 0.233, '(0.1, 0.25]': 7.953, '(0.25, 0.5]': 7.115, '(0.5, 0.75]': 1.492, '(0.75, 0.9]': 2.403, '(0.9, 1.0]': 0.149}`
+Forced-oracle gross edge by price bucket (pp):
+`{'(0.0, 0.1]': 1.529, '(0.1, 0.25]': 1.634, '(0.25, 0.5]': -2.069, '(0.5, 0.75]': 1.502, '(0.75, 0.9]': 6.493, '(0.9, 1.0]': 1.681}`
 
-Two findings: (1) the real edge an oracle could capture is **+1.38 pp gross**
-but **-13.56% per trade *net* of the 2¢ spread** — even perfect
-information cannot beat a normal bid/ask. (2) The machine does **worse than nothing**
-(**-1.78 pp**, HAC t = -1.98): it cannot find the edge
-sitting in front of it, and still agrees with its Markov-ablated self 66%
-of the time — the chain adds nothing even when there is something to add.
+Three findings:
+
+1. **The machine does detect the planted wedge** — **+1.83 pp gross**
+per trade (HAC t = +2.09, clearing
+the pre-registered |t| > 2 bar) — but not through its Markov chain. The ablated (price-only)
+pipeline only ever trades the >0.958 ceiling band, where the table's forced-NO points *against*
+the wedge (favorites are cheap here): it captures **-0.46 pp**
+(t = -20.19) on its 275 trades. The calibration table is
+the signal, its ceiling is the bug, and the Monte-Carlo noise is a randomizer that happens to
+spread bets into the band where the table's sign is right.
+2. **Costs gate everything.** Net of the 1¢ entry toll the machine's book returns
+**-22.0% per trade** on 1231 cost-blind trades
+and the quarter-Kelly bankroll ends at **0.150×** — gross
+detection, net destruction.
+3. **Perfect information beats the toll only barely, and only with discipline.** The planted
+wedge averages ~1.7¢ against a 1¢ entry toll. A cost-blind oracle forced through all
+2000 markets nets **+0.58%** per trade
+(+1.75 pp gross) — barely above water, because on a large
+share of markets the wedge is thinner than the toll. A **cost-aware** oracle that passes on
+exactly those markets trades 1243/2000
+(62%) and nets **+2.27% per trade**
+— and even that, with the true probability in hand, carries HAC t = +1.97
+on 2000 markets. That selectivity — knowing the truth *and* refusing the toll-dominated
+trades — is the ceiling on tradability, and the article's pipeline has neither ingredient.

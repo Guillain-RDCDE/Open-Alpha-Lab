@@ -5,46 +5,75 @@ basis is a transparent order-flow simulator (see the desk note in
 [`phantom_kernel/sim.py`](../phantom_kernel/sim.py)), not cached market data: Avellaneda-
 Stoikov is a theorem about a model world, so we test it in two worlds — **A (textbook)** where
 the exponential-arrival assumption holds, and **B (frictions)** with heavy-tailed (power-law)
-order reach, price jumps, stochastic vol and informed flow. Seed **0**. Simulated-input
-fingerprint **`1cb0c6bc010a`**. Reach grid: 80 points, delta in [0.25, 40].*
+order reach, price jumps, stochastic vol and informed flow. World B's tail exponent (1.7) sits
+inside the band this study measured on real books (survival exponents ~1.4-3.2,
+[`results_real.md`](results_real.md)); a heavier alpha = 1.2 rides along as a labelled stress
+case. Seed **0**. Simulated-input fingerprint **`6a976d1b2d3d`**. Reach grid: 80 points, delta in
+[0.25, 40].*
+
+> **Restated.** Two headline numbers in earlier versions of this doc were quoted from invalid
+> or worst-case parameterisations and are restated here. (1) The old "+1.26M AIC gap" compared
+> Poisson AICs across 80 *cumulative* fill counts of the same orders — nested counts are
+> neither independent nor Poisson, so that gap scaled with the sample size and its magnitude
+> was meaningless (the direction was right). H1 is now scored by a per-observation likelihood
+> test (each order counted once) plus Vuong's statistic. (2) The old "±163% spread error" was
+> computed at horizon T = 1, where the k-term is essentially the whole spread; the headline is
+> now quoted at the tournament's own session (T = 600) with T = 1 kept as a labelled bound.
+> Both restated results point the same way; the magnitudes are now honest.
 
 > **Machinery sanity first.** On World A the estimator recovers the planted arrival rate
 > **k = 0.5972** (true 0.6, error -0.46%) with
-> R^2 = **0.99998**, and the exponential kernel wins goodness-of-fit decisively. So the
-> code measures the kernel correctly *where the assumption is true* — whatever breaks in
-> World B below is the assumption failing, not the estimator.
+> R^2 = **0.99998**, and the per-order likelihood test crowns the exponential decisively
+> (V = -1510.3). So the code measures the kernel correctly *where the
+> assumption is true* — whatever breaks in World B below is the assumption failing, not the
+> estimator.
 
 ## H1 — is the arrival kernel exponential? (the load-bearing assumption)
-*Fit `lambda(delta) = A e^{-k delta}` (AS) against a power law `A' delta^{-alpha}` on each
-world's fill counts. `aic_gap > 0` => the power law is preferred (the exponential is rejected).*
+*The verdict test is a per-observation likelihood comparison on the raw execution depths —
+each order contributes exactly once, so the depths are iid under either hypothesis: exponential
+(MLE rate, 1 parameter, the AS kernel) vs power law (Pareto, MLE scale + exponent, 2
+parameters), scored by AIC (`aic_gap > 0` => power law preferred) and Vuong's normalised
+likelihood ratio (`V`; winner declared at p < 0.05). `r2_exp`/`r2_pow` are the descriptive
+binned fits; `k_exp` is the exponential rate a practitioner would actually plug into AS.*
 
 ```
-              r2_exp r2_pow  k_exp alpha_pow         aic_gap       winner
-A (textbook)  1.0000 0.7559 0.5972    0.8466 -1,005,504.2000  exponential
-B (frictions) 0.6826 0.9996 0.1975    1.1604  1,261,517.2000    power-law
+                     r2_exp r2_pow  k_exp alpha_mle         aic_gap ll_per_order           V       winner
+A (textbook)         1.0000 0.7559 0.5972    0.0711 -1,651,863.7000      -2.0648 -1,510.3000  exponential
+B (frictions)        0.7363 0.8929 0.2725    1.6996    664,175.6000       0.8302    220.0000    power-law
+B-stress (alpha=1.2) 0.6826 0.9996 0.1975    1.1997    827,890.7000       1.0349     41.0000    power-law
 ```
 
-In World A the exponential is essentially perfect (R^2 = 1.0) and wins by a vast AIC margin.
-In World B — heavy-tailed reach, the empirically documented case — the **power law wins**
-(R^2 0.9996 vs 0.6826 for the
-exponential; AIC gap **+1,261,517.2**). The exponential `k` you
-would fit is **0.1975** — a number with no stable meaning.
+In World A the exponential is essentially perfect (binned R^2 = 1.0) and the per-order test
+crowns it by a huge margin. In World B — heavy-tailed reach with the tail exponent *inside the
+measured band* — the **power law wins**: AIC gap **+664,175.6** over 400,000
+orders (0.8302 nats per order), Vuong **V = +220.0** (p
+beyond machine precision), and the MLE recovers the planted tail exponent
+(1.6996 vs true 1.7). The exponential `k` you would fit is
+**0.2725** — a number with no stable meaning. The stress row (alpha = 1.2,
+heavier than any tail the study measured) says the same thing louder, and is labelled as the
+stress case it is.
 
 ## H1 (cont.) — the phantom parameter: a static k while the truth drifts 4x
 *Four intraday regimes, each genuinely exponential with its own k spanning 4x. Each regime's
 k is recovered exactly; base AS instead fits one **static** k over the session. The gap is
-translated into the error in the AS **optimal half-spread** the static fit would quote.*
+translated into the error in the AS **optimal half-spread** the static fit would quote — at
+the tournament's own session (T = 600, evaluated mid-session), the configuration every other
+number in this study trades at.*
 
 ```
-k_true (per regime)        : [0.3, 0.6, 0.9, 1.2]
-k recovered (per regime)   : [0.2993, 0.6044, 0.8981, 1.2004]
-k_pooled (static AS fit)   : 0.4247
-spread % error per regime  : [-26.43, 36.97, 99.92, 162.53]
-max |spread % error|       : 162.53
+k_true (per regime)               : [0.3, 0.6, 0.9, 1.2]
+k recovered (per regime)          : [0.2993, 0.6044, 0.8981, 1.2004]
+k_pooled (static AS fit)          : 0.4247
+spread % error per regime (T=600) : [-14.45, 14.53, 30.71, 41.05]
+max |spread % error|      (T=600) : 41.05
+worst case at T=1 (upper bound)   : [-26.43, 36.97, 99.92, 162.53] (max 162.53)
 ```
 
 A single static `k` mis-prices the celebrated "optimal" spread by up to
-**162.53%** across the session.
+**41.05%** at the study's own trading horizon. (At T = 1, where
+the k-term is essentially the whole spread, the same mis-calibration reaches
+±162.53% — the worst case by construction, quoted only
+as a bound.)
 
 ## H2 — the market-making tournament (is the AS skew worth it?)
 *One realised market per world; four quoters face the identical exogenous order flow. The
@@ -56,10 +85,10 @@ informed move.*
 ### World A (textbook) — k_as = 0.600, baseline half-spread = 3.942
 ```
                      terminal_pnl  pnl_sharpe  ci_lo  ci_hi  inv_std  inv_absmax    n_fills  n_adverse
-AS (fixed)            13,909.9100      1.6350 1.5320 1.7610   0.6500      6.0000 8,732.0000     0.0000
-AS (adaptive vol)     13,768.5900      1.5970 1.5000 1.7200   0.6600      7.0000 8,658.0000     0.0000
-Symmetric (no skew)   17,615.9500      1.1150 0.9410 1.3170  45.5400    191.0000 4,527.0000     0.0000
-Inventory clamp       17,105.6800      2.9000 2.6400 3.1940   8.1800     30.0000 4,366.0000     0.0000
+AS (fixed)            13,909.9100      1.6350 1.4170 1.9590   0.6500      6.0000 8,732.0000     0.0000
+AS (adaptive vol)     13,768.5900      1.5970 1.3870 1.9090   0.6600      7.0000 8,658.0000     0.0000
+Symmetric (no skew)   17,615.9500      1.1150 0.9210 1.4230  45.5400    191.0000 4,527.0000     0.0000
+Inventory clamp       17,105.6800      2.9000 2.6500 3.2320   8.1800     30.0000 4,366.0000     0.0000
 ```
 
 In a benign world a **brainless inventory clamp** earns the best risk-adjusted P&L
@@ -67,22 +96,44 @@ In a benign world a **brainless inventory clamp** earns the best risk-adjusted P
 — AS's aggressive skew minimises an inventory variance (0.65 vs
 45.54) nobody was being paid to fear, at the cost of P&L.
 
-### World B (frictions) — k_as = 0.198, baseline half-spread = 6.497
+### World B (frictions) — k_as = 0.272, baseline half-spread = 5.526
 ```
                      terminal_pnl  pnl_sharpe  ci_lo  ci_hi  inv_std  inv_absmax    n_fills  n_adverse
-AS (fixed)             9,407.2400      2.1960 2.0380 2.3810   0.5900      5.0000 2,490.0000 1,338.0000
-AS (adaptive vol)        424.9300      0.2610 0.2110 0.3160   0.0600      2.0000   103.0000    28.0000
-Symmetric (no skew)    7,059.5500      0.3440 0.2180 0.4980   9.4300     34.0000 1,379.0000   601.0000
-Inventory clamp        7,069.6000      0.3510 0.2250 0.5050   9.2300     30.0000 1,375.0000   600.0000
+AS (fixed)            13,525.8900      1.5030 1.3220 1.8360   0.6000      7.0000 4,964.0000 3,035.0000
+AS (adaptive vol)        214.3400      0.1470 0.0790 0.2310   0.0500      2.0000    76.0000    32.0000
+Symmetric (no skew)   14,354.5100      0.2900 0.1880 0.3920  10.2800     46.0000 2,153.0000 1,170.0000
+Inventory clamp       12,260.4100      0.3520 0.2450 0.4600   7.7500     30.0000 2,137.0000 1,161.0000
 ```
 
 When inventory is dangerous (jumps + informed flow), AS's tight control **does** pay — it
-wins decisively — *even though* its `k = 0.198` is a misspecified phantom.
+wins decisively — *even though* its `k = 0.272` is a misspecified phantom.
 The reason is structural: the reservation-price **skew carries no k**; the phantom only
 corrupts spread *width*. Meanwhile the article's recommended "rolling realised-vol" fix
-(**AS adaptive**) **collapses** under jumps (Sharpe 0.261),
+(**AS adaptive**) **collapses** under jumps (Sharpe 0.147),
 because naive realised vol is jump-contaminated and blows the spread out to where almost
-nothing fills (103.0 fills).
+nothing fills (76.0 fills).
+
+## H2 (cont.) — the k-ablation: is AS's World-B win the kernel calibration, or the skew?
+*The decisive experiment for the MISATTRIBUTED stamp: same AS quoter, same World-B flow, five
+seeds — only `k` changes, between the two calibrations the study itself puts on the table: the
+textbook **0.6** and the phantom **0.272** fitted on World B's own fills (a
+~2.2x move in the arrival parameter, hence a materially different quoted width).*
+
+```
+       sharpe k=0.600 (textbook)  pnl k=0.600 (textbook)  sharpe k=0.272 (fitted on B)  pnl k=0.272 (fitted on B)
+seed0                     1.5090             15,009.1000                        1.5030                13,525.9000
+seed1                     1.5340             15,053.9000                        1.4850                13,160.2000
+seed2                     1.5260             15,130.4000                        1.5410                13,378.3000
+seed3                     1.5120             14,862.6000                        1.5240                13,398.2000
+seed4                     1.4990             15,039.6000                        1.5190                13,668.4000
+mean                      1.5160             15,019.1200                        1.5144                13,426.2000
+```
+
+The risk-adjusted P&L **does not move**: mean Sharpe **1.516** (textbook k) vs
+**1.514** (fitted phantom k). A 2.2x error in the model's load-bearing parameter changes
+the outcome by roughly nothing — direct proof that AS's World-B performance comes from the
+**k-free inventory skew**, not from the kernel-calibrated spread width the formula is famous
+for.
 
 ### Seed-robustness — P&L Sharpe per quoter across 5 seeds
 World A:
@@ -99,21 +150,25 @@ mean       1.5908             1.6044               2.4830           3.2658
 World B:
 ```
        AS (fixed)  AS (adaptive vol)  Symmetric (no skew)  Inventory clamp
-seed0      2.1960             0.2610               0.3440           0.3510
-seed1      2.1730             0.1670               0.2040           0.2550
-seed2      2.0770             0.1100               0.2980           0.3780
-seed3      2.0430             0.0350               0.1640           0.2080
-seed4      2.1130             0.2560               0.2350           0.3160
-mean       2.1204             0.1658               0.2490           0.3016
+seed0      1.5030             0.1470               0.2900           0.3520
+seed1      1.4500             0.1200               0.1430           0.3310
+seed2      1.5450             0.1650               0.2590           0.3810
+seed3      1.5000             0.1420               0.1310           0.2490
+seed4      1.5090             0.1540               0.1020           0.2150
+mean       1.5014             0.1456               0.1850           0.3056
 ```
 
 ## Verdict (earned on the simulator + the heavy-tail literature)
 - **Signal (the kernel `lambda = A e^{-k delta}`): `NONE`** — rejected under heavy-tailed
-  reach (power law wins, R^2 0.9996 vs
-  0.6826); `k` is a phantom (4x drift -> up to
-  162.53% spread error).
+  reach drawn from the measured band: the per-order likelihood test prefers the power law by
+  AIC **+664,175.6** over 400k orders (0.8302 nats/order,
+  Vuong V = +220.0); `k` is a phantom (4x drift -> up to
+  41.05% spread error at the study's own horizon;
+  162.53% at the T=1 bound).
 - **Tradability (does skipping AS leave money on the table?): `FRAGILE`** — a trivial clamp
   beats AS on risk-adjusted P&L whenever inventory isn't dangerous; the genuine benefit is
   narrow and lives in the (k-free) skew.
-- **The famous "optimal spread": `MISATTRIBUTED`** — its k-dependent term rests on the false
-  kernel and is not where the value is; the production "rolling-vol" fix backfires under jumps.
+- **The famous "optimal spread": `MISATTRIBUTED`** — proven by ablation: swapping the textbook
+  k (0.6) for the phantom (0.272) leaves World-B Sharpe unchanged
+  (1.516 vs 1.514); the value lives in the skew, and the production "rolling-vol" fix
+  backfires under jumps.

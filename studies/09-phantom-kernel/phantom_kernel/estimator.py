@@ -10,9 +10,11 @@ Fitting is a weighted log-linear regression: with fills bucketed by quote distan
 ``log lambda(delta) = log A - k * delta`` is linear in ``delta`` (exponential kernel) and
 ``log lambda(delta) = log A' - alpha * log(delta)`` is linear in ``log delta`` (power-law
 kernel). Counts are weighted by themselves (a Poisson-variance weighting) so dense, reliable
-buckets dominate the noisy tail. The two fits are then scored against each other by weighted
-R^2 and by Poisson AIC. Pure numpy — no scipy — to keep the study's dependency surface as
-light as the rest of the desk.
+buckets dominate the noisy tail. Those binned fits are *descriptive* (they recover ``k`` and
+draw the curve); the *verdict* between the two shapes comes from
+:func:`reach_likelihood_test` — a per-observation likelihood comparison on the raw execution
+depths, where each order counts exactly once, scored by AIC/BIC and Vuong's test. Pure numpy —
+no scipy — to keep the study's dependency surface as light as the rest of the desk.
 """
 
 from __future__ import annotations
@@ -113,11 +115,65 @@ def _wls(x: np.ndarray, y: np.ndarray, w: np.ndarray) -> tuple[float, float, flo
     return float(a), float(b), float(r2)
 
 
-def _poisson_aic(counts: np.ndarray, mu: np.ndarray, n_params: int = 2) -> float:
-    """AIC under a Poisson likelihood for bucket ``counts`` given fitted means ``mu``."""
-    mu = np.clip(mu, 1e-9, None)
-    log_lik = float(np.sum(counts * np.log(mu) - mu - np.array([math.lgamma(c + 1) for c in counts])))
-    return 2 * n_params - 2 * log_lik
+def reach_likelihood_test(reach: np.ndarray) -> dict:
+    """Exponential vs power-law on the **individual execution depths** — the valid H1 test.
+
+    Each order contributes exactly one observation (its reach), so under either hypothesis the
+    depths are iid draws from the reach law and the two log-likelihoods are legitimate:
+
+    * **exponential** ``f(x) = lam e^{-lam x}`` (MLE ``lam = 1/mean``; 1 parameter) — the law
+      whose survival function *is* the AS kernel;
+    * **power law** (Pareto I) ``f(x) = (alpha/xm)(x/xm)^{-(alpha+1)}`` on ``x >= xm``
+      (MLE ``xm = min(x)``, ``alpha = n / sum log(x/xm)``; 2 parameters) — the heavy tail.
+
+    The two models are non-nested, so they are scored by AIC/BIC *and* by Vuong's normalised
+    likelihood-ratio test (Vuong 1989): ``V > 0`` favours the power law, two-sided ``p``, and a
+    ``winner`` declared only at ``p < 0.05``. ``ll_per_obs`` is the mean per-order log-likelihood
+    edge of the power law — the magnitude that scales honestly.
+
+    Why this replaces the study's original test: the first version compared Poisson AICs across
+    80 **cumulative survival counts** of the *same* orders (the count at depth ``delta`` and at
+    ``delta'`` share orders), so the buckets were neither independent nor Poisson and the AIC
+    gap grew without bound in ``n_orders`` — its magnitude was meaningless (its direction, it
+    turns out, was right). Here every order enters the likelihood exactly once.
+    """
+    x = np.asarray(reach, float)
+    x = x[np.isfinite(x) & (x > 0)]
+    n = x.size
+    if n < 100:
+        return {"winner": "inconclusive", "n": int(n)}
+
+    # Exponential MLE (1 parameter).
+    lam = 1.0 / float(x.mean())
+    ll_exp = math.log(lam) - lam * x
+
+    # Pareto I MLE (2 parameters: the scale is the smallest depth, then alpha in closed form).
+    xm = float(x.min())
+    logs = np.log(x / xm)
+    alpha = n / float(logs.sum())
+    ll_pl = math.log(alpha) - math.log(xm) - (alpha + 1.0) * logs
+
+    d = ll_pl - ll_exp
+    lr = float(d.sum())
+    sd = float(d.std(ddof=1))
+    V = lr / (math.sqrt(n) * sd) if sd > 0 else 0.0
+    p = 2.0 * _normal_sf(abs(V))
+    sum_exp, sum_pl = float(ll_exp.sum()), float(ll_pl.sum())
+    winner = ("power-law" if V > 0 else "exponential") if p < 0.05 else "inconclusive"
+    return {
+        "n": int(n),
+        "lam": lam,
+        "alpha_mle": alpha,
+        "xm": xm,
+        "aic_exp": 2 * 1 - 2 * sum_exp,
+        "aic_pow": 2 * 2 - 2 * sum_pl,
+        "aic_gap": (2 * 1 - 2 * sum_exp) - (2 * 2 - 2 * sum_pl),   # > 0: power law preferred
+        "bic_gap": (math.log(n) * 1 - 2 * sum_exp) - (math.log(n) * 2 - 2 * sum_pl),
+        "ll_per_obs": lr / n,
+        "V": V,
+        "p": p,
+        "winner": winner,
+    }
 
 
 # --------------------------------------------------------------------------- #
@@ -126,21 +182,20 @@ def _poisson_aic(counts: np.ndarray, mu: np.ndarray, n_params: int = 2) -> float
 def fit_exponential(deltas: np.ndarray, counts: np.ndarray) -> dict:
     """Fit ``lambda(delta) = A e^{-k delta}`` (the AS kernel) to bucketed fill counts.
 
-    Returns the recovered ``k`` and ``A`` (relative), the weighted R^2 of the log-linear fit,
-    and the Poisson AIC. A clean exponential world gives R^2 ~ 1; the worse the fit, the more
-    ``k`` is a fiction.
+    Returns the recovered ``k`` and ``A`` (relative) and the weighted R^2 of the log-linear
+    fit. A clean exponential world gives R^2 ~ 1; the worse the fit, the more ``k`` is a
+    fiction. Descriptive only — the exponential-vs-power-law *verdict* is
+    :func:`reach_likelihood_test` on the raw depths.
     """
     deltas = np.asarray(deltas, float)
     counts = np.asarray(counts, float)
     m = counts > 0
     x, c = deltas[m], counts[m]
     a, b, r2 = _wls(x, np.log(c), c)
-    mu = np.exp(a + b * x)
     return {
         "k": -b,
         "A": math.exp(a) if np.isfinite(a) else float("nan"),
         "r2": r2,
-        "aic": _poisson_aic(c, mu),
         "n_buckets": int(m.sum()),
     }
 
@@ -149,42 +204,50 @@ def fit_powerlaw(deltas: np.ndarray, counts: np.ndarray) -> dict:
     """Fit ``lambda(delta) = A' delta^{-alpha}`` (a heavy-tailed kernel) to the same counts.
 
     The alternative hypothesis: order reach is power-law, so the kernel decays polynomially,
-    not exponentially. If this beats the exponential fit, the AS form is the wrong shape and
-    ``k`` does not exist as a stable parameter.
+    not exponentially. Descriptive, like :func:`fit_exponential`.
     """
     deltas = np.asarray(deltas, float)
     counts = np.asarray(counts, float)
     m = (counts > 0) & (deltas > 0)
     x, c = deltas[m], counts[m]
     a, b, r2 = _wls(np.log(x), np.log(c), c)
-    mu = np.exp(a + b * np.log(x))
     return {
         "alpha": -b,
         "r2": r2,
-        "aic": _poisson_aic(c, mu),
         "n_buckets": int(m.sum()),
     }
 
 
-def goodness_of_fit(deltas: np.ndarray, counts: np.ndarray) -> dict:
+def goodness_of_fit(reach: np.ndarray, deltas: np.ndarray, counts: np.ndarray) -> dict:
     """Head-to-head: is the fill kernel exponential (AS) or a power law (heavy-tailed)?
 
-    Returns both fits' R^2 and AIC, the AIC gap (``aic_exp - aic_pow``; positive => the power
-    law wins), and a verdict string. This is the falsification of H1: in a world that truly is
-    exponential the exponential wins decisively; under heavy-tailed reach the power law does.
+    Two layers. The **descriptive** layer is the binned weighted-R^2 fits (they recover the
+    ``k`` a practitioner would plug in, and the power-law slope). The **verdict** layer is
+    :func:`reach_likelihood_test` on the raw execution depths — each order counted exactly
+    once — which supplies the legitimate AIC/BIC gap and Vuong statistic.
+
+    *Restated:* an earlier version of this function scored the binned fits by Poisson AIC.
+    Those 80 buckets are nested cumulative survival counts of the same orders — not
+    independent Poisson draws — so that AIC gap scaled with ``n_orders`` and its magnitude was
+    statistically meaningless. The per-observation test replaces it; the *direction* of the
+    old result (power law wins in the friction world) survives.
     """
     exp = fit_exponential(deltas, counts)
     pw = fit_powerlaw(deltas, counts)
-    aic_gap = exp["aic"] - pw["aic"]
+    lt = reach_likelihood_test(reach)
     return {
         "r2_exp": exp["r2"],
         "r2_pow": pw["r2"],
         "k_exp": exp["k"],
         "alpha_pow": pw["alpha"],
-        "aic_exp": exp["aic"],
-        "aic_pow": pw["aic"],
-        "aic_gap": aic_gap,            # > 0 : power law preferred (exponential rejected)
-        "winner": "power-law" if aic_gap > 0 else "exponential",
+        "n_orders": lt["n"],
+        "alpha_mle": lt.get("alpha_mle", float("nan")),
+        "aic_gap": lt.get("aic_gap", float("nan")),    # > 0 : power law preferred
+        "bic_gap": lt.get("bic_gap", float("nan")),
+        "ll_per_obs": lt.get("ll_per_obs", float("nan")),
+        "V": lt.get("V", float("nan")),
+        "p": lt.get("p", float("nan")),
+        "winner": lt["winner"],
     }
 
 
@@ -198,6 +261,7 @@ def static_k_spread_error(
     gamma: float = 0.1,
     sigma: float = 0.4,
     horizon: float = 1.0,
+    eval_t: float = 0.0,
     seed: int = 0,
 ) -> dict:
     """Quantify the spread error from using one *static* k while the true k moves by regime.
@@ -207,6 +271,13 @@ def static_k_spread_error(
     fits a single pooled ``k`` over the whole session. We recover each regime's ``k``, the
     pooled ``k``, and translate the gap into the quantity that matters: the percentage error
     in the AS *optimal half-spread* the static fit would quote in each regime.
+
+    ``horizon`` and ``eval_t`` set where the spread is evaluated, and they matter: the k-term
+    ``(2/gamma) ln(1 + gamma/k)`` is constant in time while the inventory term
+    ``gamma sigma^2 (T - t)`` scales with the remaining horizon, so a short horizon makes the
+    k-error the whole spread (the worst case) and a long one dilutes it. Quote the number at
+    the horizon the rest of the study actually trades (the tournament's ``T``), and keep the
+    short-horizon figure as a labelled upper bound.
 
     Imports the spread formula from :mod:`phantom_kernel.strategies` lazily to avoid a cycle.
     """
@@ -226,8 +297,8 @@ def static_k_spread_error(
     k_pooled = fit_exponential(deltas, pooled_counts)["k"]
 
     # Spread the static (pooled) k would quote vs the spread each regime's true k warrants.
-    spread_true = np.array([optimal_spread(0.0, gamma, sigma, k, horizon) for k in k_values])
-    spread_static = np.array([optimal_spread(0.0, gamma, sigma, k_pooled, horizon)] * len(k_values))
+    spread_true = np.array([optimal_spread(eval_t, gamma, sigma, k, horizon) for k in k_values])
+    spread_static = np.array([optimal_spread(eval_t, gamma, sigma, k_pooled, horizon)] * len(k_values))
     pct_err = 100.0 * (spread_static - spread_true) / spread_true
 
     return {
@@ -235,6 +306,8 @@ def static_k_spread_error(
         "k_recovered_per_regime": [round(x, 4) for x in per_regime_k],
         "k_pooled_static": round(float(k_pooled), 4),
         "k_true_ratio": float(k_values.max() / k_values.min()),
+        "horizon": horizon,
+        "eval_t": eval_t,
         "spread_pct_error_per_regime": [round(float(x), 2) for x in pct_err],
         "max_abs_spread_pct_error": round(float(np.max(np.abs(pct_err))), 2),
     }

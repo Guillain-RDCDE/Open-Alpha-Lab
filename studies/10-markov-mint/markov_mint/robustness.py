@@ -14,8 +14,10 @@ Five questions, each pre-registered in the README's beat 3:
      net of a realistic bid/ask. Bankroll trajectory, per-trade Sharpe (bootstrap CI), win
      rate. → ``pnl_sim`` / ``cost_sweep``.
   5. **Machinery sanity / could-you-trade-it.** On markets with a *planted* favorite-longshot
-     wedge, recover the edge with an oracle price→truth lookup, show where it lives (the tails)
-     and how little survives the spread — and that the chain still adds nothing. → ``recover_planted``.
+     wedge, recover the edge with an oracle price→truth lookup — both cost-blind (the gross
+     ceiling) and cost-aware (the honest net reference: trade only where the wedge clears the
+     entry toll) — show where it lives, and ask whether the chain adds anything once a real
+     edge is present. → ``recover_planted``.
 
 Inference and bootstrap come from the shared engine (`quantlab.analytics`, `quantlab.stats`)
 so the numbers line up with every other study on the desk.
@@ -130,29 +132,30 @@ def edge_vs_history(hist_lens=(20, 40, 60, 120, 250), n_markets: int = 800,
 # --------------------------------------------------------------------------- #
 
 def inertness(markets, system: MarkovMintSystem | None = None, seed: int = 0) -> dict:
-    """Compare full pipeline vs Markov-ablated (``raw_prob := price``), and vs the bias curve.
+    """Compare the full pipeline vs the Markov-ablated one (``raw_prob := price``).
 
     If the Markov + Monte-Carlo stage carried information, deleting it would change the trade
     decisions and the system edge. We report: the fraction of markets where the *direction*
-    agrees between full and ablated runs; the correlation of the two system edges; and the
-    correlation of the full system edge with the pure calibration wedge ``calibrate(price) -
-    price`` — which uses no price history at all. Numbers near 1 mean the chain is decorative.
+    agrees between full and ablated runs, the correlation of the two system edges, and how
+    often each version takes a position. Note the ablated system edge *is*, identically, the
+    pure calibration wedge ``calibrate(price) - price`` (set ``raw_prob = price`` in the
+    pipeline and nothing else is left) — so a single correlation answers both "is the chain
+    just the price?" and "is the edge just the calibration curve?"; there is no second,
+    independent check to run. Numbers near 1 mean the chain is decorative.
     """
     system = system or MarkovMintSystem()
     full = analyze_markets(markets, system, ablate_markov=False, seed=seed)
     abla = analyze_markets(markets, system, ablate_markov=True, seed=seed)
 
     same_dir = float((full["direction"] == abla["direction"]).mean())
+    # By construction abla["system_edge"] == calibrate(price) - price, exactly.
     edge_corr = float(np.corrcoef(full["system_edge"], abla["system_edge"])[0, 1])
-    bias_curve = full["market_price"].apply(calibrate) - full["market_price"]
-    bias_corr = float(np.corrcoef(full["system_edge"], bias_curve)[0, 1])
 
     # How often each version even takes a position, and how often they pick the same side.
     return {
         "n": int(len(full)),
         "same_direction_frac": same_dir,
         "edge_corr_full_vs_ablated": edge_corr,
-        "edge_corr_full_vs_biascurve": bias_corr,
         "active_frac_full": float((full["dir_sign"] != 0).mean()),
         "active_frac_ablated": float((abla["dir_sign"] != 0).mean()),
     }
@@ -163,27 +166,34 @@ def inertness(markets, system: MarkovMintSystem | None = None, seed: int = 0) ->
 # --------------------------------------------------------------------------- #
 
 def _trade_return(dir_sign: float, yes_price: float, outcome: int, spread: float) -> float:
-    """Return on capital for one binary-contract trade, charging half the spread on entry.
+    """Return on capital for one binary-contract trade held to resolution.
 
-    BUY YES lifts the ask ``yes_price + spread/2`` and is paid 1 iff the event resolves YES.
-    BUY NO lifts the NO ask ``(1 - yes_price) + spread/2`` and is paid 1 iff it resolves NO.
-    Return is ``(payoff - effective_cost) / effective_cost`` — i.e. on the capital staked.
+    ``spread`` is the full quoted bid/ask width; the taker crosses it **once**, on entry, so
+    the toll charged is the half-spread ``spread/2`` (resolution pays face value — there is
+    no exit trade and no exit spread). BUY YES lifts the ask ``yes_price + spread/2`` and is
+    paid 1 iff the event resolves YES; BUY NO lifts the NO ask ``(1 - yes_price) + spread/2``
+    and is paid 1 iff it resolves NO. Return is ``(payoff - effective_cost) / effective_cost``
+    — i.e. on the capital staked. The cost is deliberately *not* capped below 1: near the top
+    tick the ask can exceed par, and such a trade is simply a guaranteed loss (an earlier cap
+    at 0.99 let the taker buy *below* the quoted price up there, manufacturing fake edge).
     """
     if dir_sign == 0.0:
         return 0.0
     if dir_sign > 0:
-        eff = min(yes_price + spread / 2.0, 1.0 - data.EPS)
+        eff = yes_price + spread / 2.0
         payoff = float(outcome)
     else:
-        eff = min((1.0 - yes_price) + spread / 2.0, 1.0 - data.EPS)
+        eff = (1.0 - yes_price) + spread / 2.0
         payoff = float(1 - outcome)
     return (payoff - eff) / eff
 
 
 def pnl_sim(df: pd.DataFrame, spread: float = 0.02, seed: int = 0) -> dict:
-    """Score the machine's bets against the true outcome, net of a ``spread`` (price units).
+    """Score the machine's bets against the true outcome, net of the bid/ask toll.
 
-    Per-trade returns on capital across all *active* trades; the win rate; a per-trade Sharpe
+    ``spread`` is the full quoted bid/ask width (price units); each trade pays the **half-
+    spread** on entry and nothing on resolution (see :func:`_trade_return`). Per-trade
+    returns on capital across all *active* trades; the win rate; a per-trade Sharpe
     with a bootstrap CI (``periods_per_year=1`` — these are trades, not days); and the terminal
     bankroll from compounding the machine's own quarter-Kelly fractions. A genuine edge grows
     the bankroll; betting noise (efficient null) bleeds it, faster once the spread bites.
@@ -217,13 +227,14 @@ def pnl_sim(df: pd.DataFrame, spread: float = 0.02, seed: int = 0) -> dict:
 
 def pnl_by_price_bucket(df: pd.DataFrame, spread: float = 0.0,
                         bins=(0.0, 0.1, 0.25, 0.5, 0.75, 0.9, 1.0)) -> pd.DataFrame:
-    """Per-trade return by price bucket — locates *where* the machine bleeds on the null.
+    """Per-trade return by price bucket — locates *where* the machine's risk concentrates.
 
-    The smoking gun: the article's calibration table tops out at 0.958, so a contract trading
-    richer than that is mechanically handed a calibrated probability *below* its own price,
-    forcing a BUY NO. On a fair market that is a short of a strong favorite — it loses about as
-    often as the favorite wins. This breakdown makes that visible (the top bucket carries the
-    most trades and the worst return) and reproducible.
+    The article's calibration table tops out at 0.958, so a contract trading richer than that
+    is mechanically handed a calibrated probability *below* its own price, forcing a BUY NO.
+    On a fair market that is a short of a strong favorite: zero expected value (the price is
+    honest) but lottery-ticket variance — a ~2¢ stake that is lost ~98% of the time and pays
+    ~49× otherwise. This breakdown makes the concentration visible (the top bucket carries the
+    most trades and the most extreme return profile) and reproducible.
     """
     active = df[df["dir_sign"] != 0.0].copy()
     active["ret"] = [
@@ -281,41 +292,77 @@ def recover_planted(markets, system: MarkovMintSystem | None = None,
                     spread: float = 0.02, seed: int = 0) -> dict:
     """On markets with a real planted wedge, what does the machine recover — and at what cost?
 
-    Two benchmarks scored against the true outcome: the **machine** (full pipeline) and an
-    **oracle** that bets ``sign(true_prob - price)`` knowing the true probability. We report the
-    captured edge of each (gross and net of the spread) and the same machine-vs-ablated direction
-    agreement as :func:`inertness`, to show that even *with* a real edge present, the chain still
-    contributes nothing — the calibration table is doing all the work.
+    Three benchmarks scored against the true outcome:
+
+      * the **machine** — the full pipeline, gross and net of the half-spread;
+      * the **forced oracle** — bets ``sign(true_prob - price)`` on *every* market, cost-blind.
+        This is the most *gross* edge any method could capture, but as a *net* benchmark it is
+        a strawman: it is made to pay the toll even where the wedge is thinner than the toll;
+      * the **cost-aware oracle** — the honest perfect-information reference: it trades a
+        market only when the expected return on its side is still positive *after* the entry
+        half-spread, and passes otherwise. The gap between its selectivity (how few markets
+        clear the toll) and its net return is the real ceiling on tradability.
+
+    Units: ``*_edge_pp_gross`` are probability **percentage points** captured per trade
+    (``E[sign · (outcome − price)] × 100``); ``*_mean_ret_net`` are fractional **returns on
+    capital staked**, net of the entry half-spread. We also repeat the machine-vs-ablated
+    direction agreement from :func:`inertness`, to ask whether the chain (rather than the
+    calibration table) contributes anything once a real edge is present.
     """
     system = system or MarkovMintSystem()
     df = analyze_markets(markets, system, seed=seed)
     abla = analyze_markets(markets, system, ablate_markov=True, seed=seed)
 
-    # Machine, gross and net of spread.
+    # Machine (full and Markov-ablated), gross and net of the half-spread.
     head = headline_test(df)
+    abla_head = headline_test(abla)
     pnl = pnl_sim(df, spread=spread, seed=seed)
 
-    # Oracle: the most a method could capture given the truth.
-    osign = np.sign(df["true_prob"] - df["market_price"]).to_numpy()
-    oracle_gross = float((osign * (df["outcome"] - df["market_price"])).mean() * 100)
+    px = df["market_price"].to_numpy()
+    tp = df["true_prob"].to_numpy()
+    oc = df["outcome"].to_numpy()
+
+    # Forced oracle: the true side on every market, cost-blind.
+    osign = np.sign(tp - px)
+    oracle_gross = float((osign * (oc - px)).mean() * 100)
     oracle_net = np.array([
-        _trade_return(s, c, o, spread)
-        for s, c, o in zip(osign, df["market_price"], df["outcome"]) if s != 0
+        _trade_return(s, c, o, spread) for s, c, o in zip(osign, px, oc) if s != 0
     ])
+
+    # Cost-aware oracle: trade the true side only if it still pays after the entry toll.
+    exp_yes = (tp - (px + spread / 2.0)) / (px + spread / 2.0)
+    exp_no = ((1.0 - tp) - ((1.0 - px) + spread / 2.0)) / ((1.0 - px) + spread / 2.0)
+    exp_net = np.where(osign > 0, exp_yes, exp_no)
+    aware = (osign != 0) & (exp_net > 0)
+    aware_gross = float((osign[aware] * (oc[aware] - px[aware])).mean() * 100) if aware.any() else np.nan
+    aware_net = np.array([
+        _trade_return(s, c, o, spread) for s, c, o in zip(osign[aware], px[aware], oc[aware])
+    ])
+    aware_hac = (mean_tstat_hac(pd.Series(aware_net)) if len(aware_net)
+                 else {"tstat": np.nan})
 
     same_dir = float((df["direction"] == abla["direction"]).mean())
 
-    # Where the edge lives: oracle gross edge by price bucket (the tails carry it).
+    # Where the edge lives: forced-oracle gross edge by price bucket.
     bucket = pd.cut(df["market_price"], bins=[0, 0.1, 0.25, 0.5, 0.75, 0.9, 1.0])
-    by_bucket = (osign * (df["outcome"] - df["market_price"])).groupby(bucket, observed=False).mean() * 100
+    by_bucket = pd.Series(osign * (oc - px)).groupby(bucket.reset_index(drop=True), observed=False).mean() * 100
 
     return {
         "machine_edge_pp_gross": head["machine_edge_pp"],
         "machine_t": head["machine_t"],
         "machine_mean_ret_net": pnl["mean_ret"],
         "machine_terminal_bankroll_net": pnl["terminal_bankroll"],
-        "oracle_edge_pp_gross": oracle_gross,
-        "oracle_mean_ret_net": float(oracle_net.mean()) if len(oracle_net) else np.nan,
+        "machine_n_trades": pnl["n_trades"],
+        "ablated_edge_pp_gross": abla_head["machine_edge_pp"],
+        "ablated_t": abla_head["machine_t"],
+        "ablated_n_trades": abla_head["n_active"],
+        "oracle_forced_edge_pp_gross": oracle_gross,
+        "oracle_forced_mean_ret_net": float(oracle_net.mean()) if len(oracle_net) else np.nan,
+        "oracle_aware_n_trades": int(aware.sum()),
+        "oracle_aware_frac": float(aware.mean()),
+        "oracle_aware_edge_pp_gross": aware_gross,
+        "oracle_aware_mean_ret_net": float(aware_net.mean()) if len(aware_net) else np.nan,
+        "oracle_aware_t": float(aware_hac["tstat"]),
         "same_direction_machine_vs_ablated": same_dir,
         "oracle_edge_by_price_bucket_pp": {str(k): round(float(v), 3) for k, v in by_bucket.items()},
     }

@@ -131,8 +131,9 @@ def build_curious():
             "fills iff an incoming order *reaches* at least `δ` into the book, so "
             "`λ(δ) = Λ·P(reach ≥ δ) = Λ·S_reach(δ)` — **the arrival kernel is the survival "
             "function of order reach.** Exponential reach ⟺ the AS kernel exactly; heavy-tailed "
-            "reach ⟹ a power law. We pre-register: Signal `NONE` if a power law wins AIC on "
-            "realistic flow, and `k` so regime-dependent that a static fit mis-prices the spread."
+            "reach ⟹ a power law. We pre-register: Signal `NONE` if a power law wins the "
+            "per-order likelihood test on realistic flow, and `k` so regime-dependent that a "
+            "static fit mis-prices the spread."
         ),
         md(
             "## 4 · The Teardown\n\n"
@@ -143,13 +144,18 @@ def build_curious():
         code(KERNEL_PLOT),
         md(
             "The exponential is the wrong *shape* for realistic flow. Scored head-to-head against "
-            "a power law (heavy-tailed), the exponential wins in World A and **loses** in World B:\n\n"
-            "> 🔬 **For the quants** — the fit is Poisson-AIC model selection; World B prefers the "
-            "power law by an AIC gap of **+1.26M** (R² 0.9996 vs 0.68). And this isn't only a "
-            "simulator artefact: the rigorous **Clauset–Shalizi–Newman + Vuong** tail test on "
-            "**real Binance order books** (4 markets, [`docs/results_real.md`](../docs/results_real.md)) "
-            "calls order size power-law on **4/4** and price-distance on **3/4** — real order flow "
-            "is heavy-tailed, so the exponential `k` is calibrated to a kernel markets don't have."
+            "a power law (heavy-tailed), the exponential wins in World A and **loses** in World B "
+            "(the table also carries a clearly-labelled *stress* row, α=1.2 — heavier than any "
+            "tail the study measured — which says the same thing louder):\n\n"
+            "> 🔬 **For the quants** — the verdict columns come from a per-order likelihood test: "
+            "exponential vs power-law MLE on the raw execution depths, each order counted exactly "
+            "once, scored by AIC and Vuong's non-nested statistic. On this notebook's 200k-order "
+            "draw, World B prefers the power law by **~0.83 nats per order** (AIC gap ≈ +332k, "
+            "Vuong V ≈ +171). And this isn't only a simulator artefact: the same "
+            "**Clauset–Shalizi–Newman + Vuong** machinery on **real Binance order books** "
+            "(4 markets, [`docs/results_real.md`](../docs/results_real.md)) calls order size "
+            "power-law on **4/4** and price-distance on **3/4** — and World B's tail exponent "
+            "(1.7) is drawn from the band those books measure."
         ),
         code(
             "gof = ex.kernel_gof_table(n_orders=NORD, seed=0)\n"
@@ -157,14 +163,17 @@ def build_curious():
         ),
         md(
             "And because real `k` drifts through the day (the write-up admits 3–5×), a single "
-            "fixed `k` mis-prices the 'optimal' spread badly:"
+            "fixed `k` mis-prices the 'optimal' spread — by **~41%** at the session length this "
+            "study actually trades (T=600), and up to ~163% in the short-horizon worst case "
+            "(T=1, where the `k`-term is the whole spread — quoted only as a bound):"
         ),
         code(
             "ki = ex.k_instability(seed=0)\n"
-            "print('true k per regime    :', ki['k_true'])\n"
-            "print('one static k AS uses :', ki['k_pooled_static'])\n"
-            "print('spread error / regime:', ki['spread_pct_error_per_regime'], '%')\n"
-            "print('worst spread error   :', ki['max_abs_spread_pct_error'], '%')"
+            "print('true k per regime           :', ki['k_true'])\n"
+            "print('one static k AS uses        :', ki['k_pooled_static'])\n"
+            "print('spread error / regime (T=600):', ki['spread_pct_error_per_regime'], '%')\n"
+            "print('worst spread error (T=600)  :', ki['max_abs_spread_pct_error'], '%')\n"
+            "print('worst case at T=1 (bound)   :', ki['bound_T1']['max_abs_spread_pct_error'], '%')"
         ),
         md(
             "## 5 · The Verdict — and the twist\n\n"
@@ -194,7 +203,9 @@ def build_curious():
             "`k`; `k` enters *only* the spread's arrival term `(2/γ)·ln(1+γ/k)`. So a misspecified "
             "`k` shifts quote *width* (a level effect on fill rate) but leaves the inventory "
             "skew — the thing driving `q`→0 — untouched. That's why World-B AS keeps its tight "
-            "control and positive Sharpe with `k` off by 3×: the broken half wasn't doing the work."
+            "control and positive Sharpe with `k` off by ~2.2×. The deep-dive notebook proves it "
+            "by **ablation**: swap the carefully fitted phantom `k` for the plain textbook value "
+            "and AS's World-B Sharpe doesn't move — the broken half wasn't doing the work."
         ),
         md(
             "## 6 · Could You Trade It?\n\n"
@@ -213,7 +224,7 @@ def build_curious():
             "exponential. We also already **worked one complement**: does a *jump-robust* "
             "(bipower) volatility estimate rescue the collapsing rolling-vol 'production fix'? "
             "Answer — **no, only mitigated** (see [`docs/extension.md`](../docs/extension.md)): it "
-            "roughly doubles the collapsed Sharpe but stays far below plain fixed-σ AS, because "
+            "lifts the collapsed Sharpe but stays far below plain fixed-σ AS, because "
             "adapting spread *width* is the wrong lever. The natural next steps are a **multi-day, "
             "multi-venue** real-data sweep and the **GLT** hard-inventory-bound quoter vs the "
             "brainless clamp. The deep-dive notebook (`02_for_the_quants`) carries the inference, "
@@ -231,7 +242,7 @@ def build_quants():
     cells = [
         md(
             "# Phantom-Kernel — a quantitative teardown 🔬\n"
-            "### Survival-function kernel · Poisson-AIC model selection · static-`k` spread error · bootstrap-Sharpe tournament\n\n"
+            "### Survival-function kernel · per-order likelihood model selection · static-`k` spread error · bootstrap-Sharpe tournament\n\n"
             "![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)\n"
             "![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)\n"
             "![Optimal--spread: Misattributed](https://img.shields.io/badge/Optimal--spread-Misattributed-8b949e?style=flat-square)\n\n"
@@ -241,9 +252,9 @@ def build_quants():
             "> ⚠️ **Not investment advice.** Runs offline on the simulator (no network, no data); "
             "the frozen 5-seed numbers and fingerprint are in "
             "[`docs/results.md`](../docs/results.md), the heavy-tail confirmation on real Binance "
-            "books in [`docs/results_real.md`](../docs/results_real.md). Methods: Poisson-AIC "
-            "model selection, Clauset-Shalizi-Newman / Vuong power-law tests, bootstrap Sharpe "
-            "CIs — see [`docs/references.md`](../docs/references.md).\n"
+            "books in [`docs/results_real.md`](../docs/results_real.md). Methods: per-order "
+            "likelihood model selection (AIC + Vuong), Clauset-Shalizi-Newman / Vuong power-law "
+            "tests, bootstrap Sharpe CIs — see [`docs/references.md`](../docs/references.md).\n"
             ">\n"
             "> 💡 **The `💡 In plain words` notes** translate each result back into intuition — "
             "so this notebook still reads even if you skim the maths. House style in "
@@ -286,12 +297,20 @@ def build_quants():
         ),
         code(KERNEL_PLOT),
         md(
-            "**(b) Model selection** — weighted R² *and* Poisson AIC. `aic_gap > 0` ⟹ the power "
-            "law is preferred, i.e. the AS exponential is rejected. World A: exponential. World B: "
-            "power law, decisively.\n\n"
+            "**(b) Model selection — each order counted once.** The binned weighted-R² fits are "
+            "*descriptive* (they recover the `k` a desk would plug in and draw the curve); the "
+            "*verdict* is a **per-observation likelihood test** on the raw execution depths: "
+            "exponential (1-parameter MLE) vs power law (Pareto, 2-parameter MLE), scored by AIC "
+            "(`aic_gap > 0` ⟹ power law preferred) and **Vuong's** non-nested statistic. (An "
+            "earlier draft scored the 80 *cumulative* fill counts as independent Poissons — "
+            "nested counts of the same orders are neither, so that gap scaled with the sample "
+            "size; restated in [`docs/results.md`](../docs/results.md).) World A: exponential. "
+            "World B: power law, decisively — and the α=1.2 row is the labelled *stress* case, "
+            "heavier than any tail the study measured.\n\n"
             "> 💡 **In plain words** — line up two candidate shapes against the data and ask which "
-            "the evidence prefers. In the textbook world the exponential wins (it's the truth "
-            "there); in the realistic world the heavy-tailed power law wins by a landslide."
+            "the evidence prefers, letting each order vote exactly once. In the textbook world "
+            "the exponential wins (it's the truth there); in the realistic world the heavy-tailed "
+            "power law wins by a landslide."
         ),
         code("ex.kernel_gof_table(n_orders=NORD, seed=0)"),
         md(
@@ -302,15 +321,20 @@ def build_quants():
             "via [`examples/confirm_heavy_tail.py`](../examples/confirm_heavy_tail.py)) calls order "
             "**size** power-law on **4/4** markets (Vuong V 2.8–5.5, p<0.01, α≈3.0–3.4) and "
             "**|price−mid|** power-law on **3/4** (the 4th merely *inconclusive*, never a clean "
-            "exponential). Real order flow is heavy-tailed on the venue the article targets.\n\n"
+            "exponential). The measured price-distance tails translate to survival exponents "
+            "≈1.4–3.2 — the band World B's α=1.7 is drawn from. One-day snapshot, four symbols, "
+            "one venue: it supports the heavy-tail premise; the verdict itself is earned on the "
+            "simulator.\n\n"
             "> 💡 **In plain words** — this isn't a quirk of our toy market: real crypto order "
             "books have the fat tail too, so the exponential the model leans on is the wrong shape "
             "out in the wild, not just in the lab."
         ),
         md(
             "**(c) The phantom parameter** — four regimes with `k` spanning 4×. Each regime's `k` "
-            "is recovered exactly, but base AS fits one static `k`; the gap becomes a spread "
-            "error of up to ~160%."
+            "is recovered exactly, but base AS fits one static `k`; at the session length the "
+            "study actually trades (T=600, evaluated mid-session) the gap mis-prices the spread "
+            "by **up to ~41%** — and by up to ~163% at T=1, where the `k`-term is essentially "
+            "the whole spread (the worst case by construction, quoted only as a bound)."
         ),
         code(
             "ki = ex.k_instability(seed=0)\n"
@@ -347,18 +371,42 @@ def build_quants():
             "saves it is the inventory lean, not the famous spread formula."
         ),
         md(
-            "**(e) Seed-robustness** — the orderings are not a single-draw fluke (5 seeds; the "
+            "**(e) The k-ablation** — the decisive experiment for the MISATTRIBUTED stamp. Same "
+            "AS quoter, same World-B flow, run at the study's own session length (T=600); only "
+            "`k` swaps between the two calibrations the study puts on the table — the textbook "
+            "**0.6** and the phantom fitted on World B's own fills (~2.2× apart, hence a "
+            "materially different quoted width)."
+        ),
+        code(
+            "ab = ex.k_ablation(sim.WORLD_B, seeds=(0, 1), n_steps=60_000)\n"
+            "print('fitted phantom k =', round(ab.attrs['k_fit'], 4))\n"
+            "print(ab.round(3).to_string())"
+        ),
+        md(
+            "The risk-adjusted P&L **doesn't move** (the frozen 5-seed means in "
+            "[`docs/results.md`](../docs/results.md): **1.516 vs 1.514**). A ~2.2× error in the "
+            "model's load-bearing parameter is P&L-neutral at the study's horizon — direct proof "
+            "that AS's World-B win comes from the `k`-free skew, not the kernel-calibrated width.\n\n"
+            "> 💡 **In plain words** — we grabbed the model's famous dial, turned it by a factor "
+            "of two, and the bottom line didn't notice. The dial isn't connected to the part "
+            "that makes the money."
+        ),
+        md(
+            "**(f) Seed-robustness** — the orderings are not a single-draw fluke (5 seeds; the "
             "frozen table is in `docs/results.md`)."
         ),
         code("ex.tournament_multiseed(sim.WORLD_B, seeds=(0, 1, 2)).round(3)"),
         md(
             "## 5 · The Verdict\n\n"
-            "**Signal NONE** — World-B kernel is power-law (R² 0.9996 vs exponential 0.68; AIC gap "
-            "+1.26M); static `k` mis-prices the spread by up to 162%. **Tradability FRAGILE** — a "
-            "clamp beats AS in World A (Sharpe 3.27 vs 1.59); AS wins World B (2.12) but the "
-            "rolling-vol fix collapses (0.17). **Optimal spread MISATTRIBUTED** — the value is in "
-            "the `k`-free skew. (Frozen 5-seed numbers + fingerprint: `docs/results.md`; real-data "
-            "heavy-tail confirmation: `docs/results_real.md`.)\n\n"
+            "**Signal NONE** — World-B reach prefers the power law by **~0.83 nats per order** "
+            "(frozen 400k-order run: AIC gap +664k, Vuong V = +220); a static `k` mis-prices the "
+            "spread by **41%** at the study's own horizon (163% at the T=1 bound). "
+            "**Tradability FRAGILE** — a clamp beats AS in World A (frozen 5-seed Sharpe 3.27 vs "
+            "1.59); AS wins World B (1.50) but the rolling-vol fix collapses (0.15). "
+            "**Optimal spread MISATTRIBUTED** — proven by ablation: textbook `k` vs fitted "
+            "phantom, World-B Sharpe 1.516 vs 1.514. The value is in the `k`-free skew. (Frozen "
+            "5-seed numbers + fingerprint: `docs/results.md`; real-data heavy-tail check: "
+            "`docs/results_real.md`.)\n\n"
             "> 💡 **In plain words** — the headline equation everyone copies rests on a false "
             "assumption *and* isn't where the money is. Keep the inventory lean; treat the spread "
             "formula as a rough rule of thumb, not a theorem."
@@ -377,7 +425,7 @@ def build_quants():
             "multi-venue** sweep and a fit *in ticks* to remove price-discreteness noise.\n"
             "- **Jump-robust adaptive vol — worked** ([`docs/extension.md`](../docs/extension.md)): "
             "bipower variation *mitigates but does not rescue* the rolling-vol fix (World-B Sharpe "
-            "0.17→0.32, still ≪ fixed-σ 2.12) — adapting spread *width* is the wrong lever, which "
+            "0.15→0.23, still ≪ fixed-σ 1.50) — adapting spread *width* is the wrong lever, which "
             "sharpens the core verdict.\n- The **GLT** closed form with hard inventory bounds vs "
             "the clamp.\n- A **Cartea–Jaimungal** adverse-selection spread term.\n- A **γ-sweep** "
             "to map where the skew's P&L cost stops exceeding its risk saving.\n- A **multi-day / "

@@ -16,12 +16,22 @@ Two generators, two ground truths:
       is finding noise — there is, provably, nothing to find. This is where the claim must
       die if it is empty.
     * :func:`biased_markets` — a **planted favorite-longshot wedge**. The *fair* posterior is
-      simulated exactly as above, but the *traded* price is pushed toward the centre
-      (``traded = sigmoid(gamma * logit(fair))`` with ``gamma > 1``): cheap longshots trade
-      *richer* than they resolve, expensive favorites trade *cheaper* — the classic bias the
-      article quotes. Here a real edge **does** exist, of a known size, so we can ask the
-      honest follow-up: how big is it, where does it live, and does *the Markov chain* (as
-      opposed to a one-line price→truth lookup) recover any of it?
+      simulated exactly as above, but the *traded* price is pulled toward the centre by
+      compressing the log-odds (``traded = sigmoid(gamma * logit(fair))`` with ``gamma < 1``):
+      longshots trade *richer* than their true probability and favorites trade *cheaper* —
+      the classic Thaler-Ziemba bias the article quotes (over-bet longshots are overpriced;
+      favorites are the bargain). Worked example at the default ``gamma = 0.85``: a fair
+      5.0¢ longshot trades at 7.6¢ (rich), a fair 95.0¢ favorite at 92.4¢ (cheap). Here a
+      real edge **does** exist, of a known size and known sign, so we can ask the honest
+      follow-up: how big is it, where does it live, and does *the Markov chain* (as opposed
+      to a one-line price→truth lookup) recover any of it?
+
+Everything is computed in **log-odds space and never pinned to a boundary**: probabilities
+are ``sigmoid`` of a (clipped-at-``±L_MAX``) log-odds walk, so they live strictly inside
+(0, 1) with no atom of mass at any clip bound. (An earlier version clipped prices into
+[0.01, 0.99]; that parked hundreds of near-certain markets at exactly 0.99 while their true
+resolution rate was ~0.997, fabricating a guaranteed-loss book at the boundary. The
+regression test ``test_no_price_atoms`` guards against reintroducing it.)
 
 Each :class:`Market` carries its full pre-resolution price history, the days left to expiry,
 and — the thing a real trader never gets but a simulator does — the **realized outcome**, so
@@ -35,9 +45,13 @@ from dataclasses import dataclass
 
 import numpy as np
 
-# Clip prices into (EPS, 1-EPS) so log-odds stay finite and discretisation has room at the
-# tails (a contract never trades at a literal 0 or 100 on a live book either).
+# Numerical guard for logit() on user-supplied probabilities only — the generators
+# themselves work in log-odds and never produce a price at (or beyond) this bound.
 EPS = 0.01
+
+# Log-odds are clipped at ±L_MAX for float safety: sigmoid(±30) is within 1e-13 of the
+# boundary but still strictly inside (0, 1), so no probability mass is parked at a bound.
+L_MAX = 30.0
 
 
 def logit(p: np.ndarray | float) -> np.ndarray | float:
@@ -70,26 +84,25 @@ class Market:
         return float(self.prices[-1])
 
 
-def _posterior_path(outcome: int, p0: float, n_steps: int, delta: float,
-                    rng: np.random.Generator) -> np.ndarray:
-    """The exact Bayesian posterior P(YES | signals so far) — a martingale by construction.
+def _posterior_logodds_path(outcome: int, L0: float, n_steps: int, delta: float,
+                            rng: np.random.Generator) -> np.ndarray:
+    """The exact Bayesian posterior log-odds of YES — ``sigmoid`` of it is a martingale.
 
-    Prior odds are ``p0/(1-p0)``. Each step delivers a Gaussian signal ``s ~ N(±delta, 1)``
+    Prior log-odds are ``L0``. Each step delivers a Gaussian signal ``s ~ N(±delta, 1)``
     whose mean's sign is the (hidden) outcome; the log-likelihood-ratio increment is exactly
-    ``2*delta*s``, so the posterior log-odds is a random walk ``logit(p0) + Σ 2*delta*s_k``.
+    ``2*delta*s``, so the posterior log-odds is a random walk ``L0 + Σ 2*delta*s_k``.
     Because it is a genuine posterior under the prior the outcome was drawn from, the
     *probability* ``sigmoid(L_t)`` satisfies ``E[p_{t+1} | history_t] = p_t`` — the defining
     property of a fair price. ``delta`` sets how fast information accrues (how far the price
-    has wandered toward its eventual resolution by "now").
+    has wandered toward its eventual resolution by "now"). Clipped at ``±L_MAX`` for float
+    safety only — no probability ever touches 0, 1 or any interior clip bound.
     """
-    L = float(logit(p0))
-    out = np.empty(n_steps + 1)
-    out[0] = p0
     mu = delta if outcome == 1 else -delta
     s = rng.normal(mu, 1.0, size=n_steps)
-    L = L + np.cumsum(2.0 * delta * s)
-    out[1:] = sigmoid(L)
-    return np.clip(out, EPS, 1.0 - EPS)
+    L = np.empty(n_steps + 1)
+    L[0] = L0
+    L[1:] = L0 + np.cumsum(2.0 * delta * s)
+    return np.clip(L, -L_MAX, L_MAX)
 
 
 def _draw_markets(n_markets: int, hist_len: int, days_to_expiry: int,
@@ -98,22 +111,23 @@ def _draw_markets(n_markets: int, hist_len: int, days_to_expiry: int,
     """Shared engine: draw ``n_markets`` posterior-martingale markets, optionally distorted.
 
     ``prior_scale`` spreads the initial fair prices across (0,1) including the tails
-    (``p0 = sigmoid(N(0, prior_scale))``); ``gamma == 1`` leaves the price efficient, while
-    ``gamma > 1`` applies the favorite-longshot wedge to the *traded* price only.
+    (``L0 ~ N(0, prior_scale)``, ``p0 = sigmoid(L0)``). ``gamma == 1`` leaves the traded
+    price efficient; ``gamma < 1`` compresses the fair log-odds toward zero, which prices
+    every longshot *above* its true probability and every favorite *below* it — the
+    favorite-longshot wedge, applied to the *traded* price only (``true_prob`` stays fair).
     """
     rng = np.random.default_rng(seed)
     markets: list[Market] = []
     for _ in range(n_markets):
-        p0 = float(sigmoid(rng.normal(0.0, prior_scale)))
+        L0 = float(rng.normal(0.0, prior_scale))
+        p0 = float(sigmoid(L0))
         outcome = int(rng.random() < p0)
-        fair = _posterior_path(outcome, p0, hist_len, delta, rng)
-        if gamma == 1.0:
-            traded = fair
-        else:
-            traded = np.clip(sigmoid(gamma * logit(fair)), EPS, 1.0 - EPS)
+        L = _posterior_logodds_path(outcome, L0, hist_len, delta, rng)
+        fair = sigmoid(L)
+        traded = fair if gamma == 1.0 else sigmoid(gamma * L)
         markets.append(
             Market(
-                prices=traded,
+                prices=np.asarray(traded, dtype=float),
                 days_to_expiry=days_to_expiry,
                 outcome=outcome,
                 true_prob=float(fair[-1]),
@@ -132,14 +146,17 @@ def efficient_markets(n_markets: int = 2000, hist_len: int = 60,
 
 def biased_markets(n_markets: int = 2000, hist_len: int = 60,
                    days_to_expiry: int = 30, delta: float = 0.15,
-                   prior_scale: float = 1.6, gamma: float = 1.18,
+                   prior_scale: float = 1.6, gamma: float = 0.85,
                    seed: int = 1) -> list[Market]:
-    """A planted favorite-longshot wedge: traded price ≠ fair prob by a known amount.
+    """A planted favorite-longshot wedge: traded price ≠ fair prob, by a known, signed amount.
 
-    ``gamma > 1`` pushes the fair posterior to a more-extreme *traded* price, so low prices
-    are over-stated (longshots trade rich) and high prices under-stated (favorites trade
-    cheap) — a real, exploitable edge of controlled size, used for the machinery-sanity and
-    "could you trade it" beats.
+    ``gamma < 1`` compresses the fair log-odds toward zero, so every low-probability
+    contract trades *above* its true probability (longshots rich — over-bet, as in
+    Thaler-Ziemba) and every high-probability contract trades *below* it (favorites cheap).
+    At the default ``gamma = 0.85``: fair 5.0¢ → trades 7.6¢; fair 95.0¢ → trades 92.4¢.
+    A real, exploitable edge of controlled size and sign, used for the machinery-sanity and
+    "could you trade it" beats. (``gamma > 1`` would plant the *opposite*, anti-Thaler-Ziemba
+    wedge — the sign is unit-tested in ``tests/test_data.py``.)
     """
     return _draw_markets(n_markets, hist_len, days_to_expiry, delta,
                          prior_scale, gamma=gamma, seed=seed)

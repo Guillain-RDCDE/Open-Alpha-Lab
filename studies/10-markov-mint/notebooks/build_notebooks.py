@@ -9,8 +9,9 @@ here, rebuild the skeletons, then execute with nbconvert to embed figures/output
 
 Both notebooks run on a **small, fast** slice of the offline synthetic markets (a martingale
 null + a planted favorite-longshot wedge) so they execute with no network in seconds; the
-**headline numbers** (2,000 markets) live in [`docs/results.md`](../docs/results.md), produced
-by `examples/verify.py`. Both follow the SAME seven desk beats (see ../../../METHODOLOGY.md).
+**headline numbers** (2,000 markets, the article's own 10,000 Monte-Carlo paths) live in
+[`docs/results.md`](../docs/results.md), produced by `examples/verify.py`. Both follow the
+SAME seven desk beats (see ../../../METHODOLOGY.md).
 """
 
 from __future__ import annotations
@@ -35,8 +36,9 @@ from markov_mint import data, robustness
 from markov_mint.markov import MarkovMintSystem
 
 # Small & fast: a martingale NULL (price = fair posterior, no edge exists) and a planted
-# favorite-longshot WEDGE (a real edge of known size). Headline numbers (2,000 markets) are
-# in ../docs/results.md via examples/verify.py.
+# favorite-longshot WEDGE (longshots rich, favorites cheap — a real edge of known size and
+# sign). Headline numbers (2,000 markets, the article's 10,000 Monte-Carlo paths) are in
+# ../docs/results.md via examples/verify.py; here we trim the path count for speed.
 SYS = MarkovMintSystem(n_sims=1500)
 null = data.efficient_markets(n_markets=500, seed=0)
 wedge = data.biased_markets(n_markets=500, seed=1)
@@ -141,27 +143,33 @@ def build_curious():
         code(
             "pnl = robustness.pnl_sim(df, spread=0.02, seed=0)\n"
             "print(f\"win rate           : {pnl['win_rate']:.1%}   (the thread promised 100%)\")\n"
-            "print(f\"terminal bankroll  : {pnl['terminal_bankroll']:.4f}x  after a 2c spread\")\n"
+            "print(f\"terminal bankroll  : {pnl['terminal_bankroll']:.4f}x  net of the 1c entry half-spread\")\n"
             "sweep = robustness.cost_sweep(df, spreads=(0.0, 0.01, 0.02, 0.04, 0.08), seed=0)\n"
             "sweep[['mean_ret', 'win_rate']].round(3)"
         ),
         md(
             "## 5 · The Verdict\n\n"
             "On the full **2,000-market** run (see [`docs/results.md`](../docs/results.md)):\n\n"
-            "- The machine's directional edge is **−0.68 pp** (statistically zero) — the best any "
+            "- The machine's directional edge is **−0.45 pp** (statistically zero) — the best any "
             "method could do on a fair market is **0**. → **Signal: NONE**\n"
-            "- Kelly-sized, the bankroll falls to **0.0003×** (and **0.0017× even at zero cost**), "
-            "because the thread's calibration table caps at 0.958 and so **reflexively shorts every "
-            "favorite** — a guaranteed loser on fair odds. → **Tradability: MIRAGE**\n"
-            "- Win rate **51.6%**. → **'Win every trade': BUSTED**"
+            "- Kelly-sized, the bankroll falls to **0.0003×** net of the 1¢ entry half-spread — "
+            "and to **0.0017× even at zero cost**: compounding coin-flip bets is pure variance "
+            "drag. The thread's calibration table caps at 0.958, so it **reflexively shorts every "
+            "strong favorite** — zero expected value on fair odds, but lottery-ticket variance a "
+            "Kelly book never gets paid for. → **Tradability: MIRAGE**\n"
+            "- Win rate **51.5%**. → **'Win every trade': BUSTED**"
         ),
         md(
             "## 6 · Could You Trade It?\n\n"
-            "Two layers, both fail. The method as written is *worse* than not trading. And if you "
-            "threw the chain away and traded the one real effect it gestures at — the "
-            "favorite-longshot bias — even a trader who **knew the true probabilities** would net "
-            "**−13.6% per trade** after a 2¢ spread. The genuine edge is a few cents; the bid/ask "
-            "eats it first."
+            "We replant the one real effect the thread gestures at — the favorite-longshot bias "
+            "(longshots priced *rich*, favorites *cheap*) — and ask what each player recovers. The "
+            "machine does detect it **gross** (+1.83 pp per trade, via its borrowed calibration "
+            "table, not the chain) and still loses **−22% per trade net**, because it trades "
+            "cost-blind and the ~1.7¢ wedge is thinner than the 1¢ toll on most of its trades. "
+            "Even an oracle that **knows the true probabilities** only nets **+2.3% per trade** — "
+            "and only by refusing every market where the toll dominates the wedge. Perfect "
+            "information beats the spread only by trading selectively; the pipeline has neither "
+            "the information nor the selectivity."
         ),
         md(
             "## 7 · Going Further\n\n"
@@ -266,38 +274,52 @@ def build_quants():
             "      f\"  (~{(1-inert['edge_corr_full_vs_ablated']**2)*100:.0f}% noise)\")"
         ),
         md(
-            "**(d) Why it loses *before* costs — the calibration ceiling.** The table caps at "
-            "0.958, so any richer contract is handed a probability below its price → a forced "
-            "**BUY NO**. On a fair market that shorts favorites; the top price bucket carries the "
-            "most trades and the worst return."
+            "**(d) The calibration ceiling — a built-in reflex to short every strong favorite.** "
+            "The table caps at 0.958, so any richer contract is handed a probability below its "
+            "price → a forced **BUY NO**. On a *fair* market those shorts are zero-EV with "
+            "lottery-ticket variance (a ~2¢ stake lost ~98% of the time), pure uncompensated risk "
+            "for a Kelly book — and on a market where favorites are genuinely *underpriced* (the "
+            "real-world favorite-longshot bias) they point exactly the wrong way. The top price "
+            "bucket carries the most trades and the most extreme return profile."
         ),
         code(
             "print(robustness.calibration_ceiling_effect(df))\n"
             "bucket = robustness.pnl_by_price_bucket(df, spread=0.0)\n"
             "ax = bucket['mean_ret'].plot(kind='bar', color='firebrick', alpha=0.8)\n"
             "ax.axhline(0, color='k', lw=0.8); ax.set_ylabel('gross return / trade')\n"
-            "ax.set_title('Where the machine bleeds: it shorts the favorites (90-100c)'); plt.show()\n"
+            "ax.set_title('Where the risk concentrates: forced shorts of strong favorites (90-100c)'); plt.show()\n"
             "bucket.round(3)"
         ),
         md(
             "## 5 · The Verdict\n\n"
-            "Headline (2,000 markets, results.md): **Signal NONE** (directional edge −0.68 pp, HAC "
-            "*t* = −0.77; oracle 0); **Tradability MIRAGE** (terminal bankroll 0.0003× @2¢, 0.0017× "
-            "@0; per-trade Sharpe −0.12, CI [−0.54, −0.03]); **'Win every trade' BUSTED** (win rate "
-            "51.6%). The raw-edge std falls 19.8 → 2.1 pp over history 20 → 250."
+            "Headline (2,000 markets, results.md): **Signal NONE** (directional edge −0.45 pp, HAC "
+            "*t* = −0.51; oracle 0); **Tradability MIRAGE** (terminal bankroll 0.0003× net of the "
+            "1¢ entry half-spread, 0.0017× at zero cost; per-trade Sharpe < 0); **'Win every "
+            "trade' BUSTED** (win rate 51.5%). The raw-edge std falls ~20 → ~2 pp over history "
+            "20 → 250."
         ),
         md(
             "## 6 · Could You Trade It? — the planted-edge bound\n\n"
-            "On a market with a **real** favorite-longshot wedge, an oracle that knows the true "
-            "probability bounds what's recoverable. The edge is real but thin — and the article's "
-            "machine, even here, does worse than nothing and still ignores its own Markov stage."
+            "On markets with a **real** planted wedge (longshots rich, favorites cheap — the "
+            "Thaler-Ziemba direction), three benchmarks bound what's recoverable. The **machine** "
+            "detects the edge gross — through its calibration table, not the chain (the ablated, "
+            "price-only run captures it too) — and loses it all back to the toll, because it "
+            "trades cost-blind. The **forced oracle** (true side on every market) is the gross "
+            "ceiling but barely breaks even net. Only the **cost-aware oracle** — true "
+            "probabilities *plus* the discipline to pass on toll-dominated markets — keeps a "
+            "positive net mean: perfect information beats the spread only by trading selectively."
         ),
         code(
             "rec = robustness.recover_planted(wedge, SYS, spread=0.02, seed=1)\n"
-            "print(f\"oracle  : {rec['oracle_edge_pp_gross']:+.2f} pp gross  ->  {rec['oracle_mean_ret_net']:+.2%} net of 2c\")\n"
-            "print(f\"machine : {rec['machine_edge_pp_gross']:+.2f} pp gross  (t = {rec['machine_t']:+.2f})\")\n"
-            "print(f\"machine still agrees with its Markov-ablated self {rec['same_direction_machine_vs_ablated']:.0%} of the time\")\n"
-            "print('oracle edge by price bucket (pp):', rec['oracle_edge_by_price_bucket_pp'])"
+            "print(f\"machine          : {rec['machine_edge_pp_gross']:+.2f} pp gross (t = {rec['machine_t']:+.2f})\"\n"
+            "      f\"  ->  {rec['machine_mean_ret_net']:+.2%}/trade net on {rec['machine_n_trades']} trades\")\n"
+            "print(f\"ablated (no chain): {rec['ablated_edge_pp_gross']:+.2f} pp gross (t = {rec['ablated_t']:+.2f})\"\n"
+            "      f\" on {rec['ablated_n_trades']} trades\")\n"
+            "print(f\"forced oracle    : {rec['oracle_forced_edge_pp_gross']:+.2f} pp gross\"\n"
+            "      f\"  ->  {rec['oracle_forced_mean_ret_net']:+.2%}/trade net (pays the toll everywhere)\")\n"
+            "print(f\"cost-aware oracle: trades {rec['oracle_aware_n_trades']}/{len(wedge)}\"\n"
+            "      f\"  ->  {rec['oracle_aware_mean_ret_net']:+.2%}/trade net (t = {rec['oracle_aware_t']:+.2f})\")\n"
+            "print('forced-oracle gross edge by price bucket (pp):', rec['oracle_edge_by_price_bucket_pp'])"
         ),
         md(
             "## 7 · Going Further\n\n"
@@ -305,7 +327,7 @@ def build_quants():
             "catch — but calibration overwrites it).\n"
             "- A **real Polymarket tape** to price the longshot bias net of true spreads.\n"
             "- A **debugged pipeline** (uncapped calibration, YES = true resolution) to show it "
-            "still reduces to 'bet the bias' and dies to the spread — i.e. the bugs aren't why it "
+            "still reduces to 'bet the bias' and dies to the toll — i.e. the bugs aren't why it "
             "fails.\n"
             "- An **adverse-selection maker model** to price the '+1.12% maker rebate' honestly."
         ),

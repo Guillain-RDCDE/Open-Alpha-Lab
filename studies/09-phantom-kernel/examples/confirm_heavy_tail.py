@@ -66,6 +66,7 @@ def _write(tab: pd.DataFrame):
     n_dist_pl = int((tab["dist_winner"] == "power-law").sum())
     size_view = tab[["n_trades", "size_alpha", "size_V", "size_p", "size_winner"]]
     dist_view = tab[["dist_alpha", "dist_V", "dist_p", "dist_winner"]]
+    prov_view = tab[["n_trades", "fingerprint"]]
     with open(OUT, "w", encoding="utf-8") as fh:
         fh.write(f"""# Real-data leg — Study 09 (Phantom-Kernel): the kernel on real order books
 
@@ -73,11 +74,16 @@ def _write(tab: pd.DataFrame):
 Binance USD-M futures archives (aggTrades + bookTicker, **{DAY}**), each trade joined to the
 live best-bid/offer mid via [`examples/fetch_binance.py`](../examples/fetch_binance.py). The
 test is the **Clauset-Shalizi-Newman power-law fit + Vuong likelihood-ratio** ([`tail_test`](../phantom_kernel/estimator.py)),
-not the grid-sensitive binned regression used on the simulator: `V > 0` favours a power-law
-tail over an exponential, and a winner is declared only at `p < 0.05`. Per-market content
-fingerprints below; the `_cache/` parquets are git-ignored, so re-run to reproduce.*
+not the binned regression used descriptively on the simulator: `V > 0` favours a power-law
+tail over an exponential, and a winner is declared only at `p < 0.05`. The `_cache/` parquets
+are git-ignored; the archive day above is still publicly downloadable, and the per-market
+content fingerprints below let a re-run verify it fetched byte-identical data.*
 
-This is the empirical confirmation of the simulator's World B: **do real order flows have the
+| market | trades | fingerprint (quantlab.repro) |
+|---|---:|---|
+{chr(10).join(f"| {s} | {prov_view.loc[s, 'n_trades']:,} | `{prov_view.loc[s, 'fingerprint']}` |" for s in prov_view.index)}
+
+This is the empirical check of the simulator's World B premise: **do real order flows have the
 heavy (power-law) tail that breaks the exponential AS kernel, or the exponential AS assumes?**
 We test two quantities — **order size** (what drives how far an order reaches into the book;
 Gabaix et al. 2003) and **|price - mid|** (the literal price distance the AS kernel lives on).
@@ -96,14 +102,20 @@ Power-law on {n_dist_pl} of {n} markets; the remainder is *inconclusive*, never 
 exponential. The price-distance tail is noisier than the size tail — exactly as expected, since
 a concave (square-root) price-impact law and a deep book attenuate how far large orders push
 the price even when their *size* is heavy-tailed. The heavy tail is unmistakable at its source
-(size) and mostly survives the trip to price distance.
+(size) and mostly survives the trip to price distance. The CSN `dist_alpha` above is a
+*density* exponent; the corresponding survival exponents ({', '.join(f"{float(a) - 1.0:.2f}" for a in tab['dist_alpha'])})
+are the band World B's tail (alpha = 1.7) is drawn from.
 
-## Read
-On real order books the order flow is **heavy-tailed, not exponential** — power-law in size on
-every market tested and in price-distance on most. The exponential `k` of Avellaneda-Stoikov is
-calibrated to a kernel real markets do not have: **the Signal stamp (`NONE`) holds on real data,
-not just in simulation.** (Tail exponents are a single trading day per market; a multi-day /
-multi-venue sweep would tighten the estimates — see the README's beat 7.)
+## Read — and the honest scope of this leg
+On these books, on this day, order flow is **heavy-tailed, not exponential** — power-law in
+size on {n_size_pl} of {n} markets and in price-distance on {n_dist_pl} of {n} (the remainder
+inconclusive, never a clean exponential). **The heavy-tail premise behind the Signal stamp is
+consistent with the real data** — the simulator's World B is built from the empirically
+documented case, not a strawman. The scope is what it is: a **single-day snapshot** (one
+trading day, four mid-cap symbols, one venue), so it supports the premise rather than
+independently re-proving the stamp; the verdict itself is earned on the simulator
+([`results.md`](results.md)). A multi-day / multi-venue sweep would tighten the exponents —
+see the README's beat 7.
 
 > Full study verdict: [README](../README.md). Simulator teardown: [`results.md`](results.md).
 """)

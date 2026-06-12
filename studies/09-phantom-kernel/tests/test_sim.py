@@ -8,9 +8,25 @@ from phantom_kernel import sim
 
 def test_reach_is_nonnegative():
     rng = np.random.default_rng(0)
-    for w in (sim.WORLD_A, sim.WORLD_B):
+    for w in (sim.WORLD_A, sim.WORLD_B, sim.WORLD_B_STRESS):
         r = sim.sample_reach(w, 10_000, rng)
         assert (r >= 0).all()
+
+
+def test_world_b_mean_reach_matches_world_a():
+    """The two worlds (and the stress variant) trade comparable volume: only the tail shape
+    differs, so the kernel test isn't confounded by a different mean reach."""
+    for w in (sim.WORLD_B, sim.WORLD_B_STRESS):
+        assert abs(w.mean_reach() - sim.WORLD_A.mean_reach()) < 0.02
+
+
+def test_world_b_tail_is_inside_the_measured_band():
+    """The central friction world must not be heavier than every tail the study measured on
+    real books (survival exponents ~1.4-3.2, docs/results_real.md); the heavier case is the
+    explicitly labelled stress world."""
+    assert 1.4 <= sim.WORLD_B.pareto_alpha <= 3.2
+    assert sim.WORLD_B_STRESS.pareto_alpha < 1.4
+    assert "stress" in sim.WORLD_B_STRESS.name.lower()
 
 
 def test_world_a_reach_is_exponential(deltas):

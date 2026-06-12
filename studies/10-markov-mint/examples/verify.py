@@ -28,7 +28,9 @@ pd.set_option("display.max_columns", 20)
 pd.set_option("display.float_format", lambda v: f"{v:,.4f}")
 
 OUT = os.path.join(_STUDY, "docs", "results.md")
-SPREAD = 0.02   # 2¢ round-trip bid/ask — generous for a liquid Polymarket contract
+# Full quoted bid/ask width (price units). A taker crosses it ONCE, on entry, so each trade
+# pays the 1¢ half-spread; resolution pays face value (no exit trade, no exit spread).
+SPREAD = 0.02
 
 
 def main():
@@ -53,7 +55,7 @@ def main():
     print("\n[inertness — delete the Markov stage, what changes?]\n", inert)
 
     pnl = robustness.pnl_sim(df_eff, spread=SPREAD, seed=0)
-    print("\n[costed P&L on the null, 2c spread]\n", pnl)
+    print("\n[costed P&L on the null, 2c-wide book]\n", pnl)
 
     ceil = robustness.calibration_ceiling_effect(df_eff)
     print("\n[calibration-ceiling forced-NO effect]\n", ceil)
@@ -69,16 +71,18 @@ def main():
     rec = robustness.recover_planted(bias, system, spread=SPREAD, seed=1)
     print("\n[planted wedge — what's recoverable, and at what cost]\n", rec)
 
-    _write_results(OUT, eff, eff_frame, head, hist, inert, pnl, ceil, bucket, sweep, rec, asof, fp, SPREAD)
+    _write_results(OUT, eff, head, hist, inert, pnl, ceil, bucket, sweep, rec, asof, fp, SPREAD)
     print(f"\nwrote {OUT}")
 
 
-def _write_results(path, eff, eff_frame, head, hist, inert, pnl, ceil, bucket, sweep, rec, asof, fp, spread):
+def _write_results(path, eff, head, hist, inert, pnl, ceil, bucket, sweep, rec, asof, fp, spread):
     def md(df):
         return "```\n" + df.round(4).to_string() + "\n```"
 
     def d(x):
         return {k: (round(v, 4) if isinstance(v, float) else v) for k, v in x.items()}
+
+    rec_main = {k: v for k, v in rec.items() if k != "oracle_edge_by_price_bucket_pp"}
 
     with open(path, "w", encoding="utf-8") as fh:
         fh.write(f"""# Results — Study 10 (Markov-Mint) on controlled synthetic markets
@@ -87,8 +91,10 @@ def _write_results(path, eff, eff_frame, head, hist, inert, pnl, ceil, bucket, s
 **method** claim, so we test it on markets whose truth we set. The **efficient null** is
 {len(eff)} binary markets whose price is the exact Bayesian posterior — a martingale, so the
 price is already the best estimate of the outcome and **no edge exists by construction**. The
-**planted wedge** adds a known favorite-longshot distortion. Bid/ask charged: **{spread*100:.0f}¢
-round-trip**. As-of **{asof}** (synthetic seed, not a feed). Sample fingerprint **`{fp}`**
+**planted wedge** adds a known favorite-longshot distortion (longshots trade rich, favorites
+cheap). Bid/ask quoted **{spread*100:.0f}¢ wide**; a taker crosses it once, on entry, so each
+trade pays the **{spread*50:.0f}¢ half-spread** (resolution pays face value — no exit trade).
+As-of **{asof}** (synthetic seed, not a feed). Sample fingerprint **`{fp}`**
 ({len(eff)} markets).*
 
 > **Read the null first.** Everything below the headline is measured on markets where the price
@@ -105,8 +111,7 @@ machine edge / trade : {head['machine_edge_pp']:+.3f} pp   (HAC t = {head['machi
 oracle  edge / trade : {head['oracle_edge_pp']:+.3f} pp   (no exploitable side exists on the null)
 ```
 
-The machine's directional edge is indistinguishable from zero (and if anything negative): a
-coin flip dressed as a signal.
+The machine's directional edge is indistinguishable from zero: a coin flip dressed as a signal.
 
 ## Noise, not signal — the raw Monte-Carlo "edge" vs history length
 *The chain's only output is ``raw_prob − price``. Real information would not shrink with more
@@ -119,53 +124,78 @@ to ~{hist['std_raw_edge_pp'].iloc[-1]:.0f} pp** as history grows — the signatu
 noise, not information.
 
 ## The chain is a noise *generator*, not a signal — and not inert either
-*Full pipeline vs ``raw_prob := price`` (no chain at all), and vs the pure calibration wedge
-``calibrate(price) − price`` (which never touches the price history).*
+*Full pipeline vs ``raw_prob := price`` (no chain at all). One identity worth knowing: with the
+chain deleted, the system edge **is** the pure calibration wedge ``calibrate(price) − price``,
+exactly — so a single correlation answers both "is the chain just the price?" and "is the edge
+just the table?".*
 
 `{d(inert)}`
 
 The Monte-Carlo does not add signal — it adds **noise that triggers trades**: the full pipeline
 takes a position on **{inert['active_frac_full']:.0%}** of markets versus only **{inert['active_frac_ablated']:.0%}**
 for price-only, and its "edge" correlates just **{inert['edge_corr_full_vs_ablated']:.2f}** with the
-price-only version (≈{(1-inert['edge_corr_full_vs_ablated']**2)*100:.0f}% of it is Monte-Carlo noise).
+price-only version (≈{(1-inert['edge_corr_full_vs_ablated']**2)*100:.0f}% of its variance is Monte-Carlo noise).
 So the chain roughly **triples the bet count** with coin-flip trades.
 
 ## Costed P&L on the null — Kelly-sized bets scored against truth
 `{d(pnl)}`
 
-The bankroll {('grows' if pnl['terminal_bankroll'] > 1 else 'is destroyed')} — **{pnl['terminal_bankroll']:.4f}×**
-after the {spread*100:.0f}¢ spread, and still **{sweep.loc[0.0, 'terminal_bankroll']:.4f}× at *zero*
-cost**. "Win every single trade" needs a 100% win rate; the realized rate is **{pnl['win_rate']:.0%}**.
+No edge means no growth: the bankroll multiplies by **{pnl['terminal_bankroll']:.4f}×**
+over {pnl['n_trades']} quarter-Kelly bets once each pays the {spread*50:.0f}¢ entry toll
+(zero-cost bankroll: **{sweep.loc[0.0, 'terminal_bankroll']:.4f}×** — a martingale book has nothing
+to compound but variance drag). "Win every single trade" needs a 100% win rate; the realized
+rate is **{pnl['win_rate']:.0%}**.
 
-### Why it loses *before* costs — the calibration ceiling
+### The calibration ceiling — a built-in reflex to short every strong favorite
 The article's table tops out at **{ceil['ceiling']:.3f}**, so any contract trading richer is handed a
 calibrated probability *below its own price* — a mechanical **BUY NO**. Here **{ceil['n_above_ceiling']}/{len(eff)}**
-markets price above the ceiling, and the machine shorts **{ceil['frac_above_that_buy_no']:.0%}** of them.
-On a fair market, shorting a strong favorite loses about as often as the favorite wins:
+markets price above the ceiling and the machine shorts **{ceil['frac_above_that_buy_no']:.0%}** of them.
+On a *fair* market those shorts have zero expected value but lottery-ticket risk (stake ~2¢
+against a ~98% chance of losing it all), pure uncompensated variance for a Kelly book — and on
+any market where favorites are *underpriced* (the real-world favorite-longshot bias) they point
+exactly the wrong way, as the planted-wedge section shows. Gross per-trade return by price
+bucket:
 
 {md(bucket)}
 
-The (0.9, 1.0] bucket carries the most trades and the worst return — the system reflexively
-shorts favorites it cannot price.
-
-## Cost sweep — spread → mean net return, win rate, terminal bankroll
+## Cost sweep — spread width → mean net return, win rate, terminal bankroll
 {md(sweep)}
 
 ## Planted favorite-longshot wedge — what's actually recoverable
-*A market where a real edge exists. The **oracle** knows the true probability; the **machine**
-runs the article's pipeline; "same-direction vs ablated" repeats the inertness check.*
+*Markets where a real edge exists: longshots trade **rich**, favorites **cheap** (the
+Thaler-Ziemba direction; at γ = 0.85 a fair 5.0¢ longshot trades at 7.6¢). Benchmarks, all
+scored against the realized outcome — ``*_pp`` are probability points captured per trade,
+``*_ret`` are returns on capital staked net of the {spread*50:.0f}¢ entry toll:*
 
-`{d({k: v for k, v in rec.items() if k != 'oracle_edge_by_price_bucket_pp'})}`
+`{d(rec_main)}`
 
-Oracle gross edge by price bucket (pp) — it lives in the moderate-longshot band, not the extremes:
+Forced-oracle gross edge by price bucket (pp):
 `{rec['oracle_edge_by_price_bucket_pp']}`
 
-Two findings: (1) the real edge an oracle could capture is **+{rec['oracle_edge_pp_gross']:.2f} pp gross**
-but **{rec['oracle_mean_ret_net']:+.2%} per trade *net* of the {spread*100:.0f}¢ spread** — even perfect
-information cannot beat a normal bid/ask. (2) The machine does **worse than nothing**
-(**{rec['machine_edge_pp_gross']:+.2f} pp**, HAC t = {rec['machine_t']:+.2f}): it cannot find the edge
-sitting in front of it, and still agrees with its Markov-ablated self {rec['same_direction_machine_vs_ablated']:.0%}
-of the time — the chain adds nothing even when there is something to add.
+Three findings:
+
+1. **The machine does detect the planted wedge** — **{rec['machine_edge_pp_gross']:+.2f} pp gross**
+per trade (HAC t = {rec['machine_t']:+.2f}, {'clearing' if abs(rec['machine_t']) > 2 else 'short of'}
+the pre-registered |t| > 2 bar) — but not through its Markov chain. The ablated (price-only)
+pipeline only ever trades the >0.958 ceiling band, where the table's forced-NO points *against*
+the wedge (favorites are cheap here): it captures **{rec['ablated_edge_pp_gross']:+.2f} pp**
+(t = {rec['ablated_t']:+.2f}) on its {rec['ablated_n_trades']} trades. The calibration table is
+the signal, its ceiling is the bug, and the Monte-Carlo noise is a randomizer that happens to
+spread bets into the band where the table's sign is right.
+2. **Costs gate everything.** Net of the {spread*50:.0f}¢ entry toll the machine's book returns
+**{rec['machine_mean_ret_net']:+.1%} per trade** on {rec['machine_n_trades']} cost-blind trades
+and the quarter-Kelly bankroll ends at **{rec['machine_terminal_bankroll_net']:.3f}×** — gross
+detection, net destruction.
+3. **Perfect information beats the toll only barely, and only with discipline.** The planted
+wedge averages ~1.7¢ against a 1¢ entry toll. A cost-blind oracle forced through all
+{len(eff)} markets nets **{rec['oracle_forced_mean_ret_net']:+.2%}** per trade
+({rec['oracle_forced_edge_pp_gross']:+.2f} pp gross) — barely above water, because on a large
+share of markets the wedge is thinner than the toll. A **cost-aware** oracle that passes on
+exactly those markets trades {rec['oracle_aware_n_trades']}/{len(eff)}
+({rec['oracle_aware_frac']:.0%}) and nets **{rec['oracle_aware_mean_ret_net']:+.2%} per trade**
+— and even that, with the true probability in hand, carries HAC t = {rec['oracle_aware_t']:+.2f}
+on {len(eff)} markets. That selectivity — knowing the truth *and* refusing the toll-dominated
+trades — is the ceiling on tradability, and the article's pipeline has neither ingredient.
 """)
 
 

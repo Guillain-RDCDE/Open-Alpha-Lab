@@ -40,8 +40,10 @@ def _sim_fingerprint() -> str:
     deltas = ex.default_deltas()
     ca = sim.fill_counts(sim.WORLD_A, deltas, n_orders=400_000, seed=SEED)
     cb = sim.fill_counts(sim.WORLD_B, deltas, n_orders=400_000, seed=SEED)
+    cs = sim.fill_counts(sim.WORLD_B_STRESS, deltas, n_orders=400_000, seed=SEED)
     idx = pd.bdate_range("2000-01-03", periods=len(deltas))
-    df = pd.DataFrame({"delta": deltas, "counts_A": ca, "counts_B": cb}, index=idx)
+    df = pd.DataFrame({"delta": deltas, "counts_A": ca, "counts_B": cb,
+                       "counts_B_stress": cs}, index=idx)
     return fingerprint(df, round_dp=4)
 
 
@@ -53,6 +55,7 @@ def main():
     tB = ex.tournament(sim.WORLD_B, seed=SEED)
     msA = ex.tournament_multiseed(sim.WORLD_A)
     msB = ex.tournament_multiseed(sim.WORLD_B)
+    abl = ex.k_ablation(sim.WORLD_B)
     fp = _sim_fingerprint()
 
     print(f"sim fingerprint: {fp}")
@@ -60,18 +63,24 @@ def main():
     print("\n[kernel goodness-of-fit]\n", gof.to_string())
     print("\n[static-k spread error]")
     for k in ("k_true", "k_recovered_per_regime", "k_pooled_static",
-              "spread_pct_error_per_regime", "max_abs_spread_pct_error"):
+              "spread_pct_error_per_regime", "max_abs_spread_pct_error", "bound_T1"):
         print(f"  {k}: {kins[k]}")
     print("\n[tournament World A]  k_as=%.3f half=%.3f\n" % (tA.attrs["k_as"], tA.attrs["half_spread"]), tA.to_string())
     print("\n[tournament World B]  k_as=%.3f half=%.3f\n" % (tB.attrs["k_as"], tB.attrs["half_spread"]), tB.to_string())
+    print("\n[k-ablation, World B]  k_fit=%.4f\n" % abl.attrs["k_fit"], abl.to_string())
 
-    _write(OUT, rec, gof, kins, tA, tB, msA, msB, fp)
+    _write(OUT, rec, gof, kins, tA, tB, msA, msB, abl, fp)
     print(f"\nwrote {OUT}")
 
 
-def _write(path, rec, gof, kins, tA, tB, msA, msB, fp):
+def _write(path, rec, gof, kins, tA, tB, msA, msB, abl, fp):
     def md(df):
         return "```\n" + df.to_string() + "\n```"
+
+    B = sim.WORLD_B.name
+    BS = sim.WORLD_B_STRESS.name
+    abl_cols = [c for c in abl.columns if c.startswith("sharpe")]
+    abl_tex, abl_fit = (round(abl.loc["mean", c], 3) for c in abl_cols)
 
     with open(path, "w", encoding="utf-8") as fh:
         fh.write(f"""# Results — Study 09 (Phantom-Kernel) on the seed-fixed simulator
@@ -81,42 +90,70 @@ basis is a transparent order-flow simulator (see the desk note in
 [`phantom_kernel/sim.py`](../phantom_kernel/sim.py)), not cached market data: Avellaneda-
 Stoikov is a theorem about a model world, so we test it in two worlds — **A (textbook)** where
 the exponential-arrival assumption holds, and **B (frictions)** with heavy-tailed (power-law)
-order reach, price jumps, stochastic vol and informed flow. Seed **{SEED}**. Simulated-input
-fingerprint **`{fp}`**. Reach grid: 80 points, delta in [0.25, 40].*
+order reach, price jumps, stochastic vol and informed flow. World B's tail exponent (1.7) sits
+inside the band this study measured on real books (survival exponents ~1.4-3.2,
+[`results_real.md`](results_real.md)); a heavier alpha = 1.2 rides along as a labelled stress
+case. Seed **{SEED}**. Simulated-input fingerprint **`{fp}`**. Reach grid: 80 points, delta in
+[0.25, 40].*
+
+> **Restated.** Two headline numbers in earlier versions of this doc were quoted from invalid
+> or worst-case parameterisations and are restated here. (1) The old "+1.26M AIC gap" compared
+> Poisson AICs across 80 *cumulative* fill counts of the same orders — nested counts are
+> neither independent nor Poisson, so that gap scaled with the sample size and its magnitude
+> was meaningless (the direction was right). H1 is now scored by a per-observation likelihood
+> test (each order counted once) plus Vuong's statistic. (2) The old "±163% spread error" was
+> computed at horizon T = 1, where the k-term is essentially the whole spread; the headline is
+> now quoted at the tournament's own session (T = 600) with T = 1 kept as a labelled bound.
+> Both restated results point the same way; the magnitudes are now honest.
 
 > **Machinery sanity first.** On World A the estimator recovers the planted arrival rate
 > **k = {rec['k_recovered']}** (true {rec['k_true']}, error {rec['rel_error_pct']}%) with
-> R^2 = **{rec['r2']}**, and the exponential kernel wins goodness-of-fit decisively. So the
-> code measures the kernel correctly *where the assumption is true* — whatever breaks in
-> World B below is the assumption failing, not the estimator.
+> R^2 = **{rec['r2']}**, and the per-order likelihood test crowns the exponential decisively
+> (V = {gof.loc[sim.WORLD_A.name, 'V']}). So the code measures the kernel correctly *where the
+> assumption is true* — whatever breaks in World B below is the assumption failing, not the
+> estimator.
 
 ## H1 — is the arrival kernel exponential? (the load-bearing assumption)
-*Fit `lambda(delta) = A e^{{-k delta}}` (AS) against a power law `A' delta^{{-alpha}}` on each
-world's fill counts. `aic_gap > 0` => the power law is preferred (the exponential is rejected).*
+*The verdict test is a per-observation likelihood comparison on the raw execution depths —
+each order contributes exactly once, so the depths are iid under either hypothesis: exponential
+(MLE rate, 1 parameter, the AS kernel) vs power law (Pareto, MLE scale + exponent, 2
+parameters), scored by AIC (`aic_gap > 0` => power law preferred) and Vuong's normalised
+likelihood ratio (`V`; winner declared at p < 0.05). `r2_exp`/`r2_pow` are the descriptive
+binned fits; `k_exp` is the exponential rate a practitioner would actually plug into AS.*
 
 {md(gof)}
 
-In World A the exponential is essentially perfect (R^2 = 1.0) and wins by a vast AIC margin.
-In World B — heavy-tailed reach, the empirically documented case — the **power law wins**
-(R^2 {gof.loc[sim.WORLD_B.name, 'r2_pow']} vs {gof.loc[sim.WORLD_B.name, 'r2_exp']} for the
-exponential; AIC gap **+{gof.loc[sim.WORLD_B.name, 'aic_gap']:,}**). The exponential `k` you
-would fit is **{gof.loc[sim.WORLD_B.name, 'k_exp']}** — a number with no stable meaning.
+In World A the exponential is essentially perfect (binned R^2 = 1.0) and the per-order test
+crowns it by a huge margin. In World B — heavy-tailed reach with the tail exponent *inside the
+measured band* — the **power law wins**: AIC gap **+{gof.loc[B, 'aic_gap']:,}** over 400,000
+orders ({gof.loc[B, 'll_per_order']} nats per order), Vuong **V = +{gof.loc[B, 'V']}** (p
+beyond machine precision), and the MLE recovers the planted tail exponent
+({gof.loc[B, 'alpha_mle']} vs true 1.7). The exponential `k` you would fit is
+**{gof.loc[B, 'k_exp']}** — a number with no stable meaning. The stress row (alpha = 1.2,
+heavier than any tail the study measured) says the same thing louder, and is labelled as the
+stress case it is.
 
 ## H1 (cont.) — the phantom parameter: a static k while the truth drifts 4x
 *Four intraday regimes, each genuinely exponential with its own k spanning 4x. Each regime's
 k is recovered exactly; base AS instead fits one **static** k over the session. The gap is
-translated into the error in the AS **optimal half-spread** the static fit would quote.*
+translated into the error in the AS **optimal half-spread** the static fit would quote — at
+the tournament's own session (T = 600, evaluated mid-session), the configuration every other
+number in this study trades at.*
 
 ```
-k_true (per regime)        : {kins['k_true']}
-k recovered (per regime)   : {kins['k_recovered_per_regime']}
-k_pooled (static AS fit)   : {kins['k_pooled_static']}
-spread % error per regime  : {kins['spread_pct_error_per_regime']}
-max |spread % error|       : {kins['max_abs_spread_pct_error']}
+k_true (per regime)               : {kins['k_true']}
+k recovered (per regime)          : {kins['k_recovered_per_regime']}
+k_pooled (static AS fit)          : {kins['k_pooled_static']}
+spread % error per regime (T=600) : {kins['spread_pct_error_per_regime']}
+max |spread % error|      (T=600) : {kins['max_abs_spread_pct_error']}
+worst case at T=1 (upper bound)   : {kins['bound_T1']['spread_pct_error_per_regime']} (max {kins['bound_T1']['max_abs_spread_pct_error']})
 ```
 
 A single static `k` mis-prices the celebrated "optimal" spread by up to
-**{kins['max_abs_spread_pct_error']}%** across the session.
+**{kins['max_abs_spread_pct_error']}%** at the study's own trading horizon. (At T = 1, where
+the k-term is essentially the whole spread, the same mis-calibration reaches
+±{kins['bound_T1']['max_abs_spread_pct_error']}% — the worst case by construction, quoted only
+as a bound.)
 
 ## H2 — the market-making tournament (is the AS skew worth it?)
 *One realised market per world; four quoters face the identical exogenous order flow. The
@@ -144,6 +181,20 @@ corrupts spread *width*. Meanwhile the article's recommended "rolling realised-v
 because naive realised vol is jump-contaminated and blows the spread out to where almost
 nothing fills ({tB.loc['AS (adaptive vol)', 'n_fills']} fills).
 
+## H2 (cont.) — the k-ablation: is AS's World-B win the kernel calibration, or the skew?
+*The decisive experiment for the MISATTRIBUTED stamp: same AS quoter, same World-B flow, five
+seeds — only `k` changes, between the two calibrations the study itself puts on the table: the
+textbook **0.6** and the phantom **{abl.attrs['k_fit']:.3f}** fitted on World B's own fills (a
+~2.2x move in the arrival parameter, hence a materially different quoted width).*
+
+{md(abl)}
+
+The risk-adjusted P&L **does not move**: mean Sharpe **{abl_tex}** (textbook k) vs
+**{abl_fit}** (fitted phantom k). A 2.2x error in the model's load-bearing parameter changes
+the outcome by roughly nothing — direct proof that AS's World-B performance comes from the
+**k-free inventory skew**, not from the kernel-calibrated spread width the formula is famous
+for.
+
 ### Seed-robustness — P&L Sharpe per quoter across 5 seeds
 World A:
 {md(msA)}
@@ -153,14 +204,18 @@ World B:
 
 ## Verdict (earned on the simulator + the heavy-tail literature)
 - **Signal (the kernel `lambda = A e^{{-k delta}}`): `NONE`** — rejected under heavy-tailed
-  reach (power law wins, R^2 {gof.loc[sim.WORLD_B.name, 'r2_pow']} vs
-  {gof.loc[sim.WORLD_B.name, 'r2_exp']}); `k` is a phantom (4x drift -> up to
-  {kins['max_abs_spread_pct_error']}% spread error).
+  reach drawn from the measured band: the per-order likelihood test prefers the power law by
+  AIC **+{gof.loc[B, 'aic_gap']:,}** over 400k orders ({gof.loc[B, 'll_per_order']} nats/order,
+  Vuong V = +{gof.loc[B, 'V']}); `k` is a phantom (4x drift -> up to
+  {kins['max_abs_spread_pct_error']}% spread error at the study's own horizon;
+  {kins['bound_T1']['max_abs_spread_pct_error']}% at the T=1 bound).
 - **Tradability (does skipping AS leave money on the table?): `FRAGILE`** — a trivial clamp
   beats AS on risk-adjusted P&L whenever inventory isn't dangerous; the genuine benefit is
   narrow and lives in the (k-free) skew.
-- **The famous "optimal spread": `MISATTRIBUTED`** — its k-dependent term rests on the false
-  kernel and is not where the value is; the production "rolling-vol" fix backfires under jumps.
+- **The famous "optimal spread": `MISATTRIBUTED`** — proven by ablation: swapping the textbook
+  k (0.6) for the phantom ({abl.attrs['k_fit']:.3f}) leaves World-B Sharpe unchanged
+  ({abl_tex} vs {abl_fit}); the value lives in the skew, and the production "rolling-vol" fix
+  backfires under jumps.
 """)
 
 

@@ -35,8 +35,11 @@ Two worlds
   ``A e^{-k delta}``), constant volatility, no jumps, all flow uninformed. The model *should*
   estimate cleanly and the skew *should* pay here. If it doesn't, the code is wrong.
 * :data:`WORLD_B` — the same market with the frictions the paper sets aside: **heavy-tailed
-  (Pareto) reach**, **price jumps**, **stochastic volatility**, and a fraction of **informed**
-  orders that move the mid against whoever just filled them (adverse selection).
+  (Pareto) reach** with a tail exponent inside the band measured on real books in this study,
+  **price jumps**, **stochastic volatility**, and a fraction of **informed** orders that move
+  the mid against whoever just filled them (adverse selection).
+* :data:`WORLD_B_STRESS` — World B with the reach tail pushed past anything the study
+  measured (alpha = 1.2): a labelled stress case for the kernel test, not the central claim.
 
 Used by :mod:`phantom_kernel.estimator` (which only needs the reach/fill side) and
 :mod:`phantom_kernel.strategies` (which needs the full mid path + order stream).
@@ -102,11 +105,33 @@ WORLD_A = World(
 
 # The friction world: heavy-tailed reach (power-law kernel), jumps, stochastic vol, and
 # informed flow. Mean reach is matched to WORLD_A (1/0.6 ~ 1.67) so the two markets trade at a
-# comparable *volume* and only the *shape* of the kernel differs. With alpha = 1.2 the reach
-# has infinite variance — the occasional book-sweeping order the exponential law cannot
-# produce, and the documented reality of market-order size (Gopikrishnan 2000, Gabaix 2003).
+# comparable *volume* and only the *shape* of the kernel differs. The tail exponent alpha here
+# is the *survival* exponent, i.e. one less than the Clauset-style density exponent the
+# real-data leg reports: the |price - mid| tails measured on the study's own Binance books
+# (docs/results_real.md) span survival exponents ~1.4-3.2, so alpha = 1.7 sits inside the
+# measured band rather than below it. It still has infinite variance (alpha < 2) — the
+# occasional book-sweeping order the exponential law cannot produce, and the documented
+# reality of market-order size (Gopikrishnan 2000, Gabaix 2003).
 WORLD_B = World(
     name="B (frictions)",
+    arrival_rate=40.0,
+    reach_kind="pareto",
+    pareto_alpha=1.7,
+    pareto_xm=0.686,                # mean reach = 0.686 * (1 + 1/0.7) = 1.666 ~ 1/0.6 (WORLD_A)
+    sigma=0.4,
+    jump_rate=2.0,
+    jump_size=1.2,
+    vol_of_vol=0.6,
+    informed_frac=0.30,
+    informed_edge=0.9,
+    informed_reach_boost=2.5,
+)
+
+# Stress variant of the reach law only: alpha = 1.2 is heavier than every tail this study
+# measured on real books (survival exponents ~1.4-3.2), so it is kept as a labelled stress
+# case for the kernel test — not the central claim. Same matched mean reach.
+WORLD_B_STRESS = World(
+    name="B-stress (alpha=1.2)",
     arrival_rate=40.0,
     reach_kind="pareto",
     pareto_alpha=1.2,

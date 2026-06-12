@@ -49,10 +49,11 @@ def build_transition_matrix(prices, n_states: int = 10) -> np.ndarray:
 
 
 def monte_carlo(T: np.ndarray, start_state: int, days: int = 30,
-                n_sims: int = 5000, rng: np.random.Generator | None = None) -> float:
+                n_sims: int = 10_000, rng: np.random.Generator | None = None) -> float:
     """Random-walk ``n_sims`` paths through ``T`` for ``days`` steps; return the YES fraction.
 
-    Vectorised but semantically identical to the article's per-path loop: at each step every
+    ``n_sims`` defaults to 10,000 — the article's own path count, kept so the port stays
+    verbatim. Vectorised but semantically identical to the article's per-path loop: at each step every
     live path samples its next state from its current row of ``T`` (inverse-CDF sampling). A
     path counts as YES if it ends in the **upper half of the grid** — the author's definition,
     preserved. Empty rows (states never observed) are made absorbing, the natural limit of the
@@ -113,7 +114,7 @@ class MarkovMintSystem:
     downstream decisions barely move, the Markov apparatus was inert.
     """
 
-    def __init__(self, n_states: int = 10, n_sims: int = 5000, edge_threshold: float = 0.03,
+    def __init__(self, n_states: int = 10, n_sims: int = 10_000, edge_threshold: float = 0.03,
                  kelly_mult: float = 0.25):
         self.n_states = n_states
         self.n_sims = n_sims

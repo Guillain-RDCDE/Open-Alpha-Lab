@@ -10,7 +10,8 @@ Three questions, in the desk's order:
 3. **Is the skew alpha or beta (H2)?** The market-making tournament (:func:`tournament`) in
    both worlds: AS vs adaptive-AS vs a skew-free symmetric quoter vs a brainless inventory
    clamp. The gap between AS and the *clamp* is the part of the model that isn't just "don't
-   hold inventory".
+   hold inventory". The :func:`k_ablation` then swaps only ``k`` between its two calibrations
+   to prove where the World-B win lives — the experiment behind the MISATTRIBUTED stamp.
 
 Everything is deterministic given the seeds. The numbers these functions print are the
 numbers in ``docs/results.md`` and the README.
@@ -67,23 +68,33 @@ def estimator_recovery(world: sim.World = sim.WORLD_A, n_orders: int = 400_000, 
 # --------------------------------------------------------------------------- #
 # 2a. Is the kernel exponential at all? (H1)
 # --------------------------------------------------------------------------- #
-def kernel_gof_table(n_orders: int = 400_000, seed: int = 0) -> pd.DataFrame:
-    """Exponential-vs-power-law fit on each world's fill kernel.
+def kernel_gof_table(n_orders: int = 400_000, seed: int = 0, worlds=None) -> pd.DataFrame:
+    """Exponential-vs-power-law on each world's order reach.
 
     WORLD_A should crown the exponential (it is one); WORLD_B's heavy-tailed reach should make
-    the power law win, i.e. the AS form is the wrong shape — H1 falsified.
+    the power law win, i.e. the AS form is the wrong shape — H1 falsified. WORLD_B_STRESS
+    (alpha = 1.2, heavier than anything the study measured on real books) rides along as a
+    labelled stress row. The verdict columns (``aic_gap``, ``V``, ``winner``) come from the
+    per-observation likelihood test (each order counted once); the R^2 columns are the
+    descriptive binned fits.
     """
     deltas = default_deltas()
+    if worlds is None:
+        worlds = (sim.WORLD_A, sim.WORLD_B, sim.WORLD_B_STRESS)
     rows = {}
-    for w in (sim.WORLD_A, sim.WORLD_B):
+    for w in worlds:
+        # The same draw that generates fill_counts(w, ..., seed): one reach per order.
+        reach = sim.sample_reach(w, n_orders, np.random.default_rng(seed))
         counts = sim.fill_counts(w, deltas, n_orders=n_orders, seed=seed)
-        g = goodness_of_fit(deltas, counts)
+        g = goodness_of_fit(reach, deltas, counts)
         rows[w.name] = {
             "r2_exp": round(g["r2_exp"], 4),
             "r2_pow": round(g["r2_pow"], 4),
             "k_exp": round(g["k_exp"], 4),
-            "alpha_pow": round(g["alpha_pow"], 4),
-            "aic_gap": round(g["aic_gap"], 1),     # >0 => power-law preferred
+            "alpha_mle": round(g["alpha_mle"], 4),
+            "aic_gap": round(g["aic_gap"], 1),     # >0 => power-law preferred (per-order test)
+            "ll_per_order": round(g["ll_per_obs"], 4),
+            "V": round(g["V"], 1),
             "winner": g["winner"],
         }
     return pd.DataFrame(rows).T
@@ -92,11 +103,30 @@ def kernel_gof_table(n_orders: int = 400_000, seed: int = 0) -> pd.DataFrame:
 # --------------------------------------------------------------------------- #
 # 2b. The phantom parameter — a static k while the true one drifts (H1)
 # --------------------------------------------------------------------------- #
-def k_instability(seed: int = 0) -> dict:
-    """Four intraday regimes with k spanning 4x; the static fit's spread error per regime."""
+def k_instability(seed: int = 0, n_steps: int = 60_000, dt: float = 0.01) -> dict:
+    """Four intraday regimes with k spanning 4x; the static fit's spread error per regime.
+
+    Two parameterisations of the *same* mis-calibration, because the spread error depends on
+    how much non-k spread surrounds the k-term:
+
+    * **headline** — the tournament's own session (``T = n_steps * dt``), evaluated
+      mid-session, i.e. the configuration every other number in this study trades at;
+    * **bound_T1** — ``T = 1``, where the k-term is essentially the whole spread. This is the
+      worst case by construction (it maximises the k-error's share) and is quoted only as a
+      labelled upper bound.
+    """
     deltas = default_deltas()
     k_values = np.array([0.3, 0.6, 0.9, 1.2])   # 4x spread, the article's admitted range
-    return static_k_spread_error(k_values, deltas, n_orders=200_000, seed=seed)
+    T = n_steps * dt
+    headline = static_k_spread_error(k_values, deltas, n_orders=200_000, seed=seed,
+                                     horizon=T, eval_t=T / 2.0)
+    bound = static_k_spread_error(k_values, deltas, n_orders=200_000, seed=seed,
+                                  horizon=1.0, eval_t=0.0)
+    out = dict(headline)            # headline keys at top level (back-compatible shape)
+    out["bound_T1"] = {k: bound[k] for k in
+                       ("horizon", "eval_t", "spread_pct_error_per_regime",
+                        "max_abs_spread_pct_error")}
+    return out
 
 
 # --------------------------------------------------------------------------- #
@@ -175,6 +205,52 @@ def tournament_multiseed(world: sim.World, seeds=(0, 1, 2, 3, 4), **kw) -> pd.Da
     rows = [tournament(world, seed=s, **kw)["pnl_sharpe"] for s in seeds]
     df = pd.DataFrame(rows, index=[f"seed{s}" for s in seeds])
     df.loc["mean"] = df.mean()
+    return df
+
+
+# --------------------------------------------------------------------------- #
+# 3b. The k-ablation — the experiment the MISATTRIBUTED stamp rests on
+# --------------------------------------------------------------------------- #
+def k_ablation(
+    world: sim.World = sim.WORLD_B,
+    k_textbook: float = 0.6,
+    seeds=(0, 1, 2, 3, 4),
+    n_steps: int = 60_000,
+    dt: float = 0.01,
+    gamma: float = 0.1,
+    base_seed: int = 0,
+) -> pd.DataFrame:
+    """Same AS machinery, same World-B flow — only ``k`` changes. Identical everything else.
+
+    The two values are the two calibrations the study itself puts on the table: the textbook
+    ``k`` (0.6, the rate World A is built on) and the phantom ``k`` a practitioner would fit
+    on World B's own fills. If the closed-form spread width were where AS's World-B win lives,
+    swapping one for the other (a ~2x move in the arrival parameter, hence a materially
+    different quoted width) would move the P&L materially. If the win lives in the k-free
+    inventory skew, it barely moves. This is the ablation behind the MISATTRIBUTED stamp.
+    """
+    k_fit = _k_for_as(world, base_seed)
+    labels = {f"k={k_textbook:.3f} (textbook)": k_textbook,
+              f"k={k_fit:.3f} (fitted on B)": k_fit}
+    T = n_steps * dt
+    rows = {}
+    for s in seeds:
+        flow = sim.simulate_flow(world, n_steps=n_steps, dt=dt, seed=s)
+        row = {}
+        for label, k in labels.items():
+            led = run_market(flow, ASQuoter(gamma, world.sigma, k, T), T=T)
+            m = metrics(led)
+            sharpe = m["sharpe_step"]
+            if sharpe_ci_bootstrap is not None:
+                ci = sharpe_ci_bootstrap(daily_returns(led), n_boot=2000, periods_per_year=1, seed=s)
+                sharpe = ci["sharpe"]
+            row[f"sharpe {label}"] = round(sharpe, 3)
+            row[f"pnl {label}"] = round(m["terminal_pnl"], 1)
+        rows[f"seed{s}"] = row
+    df = pd.DataFrame(rows).T
+    df.loc["mean"] = df.mean()
+    df.attrs["k_textbook"] = k_textbook
+    df.attrs["k_fit"] = k_fit
     return df
 
 

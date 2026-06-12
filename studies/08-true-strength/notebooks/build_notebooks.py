@@ -9,11 +9,12 @@ rebuild the skeletons, then execute with nbconvert to embed figures/outputs.
 
 The executed path runs on the **offline synthetic universe** — trend/cycle names hidden among
 random walks — because the cached real parquets are git-ignored and the desk's reproducible
-core must run with no network. The synthetic is where the machinery is *validated* (the three
-oscillators agree on planted structure, less on noise); the **NONE / MIRAGE / BUSTED real
-verdict** is quoted from [`docs/results.md`](../docs/results.md), produced by
-`examples/verify_real.py`. Both notebooks follow the SAME seven desk beats (see
-../../../METHODOLOGY.md).
+core must run with no network. The synthetic is the **control**, and it proves something
+sharper than "the machinery works": the TSI/MACD level collinearity and the spanning R² are
+about as high on *pure noise* as on planted structure — the co-movement is a property of the
+filters, not of any market. The **NONE / MIRAGE / BUSTED real verdict** is quoted from
+[`docs/results.md`](../docs/results.md), produced by `examples/verify_real.py`. Both
+notebooks follow the SAME seven desk beats (see ../../../METHODOLOGY.md).
 """
 
 from __future__ import annotations
@@ -36,9 +37,9 @@ import numpy as np, pandas as pd
 pd.set_option("display.float_format", lambda v: f"{v:,.4f}")
 from true_strength import data, oscillators as osc, backtest, collinearity
 
-# Offline synthetic universe: trend/cycle names among random walks. This VALIDATES the
-# machinery (oscillators agree where structure is planted). The real verdict (a liquid
-# 174-name basket: NONE / MIRAGE / BUSTED) is in ../docs/results.md via verify_real.py.
+# Offline synthetic universe: trend/cycle names among random walks. This is the CONTROL
+# (the collinearity is as high on pure noise as on structure). The real verdict (a liquid
+# 177-name basket: NONE / MIRAGE / BUSTED) is in ../docs/results.md via verify_real.py.
 frames, truth = data.synthetic_universe(seed=0)
 structured = {t.ticker for t in truth}
 print(f"{len(frames)} names, {len(structured)} with planted momentum structure")
@@ -64,7 +65,7 @@ def build_curious():
            "![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-c0392b?style=flat-square)\n"
            "![Truer?: Busted](https://img.shields.io/badge/Truer-Busted-8b949e?style=flat-square)\n\n"
            "No maths needed: we put the three indicators side by side and ask whether they ever "
-           "disagree. On the real 174-name run (`../docs/results.md`) the TSI is **84% reconstructable** "
+           "disagree. On the real 177-name run (`../docs/results.md`) the TSI is **84% reconstructable** "
            "from the MACD and RSI, takes the **same position as the MACD 99.4%** of the time, and its "
            "equity curve correlates **0.994** with it. Three names, one trade.\n\n"
            "> 📓 **This is the plain-language layer.** Want the statistics, the microstructure and the "
@@ -100,11 +101,16 @@ def build_curious():
            "Four escalating questions: do the three move together (correlation)? does the TSI add "
            "anything beyond the other two (a spanning test)? do they take the same trade (position "
            "agreement)? and is any standalone profit just the reward for being long stocks, not the "
-           "oscillator? First, a sanity check that the machinery works where we *know* the answer."),
+           "oscillator? First, the control — run the comparison where we *know* the answer, on "
+           "planted trends **and on pure random walks**."),
         code("rec = collinearity.structure_recall(frames, truth)\n"
-             "print('oscillators agree on structured names:', round(rec['agree_structured'], 3))\n"
-             "print('oscillators agree on noise names:     ', round(rec['agree_noise'], 3))\n"
-             "# They agree more where real momentum structure is planted — the machinery is sound."),
+             "print('positions agree on structured names:', round(rec['agree_structured'], 3))\n"
+             "print('positions agree on noise names:     ', round(rec['agree_noise'], 3))\n"
+             "print('TSI~MACD correlation on structure:  ', round(rec['corr_tsi_macd_structured'], 3))\n"
+             "print('TSI~MACD correlation on pure noise: ', round(rec['corr_tsi_macd_noise'], 3))\n"
+             "# The trades line up a bit more where a trend is planted — but the LEVEL collinearity\n"
+             "# is just as high on pure noise: three smoothings of the same one-bar price change\n"
+             "# co-move on any input. The TSI/MACD near-identity is built into the filters."),
 
         md("## 4 · The Teardown\n\n"
            "On the structured names, how correlated are the three? And how much of the TSI is just "
@@ -119,11 +125,13 @@ def build_curious():
              "print(f'TSI and MACD take the same long/flat stance {agree:.1%} of days on {name}')"),
 
         md("## 5 · The Verdict\n\n"
-           "On the real 174-name universe (`../docs/results.md`):\n\n"
+           "On the real 177-name universe (`../docs/results.md`):\n\n"
            "- **Signal — distinct? `NONE`.** TSI 84% spanned by MACD+RSI; same position as the MACD "
-           "99.4% of days; equity-curve correlation 0.994.\n"
-           "- **Tradability — a distinct edge? `MIRAGE`.** The crossover's 0.61 Sharpe is the reward "
-           "for being long stocks ~half the time; strip that bias and the TSI's timing Sharpe is 0.05.\n"
+           "99.4% of days; equity-curve correlation 0.994 — and the control shows the collinearity "
+           "is built into the filters (spanning R² 0.86 on pure random walks).\n"
+           "- **Tradability — a distinct edge? `MIRAGE`.** The crossover's 0.63 Sharpe is the reward "
+           "for being long stocks ~half the time; run the same rule long/short and it earns −0.42 "
+           "(the zero-cross book +0.05).\n"
            "- **'Truer' than MACD/RSI? `BUSTED`.** Three names, one trade."),
 
         md("## 6 · Could You Trade It?\n\n"
@@ -132,9 +140,11 @@ def build_curious():
            "one more knob to tune."),
 
         md("## 7 · Going Further\n\n"
-           "Regress the TSI out of MACD+RSI and trade the *residual* — we'd bet its Sharpe is ≈ 0. "
-           "Or run the same test on the Stochastic, CCI, Williams %R: a little atlas of oscillator "
-           "redundancy. See the front-page README for the full thread."),
+           "We regressed the TSI out of MACD+RSI and traded the *residual*: before costs it earns "
+           "≈ 0 (the unique part carries no information), and the only thing costs add is friction "
+           "— the residual flips sign ~4× as often as the level (~72×/yr vs ~16×/yr), so a fee "
+           "turns a zero into a reliable negative. Next: run the same test on the Stochastic, CCI, Williams %R — a "
+           "little atlas of oscillator redundancy. See the front-page README for the full thread."),
     ]
     nb = new_notebook(cells=cells)
     _write(nb, "01_for_the_curious.ipynb")
@@ -155,7 +165,7 @@ def build_quants():
            "beats, every claim now carrying its standard error.* We ask whether the TSI carries momentum "
            "information not already in MACD+RSI, or is merely the same trade double-smoothed.\n\n"
            "> ⚠️ **Not investment advice.** Executed on the offline synthetic universe; the headline real "
-           "numbers (174-name basket) are quoted from `../docs/results.md` (as-of + fingerprint), produced "
+           "numbers (177-name basket) are quoted from `../docs/results.md` (as-of + fingerprint), produced "
            "by `examples/verify_real.py`. References in `../docs/references.md`.\n"
            ">\n"
            "> 💡 **The `💡 In plain words` notes** translate each result back into intuition — so this "
@@ -165,10 +175,20 @@ def build_quants():
         md("## 1–3 · Claim, stakes, protocol\n\n"
            "H₁: the TSI carries momentum information not already in MACD+RSI. Null: it is spanned by "
            "them, its position and equity curve are collinear, and any standalone Sharpe is the long "
-           "bias. Pre-registered mirage line: R² ≳ 0.8, sign agreement ≳ 0.9 vs MACD, equity ρ ≳ 0.95.\n\n"
-           "Machinery sanity — the oscillators must agree more on planted structure than on noise:"),
+           "bias. Pre-registered mirage line: R² ≳ 0.8, sign agreement ≳ 0.9 vs MACD, equity ρ ≳ 0.95. "
+           "The closing-argument criterion is declared on the **gross** residual Sharpe (information), "
+           "with net (friction) reported separately.\n\n"
+           "The control — and what it actually proves. Position agreement is a little higher on "
+           "planted structure than on noise (the trades line up where there is a trend to agree "
+           "about), but the **level collinearity and the spanning R² are about as high on pure "
+           "random walks**: the TSI, the MACD line and the centred RSI are all smoothings of the "
+           "same one-bar price change, so they co-move on *any* input. The collinearity is "
+           "mechanical — which sharpens the verdict: a near-identity built into the filter cannot "
+           "be a distinct signal on any data."),
         code("rec = collinearity.structure_recall(frames, truth)\n"
-             "print(rec)"),
+             "print(rec)\n"
+             "# corr_tsi_macd_noise / spanning_r2_noise are the load-bearing numbers: as high on\n"
+             "# random walks as on structure (and as on the real 177-name panel)."),
 
         md("## 4 · The Teardown\n\n"
            "### Same shape? Level collinearity and the spanning-R²"),
@@ -185,35 +205,48 @@ def build_quants():
         md("### Alpha vs beta — the long/short timing cut\n\n"
            "The standalone long/flat Sharpe is partly the equity risk premium (long ~half the time). "
            "Symmetrise to long/short and the unconditional drift cancels, leaving only the "
-           "oscillator's *timing*. On the real run that collapses TSI 0.61 → 0.05."),
+           "oscillator's *timing*. On the real run that collapses TSI 0.63 → −0.42 (same "
+           "signal-cross rule; the zero-cross long/short book sits at +0.05)."),
         code("# long/flat vs long/short Sharpe for the TSI crossover on this synthetic universe\n"
              "lf = backtest.equal_weight_net(frames, lambda c: backtest.tsi_position(c, rule='signal', long_short=False))\n"
              "ls = backtest.equal_weight_net(frames, lambda c: backtest.tsi_position(c, rule='signal', long_short=True))\n"
              "print('long/flat  Sharpe:', round(backtest.annualized_sharpe(lf), 3))\n"
              "print('long/short Sharpe:', round(backtest.annualized_sharpe(ls), 3))"),
 
-        md("### Reality Check on the 24-variant TSI grid\n\n"
-           "White (2000): the best-of-grid Sharpe against a mean-zero bootstrap null. On the real run "
-           "p ≈ 0 — a faint, *real* generic momentum signal, which is why the verdict is **redundancy**, "
-           "not noise."),
-        code("rc = collinearity.reality_check_grid(frames, n_boot=500)\n"
-             "print({k: (round(v,4) if isinstance(v,float) else v) for k,v in rc.items()})"),
+        md("### Reality Check on the 24-variant TSI grid — three nulls, one honest one\n\n"
+           "White (2000), stationary bootstrap, best-of-grid Sharpe. Run **long/flat** the test "
+           "embeds the equity drift (every variant is in the market ~half the time), so a tiny p "
+           "certifies *being long stocks*, not the oscillator. The honest runs strip the beta: "
+           "score each variant **in excess of equal-weight buy-and-hold** (does the timing beat "
+           "simply holding?) or **dollar-neutral** (long/short, drift cancels inside the book)."),
+        code("rc_lf = collinearity.reality_check_grid(frames, n_boot=500)\n"
+             "rc_xs = collinearity.reality_check_grid(frames, n_boot=500, excess_of_bh=True)\n"
+             "rc_ls = collinearity.reality_check_grid(frames, n_boot=500, long_short=True)\n"
+             "for tag, rc in [('long/flat ', rc_lf), ('excess B&H', rc_xs), ('lng/short ', rc_ls)]:\n"
+             "    print(tag, {k: (round(v,4) if isinstance(v,float) else v) for k,v in rc.items()})"),
 
         md("### Cost sweep"),
         code("print(collinearity.cost_sweep(frames, rule='signal').round(3).to_string())"),
 
-        md("### The closing argument — trade the TSI's residual over MACD+RSI\n\n"
+        md("### The closing argument — the TSI's residual over MACD+RSI: information vs friction\n\n"
            "Regress the TSI out of MACD+RSI (full-sample, the generous steelman) and trade the "
-           "*residual* — the part the other two can't reproduce. On the real run it earns Sharpe "
-           "**−0.56**: the TSI's unique content is anti-signal, while the raw long/short TSI is "
-           "already ≈ +0.05. Nothing left to be the 'true' in True Strength."),
+           "*residual* — the part the other two can't reproduce. The pre-declared criterion is on "
+           "the **gross** Sharpe: ≈ 0 means the unique content carries no information, and on the "
+           "real run that is exactly what it earns (gross Sharpe −0.02, HAC *t* −0.2). The **net** "
+           "number is a separate, friction statement: the residual flips sign ~4× as often as the "
+           "level (~72×/yr vs ~16×/yr), so any per-side cost drags a zero-information signal "
+           "reliably negative (−0.59 net at 10 bps/side) — cost arithmetic, not a tradable "
+           "anti-signal."),
         code("print({k: (round(v,4) if isinstance(v,float) else v)\n"
              "       for k,v in collinearity.orthogonalised_tsi_edge(frames).items()})"),
 
         md("## 5–7 · Verdict, tradability, going further\n\n"
-           "**Signal `NONE`** (spanning R² 0.835, sign agreement 0.994 vs MACD, equity ρ 0.994). "
-           "**Tradability `MIRAGE`** (long/short timing Sharpe 0.05 — the 0.61 was beta; the "
-           "orthogonalised residual trades *negative*, −0.56). **'Truer'? `BUSTED`.** Next: extend to "
+           "**Signal `NONE`** (spanning R² 0.835, sign agreement 0.994 vs MACD, equity ρ 0.994 — all "
+           "mechanical to the filters per the control). **Tradability `MIRAGE`** (the crossover's "
+           "0.63 was beta: the same rule long/short earns −0.42, the zero-cross book +0.05; in excess "
+           "of buy-and-hold the best of 24 variants is −0.83 with Reality Check p = 1.00). The "
+           "orthogonalised residual earns **≈ 0 gross** (−0.02, the pre-declared criterion) and −0.59 "
+           "net at 10 bps/side — friction, not anti-signal. **'Truer'? `BUSTED`.** Next: extend to "
            "the wider oscillator zoo (Stochastic, CCI, %R). Numbers + fingerprint in `../docs/results.md`."),
     ]
     nb = new_notebook(cells=cells)

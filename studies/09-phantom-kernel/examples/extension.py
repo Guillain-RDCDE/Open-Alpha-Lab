@@ -3,7 +3,7 @@
 The base study (docs/results.md) found the first adaptation the viral write-up recommends —
 feed a rolling realised volatility into the spread — *collapses* in the jumpy World B: naive
 realised variance inhales the jump variance, the spread blows out, and the book stops trading
-(Sharpe 2.15 -> 0.18). The obvious repair is a **jump-robust** vol estimator. This script swaps
+(Sharpe 1.50 -> 0.15). The obvious repair is a **jump-robust** vol estimator. This script swaps
 the naive estimator for **bipower variation** (Barndorff-Nielsen & Shephard 2004) and asks
 whether the fix is salvageable. Deterministic, offline.
 
