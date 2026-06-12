@@ -26,10 +26,12 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # Offline test-suite: no network/yfinance. scipy/statsmodels/arch/scikit-learn back the
-          # econometrics and ML studies (12 Paper-Prophet, 13 Crimson-Hour, 17 Glass-Ceiling,
-          # 22 Crystal-Ball, 39 Black-Box); real-data tests stay cache-gated and skip when absent.
-          pip install numpy pandas matplotlib pyarrow pytest scipy statsmodels arch scikit-learn
+          # Single dependency source of truth: pyproject.toml, installed through the
+          # requirements.txt alias (-e .[studies,dev]). That covers the engine, the
+          # econometrics/ML stack behind the studies (scipy/statsmodels/arch/scikit-learn)
+          # and pytest. The test-suite itself stays offline: network/real-data tests are
+          # cache-gated and skip when the cache is absent.
+          pip install -r requirements.txt
 
       - name: Study-construction gate (every published study, same construction)
         run: python tools/check_study_completeness.py
@@ -213,6 +215,36 @@ jobs:
 
       - name: Study 60 — Long-Shot test-suite
         run: pytest -q studies/60-long-shot/tests
+
+      - name: Study 61 — Slow-Burn test-suite
+        run: pytest -q studies/61-slow-burn/tests
+
+      - name: Study 62 — Premium-Seller test-suite
+        run: pytest -q studies/62-premium-seller/tests
+
+      - name: Study 63 — Free-Fall test-suite
+        run: pytest -q studies/63-free-fall/tests
+
+      - name: Study 64 — Share-Shuffle test-suite
+        run: pytest -q studies/64-share-shuffle/tests
+
+      - name: Study 65 — Scorecard test-suite
+        run: pytest -q studies/65-scorecard/tests
+
+      - name: Study 66 — Inverted test-suite
+        run: pytest -q studies/66-inverted/tests
+
+      - name: Study 67 — Fed-Drift test-suite
+        run: pytest -q studies/67-fed-drift/tests
+
+      - name: Study 68 — All-Weather test-suite
+        run: pytest -q studies/68-all-weather/tests
+
+      - name: Study 69 — Safe-Haven test-suite
+        run: pytest -q studies/69-safe-haven/tests
+
+      - name: Study 70 — Digital-Gold test-suite
+        run: pytest -q studies/70-digital-gold/tests
 
       - name: Smoke-run the offline demos
         run: |
