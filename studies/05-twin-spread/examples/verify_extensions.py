@@ -3,7 +3,7 @@
 Runs three forks on the **modern era** (where the headline verdict lives), each a single
 change to the textbook rule, and reports whether any drags it back over the line:
 
-    1. stop-loss        — cap the per-episode loss (the −77%-drawdown short-gamma tail)
+    1. stop-loss        — cap the per-episode loss (the −85%-drawdown short-gamma tail)
     2. cointegration    — keep only pairs whose formation spread passes a Dickey–Fuller
                           mean-reversion gate (an *economic* reason to revert)
     3. selection breadth — trade only the very tightest pairs (offline proxy for the

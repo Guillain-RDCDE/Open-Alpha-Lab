@@ -6,7 +6,15 @@ pipeline rolling across the sample, and the modern teardown: formation → backt
 decay-by-year → the bid-ask-bounce wait rule → market-neutrality → cost sweep →
 capacity. Cache-only: names with no parquet are skipped, never silently re-downloaded.
 
-    python examples/verify_real.py
+    python examples/verify_real.py            # cache-only (the default)
+    python examples/verify_real.py --fetch    # (re)build the cache first — SLOW
+
+``--fetch`` walks the Study 04 feed's ticker list and re-downloads each name through
+Study 04's own cache writer (one parquet per name, split-only). Use it when the cache
+is absent or was written by a pre-fix revision of the data layer (the old split-only
+mode double-adjusted across split dates, corrupting every name that ever split —
+AAPL, NVDA, ...). Expect a couple hundred Yahoo! calls; delisted names fail and are
+skipped, which is the survivorship caveat stated in the README.
 
 Prints every table and writes a reproducible results doc (as-of date + a content
 fingerprint of the price inputs) to `docs/results.md`, so the README verdict traces to
@@ -67,7 +75,50 @@ def _run_block(panel, dvol):
     return res, neutral, boot, cap
 
 
+def _round4(d: dict) -> dict:
+    """Round the numeric values of a stats dict, pass anything else through.
+
+    The quantlab bootstrap dict now carries non-numeric provenance fields
+    (e.g. ``method='cbb'``); rounding blindly would crash on them.
+    """
+    return {k: (round(v, 4) if isinstance(v, float) else v) for k, v in d.items()}
+
+
+def _fetch_cache() -> None:
+    """(Re)build the shared Study 04 price cache from the committed WSB feed.
+
+    Reuses Study 04's ``social_oracle.data.fetch`` — the single cache writer for
+    these parquets — so the format and the adjustment convention stay canonical.
+    Existing parquets are removed first: a cache written by the pre-fix data layer
+    holds double-split-adjusted prices and must not survive a refresh.
+    """
+    study04 = os.path.abspath(os.path.join(_STUDY, "..", "04-social-oracle"))
+    sys.path.insert(0, study04)
+    from social_oracle import data as oracle_data  # noqa: E402
+
+    feed = pd.read_csv(os.path.join(study04, "_data", "wsb_mentions.csv"))
+    tickers = sorted(set(feed["ticker"].astype(str)) | {"SPY"})
+    cache_dir = os.path.abspath(data.DEFAULT_CACHE)
+    if os.path.isdir(cache_dir):
+        for f in os.listdir(cache_dir):
+            if f.endswith(".parquet"):
+                os.remove(os.path.join(cache_dir, f))
+    print(f"fetching {len(tickers)} names into {cache_dir} (delisted names will fail; that's the survivorship caveat) ...")
+    ok, dead = 0, []
+    for i, tk in enumerate(tickers, 1):
+        try:
+            oracle_data.fetch(tk, mode="split_only", use_cache=False)
+            ok += 1
+        except Exception:
+            dead.append(tk)
+        if i % 25 == 0:
+            print(f"  {i}/{len(tickers)} done ({ok} priced, {len(dead)} missing)")
+    print(f"fetched {ok}/{len(tickers)} names; missing/delisted ({len(dead)}): {', '.join(dead)}")
+
+
 def main():
+    if "--fetch" in sys.argv[1:]:
+        _fetch_cache()
     asof = DEFAULT_AS_OF
     frames = data.load_universe(mode="split_only", min_rows=750, asof=asof)
     panel = data.clean_panel(data.close_panel(frames))   # winsorize bad prints (BMW +6.2M%, ...)
@@ -93,8 +144,8 @@ def main():
     def show(tag, res, neutral, boot, cap):
         print(f"\n[{tag}]")
         print({k: (round(v, 4) if isinstance(v, float) else v) for k, v in res.stats.items()})
-        print("  neutrality", {k: round(v, 4) for k, v in neutral.items()})
-        print("  bootstrap ", {k: round(v, 4) for k, v in boot.items()})
+        print("  neutrality", _round4(neutral))
+        print("  bootstrap ", _round4(boot))
         print("  capacity  ", {k: (round(v, 1) if isinstance(v, float) else v) for k, v in cap.items()})
 
     show("MODERN 2005-2026 (headline)", res_m, neutral_m, boot_m, cap_m)
@@ -138,16 +189,20 @@ fingerprint **`{fp}`** ({panel.shape[1]} names, {panel.index.min().date()} →
 > has enough names to yield genuinely tight minimum-distance pairs (eligible ≥ 60 from
 > **{first60}**). We **headline the modern era** and show the full sample as context. The
 > pre-2000 numbers are formed from 7–45 names and are *not* a GGR replication.
+> The basket is also **survivor-biased**: the cache keeps only names that could still be
+> re-downloaded at fetch time, so delisted losers are missing — a bias that *flatters* a
+> convergence rule (the pairs that broke and vanished aren't there to lose money), which
+> makes the negative verdict conservative.
 
 ## Headline — MODERN era ({modern.index.min().date()} → {modern.index.max().date()}), committed capital, wait=1
 `{stats_line(res_m)}`
-- market neutrality: `{ {k: round(v, 4) for k, v in neutral_m.items()} }`
-- bootstrap Sharpe CI: `{ {k: round(v, 4) for k, v in boot_m.items()} }`
+- market neutrality: `{_round4(neutral_m)}`
+- bootstrap Sharpe CI: `{_round4(boot_m)}`
 - capacity (per leg): `{ {k: (round(v, 1) if isinstance(v, float) else v) for k, v in cap_m.items()} }`
 
 ## Full sample (context only — thin early universe)
 `{stats_line(res_f)}`
-- bootstrap Sharpe CI: `{ {k: round(v, 4) for k, v in boot_f.items()} }`
+- bootstrap Sharpe CI: `{_round4(boot_f)}`
 
 ## Eligible-name growth + pair tightness (every 4th window)
 {md(elig.iloc[::4])}

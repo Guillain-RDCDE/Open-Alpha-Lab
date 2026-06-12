@@ -53,6 +53,26 @@ VOL_FLOOR = 0.1         # the article's max(vol_forecast, 0.1)
 SIZE_CAP = 1.0          # the article's min(1.0, 1/vol)
 
 
+def _require_model_deps() -> None:
+    """Fail LOUDLY if the modelling stack is missing — never degrade to flat signals.
+
+    ``_fit_forecast_vol`` imports statsmodels/arch lazily, and every caller wraps it
+    in the article's bare ``except`` (a failed *fit* ⇒ flat day). Without this
+    preflight, a missing ``arch`` would make every step "fail", silently producing
+    forecast=0 / size=0 for the whole sample — a run that *looks* complete and is
+    actually measuring nothing. An environment problem must raise, not zero-fill.
+    """
+    try:
+        from statsmodels.tsa.arima.model import ARIMA  # noqa: F401
+        from arch import arch_model  # noqa: F401
+    except ImportError as exc:  # pragma: no cover - environment dependent
+        raise ImportError(
+            "paper_prophet.stack needs `statsmodels` and `arch` to fit the "
+            "ARIMA(1,0,1)+GARCH(1,1) stack; install them (`pip install statsmodels "
+            "arch`) — refusing to run with zero-filled forecasts."
+        ) from exc
+
+
 @dataclass(frozen=True)
 class WalkForward:
     """The walk-forward record: one row per graded day, plus the inputs that made it.
@@ -118,6 +138,7 @@ def generate_signals(returns: pd.Series, lookback: int = LOOKBACK,
     ``max_steps`` caps the number of graded days (for quick previews / tests); ``None`` runs the
     full out-of-sample span.
     """
+    _require_model_deps()
     r = returns.dropna()
     n = len(r)
     rows = []
@@ -129,6 +150,8 @@ def generate_signals(returns: pd.Series, lookback: int = LOOKBACK,
             forecast, vol, params = _fit_forecast_vol(window, sp if warm_start else None)
             if warm_start:
                 sp = params
+        except ImportError:
+            raise  # a missing dependency is an environment failure, never a flat day
         except Exception:  # a failed fit ⇒ flat that day (the article's bare ``except: 0``)
             forecast, vol = 0.0, np.inf
         size = min(SIZE_CAP, 1.0 / max(vol, VOL_FLOOR)) if np.isfinite(vol) else 0.0
@@ -158,6 +181,8 @@ def _cold_step(window: np.ndarray):
     """
     try:
         return _fit_forecast_vol(window, None)[:2]
+    except ImportError:
+        raise  # surface a broken worker environment instead of zero-filling the run
     except Exception:
         return 0.0, np.inf
 
@@ -174,6 +199,7 @@ def generate_signals_parallel(returns: pd.Series, lookback: int = LOOKBACK,
     import os
     from concurrent.futures import ProcessPoolExecutor
 
+    _require_model_deps()
     r = returns.dropna()
     n = len(r)
     stop = n if max_steps is None else min(n, lookback + max_steps)

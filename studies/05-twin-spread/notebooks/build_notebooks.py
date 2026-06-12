@@ -90,10 +90,10 @@ def build_curious():
             "| Does the rule find genuinely matched pairs? | ✅ **Yes** — given real twins, the "
             "minimum-distance selector recovers them almost perfectly. |\n"
             "| When matched pairs *do* revert, does it profit? | ✅ **Yes** — on the synthetic, "
-            "~+0.95%/mo at a Sharpe near 1.7. The machinery works. |\n"
+            "~+0.86%/mo at a Sharpe near 1.9. The machinery works. |\n"
             "| Do real liquid stocks revert like that today? | ❌ **No** — on the real basket the "
             "spread doesn't pay: **negative even before costs**. |\n"
-            "| Could you trade it? | ❌ **No edge to trade** — −0.54%/mo net, a −85% drawdown, "
+            "| Could you trade it? | ❌ **No edge to trade** — −0.53%/mo net, a −85% drawdown, "
             "market-neutral so there's nowhere to hide. |\n\n"
             "> Desk shorthand: **Signal `NONE` · Tradability `MIRAGE` · Decay `CONFIRMED`** — let's "
             "see the method earn them."
@@ -153,8 +153,8 @@ def build_curious():
             "sound. Now the real world, quoted from the reproducible run "
             "([`../docs/results.md`](../docs/results.md), via `examples/verify_real.py`):\n\n"
             "- **The selector still works** on real data — it finds tight pairs.\n"
-            "- **But the spread doesn't pay.** Modern era (2005–2026): **−0.48%/mo gross**, "
-            "**−0.54%/mo net**, Sharpe **−0.44**. Win rate 56.2% — *more winners than losers* — "
+            "- **But the spread doesn't pay.** Modern era (2004–2026): **−0.47%/mo gross**, "
+            "**−0.53%/mo net**, Sharpe **−0.43**. Win rate 56.2% — *more winners than losers* — "
             "and still a negative mean.\n"
             "- **Negative even at zero cost** — so it isn't a cost problem; there's no edge.\n"
             "- **Decayed:** good years cluster in 1983–2004; the modern era is mostly red, worst in "
@@ -191,9 +191,9 @@ def build_curious():
             "([`../docs/extensions.md`](../docs/extensions.md)). None clears the bar:\n\n"
             "| Fix | Monthly net | Max DD |\n"
             "|---|---|---|\n"
-            "| Baseline (naive rule) | −0.54% | −85% |\n"
+            "| Baseline (naive rule) | −0.53% | −85% |\n"
             "| + Stop-loss 10% | −0.09% | −30% |\n"
-            "| + Cointegration gate | −0.58% | −87% |\n\n"
+            "| + Cointegration gate | −0.49% | −87% |\n\n"
             "- A **stop-loss** tames the drawdown (−85% → −24% at a 5% stop) but only stops you to "
             "*roughly flat* — the tail was real, the edge isn't.\n"
             "- A **cointegration gate** doesn't help: in-sample mean-reversion doesn't forecast it.\n"
@@ -279,20 +279,21 @@ def build_quants():
         ),
         code(
             "mkt = data.market_return(panel)\n"
-            "print('neutrality:', {k:round(v,4) for k,v in robustness.market_neutrality(res.daily, mkt).items()})\n"
-            "print('bootstrap :', {k:round(v,4) for k,v in robustness.bootstrap_sharpe(res.daily, n_boot=2000).items()})"
+            "r4 = lambda d: {k: (round(v, 4) if isinstance(v, float) else v) for k, v in d.items()}\n"
+            "print('neutrality:', r4(robustness.market_neutrality(res.daily, mkt)))\n"
+            "print('bootstrap :', r4(robustness.bootstrap_sharpe(res.daily, n_boot=2000)))"
         ),
         md(
             "> On **real** data these read: β = 0.04, R² = 0.00 (cleanly neutral), and a modern "
-            "bootstrap Sharpe CI of **[−0.84, −0.03]** — *entirely below zero*, 98% of resamples "
-            "negative. The full-sample CI [−0.34, +0.15] straddles zero (the thin early universe "
+            "bootstrap Sharpe CI of **[−0.82, −0.07]** — *entirely below zero*, 99% of resamples "
+            "negative. The full-sample CI [−0.35, +0.09] straddles zero (the thin early universe "
             "dilutes it)."
         ),
 
         md(
             "## 5 · The verdict, with the numbers\n\n"
-            "**Signal `NONE`** (real gross −0.48%/mo, CI below 0, negative at zero cost). "
-            "**Tradability `MIRAGE`** (net −0.54%/mo, −85% DD, β≈0, capacity ample so liquidity "
+            "**Signal `NONE`** (real gross −0.47%/mo, CI below 0, negative at zero cost). "
+            "**Tradability `MIRAGE`** (net −0.53%/mo, −85% DD, β≈0, capacity ample so liquidity "
             "isn't the constraint — the missing edge is). **Decay `CONFIRMED`** (best years "
             "1983–2004; modern era red; green only in dislocations — 2008 +0.9%/mo Sharpe 1.30)."
         ),
@@ -319,7 +320,7 @@ def build_quants():
             "(true twins) the stop-loss should cut the drawdown while keeping the edge; the cells "
             "below show it. On **real** data ([`../docs/extensions.md`](../docs/extensions.md)) "
             "none clears the bar — stop-loss −0.09%/mo (DD −85%→−30%), cointegration gate "
-            "−0.58%/mo (no help), both −0.15%/mo. The stop does all the work, and only stanches "
+            "−0.49%/mo (no help), both −0.13%/mo. The stop does all the work, and only stanches "
             "the bleed; the gate's in-sample stationarity doesn't forecast convergence."
         ),
         code(
