@@ -17,6 +17,8 @@ except Exception:
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
 
+from quantlab.repro import DEFAULT_AS_OF, as_of  # noqa: E402
+
 from bargain_bin import data, strategy as st  # noqa: E402
 
 
@@ -25,6 +27,7 @@ def main(fetch: bool) -> None:
     if ret.empty:
         print("No cached real data. Re-run with --fetch (needs network).")
         return
+    ret = as_of(ret, DEFAULT_AS_OF)  # pin the sample; drops any in-progress month
 
     for name, (val, grw) in data.PAIRS.items():
         if val not in ret.columns or grw not in ret.columns:
@@ -35,11 +38,12 @@ def main(fetch: bool) -> None:
         print(f"\n{val} − {grw}  ({sp.index.min().date()}..{sp.index.max().date()}, {s['n']} mo)")
         print(f"  HML: mean {s['mean_ann']:+.2%}/yr  Sharpe {s['sharpe']:+.2f}  (Lo t={s['tstat']:+.2f})  hit {s['hit_rate']:.0%}")
         print(f"  value Sharpe {lv['sharpe']:.2f} (CAGR {lv['cagr']:+.2%}) vs growth Sharpe {lg['sharpe']:.2f} (CAGR {lg['cagr']:+.2%})")
-        print("  regimes:\n" + st.regime_split(sp).round(3).to_string().replace("\n", "\n  "))
+        print("  regimes (2007/2021 split chosen with hindsight to frame the modern value debate — not a tested changepoint):\n  "
+              + st.regime_split(sp).round(3).to_string().replace("\n", "\n  "))
 
     try:
         from quantlab import repro
-        print(f"\ninputs fingerprint {repro.fingerprint(ret.fillna(0))}")
+        print(f"\nas-of {ret.index[-1].date()} · inputs fingerprint {repro.fingerprint(ret.fillna(0))}")
     except Exception:
         pass
 

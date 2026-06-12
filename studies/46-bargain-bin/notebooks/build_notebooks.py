@@ -24,8 +24,9 @@ sys.path.insert(0, os.path.abspath(".."))        # study package (bargain_bin/)
 import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (10, 5.5); plt.rcParams["axes.grid"] = True
 import numpy as np, pandas as pd
+from quantlab.repro import as_of
 from bargain_bin import data, strategy as st
-ret = data.fetch_pairs()                       # cache-first; built by examples/verify.py --fetch
+ret = as_of(data.fetch_pairs())                # cache-first, pinned to the as-of (drops any in-progress month)
 hml = st.hml(ret, "IVE", "IVW")                # S&P 500 value minus growth
 """
 
@@ -58,7 +59,7 @@ def build_curious():
         code(BOOT),
         md("## The answer first 🎯\n\n"
            "| The belief | The tape (2000–2026) |\n|---|---|\n"
-           "| \"Cheap beats expensive\" | Value − growth = **−1.1%/yr**; value's Sharpe < growth's. |\n"
+           "| \"Cheap beats expensive\" | Value − growth = **−1.3%/yr**; value's Sharpe < growth's. |\n"
            "| \"A dependable premium\" | Strong pre-2007, then a **−5%/yr lost decade** 2007–2020. |\n"
            "| \"Just hold value\" | You'd have abandoned it during the thirteen years it bled. |"),
         md("## 1 · The claim\n\nValue (Fama-French HML; Lakonishok-Shleifer-Vishny 1994): cheap stocks "
@@ -69,7 +70,9 @@ def build_curious():
            "orthodoxy needs re-examining — and the 'just be patient' advice has real teeth."),
         md("## 3 · How would we even know?\n\nTest it the way an investor accesses it — **value vs growth "
            "ETFs** — measure the spread and its t-stat, compare each side's Sharpe, and split the era "
-           "into pre-2007, the 2007–2020 lost decade, and 2021-on."),
+           "into pre-2007, the 2007–2020 lost decade, and 2021-on. (Those dates are the ones the value "
+           "debate argues about — chosen with hindsight, not found by a test. We use them to *describe* "
+           "the regimes, not to prove them.)"),
         code("eq=(1+hml).cumprod()\n"
              "ax=eq.plot(title='Cumulative value premium: S&P 500 Value minus Growth (IVE−IVW), 2000-2026',lw=1.8)\n"
              "ax.axhline(1.0,color='k',lw=.8,ls='--'); ax.set_ylabel('growth of $1 (long value / short growth)'); plt.show()\n"
@@ -83,7 +86,9 @@ def build_curious():
              "ax.set_ylabel('HML mean (%/yr)'); ax.axhline(0,color='k',lw=.8); plt.show()"),
         md("**Read it plainly.** Green before 2007, deep red 2007–2020, grey-ish since — on every pair. "
            "Value didn't die; it switched regime, and the regime that matters for today's investor (the "
-           "last ~18 years) hasn't paid."),
+           "last ~18 years) hasn't paid. Keep the hindsight caveat in view, though: the 2007/2021 cuts "
+           "were picked because we know how the story went — the pre-2007 green bar on the headline pair "
+           "is only 79 months."),
         md("## 5 · The verdict\n\n**Signal: Weak** — real but regime-bound, and net-negative since 2000. "
            "**Tradability: Mirage** — a thirteen-year drawdown is unholdable. **Dependable premium?: Not "
            "supported.**"),
@@ -108,7 +113,7 @@ def build_quants():
            "2000–2026. Sources in [`docs/references.md`](../docs/references.md)."),
         code(BOOT),
         md("## Verdict, up front\n\n| Axis | Stamp | Why |\n|---|---|---|\n"
-           "| Signal | **Weak** | HML −1.1%/yr since 2000; value Sharpe < growth |\n"
+           "| Signal | **Weak** | HML −1.3%/yr since 2000; value Sharpe < growth |\n"
            "| Tradability | **Mirage** | 2007–2020 lost decade, −5%/yr, Sharpe −0.7 |\n"
            "| Dependable premium? | **Not supported** | strong→negative→flat across regimes |\n\n"
            "> 💡 *In plain words:* a real factor trapped in the wrong regime for a generation."),
@@ -117,7 +122,8 @@ def build_quants():
         md("## 2 · So what? — what rides on each\n\nIf H₁/H₂ hold, a value tilt is a durable edge. If "
            "H₃ fails, value is a timing call on regimes — a very different thing to sell an investor."),
         md("## 3 · How we'd know — the protocol\n\nHML spread per pair → Lo (2002) t-stat → each leg's "
-           "Sharpe → regime split (pre-2007 / 2007–2020 / 2021-on) → the lost-decade drawdown."),
+           "Sharpe → regime split (pre-2007 / 2007–2020 / 2021-on — breakpoints chosen with hindsight to "
+           "frame the modern value debate, not a tested changepoint) → the lost-decade drawdown."),
         md("## 4 · The teardown"),
         md("### 4.1 The spread, with a t-stat"),
         code("rows={}\n"
@@ -136,7 +142,10 @@ def build_quants():
              "reg=pd.concat({k: st.regime_split(st.hml(ret,a,b))['mean_ann'] for k,(a,b) in pairs.items() if a in ret and b in ret}, axis=1).T\n"
              "display((reg*100).round(2))"),
         md("> 💡 *In plain words:* strongly positive pre-2007, deeply negative 2007–2020, flat since. "
-           "**H₃ rejected** — value is regime-switching, and the lost decade (Israel et al. 2021) dominates."),
+           "**H₃ rejected** — value is regime-switching, and the lost decade (Israel et al. 2021) dominates. "
+           "One honesty note before leaning on the pre-2007 segment: the split was chosen with hindsight to "
+           "frame the modern value debate — not a tested changepoint — and that segment is just 79 months "
+           "on IVE−IVW (9 on RPV−RPG)."),
         md("### 4.4 The lost-decade drawdown"),
         code("ld = hml.loc['2007':'2020']; eq=(1+ld).cumprod(); dd=(eq/eq.cummax()-1)\n"
              "print(f'2007-2020 value-vs-growth: cumulative {eq.iloc[-1]-1:+.1%}, max drawdown {dd.min():.1%}')\n"

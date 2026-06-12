@@ -3,9 +3,13 @@
   * :func:`synthetic_daily` — **offline, deterministic**. A daily index whose returns carry an extra
     drift on turn-of-the-month days controlled by ``premium`` (0 = the null, no seasonal). Pins the
     machinery offline.
-  * :func:`fetch_prices` — real daily total return for an index/ETF (default ``^GSPC`` for the effect's
-    long history, ``SPY`` for the tradable/cost run), **cache-first**. Fingerprinted run in
-    ``docs/results.md``.
+  * :func:`fetch_prices` — real daily returns for an index/ETF, **cache-first**. The default
+    ``^GSPC`` is the S&P 500 **price index** — long history (1950) but *no dividends*; that is fine
+    for the TOM-vs-rest *difference* (dividends accrue roughly evenly across days) and we say so
+    rather than mislabel it. ``SPY`` (auto-adjusted, so dividends reinvested = total return) carries
+    the tradable/cost run. Fingerprinted run in ``docs/results.md``.
+  * :func:`fetch_tbill` — the daily cash return from the ^IRX 13-week T-bill yield, for crediting
+    the ~81% of days the window book sits in cash (and for excess-of-cash Sharpe comparisons).
 """
 
 from __future__ import annotations
@@ -52,10 +56,11 @@ def synthetic_daily(
 
 def fetch_prices(ticker: str = "^GSPC", cache_dir: str = DEFAULT_CACHE, fetch: bool = False,
                  start_year: int = 1950) -> pd.Series:
-    """Daily total-return series for ``ticker`` (^GSPC or SPY), cache-first.
+    """Daily simple-return series for ``ticker``, cache-first.
 
-    **Cache-only** unless ``fetch=True``. Returns a daily simple-return Series from ``start_year`` (or
-    the ticker's inception), empty on a cache miss with ``fetch=False``.
+    ``^GSPC`` is **price-only** (the S&P 500 index pays no dividends into its level); ``SPY`` is
+    auto-adjusted, i.e. total return. **Cache-only** unless ``fetch=True``. Returns a Series from
+    ``start_year`` (or the ticker's inception), empty on a cache miss with ``fetch=False``.
     """
     cache = os.path.join(cache_dir, f"last_call_{ticker.lstrip('^').lower()}.parquet")
     if os.path.exists(cache):
@@ -67,9 +72,35 @@ def fetch_prices(ticker: str = "^GSPC", cache_dir: str = DEFAULT_CACHE, fetch: b
 
     px = yf.download(ticker, period="max", interval="1d", auto_adjust=True, progress=False)["Close"].dropna()
     px.index = pd.DatetimeIndex(px.index).tz_localize(None)
+    px = px[px.index < pd.Timestamp.now().normalize()]  # never cache today's half-finished bar
     ret = px.pct_change().dropna().squeeze()
     ret.name = "ret"
     ret.index.name = "date"
     os.makedirs(cache_dir, exist_ok=True)
     ret.to_frame().to_parquet(cache)
     return ret[ret.index.year >= start_year]
+
+
+def fetch_tbill(cache_dir: str = DEFAULT_CACHE, fetch: bool = False) -> pd.Series:
+    """The daily cash return: ^IRX 13-week T-bill discount yield (percent, annualised) → per-day.
+
+    ``(yield% / 100) / 252``, forward-filled over gaps, cache-first like :func:`fetch_prices`.
+    This is what the window book's cash leg earns — racing a book that idles in 0%-cash against an
+    always-invested index on raw Sharpe is an rf-inconsistent comparison.
+    """
+    cache = os.path.join(cache_dir, "last_call_irx.parquet")
+    if os.path.exists(cache):
+        return pd.read_parquet(cache)["rf"]
+    if not fetch:
+        return pd.Series(dtype=float)
+    import yfinance as yf  # lazy
+
+    px = yf.download("^IRX", period="max", interval="1d", auto_adjust=False, progress=False)["Close"].dropna()
+    px.index = pd.DatetimeIndex(px.index).tz_localize(None)
+    px = px[px.index < pd.Timestamp.now().normalize()]
+    rf = ((px.ffill() / 100.0) / 252.0).squeeze()
+    rf.name = "rf"
+    rf.index.name = "date"
+    os.makedirs(cache_dir, exist_ok=True)
+    rf.to_frame().to_parquet(cache)
+    return rf

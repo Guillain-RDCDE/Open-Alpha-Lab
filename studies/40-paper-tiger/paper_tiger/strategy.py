@@ -85,22 +85,95 @@ def blend(prices: pd.DataFrame, weights=None) -> pd.Series:
     return sum(parts).dropna().rename("blend")
 
 
-def summary(returns: pd.Series, periods_per_year: int = MONTHS_PER_YEAR) -> dict:
-    """Annualised Sharpe, CAGR, vol, max-drawdown, Calmar, skew for a monthly return series."""
+def _excess(r: pd.Series, rf, periods_per_year: int) -> pd.Series:
+    """Excess returns under the quantlab convention: scalar ``rf`` = annualised rate, Series = per-period."""
+    if np.ndim(rf) == 0:
+        return r - float(rf) / periods_per_year if float(rf) != 0.0 else r
+    rf_s = pd.Series(rf).astype(float).reindex(r.index)
+    return r - rf_s
+
+
+def summary(
+    returns: pd.Series, periods_per_year: int = MONTHS_PER_YEAR, rf: float | pd.Series = 0.0
+) -> dict:
+    """Annualised Sharpe, CAGR, vol, max-drawdown, Calmar, skew for a monthly return series.
+
+    ``rf`` follows the quantlab convention (scalar annualised rate, or a per-period return series
+    aligned on the index): the **Sharpe is computed on excess-of-cash returns** when given, while
+    CAGR / vol / drawdown stay raw. Default 0 reproduces the historical raw-Sharpe behaviour —
+    which, on an always-invested book, certifies the asset premium, not the strategy. Compare
+    like with like: raw vs raw, or excess vs excess, never one of each.
+    """
     r = pd.Series(returns).astype(float).dropna()
     if len(r) < 2:
         return {k: np.nan for k in ("sharpe", "cagr", "vol_ann", "max_drawdown", "calmar", "skew", "n")}
-    mean, std = r.mean(), r.std(ddof=1)
+    std = r.std(ddof=1)
+    ex = _excess(r, rf, periods_per_year).dropna()
+    ex_mean, ex_std = ex.mean(), ex.std(ddof=1)
     eq = (1.0 + r).cumprod()
     dd = (eq / eq.cummax() - 1.0).min()
     years = len(r) / periods_per_year
     cagr = eq.iloc[-1] ** (1.0 / years) - 1.0 if eq.iloc[-1] > 0 else np.nan
     return {
-        "sharpe": float(mean / std * np.sqrt(periods_per_year)) if std > 0 else np.nan,
+        "sharpe": float(ex_mean / ex_std * np.sqrt(periods_per_year)) if ex_std > 0 else np.nan,
         "cagr": float(cagr),
         "vol_ann": float(std * np.sqrt(periods_per_year)),
         "max_drawdown": float(dd),
         "calmar": float(cagr / abs(dd)) if dd < 0 else np.nan,
         "skew": float(r.skew()),
         "n": int(len(r)),
+    }
+
+
+def spanning_alpha(
+    strategy_returns: pd.Series,
+    factor_returns: pd.DataFrame,
+    lags: int | None = None,
+    periods_per_year: int = MONTHS_PER_YEAR,
+) -> dict:
+    """The signal test that actually isolates the *timing* skill: a spanning regression.
+
+    Regress the strategy's return on its own static ingredients,
+        r_strat = alpha + sum_i beta_i * r_factor_i + eps,
+    with a Newey-West (HAC, Bartlett kernel) covariance for the intercept. A long-only book that is
+    always invested passes a t-test on its raw mean just by carrying the asset premium; the spanning
+    intercept asks the only question dual momentum gets paid for — *does switching between the doors
+    add return that a fixed mix of the same doors would not have earned?* Feed **excess-of-cash**
+    returns on both sides so the cash leg nets out. ``lags=None`` uses the Newey-West rule of thumb
+    ``floor(4*(n/100)^(2/9))``. Returns the monthly alpha (bps), its annualised value, the HAC t-stat,
+    the betas, and R².
+    """
+    y = pd.Series(strategy_returns).astype(float)
+    f = pd.DataFrame(factor_returns).astype(float)
+    df = f.join(y.rename("_y"), how="inner").dropna()
+    yv = df["_y"].to_numpy()
+    names = [c for c in df.columns if c != "_y"]
+    X = np.column_stack([np.ones(len(df))] + [df[c].to_numpy() for c in names])
+    n, k = X.shape
+
+    beta = np.linalg.lstsq(X, yv, rcond=None)[0]
+    u = yv - X @ beta
+    if lags is None:
+        lags = int(np.floor(4.0 * (n / 100.0) ** (2.0 / 9.0)))
+
+    # HAC sandwich: V = (X'X)^-1 S (X'X)^-1, S the Bartlett-weighted long-run score covariance
+    g = X * u[:, None]  # scores
+    S = g.T @ g
+    for j in range(1, lags + 1):
+        w = 1.0 - j / (lags + 1.0)
+        gamma = g[j:].T @ g[:-j]
+        S += w * (gamma + gamma.T)
+    XtX_inv = np.linalg.inv(X.T @ X)
+    V = XtX_inv @ S @ XtX_inv
+
+    alpha, se = float(beta[0]), float(np.sqrt(max(V[0, 0], 0.0)))
+    ss_res, ss_tot = float(u @ u), float(((yv - yv.mean()) ** 2).sum())
+    return {
+        "alpha_bps_m": alpha * 1e4,
+        "alpha_ann_pct": ((1.0 + alpha) ** periods_per_year - 1.0) * 100.0,
+        "tstat": alpha / se if se > 0 else np.nan,
+        "betas": {nm: float(b) for nm, b in zip(names, beta[1:])},
+        "r2": 1.0 - ss_res / ss_tot if ss_tot > 0 else np.nan,
+        "n": int(n),
+        "lags": int(lags),
     }

@@ -88,3 +88,39 @@ def test_blend_is_weighted_average(premium_world):
     b = st.blend(p, weights={"US": 0.6, "BOND": 0.4})
     expected = (0.6 * rets["US"] + 0.4 * rets["BOND"]).dropna()
     assert np.allclose(b.to_numpy(), expected.loc[b.index].to_numpy())
+
+
+def test_summary_excess_sharpe_below_raw(premium_world):
+    """With a positive cash rate, the excess-of-cash Sharpe must sit below the raw Sharpe
+    (and only the Sharpe moves — CAGR/vol/drawdown stay raw)."""
+    p, tb, _ = premium_world
+    gem = st.gem_returns(p, tb, cost_bps=20.0)
+    raw, ex = st.summary(gem), st.summary(gem, rf=tb.reindex(gem.index))
+    assert ex["sharpe"] < raw["sharpe"]
+    for k in ("cagr", "vol_ann", "max_drawdown"):
+        assert raw[k] == ex[k]
+    # scalar convention: annualised rate, same direction
+    assert st.summary(gem, rf=0.02)["sharpe"] < raw["sharpe"]
+
+
+def test_spanning_alpha_zero_on_a_static_mix(premium_world):
+    """A fixed mix of the factors IS spanned: alpha ~ 0, beta = the weights, R² = 1."""
+    p, _, _ = premium_world
+    rets = st.to_returns(p).dropna()
+    fac = rets[["US", "BOND"]]
+    mix = 0.6 * rets["US"] + 0.4 * rets["BOND"]
+    sp = st.spanning_alpha(mix, fac)
+    assert abs(sp["alpha_bps_m"]) < 1e-6
+    assert abs(sp["betas"]["US"] - 0.6) < 1e-9 and abs(sp["betas"]["BOND"] - 0.4) < 1e-9
+    assert sp["r2"] > 0.999999
+
+
+def test_spanning_alpha_detects_an_injected_constant(premium_world):
+    """Add a deliberate 50 bp/month on top of a spanned mix: the intercept must find it, t >> 2."""
+    p, _, _ = premium_world
+    rets = st.to_returns(p).dropna()
+    fac = rets[["US", "BOND"]]
+    juiced = 0.6 * rets["US"] + 0.4 * rets["BOND"] + 0.0050
+    sp = st.spanning_alpha(juiced, fac)
+    assert abs(sp["alpha_bps_m"] - 50.0) < 1e-6
+    assert sp["tstat"] > 2.0

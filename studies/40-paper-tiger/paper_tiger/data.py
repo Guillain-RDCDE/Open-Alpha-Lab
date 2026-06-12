@@ -115,6 +115,10 @@ def fetch_etfs(
     px = raw["Close"] if isinstance(raw.columns, pd.MultiIndex) else raw[["Close"]]
     px.index = pd.DatetimeIndex(px.index).tz_localize(None)
     px = px.resample("ME").last()
+    # A month only exists once its month-end has passed. Yahoo ships the current month as a
+    # partial bar; resampling relabels it to a *future* month-end, which would poison the
+    # as-of stamp and fingerprint. Drop it — the tape ends at the last completed month.
+    px = px[px.index < pd.Timestamp.now().normalize()]
     prices = px[list(ETFS)].rename(columns=ETFS)
     tbill_m = (px[TBILL_TICKER].ffill() / 100.0) / MONTHS_PER_YEAR  # yield% → monthly return
     start = prices.dropna().index.min()

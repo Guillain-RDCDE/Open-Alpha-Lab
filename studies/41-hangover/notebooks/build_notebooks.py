@@ -24,11 +24,14 @@ sys.path.insert(0, os.path.abspath(".."))        # study package (hangover/)
 import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (10, 5.5); plt.rcParams["axes.grid"] = True
 import numpy as np, pandas as pd
+from quantlab.repro import as_of
 from hangover import data, strategy as st
-ret = data.fetch_index()              # cache-first; built by examples/verify.py --fetch
+ret = as_of(data.fetch_index().to_frame())["ret"]   # cache-first, pinned to the as-of; ^GSPC is price-only
+tbill = data.fetch_tbill()                          # ^IRX, for the cash years (zero pre-1960)
+cash = st.cash_roy(as_of(tbill.to_frame())["tbill"]) if not tbill.empty else None
 tbl = st.annual_table(ret)
 cm  = st.conditional_means(tbl)
-bar, bh = st.barometer_returns(tbl), st.buy_hold_roy(tbl)
+bar, bh = st.barometer_returns(tbl, cash), st.buy_hold_roy(tbl)
 """
 
 VERDICT = (
@@ -62,7 +65,7 @@ def build_curious():
            "| The pitch | The catch |\n|---|---|\n"
            "| \"Up 87% of the time after an up January\" | The rest of the year is up **76% of the time anyway**. |\n"
            "| \"January predicts the year\" | Its accuracy (**68%**) is **worse** than always saying \"up\" (76%). |\n"
-           "| \"So trade the omen\" | Going to cash after a down January just **holds less stock** — not timing. |"),
+           "| \"So trade the omen\" | Going to T-bills after a down January just **holds less stock** — not timing. |"),
         md("## 1 · The claim\n\nYale Hirsch, 1972: if the S&P 500 rises in January, the remaining eleven "
            "months are bullish; if January is red, watch out. Quoted every February on financial TV."),
         md("## 2 · So what?\n\nIf a single month genuinely forecasts the next eleven, that's a free "
@@ -77,25 +80,33 @@ def build_curious():
              "ax.set_ylabel('mean rest-of-year return (%)'); ax.axhline(0,color='k',lw=.8); plt.show()\n"
              "print('P(rest-of-year up):', {k: round(cm.loc[k,'p_up'],3) for k in cm.index})"),
         md("## 4 · The teardown\n\nThe rest of the year is positive after an up January **and** after a "
-           "down one. The only real difference is *how* positive."),
+           "down one. The only real difference is *how* positive — and with only 30 down-Januaries to "
+           "learn from, we put error bars on everything."),
         code("acc, base = st.barometer_accuracy(tbl), st.base_rate(tbl)\n"
              "print(f'Barometer directional accuracy: {acc:.1%}')\n"
              "print(f'Always predict \"up\" base rate:  {base:.1%}')\n"
-             "print('The omen is %s the constant.' % ('BEATEN BY' if acc < base else 'better than'))"),
+             "print('The omen is %s the constant.' % ('BEATEN BY' if acc < base else 'better than'))\n"
+             "sp = st.split_tests(tbl)\n"
+             "print(f\"Up-vs-down January split: Fisher p={sp['fisher_p']:.3f}, mean-gap permutation p={sp['mean_perm_p']:.3f}\")\n"
+             "print('-> the down-January softness is real, but it is the only thing here that is.')"),
         code("eq_bar=(1+bar).cumprod(); eq_bh=(1+bh).cumprod()\n"
              "ax=eq_bh.plot(label='Buy & hold (Feb-Dec)',lw=1.6)\n"
-             "eq_bar.plot(ax=ax,label='Barometer (cash if Jan down)',lw=1.8)\n"
-             "ax.set_yscale('log'); ax.set_title('Growth of $1, rest-of-year only'); ax.set_ylabel('growth of $1'); ax.legend(); plt.show()"),
-        md("## 5 · The verdict\n\n**Signal: Weak** — a down January does flag a softer year, faintly. "
-           "**Tradability: Mirage** — \"trading\" it just means owning less stock that year. **Predicts "
-           "the year?: Not supported** — as a forecaster it loses to a constant."),
+             "eq_bar.plot(ax=ax,label='Barometer (T-bill if Jan down)',lw=1.8)\n"
+             "ax.set_yscale('log'); ax.set_title('Growth of $1, rest-of-year only (price-only tape)'); ax.set_ylabel('growth of $1'); ax.legend(); plt.show()"),
+        md("## 5 · The verdict\n\n**Signal: Weak** — a down January does flag a softer year, faintly but "
+           "measurably (Fisher p ≈ 0.01). **Tradability: Mirage** — \"trading\" it just means owning less "
+           "stock that year, and its return edge lives on a dividend-free tape. **Predicts the year?: Not "
+           "supported** — as a forecaster it loses to a constant."),
         md("## 6 · Could you actually trade it?\n\nYou could (one decision a year, trivial), but you "
-           "shouldn't expect timing: the cash-after-down-January rule gives up return for less risk "
-           "purely by being out of the market — exactly what holding a smaller equity weight does, minus "
-           "the suspense."),
-        md("## 7 · Going further 🚪\n\nThe quants notebook splits 1950–1972 vs 1973-on (the omen faded "
-           "after Hirsch named it) and shows why the exposure-reduction \"edge\" isn't one. Next on the "
-           "calendar-anomaly bench: [Study 42 Last-Call](../../42-last-call/) — the turn-of-the-month effect, "
+           "shouldn't expect timing: the T-bill-after-down-January rule earns its lower risk purely by "
+           "being out of the market — exactly what holding a smaller equity weight does, minus the "
+           "suspense. And mind the tape: this race is **price-only**. Add dividends (~3–4%/yr, which "
+           "buy-and-hold collects every year and the rule only when invested) and the omen's CAGR edge "
+           "disappears."),
+        md("## 7 · Going further 🚪\n\nThe quants notebook splits 1950–1972 vs 1973-on (the omen *looks* "
+           "fainter after Hirsch named it, though the samples are too small to prove a fade) and shows why "
+           "the exposure-reduction \"edge\" isn't one. Next on the calendar-anomaly bench: "
+           "[Study 42 Last-Call](../../42-last-call/) — the turn-of-the-month effect, "
            "which is *real* but too small to trade."),
     ]
     _write(new_notebook(cells=cells, metadata=_meta()), "01_for_the_curious.ipynb")
@@ -103,53 +114,77 @@ def build_curious():
 
 def build_quants():
     cells = [
-        md("# Hangover — a quantitative teardown 🔬\n### Base-rate vs conditional accuracy · the only informative cell · the exposure illusion · post-publication decay\n\n"
+        md("# Hangover — a quantitative teardown 🔬\n### Base-rate vs conditional accuracy · Wilson intervals and Fisher tests on every cell · the exposure illusion · the decay you can't prove\n\n"
            + VERDICT +
            "The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). We score the "
-           "January Barometer the only honest way — against the base rate — on the S&P 500, 1950–2025.\n\n"
-           "> ⚠️ **Not investment advice.** S&P 500 (^GSPC) monthly TR (Yahoo, daily→month-end), "
-           "1950–2025. Sources in [`docs/references.md`](../docs/references.md)."),
+           "January Barometer the only honest way — against the base rate, with error bars sized for 76 "
+           "years of data — on the S&P 500, 1950–2025.\n\n"
+           "> ⚠️ **Not investment advice.** S&P 500 (^GSPC) monthly **price return** (Yahoo, "
+           "daily→month-end; no dividends — ^SP500TR only starts in 1988), 1950–2025; cash years credited "
+           "the ^IRX T-bill (zero pre-1960). Sources in [`docs/references.md`](../docs/references.md)."),
         code(BOOT),
         md("## Verdict, up front\n\n| Axis | Stamp | Why |\n|---|---|---|\n"
-           "| Signal | **Weak** | only the down-January cell informs (+2% vs +12%) |\n"
-           "| Tradability | **Mirage** | the rule just cuts equity exposure once a year |\n"
+           "| Signal | **Weak** | only the down-January cell informs (+2% vs +12%; Fisher p = 0.012, permutation p = 0.002) |\n"
+           "| Tradability | **Mirage** | the rule just cuts equity exposure once a year; its CAGR edge is a price-only artefact |\n"
            "| Predicts the year? | **Not supported** | 68% accuracy < 76% always-up base rate |\n\n"
            "> 💡 *In plain words:* the omen's famous hit-rate is the market's hit-rate; it adds almost nothing."),
         md("## 1 · The claim, steelmanned\n\n- **H₁:** rest-of-year mean and P(up) differ by the sign of January.\n"
            "- **H₂ (the pitch):** sign(January) predicts sign(rest-of-year) better than the base rate.\n"
            "- **H₃:** trading the omen beats simply holding the index."),
         md("## 2 · So what? — what rides on each\n\nIf H₂ holds, one month forecasts eleven — a free "
-           "timing signal. If only a weak H₁ holds, it's a decayed seasonal tic mistaken for a forecast."),
+           "timing signal. If only a weak H₁ holds, it's a faint seasonal tic mistaken for a forecast."),
         md("## 3 · How we'd know — the protocol\n\nCollapse months → yearly (Jan, rest-of-year) → "
-           "conditional means & P(up) → **directional accuracy vs base rate** → tradable cash-after-down "
-           "rule vs buy-and-hold → pre/post-1972 decay split."),
+           "conditional means & P(up) **with Wilson 95% intervals and a Fisher exact / permutation test "
+           "on the split** (30 down-Januaries — nothing here gets claimed without a p-value) → "
+           "**directional accuracy vs base rate** → tradable T-bill-after-down rule vs buy-and-hold → "
+           "pre/post-1972 decay split, itself Fisher-tested."),
         md("## 4 · The teardown"),
-        md("### 4.1 Conditional means and the base rate"),
+        md("### 4.1 Conditional means, intervals, and the tests"),
         code("display(cm.round(4))\n"
-             "print(f\"base rate P(up) = {st.base_rate(tbl):.1%}; accuracy = {st.barometer_accuracy(tbl):.1%}\")"),
+             "sp = st.split_tests(tbl)\n"
+             "print(f\"P(up): {sp['k_up']}/{sp['n_up']} after an up January vs {sp['k_down']}/{sp['n_down']} after a down one\")\n"
+             "print(f\"  Fisher exact p = {sp['fisher_p']:.4f}\")\n"
+             "print(f\"rest-of-year mean gap = {sp['mean_gap']:+.2%}; permutation p = {sp['mean_perm_p']:.4f} (seeded, 20k shuffles)\")"),
         md("> 💡 *In plain words:* after a down January the year still averages **+2%** and is up **60%** "
-           "of the time. The 'bad omen' is barely bad."),
+           "of the time — the 'bad omen' is barely bad. The up-vs-down *contrast* is real (p ≈ 0.01), and "
+           "**H₁ holds**. But mind the widths: the down-January cell on its own, Wilson **[42%, 75%]**, "
+           "straddles the 76% base rate — with 30 observations you cannot even show that cell is "
+           "below-average, only that it sits below the up-January cell."),
         md("### 4.2 The base-rate illusion, quantified"),
-        code("acc, base = st.barometer_accuracy(tbl), st.base_rate(tbl)\n"
+        code("ac = st.accuracy_with_ci(tbl)\n"
              "fig,ax=plt.subplots(figsize=(7,4))\n"
-             "ax.bar(['Barometer\\n(sign of Jan)','Always predict\\n\"up\"'],[acc*100,base*100],color=['#c0392b','#2ea44f'])\n"
-             "ax.set_ylabel('directional accuracy (%)'); ax.set_title('A forecaster that loses to a constant'); ax.axhline(50,color='k',lw=.6,ls='--'); plt.show()"),
+             "ax.bar(['Barometer\\n(sign of Jan)','Always predict\\n\"up\"'],[ac['accuracy']*100,ac['base_rate']*100],\n"
+             "       yerr=[[(ac['accuracy']-ac['acc_low'])*100,(ac['base_rate']-ac['base_low'])*100],\n"
+             "             [(ac['acc_high']-ac['accuracy'])*100,(ac['base_high']-ac['base_rate'])*100]],\n"
+             "       color=['#c0392b','#2ea44f'],capsize=6)\n"
+             "ax.set_ylabel('directional accuracy (%)'); ax.set_title('A forecaster that loses to a constant'); ax.axhline(50,color='k',lw=.6,ls='--'); plt.show()\n"
+             "print(f\"accuracy {ac['accuracy']:.1%} [Wilson {ac['acc_low']:.1%}, {ac['acc_high']:.1%}]  vs  base rate {ac['base_rate']:.1%} [Wilson {ac['base_low']:.1%}, {ac['base_high']:.1%}]\")"),
         md("> 💡 *In plain words:* if your predictor is beaten by a sticky note that says \"up\", it isn't a predictor. **H₂ rejected.**"),
         md("### 4.3 The tradable version — it just holds less stock"),
-        code("rows={'Buy & hold (Feb-Dec)':st.summary(bh),'Barometer (cash if Jan down)':st.summary(bar)}\n"
+        code("rows={'Buy & hold (Feb-Dec)':st.summary(bh),'Barometer (T-bill if Jan down)':st.summary(bar)}\n"
              "display(pd.DataFrame(rows).T[['cagr','sharpe','max_drawdown','hit_rate']].round(3))\n"
-             "yrs_in_cash=int((tbl['jan']<=0).sum()); print(f'years the rule sits in cash: {yrs_in_cash}/{len(tbl)}')"),
+             "yrs_in_cash=int((tbl['jan']<=0).sum()); print(f'years the rule sits in T-bills: {yrs_in_cash}/{len(tbl)}')"),
         md("> 💡 *In plain words:* higher Sharpe, lower drawdown — bought entirely by being out of the "
-           "market ~40% of down-January years. A permanently lower equity weight does the same. **H₃ rejected.**"),
-        md("### 4.4 Post-publication decay"),
-        code("for lab,sl in [('1950-1972',tbl[tbl.index<=1972]),('1973-on',tbl[tbl.index>1972])]:\n"
-             "    s=sl; print(f'{lab}: accuracy {st.barometer_accuracy(s):.1%}, jan-down rest-of-year {s[s.jan<=0][\"roy\"].mean():+.2%}')"),
-        md("> 💡 *In plain words:* sharpest before Hirsch named it (a down January once preceded a flat "
-           "year), faded after — the McLean–Pontiff fade."),
-        md("## 5 · The verdict\n\nH₁ weakly holds, H₂ and H₃ rejected → Signal `WEAK`, Tradability "
-           "`MIRAGE`, the year-ahead claim `NOT SUPPORTED`."),
+           "market ~40% of years. A permanently lower equity weight (with the same T-bills) does the "
+           "same. And the CAGR edge is the **tape's** doing, not the omen's: this race is price-only, "
+           "and dividends (~3–4%/yr) accrue to buy-and-hold in all 76 years but to the rule only in its "
+           "46 invested ones — on a total-return tape the gap closes. **H₃ rejected.**"),
+        md("### 4.4 Post-publication decay — the story you can't actually test"),
+        code("dc = st.decay_split(tbl)\n"
+             "for lab,era in [('1950-1972','pre'),('1973-on','post')]:\n"
+             "    print(f\"{lab}: accuracy {dc[era+'_acc']:.1%} ({dc[era+'_k']}/{dc[era+'_n']}) \"\n"
+             "          f\"[Wilson {dc[era+'_low']:.1%}, {dc[era+'_high']:.1%}], \"\n"
+             "          f\"jan-down rest-of-year {dc[era+'_down_mean']:+.2%}\")\n"
+             "print(f\"accuracy difference: Fisher exact p = {dc['fisher_p']:.3f}\")"),
+        md("> 💡 *In plain words:* the point estimates lean the McLean–Pontiff way — sharpest before "
+           "Hirsch named it, fainter after — but 23 vs 53 years gives **Fisher p = 0.29** and almost "
+           "fully overlapping intervals. The decay story is *consistent with* the data, not established "
+           "by it. We say \"faded\" only with that caveat attached."),
+        md("## 5 · The verdict\n\nH₁ holds (weakly but significantly), H₂ and H₃ rejected → Signal `WEAK`, "
+           "Tradability `MIRAGE`, the year-ahead claim `NOT SUPPORTED`."),
         md("## 6 · Could you trade it?\n\nOnly as a once-a-year de-risking switch — which is not timing, "
-           "and is dominated by simply choosing your equity weight on purpose."),
+           "and is dominated by simply choosing your equity weight on purpose. On an honest total-return "
+           "tape the rule keeps its drawdown story and loses its return story."),
         md("## 7 · Going further\n\nForks: (a) the \"Other January Effect\" (Cooper et al. 2006) on a "
            "size cross-section; (b) condition on January *magnitude* not just sign; (c) multiple-testing "
            "correction across all twelve \"X-month barometers\" — the calendar is full of them. Backlog: "

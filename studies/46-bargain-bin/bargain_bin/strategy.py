@@ -41,7 +41,12 @@ def hml_stats(spread: pd.Series, periods_per_year: int = MONTHS) -> dict:
 
 
 def regime_split(spread: pd.Series, breaks=(2007, 2021)) -> pd.DataFrame:
-    """HML by regime: before ``breaks[0]``, the ``breaks[0]..breaks[1]-1`` lost decade, and after."""
+    """HML by regime: before ``breaks[0]``, the ``breaks[0]..breaks[1]-1`` lost decade, and after.
+
+    The default breakpoints are **chosen with hindsight** — they are the dates the value literature
+    argues about (the GFC turn, the 2021 partial rebound), picked to frame the modern debate, not the
+    output of a changepoint test. Treat the segment stats as description, not inference.
+    """
     r = pd.Series(spread).astype(float).dropna()
     lo, hi = breaks
     segs = [(f"pre-{lo}", r[r.index.year < lo]),

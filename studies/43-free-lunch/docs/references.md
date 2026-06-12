@@ -21,10 +21,12 @@
 
 ## Data
 
-- **Yahoo! Finance** — 13 liquid ETFs spanning the beta spectrum + SPY as the market, daily
+- **Yahoo! Finance** — 13 liquid ETFs spanning the beta spectrum + SPY as the market + ^IRX (13-week
+  T-bill, the cash rate behind the self-financing ledger and every excess-of-cash Sharpe), daily
   auto-adjusted, 2000–2026. ETFs (not single stocks) keep the run fully tradable and survivorship-free
-  at the cost of coarser beta dispersion — a trade-off stated openly in the results. The offline
-  synthetic factor world injects known betas and a tunable low-beta premium (and a null).
+  at the cost of coarser beta dispersion — and, on a cross-asset panel, put TLT/IEF/GLD in the low-beta
+  bucket, a confound the results examine head-on. The offline synthetic factor world injects known
+  betas and a tunable low-beta premium (and a null).
 
 *Sibling: [30 House-Edge](../../30-house-edge/) — the same lesson, that "beats the market after free
 leverage" isn't beating the market; [40 Paper-Tiger](../../40-paper-tiger/), [41 Hangover](../../41-hangover/),

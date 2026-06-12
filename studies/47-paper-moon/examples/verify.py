@@ -36,8 +36,15 @@ def main(fetch: bool) -> None:
         print(f"  {nm:22} CAGR {x['cagr']:+.2%}  Sharpe {x['sharpe']:.2f}  maxDD {x['max_drawdown']:.0%}")
 
     print("\nDoes the bond-yield term add anything? (predictive corr with next-12m equity return)")
-    print(f"  Fed signal (E/P − y10): {st.predictive_corr(sig, d['tr']):+.2f}")
-    print(f"  E/P alone:              {st.predictive_corr(d['ep'], d['tr']):+.2f}   <- if ≥ the above, the bond term is inert")
+    race = st.predictive_corr_race(d["ep"], sig, d["tr"])
+    print(f"  Fed signal (E/P − y10): {race['corr2']:+.2f}  (block-bootstrap SE {race['se2']:.2f})")
+    print(f"  E/P alone:              {race['corr1']:+.2f}  (block-bootstrap SE {race['se1']:.2f})   <- if ≥ the above, the bond term is inert")
+    print(f"  difference (E/P − Fed): {race['diff']:+.2f}  SE {race['se_diff']:.2f}, 95% CI [{race['diff_lo']:+.2f}, {race['diff_hi']:+.2f}]")
+    print(f"  ({race['n']} overlapping monthly obs ≈ {race['n_indep']} independent ones; 12-month circular blocks, seeded)")
+    print("  -> the comparison adds nothing detectable; it does not measurably subtract either")
+    print("  (honesty notes: Shiller earnings are interpolated quarterly figures published with a lag,")
+    print("   so the 'no look-ahead' is only partial — a bias that *flatters* the Fed Model; and the")
+    print("   bond leg is y10/12 with zero duration, a cash-like proxy that also flatters the timing)")
 
     print("\nAsness money-illusion check:")
     print(f"  corr(E/P, 10y yield)        = {d['ep'].corr(d['y10']):+.2f}  (the model assumes they track)")

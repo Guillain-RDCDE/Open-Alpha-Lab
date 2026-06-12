@@ -3,9 +3,15 @@
   * :func:`synthetic_smb` — **offline, deterministic**. A market factor drives a small-cap and a
     large-cap series; the small leg carries an annual ``premium`` that can ``decay`` to zero (or
     reverse) over the sample. ``premium = 0`` is the null. Pins the SMB machinery offline.
-  * :func:`fetch_pairs` — monthly total returns for the real size pairs (**^RUT/^GSPC** for the long
-    history, **IWM/SPY** and **IJR/IVV** total-return ETF pairs), **cache-first**. Fingerprinted run in
+  * :func:`fetch_pairs` — monthly returns for the real size pairs (**^RUT/^GSPC** for the long
+    history, **IWM/SPY** and **IJR/IVV** ETF pairs), **cache-first**. Fingerprinted run in
     ``docs/results.md``.
+
+A labelling honesty note: the ETF pairs are **total return** (Yahoo auto-adjusted), but ^RUT and
+^GSPC are **price indices** — no dividends on either leg of the long history. Large caps yield more
+than small caps, so a true total-return ^RUT − ^GSPC spread would be *more negative* than the price
+spread we report; the omission is conservative in the premium's favour, and the study says so where
+the number appears.
 """
 
 from __future__ import annotations
@@ -59,10 +65,13 @@ def synthetic_smb(
 
 
 def fetch_pairs(cache_dir: str = DEFAULT_CACHE, fetch: bool = False) -> pd.DataFrame:
-    """Monthly total returns for the real size pairs, cache-first.
+    """Monthly returns for the real size pairs, cache-first.
 
     **Cache-only** unless ``fetch=True``. Returns a monthly-return frame with columns
-    ``^RUT, ^GSPC, IWM, SPY, IJR, IVV`` (empty on a cache miss with ``fetch=False``).
+    ``^RUT, ^GSPC, IWM, SPY, IJR, IVV`` — price return for the two indices, total return for the four
+    ETFs (see the module docstring for why that is conservative). The in-progress calendar month is
+    dropped at fetch time so the last bar is always a complete month. Empty on a cache miss with
+    ``fetch=False``.
     """
     cache = os.path.join(cache_dir, "vanishing_act_pairs.parquet")
     if os.path.exists(cache):
@@ -74,6 +83,9 @@ def fetch_pairs(cache_dir: str = DEFAULT_CACHE, fetch: bool = False) -> pd.DataF
     px = yf.download(TICKERS, period="max", interval="1mo", auto_adjust=True, progress=False)["Close"]
     px.index = pd.DatetimeIndex(px.index).tz_localize(None)
     ret = px.resample("ME").last().pct_change().dropna(how="all")
+    # never publish a "monthly" return built from a few days — drop the in-progress month
+    last_complete = pd.Timestamp.today().to_period("M") - 1
+    ret = ret[ret.index.to_period("M") <= last_complete]
     ret.index.name = "date"
     os.makedirs(cache_dir, exist_ok=True)
     ret.to_parquet(cache)

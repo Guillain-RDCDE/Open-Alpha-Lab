@@ -11,16 +11,24 @@ The Fed Model is a famous, named market-timing rule — and its defining ingredi
 125 years the timing earns **Sharpe 0.72 at 9.0%/yr** against buy-and-hold's **0.73 at 10.0%/yr**: it
 matches the market's risk-adjusted return while *giving up* a point of return — no improvement. The
 `WEAK` stamp is for valuation: E/P *does* carry mild forecasting power. But the model's distinctive move
-— comparing E/P to the **bond yield** — adds nothing: the Fed signal forecasts next-year returns at
-**+0.12**, while **E/P alone does better at +0.16**. The bond term is decoration. And it rests on a
-money illusion (Asness 2003): E/P tracks **inflation (corr +0.39)** far more than the **bond yield it's
-supposed to mirror (corr +0.26)** — the model equates a real earnings yield with a nominal bond yield.
-`BUSTED`.
+— comparing E/P to the **bond yield** — adds nothing detectable: the Fed signal forecasts next-year
+returns at **+0.12** vs **+0.16** for E/P alone, and once the massive overlap in 12-month forward
+returns is respected (≈125 independent observations, not 1,505), the difference is **+0.03 with a
+block-bootstrap SE of 0.05** — indistinguishable from zero. The bond term is decoration. And it rests
+on a money illusion (Asness 2003): E/P tracks **inflation (corr +0.39)** far more than the **bond yield
+it's supposed to mirror (corr +0.26)** — the model equates a real earnings yield with a nominal bond
+yield. The `BUSTED` verdict stands on that conceptual error, not on the (noisy) horse race. `BUSTED`.
 
 ## Data stamp
 
 - **Series**: Shiller S&P (price/earnings/dividend/10y/CPI), 1900-02 → 2026-05, 1,516 months,
   fingerprint `e94500e7e09d`
+- **Two honest limits, both of which flatter the model it doesn't save**: Shiller's monthly earnings
+  are interpolated quarterly figures published with a lag, so the "no look-ahead" in the lagged signal
+  is only partial — the rule sees earnings somewhat earlier than a live investor could (a bias *in the
+  Fed Model's favour*; it loses anyway). And the bond leg is `y10/12` — a zero-duration cash-like
+  proxy that spares the timing rule the duration losses a real 10-year position takes when yields
+  rise (again, flattery in the conservative direction).
 
 ## The timing doesn't beat buy-and-hold
 
@@ -32,16 +40,22 @@ supposed to mirror (corr +0.26)** — the model equates a real earnings yield wi
 Same Sharpe, same worst drawdown (−81%), a point less compounding. After a century the rule has not
 earned its complexity — it is buy-and-hold with extra steps and a worse total return.
 
-## The bond-yield comparison adds nothing — E/P alone does better
+## The bond-yield comparison adds nothing detectable — E/P alone does at least as well
 
-| predictor | correlation with next-12-month equity return |
-|---|---|
-| Fed signal (E/P − 10y yield) | **+0.12** |
-| **E/P alone** | **+0.16** |
+| predictor | corr with next-12m equity return | block-bootstrap SE |
+|---|---|---|
+| Fed signal (E/P − 10y yield) | +0.12 | 0.06 |
+| **E/P alone** | **+0.16** | 0.06 |
+| **difference (E/P − Fed)** | **+0.03** | **0.05** — 95% CI [−0.07, +0.13] |
 
-This is the crux. The Fed Model's whole idea is that you must *compare* the earnings yield to the bond
-yield. But E/P **by itself** forecasts returns *better* than the comparison does — subtracting the bond
-yield only injects noise. The model's signature ingredient is worse than useless.
+This is the crux, measured honestly. The 1,505 monthly rows overlap massively — each shares 11 of its
+12 forward months with the next, so they carry only **~125 independent observations** and naive SEs
+would be ~3.5× too small; the SEs above come from a seeded 12-month circular block bootstrap. The Fed
+Model's whole idea is that you must *compare* the earnings yield to the bond yield. The verdict the
+data can support: subtracting the bond yield **adds nothing detectable** — the comparison's point
+estimate is lower than plain E/P's, but the gap (+0.03 ± 0.05) is inside the noise. A century of data
+cannot find any contribution from the model's signature ingredient; that is exactly what "decoration"
+means, and it is all the horse race is entitled to say.
 
 ## Why: the money illusion (Asness 2003)
 
@@ -58,6 +72,8 @@ a conceptual error, not an edge.
 ## The honest takeaway
 
 The Fed Model is a `WEAK`/`MIRAGE` rule built on a `BUSTED` premise: its market-timing matches
-buy-and-hold's Sharpe while losing return, the bond-yield comparison that defines it forecasts *worse*
-than E/P alone, and the whole construct confuses a real earnings yield with a nominal bond yield. What
-little works is plain valuation (E/P) — the "Model" adds a famous name and a logical mistake.
+buy-and-hold's Sharpe while losing return, the bond-yield comparison that defines it adds nothing
+detectable over E/P alone (+0.03 ± 0.05 once the forward-return overlap is respected), and the whole
+construct confuses a real earnings yield with a nominal bond yield — the money illusion Asness (2003)
+identified, which is where the `BUSTED` is earned. What little works is plain valuation (E/P) — the
+"Model" adds a famous name and a logical mistake.

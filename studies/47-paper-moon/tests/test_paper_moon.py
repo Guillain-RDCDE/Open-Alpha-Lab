@@ -32,6 +32,29 @@ def test_bond_term_is_inert(ep_world):
     assert pc_ep >= pc_fed - 1e-9     # E/P at least as good — the bond comparison adds nothing
 
 
+def test_corr_race_is_deterministic_and_sane(ep_world):
+    """The overlap-corrected horse race: point estimates match predictive_corr, SEs are positive,
+    the percentile CI brackets the difference, and the seeded bootstrap reproduces exactly."""
+    df, _ = ep_world
+    sig = st.fed_signal(df["ep"], df["y10"])
+    race = st.predictive_corr_race(df["ep"], sig, df["tr"], n_boot=400)
+    assert abs(race["corr1"] - st.predictive_corr(df["ep"], df["tr"])) < 1e-12
+    assert abs(race["corr2"] - st.predictive_corr(sig, df["tr"])) < 1e-12
+    assert race["se1"] > 0 and race["se2"] > 0 and race["se_diff"] > 0
+    assert race["diff_lo"] <= race["diff"] <= race["diff_hi"]
+    assert race["n_indep"] == race["n"] // 12
+    race2 = st.predictive_corr_race(df["ep"], sig, df["tr"], n_boot=400)
+    assert race == race2                       # seeded -> byte-for-byte reproducible
+
+
+def test_corr_race_null_difference_in_noise(null_world):
+    """With no signal anywhere, the E/P-vs-Fed difference must sit inside its own 95% CI of zero."""
+    df, _ = null_world
+    sig = st.fed_signal(df["ep"], df["y10"])
+    race = st.predictive_corr_race(df["ep"], sig, df["tr"], n_boot=400)
+    assert race["diff_lo"] < 0.0 < race["diff_hi"]
+
+
 def test_signal_and_timing_mechanics(ep_world):
     df, _ = ep_world
     sig = st.fed_signal(df["ep"], df["y10"])

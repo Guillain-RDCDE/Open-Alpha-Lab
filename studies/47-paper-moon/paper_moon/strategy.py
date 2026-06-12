@@ -44,11 +44,54 @@ def forward_return(tr: pd.Series, horizon: int = 12) -> pd.Series:
 
 
 def predictive_corr(predictor: pd.Series, tr: pd.Series, horizon: int = 12) -> float:
-    """Correlation of a predictor with the next-``horizon``-month equity return (overlap-aware enough
-    for a like-for-like comparison between the Fed signal and E/P alone)."""
+    """Correlation of a predictor with the next-``horizon``-month equity return (point estimate only —
+    see :func:`predictive_corr_race` for the overlap-corrected uncertainty)."""
     fwd = forward_return(tr, horizon)
     df = pd.concat([pd.Series(predictor).astype(float).rename("p"), fwd], axis=1).dropna()
     return float(df["p"].corr(df["fwd"])) if len(df) > 2 else np.nan
+
+
+def predictive_corr_race(
+    p1: pd.Series, p2: pd.Series, tr: pd.Series, horizon: int = 12,
+    block: int = 12, n_boot: int = 2000, seed: int = 47,
+) -> dict:
+    """The horse race done honestly: both predictive correlations *and their difference*, with
+    overlap-corrected standard errors.
+
+    The forward-return target overlaps massively at ``horizon=12`` — consecutive months share 11 of
+    their 12 forward months, so ~1,500 monthly rows carry only ~125 independent year-length
+    observations and naive SEs are ~3.5× too small. A **circular moving-block bootstrap** (blocks of
+    ``block`` months, seeded — deterministic) resamples year-sized chunks of the aligned panel, which
+    preserves the overlap inside each block. Returns the point correlations, each bootstrap SE, and
+    the difference ``corr1 − corr2`` with its SE and 95% percentile CI — the only number that can
+    license a "predictor A beats predictor B" sentence.
+    """
+    fwd = forward_return(tr, horizon)
+    df = pd.concat([pd.Series(p1).astype(float).rename("p1"),
+                    pd.Series(p2).astype(float).rename("p2"), fwd], axis=1).dropna()
+    n = len(df)
+    if n < 3 * block:
+        return {k: np.nan for k in ("corr1", "corr2", "diff", "se1", "se2", "se_diff",
+                                    "diff_lo", "diff_hi", "n", "n_indep")}
+    x1, x2, y = df["p1"].to_numpy(), df["p2"].to_numpy(), df["fwd"].to_numpy()
+    c1, c2 = float(df["p1"].corr(df["fwd"])), float(df["p2"].corr(df["fwd"]))
+    rng = np.random.default_rng(seed)
+    n_blocks = int(np.ceil(n / block))
+    draws = np.empty((n_boot, 2))
+    for b in range(n_boot):
+        starts = rng.integers(0, n, size=n_blocks)
+        idx = (starts[:, None] + np.arange(block)[None, :]).ravel()[:n] % n  # circular blocks
+        bx1, bx2, by = x1[idx], x2[idx], y[idx]
+        draws[b, 0] = np.corrcoef(bx1, by)[0, 1]
+        draws[b, 1] = np.corrcoef(bx2, by)[0, 1]
+    diffs = draws[:, 0] - draws[:, 1]
+    lo, hi = np.percentile(diffs, [2.5, 97.5])
+    return {
+        "corr1": c1, "corr2": c2, "diff": c1 - c2,
+        "se1": float(draws[:, 0].std(ddof=1)), "se2": float(draws[:, 1].std(ddof=1)),
+        "se_diff": float(diffs.std(ddof=1)), "diff_lo": float(lo), "diff_hi": float(hi),
+        "n": int(n), "n_indep": int(n // horizon),
+    }
 
 
 def summary(returns: pd.Series, periods_per_year: int = MONTHS) -> dict:
