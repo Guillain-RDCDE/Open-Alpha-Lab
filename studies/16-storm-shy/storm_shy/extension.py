@@ -24,6 +24,16 @@ real run decides it:
       without borrowing); the rest is the leverage slice. Whether that survives on the real tape is
       left to :mod:`examples.extension` on SPY/QQQ.
 
+Two further robustness legs live here because they answer the two questions a sceptic asks of the
+desk's only `INVESTABLE` stamp:
+
+    * :func:`param_sweep` — is the gain a *tuned point* (one window, one target) or a plateau?
+      Sweeps the vol window × vol target grid and reports the net Sharpe gain in every cell.
+    * :func:`rolling_gain` / :func:`rolling_gain_stats` — has the edge *decayed* since
+      publication? The rolling multi-year **Sharpe gain** (managed minus buy-&-hold, paired
+      windows), measured on whatever tape it is given — so the no-decay claim can be made on the
+      *real* tapes, not just the synthetic control.
+
 House-standard *worked complement* in the study's own beat 7 — not a new study.
 """
 
@@ -32,7 +42,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from .strategy import compare
+from .strategy import compare, managed_returns
 from .decompose import certainty_equivalent, equal_risk_return
 
 TRADING_DAYS_PER_YEAR = 252
@@ -65,6 +75,92 @@ def leverage_cap_sweep(
     out = pd.DataFrame(rows).T
     out.index.name = "max_leverage"
     return out
+
+
+def param_sweep(
+    returns: pd.Series,
+    windows=(10, 21, 63),
+    targets=(0.08, 0.10, 0.12, 0.15),
+    max_leverage: float = 2.0,
+    cost_bps: float = 1.0,
+) -> pd.DataFrame:
+    """Net Sharpe gain over buy-&-hold across the vol-window × vol-target grid.
+
+    The headline run uses one cell (21-day window, 12% target). If the gain lived only there it
+    would be a tuned point — selection, not signal. This sweeps every combination (rows: vol
+    estimation window in days; columns: annual vol target) with everything else held fixed, so a
+    reader can see whether the edge is a plateau or a spike. The Sharpe gain is already invariant
+    to a *constant* leverage, so the target mostly moves how often the cap binds — large swings
+    across this table would be the tell of a fragile, parameter-mined result.
+    """
+    rows = {}
+    for w in windows:
+        rows[w] = {
+            t: compare(returns, target_vol_ann=t, window=w,
+                       max_leverage=max_leverage, cost_bps=cost_bps)["sharpe_gain_net"]
+            for t in targets
+        }
+    out = pd.DataFrame(rows).T
+    out.index.name = "vol_window_days"
+    out.columns = [f"{t:.0%}" for t in targets]
+    out.columns.name = "vol_target"
+    return out
+
+
+def rolling_gain(
+    returns: pd.Series,
+    window_years: float = 5.0,
+    cost_bps: float = 1.0,
+    periods_per_year: int = TRADING_DAYS_PER_YEAR,
+    **managed_kw,
+) -> pd.Series:
+    """Rolling ``window_years`` **Sharpe gain** — Sharpe(managed) − Sharpe(buy-&-hold), paired
+    windows — the decay check.
+
+    This is the headline metric itself, measured window by window (*not* the Sharpe of the
+    long-short spread, whose mean is negative whenever the managed book runs lower absolute
+    return at lower risk — that series answers a different question). A post-publication cliff
+    (McLean & Pontiff 2016) would show here as the gain sliding below zero and staying there in
+    the most recent windows. Run on a *real* tape this is the honest version of the "no decay
+    cliff" claim; the synthetic control can't decay by construction, so it proves nothing about
+    the market.
+    """
+    m = managed_returns(returns, cost_bps=cost_bps, **managed_kw)
+    bh = pd.Series(returns).astype(float).reindex(m.index).dropna()
+    m = m.reindex(bh.index)
+    win = int(round(window_years * periods_per_year))
+    ann = np.sqrt(periods_per_year)
+
+    def _roll_sharpe(x: pd.Series) -> pd.Series:
+        return x.rolling(win).mean() / x.rolling(win).std(ddof=1) * ann
+
+    return (_roll_sharpe(m) - _roll_sharpe(bh)).dropna().rename("rolling_sharpe_gain")
+
+
+def rolling_gain_stats(
+    returns: pd.Series,
+    window_years: float = 5.0,
+    cost_bps: float = 1.0,
+    **managed_kw,
+) -> dict:
+    """Summary of :func:`rolling_gain` for the results table: is the gain fading?
+
+    Reports the median and extremes of the rolling Sharpe gain, the share of windows where it
+    is positive, the value in the *last* window (the post-publication read), and the mean by
+    decade of the window's end date — the numbers behind "no decay cliff" on a real tape.
+    """
+    rs = rolling_gain(returns, window_years=window_years, cost_bps=cost_bps, **managed_kw)
+    by_decade = rs.groupby((rs.index.year // 10) * 10).mean()
+    return {
+        "window_years": float(window_years),
+        "n_windows": int(len(rs)),
+        "median": float(rs.median()),
+        "min": float(rs.min()),
+        "max": float(rs.max()),
+        "frac_positive": float((rs > 0).mean()),
+        "last": float(rs.iloc[-1]),
+        "by_decade": {f"{int(d)}s": float(v) for d, v in by_decade.items()},
+    }
 
 
 def gain_decomposition(

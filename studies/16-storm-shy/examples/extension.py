@@ -26,7 +26,7 @@ from storm_shy import data, vol, extension
 from quantlab.repro import DEFAULT_AS_OF, as_of, fingerprint
 
 OUT = os.path.join(_STUDY, "docs", "extension.md")
-TICKERS = ["SPY", "QQQ"]
+TICKERS = ["SPY", "QQQ", "EFA"]    # same three tapes as verify.py
 COST_BPS = 1.0
 
 
@@ -82,8 +82,8 @@ def _write(path, results, fps):
 leverage may not be an investor gain. We make it a backtest by splitting the edge with a leverage
 cap: **de-risk only** (cap 1.0 — cut exposure in storms, never borrow) vs the **unconstrained**
 overlay, so ``gain_full = gain_derisk + gain_leverage`` isolates the contested leverage slice. Real
-SPY/QQQ daily total-return closes, {COST_BPS:.0f} bp/turn, as-of **{DEFAULT_AS_OF}**; match the
-fingerprints below.*
+{'/'.join(results)} daily total-return closes, {COST_BPS:.0f} bp/turn, as-of **{DEFAULT_AS_OF}**;
+match the fingerprints below.*
 
 ## Data stamp
 """]
@@ -92,6 +92,10 @@ fingerprints below.*
 
     for tk, r in results.items():
         g = r["decomp"]
+        share_txt = (f"{g['share_derisk']:.0%} of the edge"
+                     if 0 <= g["share_derisk"] <= 1.5 else
+                     f"more than all of the edge (the full gain is ~{g['gain_full']:+.2f}; the "
+                     f"leverage slice is negative, so capping leverage *helps*)")
         lines.append(f"""
 ## {tk} — de-risk vs leverage slice ({r['n_bars']} bars)
 
@@ -101,7 +105,7 @@ fingerprints below.*
 | leverage (calm gearing) | {g['gain_leverage']:+.2f} | yes |
 | **full overlay** | {g['gain_full']:+.2f} | — |
 
-- **De-risk carries {g['share_derisk']:.0%} of the edge** — and it needs **no borrowing**. The
+- **De-risk carries {share_txt}** — and it needs **no borrowing**. The
   drawdown reduction is almost entirely here: **{g['buyhold_maxdd']:.0%} → {g['derisk_maxdd']:.0%}**
   with leverage capped at 1.0, and a no-borrow CRRA certainty-equivalent gain of
   **{g['ce_gain_derisk_pct']:+.2f}%/yr**.

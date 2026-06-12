@@ -6,13 +6,14 @@
 leverage may not be an investor gain. We make it a backtest by splitting the edge with a leverage
 cap: **de-risk only** (cap 1.0 — cut exposure in storms, never borrow) vs the **unconstrained**
 overlay, so ``gain_full = gain_derisk + gain_leverage`` isolates the contested leverage slice. Real
-SPY/QQQ daily total-return closes, 1 bp/turn, as-of **2026-06-01**; match the
-fingerprints below.*
+SPY/QQQ/EFA daily total-return closes, 1 bp/turn, as-of **2026-06-01**;
+match the fingerprints below.*
 
 ## Data stamp
 
-- **SPY**: 1993-01-29 → 2026-06-01, fingerprint `533c9c7f84dc`
-- **QQQ**: 1999-03-10 → 2026-06-01, fingerprint `56ce367061af`
+- **SPY**: 1993-01-29 → 2026-06-01, fingerprint `55d550cfe224`
+- **QQQ**: 1999-03-10 → 2026-06-01, fingerprint `6754a1ca17bc`
+- **EFA**: 2001-08-27 → 2026-06-01, fingerprint `7f36a65cb404`
 
 ## SPY — de-risk vs leverage slice (8390 bars)
 
@@ -70,11 +71,39 @@ fingerprints below.*
 | 10.00 | +0.25 | +0.77 | 0.70 | 0% | -38% |
 
 
+## EFA — de-risk vs leverage slice (6225 bars)
+
+| slice | Sharpe gain | needs borrowing? |
+|---|---|---|
+| **de-risk** (cap 1.0) | **+0.05** | no — avg leverage 0.77 |
+| leverage (calm gearing) | -0.04 | yes |
+| **full overlay** | +0.01 | — |
+
+- **De-risk carries more than all of the edge (the full gain is ~+0.01; the leverage slice is negative, so capping leverage *helps*)** — and it needs **no borrowing**. The
+  drawdown reduction is almost entirely here: **-61% → -31%**
+  with leverage capped at 1.0, and a no-borrow CRRA certainty-equivalent gain of
+  **+1.05%/yr**.
+- **The leverage slice is -0.04** — the contested Cederburg piece. On the real
+  tape it is small (the fat-tailed, vol-asymmetric market rewards *cutting* risk in storms far more
+  than *adding* it in calm), so almost none of the edge is levered into existence.
+
+### Leverage-cap sweep
+
+| max leverage | Sharpe gain | managed Sharpe | avg leverage | % days capped | managed maxDD |
+|---|---|---|---|---|---|
+| 1.00 | +0.05 | +0.48 | 0.77 | 30% | -31% |
+| 1.25 | +0.03 | +0.46 | 0.81 | 12% | -31% |
+| 1.50 | +0.01 | +0.44 | 0.83 | 5% | -31% |
+| 2.00 | +0.01 | +0.44 | 0.85 | 1% | -31% |
+| 3.00 | +0.01 | +0.44 | 0.85 | 0% | -31% |
+| 10.00 | +0.01 | +0.44 | 0.85 | 0% | -31% |
+
+
 ## What it shows
 
 The one caveat the headline verdict flags — *it needs leverage* — turns out, on the real tape, to be
 the part that matters **least**. The Sharpe gain and essentially all of the drawdown reduction
-survive a hard **no-borrowing** constraint in **2/2** tapes, because the edge is
+survive a hard **no-borrowing** constraint in **3/3** tapes, because the edge is
 overwhelmingly **storm-dodging** (de-risk), not calm-gearing (leverage). A long-only, leverage-capped,
 financing-constrained book — the exact investor the Cederburg critique worries about — **keeps the
 benefit**. The framework's hardest constraint, imposed, leaves `Tradability INVESTABLE` standing and

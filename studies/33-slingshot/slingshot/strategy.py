@@ -3,7 +3,10 @@
 Each day:
   1. **Signal** — each stock's trailing ``lookback``-day return, demeaned across the cross-section
      (its return *relative to the pack*), then negated: short the relative leaders, long the relative
-     laggards. Lagged one day so it's tradable.
+     laggards. The book runs on a **two-day execution lag** (the signal is shifted once at
+     construction in :func:`reversal_signal` and once more at execution in :func:`book_returns`) —
+     conservative: every headline number is earned trading a day *later* than the fastest tradable
+     implementation.
   2. **Dollar-neutral weights** — scale the demeaned signal so the long and short legs net to zero and
      gross exposure sums to one. No single-name or sector cap (a fork in beat 7).
   3. **Daily rebalance** — the signal refreshes every day, so the book turns over almost completely;
@@ -24,8 +27,9 @@ TRADING_DAYS = 252
 
 def reversal_signal(returns: pd.DataFrame, lookback: int = 5) -> pd.DataFrame:
     """Dollar-neutral contrarian weights: the cross-sectionally demeaned, negated trailing return,
-    normalised so gross exposure is 1 each day, lagged one day. Long relative laggards, short relative
-    leaders."""
+    normalised so gross exposure is 1 each day, shifted one day here (and once more at execution in
+    :func:`book_returns` — a two-day lag in total, conservative). Long relative laggards, short
+    relative leaders."""
     prices = (1.0 + returns.fillna(0.0)).cumprod()
     trail = prices / prices.shift(lookback) - 1.0
     x = trail.sub(trail.mean(axis=1), axis=0)              # relative to the cross-section
@@ -36,9 +40,11 @@ def reversal_signal(returns: pd.DataFrame, lookback: int = 5) -> pd.DataFrame:
 
 
 def book_returns(returns: pd.DataFrame, lookback: int = 5, cost_bps: float = 5.0) -> pd.Series:
-    """Net daily return of the dollar-neutral reversal book: weights applied to next-day returns, minus
-    turnover cost (``cost_bps`` per unit traded). Equities cost more to trade than futures (~5 bp here),
-    and the book rebalances daily, so the cost term is decisive."""
+    """Net daily return of the dollar-neutral reversal book, minus turnover cost (``cost_bps`` per unit
+    traded). The weights from :func:`reversal_signal` (already shifted once) are shifted once more here —
+    a **two-day execution lag** in total, which is conservative (a faster fill could only help a reversal
+    signal). Equities cost more to trade than futures (~5 bp here), and the book rebalances daily, so the
+    cost term is decisive."""
     w = reversal_signal(returns, lookback=lookback)
     gross = (w.shift(1) * returns).sum(axis=1)
     cost = (cost_bps * 1e-4) * w.diff().abs().sum(axis=1)

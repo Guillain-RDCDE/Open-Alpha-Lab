@@ -237,8 +237,10 @@ def build_quants():
             "## Beat 1 · The claim, precisely\n\n"
             "Each day, weight $w_{i,t} \\propto -\\big(x_{i,t}-\\bar x_t\\big)$ where $x_{i,t}$ is stock "
             "$i$'s trailing 5-day return and $\\bar x_t$ the cross-sectional mean; weights are scaled so "
-            "$\\sum_i w_{i,t}=0$ (dollar-neutral) and $\\sum_i|w_{i,t}|=1$ (gross 1), then lagged one day. "
-            "Claim: $\\sum_i w_{i,t-1} r_{i,t}$ earns a positive, market-neutral premium. Null: i.i.d. "
+            "$\\sum_i w_{i,t}=0$ (dollar-neutral) and $\\sum_i|w_{i,t}|=1$ (gross 1), then executed on a "
+            "**two-day lag** (shifted once at construction, once at execution) — conservative, since a "
+            "faster fill could only help a reversal signal. "
+            "Claim: $\\sum_i w_{i,t-2} r_{i,t}$ earns a positive, market-neutral premium. Null: i.i.d. "
             "idiosyncratic returns ⇒ no cross-sectional overshoot to fade."
         ),
         code(

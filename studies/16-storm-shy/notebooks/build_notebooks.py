@@ -50,15 +50,33 @@ print(f"{truth.n_bars} synthetic bars | calm ~{truth.calm_fraction:.0%} of the t
 """
 
 # Real headline numbers (from docs/results.md via examples/verify.py; the cells below EXECUTE on the
-# synthetic tape, which is what runs offline). SPY since 1993, QQQ since 1999, as-of 2026-06-01.
+# synthetic tape, which is what runs offline). SPY since 1993, QQQ since 1999, EFA since 2001,
+# as-of 2026-06-01. CIs are the paired circular-block bootstrap (blocks preserve vol clustering).
 R = dict(
     spy_rho="+0.66", spy_bh="+0.65", spy_mgd="+0.76", spy_gain="+0.11",
-    spy_alpha="+2.83", spy_t="2.38", spy_ci="[-0.08, +0.31]", spy_turn="9",
+    spy_alpha="+2.83", spy_t="2.38", spy_ci="[−0.06, +0.30]", spy_p="10.8", spy_turn="9",
     spy_dd_bh="-55", spy_dd_mgd="-39", spy_ce="+2.11",
+    spy_sweep="[+0.11, +0.13]", spy_roll_last="−0.02", spy_roll_2020s="+0.15",
     qqq_rho="+0.74", qqq_bh="+0.51", qqq_mgd="+0.77", qqq_gain="+0.26",
-    qqq_alpha="+4.56", qqq_t="3.54", qqq_ci="[+0.04, +0.48]", qqq_turn="7",
-    qqq_dd_bh="-83", qqq_dd_mgd="-38", qqq_ce="+6.92",
+    qqq_alpha="+4.56", qqq_t="3.54", qqq_ci="[+0.07, +0.45]", qqq_p="0.5", qqq_turn="7",
+    qqq_dd_bh="-83", qqq_dd_mgd="-38", qqq_ce="+6.91",
+    qqq_sweep="[+0.22, +0.26]", qqq_roll_last="+0.20", qqq_roll_2020s="+0.17",
+    efa_rho="+0.66", efa_bh="+0.43", efa_mgd="+0.44", efa_gain="+0.01",
+    efa_alpha="+1.03", efa_t="0.78", efa_ci="[−0.18, +0.22]",
+    efa_dd_bh="-61", efa_dd_mgd="-31", efa_ce="+0.29", efa_sweep="[−0.06, +0.05]",
     spy_share_derisk="105", qqq_share_derisk="101",
+)
+
+# The honesty line the desk repeats wherever the SPY/EFA intervals are quoted.
+HONEST = (
+    "**The flag we will not bury:** on SPY the 95% CI for the Sharpe gain is "
+    f"**{R['spy_ci']}** (P(gain<0) = {R['spy_p']}%) and on EFA **{R['efa_ci']}** — both contain "
+    "zero. **SPY alone would not clear the bar; the stamp rests on QQQ** "
+    f"(CI **{R['qqq_ci']}**, P(gain<0) = {R['qqq_p']}%) **plus the breadth of the published "
+    "literature** (Moreira–Muir 2017 across factors and markets). What holds on every tape is the "
+    f"risk-management half: the max drawdown collapses (SPY {R['spy_dd_bh']}%→{R['spy_dd_mgd']}%, "
+    f"QQQ {R['qqq_dd_bh']}%→{R['qqq_dd_mgd']}%, EFA {R['efa_dd_bh']}%→{R['efa_dd_mgd']}%) — a "
+    "benefit that needs no significance test to bank."
 )
 
 BADGES = (
@@ -117,10 +135,14 @@ def build_curious():
             "|---|---|\n"
             "| Is tomorrow's *volatility* predictable? | ✅ **Yes** — strongly. It's the most "
             "forecastable thing in markets (calm clusters, storms cluster). |\n"
-            "| Does sizing by inverse-vol lift the risk-adjusted return? | ✅ **Yes** — on real SPY "
-            f"the Sharpe goes **{R['spy_bh']} → {R['spy_mgd']}**, on QQQ **{R['qqq_bh']} → "
+            "| Does sizing by inverse-vol lift the risk-adjusted return? | ✅ **Yes, with one flag "
+            "we won't bury** — on real SPY the Sharpe goes "
+            f"**{R['spy_bh']} → {R['spy_mgd']}**, on QQQ **{R['qqq_bh']} → "
             f"{R['qqq_mgd']}**, and the drawdown shrinks hard (QQQ **{R['qqq_dd_bh']}% → "
-            f"{R['qqq_dd_mgd']}%**). |\n"
+            f"{R['qqq_dd_mgd']}%**). Statistically, only **QQQ** clears the bar on its own; SPY's "
+            "interval straddles zero, and our non-US check (EFA) is flat on Sharpe "
+            f"(**{R['efa_bh']} → {R['efa_mgd']}**) though its crash still shrinks "
+            f"(**{R['efa_dd_bh']}% → {R['efa_dd_mgd']}%**). |\n"
             "| Does it survive costs and scale? | ✅ **Yes** — turnover is tiny "
             f"(~{R['spy_turn']}×/yr) and you're sizing the most liquid instrument on earth. The rare "
             "**`INVESTABLE`** stamp. |\n"
@@ -252,11 +274,19 @@ def build_curious():
         ),
         code(
             "sp = decompose.spanning_alpha(ret, cost_bps=1.0)\n"
-            "bs = decompose.sharpe_gain_bootstrap(ret, n_boot=2000, seed=0, cost_bps=1.0)\n"
+            "bs = decompose.sharpe_gain_bootstrap(ret, n_boot=2000, seed=0, cost_bps=1.0)  # circular block\n"
             "print(f\"spanning alpha {sp['alpha_ann_pct']:+.2f}%/yr, HAC t = {sp['alpha_t']:+.2f} \"\n"
             "      f\"(t>2 => not just luck)\")\n"
-            "print(f\"bootstrap Sharpe gain {bs['sharpe_gain']:+.2f}, 95% CI \"\n"
-            "      f\"[{bs['ci_low']:+.2f}, {bs['ci_high']:+.2f}], P(gain<0) = {bs['frac_negative']:.1%}\")"
+            "print(f\"block-bootstrap Sharpe gain {bs['sharpe_gain']:+.2f}, 95% CI \"\n"
+            "      f\"[{bs['ci_low']:+.2f}, {bs['ci_high']:+.2f}] (blocks of {bs['block_size']} days), \"\n"
+            "      f\"P(gain<0) = {bs['frac_negative']:.1%}\")"
+        ),
+        md(
+            "(The bootstrap re-deals the history in *blocks* of consecutive days — volatility comes "
+            "in clusters, and re-dealing single days would break the clusters apart and make the "
+            "interval look more certain than it is.)\n\n"
+            "That's the synthetic tape, where the gain is wired in. On the **real** tapes the same "
+            "test reads:\n\n" + HONEST
         ),
 
         md(
@@ -279,12 +309,17 @@ def build_curious():
 
         md(
             "## 5 · The verdict 🧾\n\n"
-            "- **Risk is forecastable** (synthetic AR(1) ρ ≈ 0.5; real SPY/QQQ ρ ≈ "
-            f"{R['spy_rho']}/{R['qqq_rho']}) — the engine is real and replicated.\n"
+            "- **Risk is forecastable** (synthetic AR(1) ρ ≈ 0.5; real SPY/QQQ/EFA ρ ≈ "
+            f"{R['spy_rho']}/{R['qqq_rho']}/{R['efa_rho']}) — the engine is real and replicated.\n"
             "- **The overlay pays**: on real SPY the Sharpe goes "
             f"{R['spy_bh']} → {R['spy_mgd']}, on QQQ {R['qqq_bh']} → {R['qqq_mgd']}, with drawdowns "
             "cut hard — and a spanning alpha that's HAC-significant on both "
-            f"(t = {R['spy_t']} / {R['qqq_t']}).\n"
+            f"(t = {R['spy_t']} / {R['qqq_t']}). On EFA, the non-US check, the Sharpe gain is flat "
+            f"({R['efa_gain']}) but the drawdown still collapses ({R['efa_dd_bh']}% → "
+            f"{R['efa_dd_mgd']}%).\n"
+            "- **Only QQQ clears the statistical bar by itself** — SPY's and EFA's intervals contain "
+            "zero (the flag above, repeated on purpose). The stamp rests on QQQ plus the breadth of "
+            "the literature.\n"
             "- **The null behaves**: no regime ⇒ no gain.\n\n"
             "> **Signal `REAL`.** After fifteen mirages, a genuine, stable, decades-long effect — "
             "because it forecasts *risk*, not *returns*. The real-tape numbers and fingerprints are in "
@@ -312,6 +347,15 @@ def build_curious():
             "- **It scales.** You're sizing an *index* — the most liquid instrument on earth (SPY, "
             "ES futures). The ~\\$10M capacity walls that sank earlier studies don't apply; this is "
             "how multi-billion vol-target and risk-parity funds actually run.\n"
+            "- **It isn't a magic setting.** Sweep the vol window (10/21/63 days) against the vol "
+            f"target (8–15%) on the real tapes and the gain barely moves: {R['spy_sweep']} on SPY, "
+            f"{R['qqq_sweep']} on QQQ (EFA, flat overall, spans {R['efa_sweep']}). The headline cell "
+            "(21 days, 12%) is representative, not cherry-picked.\n"
+            "- **And it hasn't quietly died.** Measured on the *real* tapes (not just our synthetic), "
+            "the rolling 5-year gain shows no post-publication cliff — QQQ's latest window reads "
+            f"{R['qqq_roll_last']} and its 2020s average {R['qqq_roll_2020s']} is its best decade; "
+            f"SPY oscillates around a small positive ({R['spy_roll_2020s']} in the 2020s). The full "
+            "table is in [`../docs/results.md`](../docs/results.md).\n"
             "- **The honest catch.** It is **not** a free lunch, and we won't sell it as one. The gain "
             "is *risk management*: to hold your risk target in calm times you must take **leverage**, "
             "and a strict risk-averse (CRRA) investor, judged at matched risk, banks a **smaller** "
@@ -333,8 +377,11 @@ def build_curious():
             "- **Build the vol forecast better.** Does a GARCH or EWMA forecast "
             "([`vol.ewma_vol`](../storm_shy/vol.py)) tighten the ride further — or is the simple "
             "21-day window already 90% of the prize?\n"
-            "- **Across asset classes.** Bonds, commodities, FX, crypto — where does sizing by "
-            "inverse-vol help most, and where does the leverage it *would* demand become unrealistic?\n\n"
+            "- **Across asset classes.** We took the first step: EFA (developed ex-US equities) is "
+            "now the third tape, and the honest answer is *mixed* — the Sharpe gain is flat but the "
+            "drawdown collapse holds. Bonds, commodities, FX, crypto remain open: where does sizing "
+            "by inverse-vol help most, and where does the leverage it *would* demand become "
+            "unrealistic?\n\n"
             "PRs welcome — push the honest 'yes' harder, or find the regime where even this one breaks."
         ),
     ]

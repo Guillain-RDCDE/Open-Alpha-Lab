@@ -36,13 +36,14 @@ r0, _ = data.synthetic_trends(trend_strength=0.0, seed=31)
 print(f"synthetic control: {truth.n_markets} markets x {truth.n_days} days, trend_strength {truth.trend_strength} (null=0)")
 """
 
-# Real-tape numbers (../docs/results.md, 18 futures 2000-2026, as-of 2026-06-10, fp efab160ee1f0)
-R = dict(fp="efab160ee1f0", asof="2026-06-10", days="6546", n="18",
+# Real-tape numbers (../docs/results.md, 18 futures 2000-2026, as-of 2026-06-10, fp b8a35a878ebc —
+# the same cached tape and fingerprint as Study 32, which shares this basket)
+R = dict(fp="b8a35a878ebc", asof="2026-06-10", days="6546", n="18",
          ts_sh="0.30", ts_cagr="2.8", ts_dd="-35", ts_skew="+1.50",
          ts_t="1.6", t12_sh="0.65", t12_t="3.3", span_alpha="3.3", span_t="1.6",
          lob_sh="0.51", b6040_sh="0.48",
-         crisis="+23.6", rest="+1.1", corr="-0.07", ncrisis="31",
-         eq_sh="0.43", eq_dd="-57", eqtr_sh="0.52", eqtr_dd="-33",
+         crisis="+23.6", rest="+1.0", corr="-0.07", ncrisis="31",
+         eq_sh="0.43", eq_dd="-57", eqtr_sh="0.51", eqtr_dd="-33",
          b_sh="0.48", b_dd="-34", btr_sh="0.56", btr_dd="-20",
          sub1="+0.83", sub2="-0.28", sub3="+0.29",
          syn_prem="2.4", syn_null="0.2",
@@ -402,7 +403,7 @@ def build_quants():
         code(
             "print('Lookback sweep (synthetic):'); print(extension.lookback_sweep(r).round(3).to_string())\n"
             f"print('\\nReal sub-period Sharpe (../docs/results.md): {R['sub1']} / {R['sub2']} / {R['sub3']}')\n"
-            "print('Real lookback sweep: 1m 0.07, 3m 0.28, 6m 0.39, 12m 0.65, blend 0.30 -- positive across, strongest at 12m.')\n"
+            "print('Real lookback sweep: 1m 0.06, 3m 0.28, 6m 0.39, 12m 0.65, blend 0.30 -- positive across, strongest at 12m.')\n"
             "print('Robust t (Lo SE, ~26y): blend ~1.6 (below the bar), 12m ~3.3 (clears) -- the Signal stamp is WEAK on this tape.')"
         ),
         md(

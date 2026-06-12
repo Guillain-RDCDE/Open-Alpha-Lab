@@ -6,8 +6,10 @@ Four legs, in the order an honest investigation runs:
      ``managed = α + β·market + ε``. A positive **α**, significant under autocorrelation-robust
      (Newey–West) errors, means the overlay expands the mean–variance frontier — it adds something
      a static position cannot replicate. This is the leg that makes Signal `REAL`.
-  2. :func:`sharpe_gain_bootstrap` — a paired bootstrap CI on ``Sharpe(managed) − Sharpe(buy-hold)``,
-     so the headline gain carries an interval, not just a point.
+  2. :func:`sharpe_gain_bootstrap` — a paired **circular block** bootstrap CI on
+     ``Sharpe(managed) − Sharpe(buy-hold)`` (blocks preserve the very vol-clustering the study
+     trades; an i.i.d. resample would understate the interval), so the headline gain carries an
+     honest interval, not just a point.
   3. :func:`certainty_equivalent` — the honest counter (Cederburg–O'Doherty–Wang–Yan 2020). A
      risk-averse CRRA investor doesn't care about Sharpe per se; they care about utility *after*
      paying for the leverage the overlay needs in calm times. We lever **both** series to the same
@@ -99,13 +101,24 @@ def sharpe_gain_bootstrap(
     alpha: float = 0.05,
     seed: int = 0,
     periods_per_year: int = TRADING_DAYS_PER_YEAR,
+    block_size: int | None = None,
+    method: str = "cbb",
     **managed_kw,
 ) -> dict:
-    """Paired bootstrap CI for ``Sharpe(managed) − Sharpe(buy-hold)``.
+    """Paired **circular block** bootstrap CI for ``Sharpe(managed) − Sharpe(buy-hold)``.
 
-    Resamples the *aligned* (buy-hold, managed) daily pairs with replacement, preserving their
-    contemporaneous link, and reports the point gain, the (1−alpha) percentile interval, and the
-    fraction of resamples where the overlay *loses* — a p-value-like read on "is the gain real?".
+    Resamples the *aligned* (buy-hold, managed) daily pairs, preserving their contemporaneous
+    link, and reports the point gain, the (1−alpha) percentile interval, and the fraction of
+    resamples where the overlay *loses* — a p-value-like read on "is the gain real?".
+
+    Daily returns are not i.i.d. — volatility clusters, which is the very effect this study
+    trades — so an i.i.d. resample destroys the serial dependence and yields intervals that are
+    too *narrow*. The default is therefore the house circular block bootstrap (Politis & Romano
+    1994; same convention as ``quantlab.stats.sharpe_ci_bootstrap``): each resample concatenates
+    blocks of ``block_size`` consecutive *pairs*, with starts drawn uniformly and indices
+    wrapping around the end of the sample. ``block_size=None`` uses the rate-optimal
+    ``round(n ** (1/3))`` rule; ``method='iid'`` reproduces the legacy independent resampling
+    (block length 1), kept for comparison — expect it to understate the interval.
     """
     m = managed_returns(returns, **managed_kw)
     bh = pd.Series(returns).astype(float).reindex(m.index)
@@ -113,14 +126,28 @@ def sharpe_gain_bootstrap(
     n = a.size
     rng = np.random.default_rng(seed)
 
+    if method == "iid":
+        blk = 1
+    elif method == "cbb":
+        blk = int(block_size) if block_size is not None else max(1, round(n ** (1.0 / 3.0)))
+    else:
+        raise ValueError("method must be 'cbb' or 'iid'")
+    blk = max(1, min(blk, n))
+
     def _sr(x):
         sd = x.std(ddof=1)
         return x.mean() / sd * np.sqrt(periods_per_year) if sd > 0 else 0.0
 
     point = _sr(b) - _sr(a)
+    n_blocks = int(np.ceil(n / blk))
+    offsets = np.arange(blk)
     boots = np.empty(n_boot)
     for i in range(n_boot):
-        idx = rng.integers(0, n, n)
+        if blk == 1:
+            idx = rng.integers(0, n, n)
+        else:
+            starts = rng.integers(0, n, n_blocks)
+            idx = ((starts[:, None] + offsets[None, :]) % n).ravel()[:n]
         boots[i] = _sr(b[idx]) - _sr(a[idx])
     lo, hi = np.percentile(boots, [100 * alpha / 2, 100 * (1 - alpha / 2)])
     return {
@@ -130,6 +157,8 @@ def sharpe_gain_bootstrap(
         "frac_negative": float((boots < 0).mean()),
         "n_obs": int(n),
         "n_boot": int(n_boot),
+        "block_size": int(blk),
+        "method": method,
     }
 
 

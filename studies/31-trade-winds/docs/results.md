@@ -27,8 +27,8 @@ edge is not prediction; it is decorrelated insurance you can blend into a portfo
 ## Robust inference — the numbers behind the Signal stamp
 
 Autocorrelation-robust *t*-stats on the net daily books (Lo-2002 SE; Newey–West on the mean agrees to
-the same decimal), computed on the cached tape (2000-07-18 → 2026-06-11, one day past the headline
-as-of; fingerprint `806ee001ea76`):
+the same decimal), computed on the same as-of tape as every table below (2000-07-18 → 2026-06-10;
+fingerprint `b8a35a878ebc` — identical to Study 32's, the two studies share one tape):
 
 | book | net Sharpe | Lo *t* | verdict vs the *t* ≥ 2 bar |
 |---|---|---|---|
@@ -42,14 +42,15 @@ Signal stamp is `WEAK` on this tape, with the 12-month leg and the literature ca
 
 ## Data stamp
 
-- **Basket**: 18 futures, 2000-07-18 → 2026-06-10, 6546 days, inputs fingerprint `efab160ee1f0`
+- **Basket**: 18 futures, 2000-07-18 → 2026-06-10, 6546 days, inputs fingerprint `b8a35a878ebc`
+  *(the same cached tape, as-of and fingerprint as Study 32 (Rip-Tide) — one tape, two signs)*
 
 ## The trend book vs just owning the basket
 
 | | Sharpe | CAGR | vol | max-DD | skew |
 |---|---|---|---|---|---|
 | **TSMOM (trend book)** | **0.30** | 2.8% | 11% | −35% | **+1.50** |
-| long-only basket (diversification only) | 0.51 | 7.7% | 17% | −55% | −0.31 |
+| long-only basket (diversification only) | 0.51 | 7.6% | 17% | −55% | −0.31 |
 | 60/40 (ES/ZN) | 0.48 | 4.9% | 11% | −34% | +0.03 |
 
 Standalone, the *timing* loses to simply holding the same markets. That's the `FRAGILE` stamp.
@@ -59,7 +60,7 @@ Standalone, the *timing* loses to simply holding the same markets. That's the `F
 | | trend book |
 |---|---|
 | ann. return in the worst ~decile equity months (31 of them) | **+23.6%/yr** |
-| ann. return the rest of the time | +1.1%/yr |
+| ann. return the rest of the time | +1.0%/yr |
 | correlation to the equity sleeve | **−0.07** |
 
 A strategy that makes its money exactly when your stocks are falling, uncorrelated the rest of the time,
@@ -73,7 +74,7 @@ effect.
 | portfolio | Sharpe | max-DD |
 |---|---|---|
 | equities only (ES) | 0.43 | −57% |
-| 60% equities / 40% trend | **0.52** | **−33%** |
+| 60% equities / 40% trend | **0.51** | **−33%** |
 | 60/40 (stock/bond) only | 0.48 | −34% |
 | 70% 60/40 / 30% trend | **0.56** | **−20%** |
 
@@ -85,7 +86,7 @@ above). This is why managed futures exists, and why the honest verdict is `WEAK`
 
 ## Robustness — it isn't a tuned lookback, and the drought is real
 
-Lookback sweep (net Sharpe): 1-month **0.07**, 3-month **0.28**, 6-month **0.39**, 12-month **0.65**,
+Lookback sweep (net Sharpe): 1-month **0.06**, 3-month **0.28**, 6-month **0.39**, 12-month **0.65**,
 blend **0.30** — positive across the board, strongest at the classic 12-month horizon. Only the 12-month
 leg clears the robust-inference bar (*t* ≈ 3.3; the blend sits at ≈ 1.6 — see the inference block above).
 

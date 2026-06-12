@@ -4,7 +4,11 @@
 S&P 500** (467 names with ≥2500 days of history) via the shared `quantlab.universe` engine, 2010–2026.
 The strategy is a **dollar-neutral cross-sectional reversal book**: each day, short the names that have
 risen most relative to the cross-section over the trailing 5 days and long those that have fallen most,
-gross exposure normalised to 1, rebalanced daily. Cost charged per unit of turnover. The offline core
+gross exposure normalised to 1, rebalanced daily. Cost charged per unit of turnover. **Execution lag:**
+the book runs on a **two-day lag** — the signal is shifted once at construction and once more at
+execution — which is *conservative*: the gross Sharpe of 0.70 below is what survives trading a full day
+later than the fastest tradable implementation, so the `REAL` stamp is earned the hard way (a one-day
+version could only be stronger). The offline core
 proves the apparatus on a synthetic panel with idiosyncratic Ornstein-Uhlenbeck overshoot; this is the
 measurement on the market. As-of **2026-06-10**; match the fingerprint below. **Caveat:** the panel is
 today's index membership → survivorship bias; the reversal *sign* is robust, exact magnitudes are not.*

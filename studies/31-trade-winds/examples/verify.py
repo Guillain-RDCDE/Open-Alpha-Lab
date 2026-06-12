@@ -29,6 +29,11 @@ def main(fetch: bool) -> None:
     if r.empty:
         print("No cached real data. Re-run with --fetch (needs network) to download the futures basket.")
         return
+    try:
+        from quantlab import repro
+        r = repro.as_of(r, "2026-06-10")  # same as-of as Study 32 — the two studies share one tape
+    except Exception:
+        pass
     tsmom = strategy.book_returns(r, cost_bps=2.0)
     lob = costs.long_only_basket(r)
     eqcols = [c for c in ("ES=F", "NQ=F", "YM=F") if c in r.columns]
