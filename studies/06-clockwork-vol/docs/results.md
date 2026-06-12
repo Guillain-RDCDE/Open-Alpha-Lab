@@ -117,19 +117,26 @@ end
 
 ## 4 · Walk-forward direction skill vs random-phase null
 *Fit the dominant period + cosine on the past only, project the sign of the next-horizon
-VIX move, score the hit rate. The null scrambles only the phase (period & amplitude kept):
-p asks whether the **learned timing** beats an arbitrary one.*
+VIX move, score the hit rate. The null scrambles only the phase (period & amplitude kept),
+**999 rotations**: p asks whether the **learned timing** beats an arbitrary one. One
+honesty note on resolution: because the score is a hit rate over discrete calls, the null's
+support is a step function of the rotation — ties with the observed skill count against it,
+so p has an effective floor well above 1/1,000 (see the fixed-80d discussion in
+[extensions.md](extensions.md)).*
 ```
          skill  null_mean  p_value  n_calls
 horizon                                    
-10      0.4917     0.4999   0.7565      842
-20      0.4946     0.4988   0.7405      841
-40      0.5089     0.4989   0.0778      839
+10      0.4917     0.4997   0.7450      842
+20      0.4946     0.4989   0.7200      841
+40      0.5089     0.4989   0.0890      839
 ```
 
-## 5 · The trade — long the S&P when the VIX cycle is projected to fall
-`{'sharpe_net': 0.3313, 'monthly_net': 0.004, 'exposure': 0.5931, 'n_trades': 76, 'buyhold_sharpe': 0.5599, 'null_sharpe_mean': 0.3708, 'null_sharpe_p95': 0.4645, 'p_value_vs_null': 0.7413, 'max_drawdown': -0.341}`
-- bootstrap Sharpe CI: `{'sharpe': 0.3457, 'ci_low': -0.0003, 'ci_high': 0.6745, 'frac_negative': 0.026, 'n_obs': 8420, 'n_boot': 2000}`
+## 5 · The trade — long the S&P while the VIX cycle is projected to fall
+*Positions read the fitted cycle's one-session projected slope — the alignment under which the
+harness **banks a planted cycle** (the positive control in the notebooks and
+`tests/test_backtest.py`), so its silence here is the market's, not the code's.*
+`{'sharpe_net': 0.3025, 'monthly_net': 0.0035, 'exposure': 0.5935, 'n_trades': 86, 'buyhold_sharpe': 0.5599, 'null_sharpe_mean': 0.3716, 'null_sharpe_p95': 0.4673, 'p_value_vs_null': 0.8756, 'max_drawdown': -0.4322}`
+- bootstrap Sharpe CI: `{'sharpe': 0.3157, 'ci_low': 0.0255, 'ci_high': 0.6314, 'frac_negative': 0.015, 'n_obs': 8420, 'n_boot': 2000, 'n_boot_valid': 2000, 'block_size': 20, 'method': 'cbb'}`
 
 ## 6 · Direction skill by decade (does it ever work?)
 ```
@@ -140,3 +147,9 @@ period
 2010-2020 0.5244     0.4977   0.2691      225
 2020-2027 0.5455     0.4996   0.0698      110
 ```
+
+---
+*Multiplicity, stated plainly: nothing above (or in [extensions.md](extensions.md)) is
+corrected for the number of looks — ~5 target periods × 3 horizons × 4 rescue variants ×
+4 sub-periods. At that count, a raw p in the few-percent range somewhere in the grid is
+roughly what chance owes us.*

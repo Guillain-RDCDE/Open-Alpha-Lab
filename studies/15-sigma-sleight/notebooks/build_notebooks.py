@@ -52,6 +52,11 @@ R = dict(
     synth_fixed="+0.63", synth_adaptive="+0.69", synth_reopt="+0.99",
     synth_adaptive_vs_reopt="-0.30", synth_adaptive_rsi="3.0",
     synth_ic_long="-0.254", synth_ic_rescaled="-0.254", synth_window_inc="-0.146",
+    # The real-tape Reality Check (White 2000, stationary bootstrap, 2,000 draws, 1 bp/turn;
+    # examples/verify.py -> docs/results.md). SPY / QQQ.
+    rc_margin_p="0.99 / 0.97", rc_margin_sharpe="−0.26 / −0.20",
+    rc_declared_p="0.016 / <0.0005", rc_declared_best="fixed 30/50 at length 2",
+    rc_full_p="<0.0005 / <0.0005", rc_bh="+0.91 / +1.01",
 )
 
 
@@ -261,8 +266,10 @@ def build_curious():
             "> **Signal `WEAK`** — the only genuine content (length-matched thresholds) is a "
             "re-statement of a known fact, not a new edge. **\"σ adds signal?\" `RELABEL`** — the "
             "transform is order-preserving, so it moves nothing. The real-tape horse race in "
-            "[`../docs/results.md`](../docs/results.md) settles whether the σ-implied band even "
-            "beats naive 70/30."
+            "[`../docs/results.md`](../docs/results.md) settles the rest: the σ-implied band beats "
+            "naive 70/30 in just 1 of 6 cells, and its *margin* over 70/30 fails the study's "
+            "pre-registered statistical bar (a White Reality Check) outright — p ≈ 0.99 / 0.97 on "
+            "SPY / QQQ, the margin itself negative."
         ),
 
         md(
@@ -287,9 +294,10 @@ def build_curious():
             "SPY/QQQ it genuinely moves the threshold several RSI points — and still beats a plain "
             "fixed level in **0 of 6** cases. The framework's missing piece, built, lands right back "
             "on `MIRAGE`.\n"
-            "- **Run the real horse race across more lengths and tickers.** Does the σ-implied band "
-            "beat 70/30 anywhere, after a White Reality Check on the re-optimisation? "
-            "(`examples/verify.py`).\n"
+            "- **Widen the horse race.** On SPY/QQQ × lengths 2/5/14 the race is run, cost-swept "
+            "(0/1/2/5 bps) and Reality-Checked (`examples/verify.py` → "
+            "[`../docs/results.md`](../docs/results.md)) — the σ-band's margin over 70/30 fails the "
+            "test outright. Does *any* ticker, length or bar size break the pattern?\n"
             "- **Multi-horizon rescaling.** On a tape with two genuine cycles, does combining raw "
             "RSI(short) *and* raw RSI(long) beat either — and does rescaling ever help over just "
             "using both raw? (It shouldn't, but it's the strongest version of the pitch.)\n\n"
@@ -387,11 +395,15 @@ def build_quants():
             "value: **0**.\n"
             "2. **Zone arithmetic** (`zone_arithmetic`): reproduce the published table from the "
             "formula; confirm RSI(14)=70 ⟺ +1.53σ and monotone compression toward 50.\n"
-            "3. **Horse race** (`strategy_compare`, HAC/Reality-Check on the real run): net Sharpe of "
-            "fixed vs σ-band vs re-optimised constant. `adaptive − reopt ≤ 0` by construction; the "
-            "open test is `adaptive` vs `fixed`.\n"
+            "3. **Horse race** (`strategy_compare`, swept over the desk's 0/1/2/5 bps cost ladder "
+            "on the real run): net Sharpe of fixed vs σ-band vs re-optimised constant. "
+            "`adaptive − reopt ≤ 0` by construction; the open test is `adaptive` vs `fixed`.\n"
             "4. **Rescale invariance** (`rescale_increment`): rank-IC gap between rescaled RSI(long) "
-            "and raw RSI(long). Pre-registered value: **0**.\n\n"
+            "and raw RSI(long). Pre-registered value: **0**.\n"
+            "5. **Reality Check** (`race_panel`/`margin_panel` + `quantlab.bayes.reality_check`, "
+            "White 2000 with the stationary bootstrap): price the multiplicity of everything the "
+            "race searches — run in 4e on this tape, and on the real one in "
+            "[`../docs/results.md`](../docs/results.md).\n\n"
             "**Mirage line:** Signal beats `WEAK` only if the σ-band beats fixed 70/30 by a margin "
             "surviving a White (2000) Reality Check on the re-optimisation, *and* not matched by the "
             "re-optimised constant."
@@ -444,8 +456,10 @@ def build_quants():
             "The `adaptive_minus_reopt` column is non-positive everywhere — exactly as the identity "
             "in 4a forces. The σ-calibration cannot beat re-optimising a constant because it *is* a "
             "constant. Whether it beats naive fixed 70/30 (the `fixed` vs `adaptive` columns) is the "
-            "only thing the real tape adds, and it carries the multiple-testing of the grid, which "
-            "the real run prices with a Reality Check."
+            "only thing the real tape adds, and it carries the multiple-testing of the grid — priced "
+            "next, in 4e. (On the real tape the race is also swept across the desk's 0/1/2/5 bps "
+            "cost ladder — see [`../docs/results.md`](../docs/results.md); the ordering never "
+            "moves.)"
         ),
 
         md(
@@ -464,15 +478,55 @@ def build_quants():
         ),
 
         md(
+            "### 4e · The Reality Check — the mirage line, executed\n"
+            "The race searches: 3 lengths × {fixed, adaptive} named variants, plus a 40-constant "
+            "re-optimisation grid per length. White's (2000) Reality Check (stationary bootstrap, "
+            "`quantlab.bayes`) prices that search. Two universes matter:\n\n"
+            "- **declared** — one column of net daily returns per named variant: does the *best* "
+            "thing in the race beat a zero-mean null once you account for having raced?\n"
+            "- **σ-margin** — per length, `adaptive − fixed` daily returns: the pre-registered "
+            "mirage line verbatim (the σ-band must beat 70/30 *by a margin surviving this test*)."
+        ),
+        code(
+            "from quantlab import bayes\n"
+            "panel = decompose.race_panel(close, lengths=(2, 5, 14), cost_bps=1.0)\n"
+            "rc = bayes.reality_check(panel, n_boot=500, seed=0)\n"
+            "print(f\"declared universe ({rc['n_series']} strategies): best \"\n"
+            "      f\"{panel.columns[rc['best_series_index']]} Sharpe {rc['observed_max_sharpe']:+.2f} \"\n"
+            "      f\"-> RC p = {rc['reality_check_pvalue']:.3f}\")\n"
+            "margins = decompose.margin_panel(close, lengths=(2, 5, 14), cost_bps=1.0)\n"
+            "rcm = bayes.reality_check(margins, n_boot=500, seed=0)\n"
+            "print(f\"sigma-margin universe: best {margins.columns[rcm['best_series_index']]} \"\n"
+            "      f\"Sharpe {rcm['observed_max_sharpe']:+.2f} -> RC p = {rcm['reality_check_pvalue']:.3f}\")"
+        ),
+        md(
+            "Read the synthetic split: the **declared** RC lights up (the tape has a *real*, "
+            "baked-in oversold edge, and a constant band harvests it — the positive control), while "
+            "the **σ-margin** RC is stone dead even here: with a genuine edge on offer, the σ-band "
+            "still cannot beat the fixed band it relabels.\n\n"
+            f"**On the real tape** ([`../docs/results.md`](../docs/results.md)): the σ-margin's best "
+            f"Sharpe is *negative* ({R['rc_margin_sharpe']}, SPY / QQQ) with RC **p = "
+            f"{R['rc_margin_p']}** — the pre-registered escape from `WEAK` is closed. The absolute "
+            f"universes do flag a survivor (declared p = {R['rc_declared_p']}; full search incl. "
+            f"the reopt grid p = {R['rc_full_p']}), but the winner is always a **plain constant "
+            f"band** ({R['rc_declared_best']}), never the σ-band — and these are long/flat rules on "
+            f"a ~10-year bull tape scored against a zero-mean null (buy-and-hold, which times "
+            f"nothing, prints Sharpe {R['rc_bh']} on the same tapes). What survives is drift plus "
+            f"the known short-RSI dip-buying effect, with zero σ-content."
+        ),
+
+        md(
             "## Beat 5 · The verdict\n\n"
             "- **Two exact identities.** The crossing diff (4a) and the rescale IC gap (4d) are "
             "**0** to machine precision, at every length — the σ-standardization is order-preserving "
             "and adds no threshold or rank information.\n"
             "- **One arithmetic table.** The cheat-sheet (4b) is a deterministic function of $n$; "
             f"RSI(14)=70 ⟺ +{R['sigma_at_70']}σ with no market input.\n"
-            "- **One empirical leg.** The horse race (4c): the σ-band loses to a re-optimised "
-            f"constant on the synthetic (Δ Sharpe {R['synth_adaptive_vs_reopt']}); on the real tape "
-            "the only live question is whether it clears fixed 70/30 after a Reality Check.\n\n"
+            "- **One empirical leg, now closed.** The horse race (4c): the σ-band loses to a "
+            f"re-optimised constant on the synthetic (Δ Sharpe {R['synth_adaptive_vs_reopt']}); on "
+            "the real tape it clears fixed 70/30 in only 1 of 6 cells, and the Reality Check (4e) "
+            f"prices the rest — the adaptive-over-fixed margin draws p = {R['rc_margin_p']} "
+            "(SPY / QQQ), on a best margin that is negative outright.\n\n"
             "**Signal `WEAK`, \"σ adds signal?\" `RELABEL`.** The framework's substance — "
             "length-matched thresholds — is real but is a re-statement of RSI arithmetic, not an "
             "edge the σ-transform creates."
@@ -485,9 +539,10 @@ def build_quants():
             "tilt. The σ-relabel changes none of the economics — it changes the number on the axis. "
             "And the framework's own disclaimer (\"not buy/sell signals\") concedes the point. Any "
             "edge that survives belongs to *RSI mean reversion at a sensible level*, not to "
-            "AdaptiveRSI; charged costs and corrected for the level-search, it is a strong "
-            "**`MIRAGE`** candidate. The real-tape numbers and the Reality Check live in "
-            "[`../docs/results.md`](../docs/results.md)."
+            "AdaptiveRSI: charged across the 0/1/2/5 bps cost ladder the ordering never moves, and "
+            f"the White Reality Check returns p = {R['rc_margin_p']} on the σ-band's margin over "
+            "70/30 while every surviving column in the absolute universes is a plain constant band. "
+            "**`MIRAGE`.** The full tables live in [`../docs/results.md`](../docs/results.md)."
         ),
 
         md(
@@ -525,8 +580,10 @@ def build_quants():
             "framework's unbuilt promise, built, escapes the relabel verdict only to land back on "
             "`MIRAGE`: a genuine regime rule still can't clear costs over a plain sensible level.\n\n"
             "### 7b · Other forks\n"
-            "- **Reality-Checked cross-section.** Sweep lengths × tickers; does the σ-implied band "
-            "beat 70/30 anywhere after White (2000)? `quantlab.stats` has the machinery.\n"
+            "- **A wider Reality-Checked cross-section.** The SPY/QQQ × {2,5,14} RC is done (4e and "
+            "[`../docs/results.md`](../docs/results.md) — the σ-margin never survives); sweep more "
+            "tickers, lengths and bar sizes and see if any cell breaks the pattern. "
+            "`decompose.race_panel` + `quantlab.bayes.reality_check` is the whole pipeline.\n"
             "- **Logit-RSI tails.** The framework's other claim is that the logit scale separates "
             "extreme readings the bounded scale compresses. For *rank/threshold* use that's "
             "invariant (shown here); for *distance* use (e.g. z-scored displacement) it's a real "

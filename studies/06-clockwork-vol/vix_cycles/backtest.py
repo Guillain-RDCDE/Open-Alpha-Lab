@@ -12,8 +12,12 @@ projection against what the market actually did next. Two scores:
    *sign* of the next-horizon VIX move better than a coin, and better than the same cycle
    with its phase scrambled? Pure forecast accuracy, fully causal.
 2. **The trade** (:func:`phase_trade`) — the tradeable expression of "buy the rally at the
-   cycle low": go long the S&P when the VIX cycle is projected to *fall*, flat when it is
-   projected to *rise*. Scored on net Sharpe vs buy-and-hold and vs a random-phase null.
+   cycle low": long the S&P for the sessions the projected cycle is *falling*, flat while it
+   is *rising*. Scored on net Sharpe vs buy-and-hold and vs a random-phase null. The position
+   rule reads the **one-session** projected slope, because the P&L accrues session by session:
+   gating instead on the h-session-ahead change (as the direction test does, by design) lags
+   the cycle by ~(h−1)/2 sessions and fails the planted-cycle positive control — a harness
+   that cannot bank a cycle we *injected* has no business judging the VIX.
 
 The random-phase null is the crux: it keeps the *period* and *amplitude* the theorist found
 and scrambles only the *timing*. If the real phase does no better than an arbitrary one, the
@@ -169,13 +173,17 @@ def _fit_schedule(
 
 
 def _positions_from_schedule(
-    sched: dict, horizon: int, phase_offset: float = 0.0, amp_gate: float = 0.0,
+    sched: dict, phase_offset: float = 0.0, amp_gate: float = 0.0,
 ) -> np.ndarray:
     """Vectorised {0,1} long/flat positions from a precomputed fit schedule.
 
-    Long (1) when the projected cycle slope over ``horizon`` is negative (vol set to fall),
-    else flat (0). ``phase_offset`` rotates the learned phase (0 for the strategy, random per
-    null draw); the amplitude gate zeroes days where the in-sample cycle is weak (amp < gate·σ).
+    Long (1) when the projected cycle's **one-session** slope is negative (vol set to fall
+    into the session the position is actually held), else flat (0). The one-step slope is the
+    aligned read: the P&L accrues daily, so gating on a multi-session-ahead change makes the
+    position lag the cycle by half the look-ahead and loses money even on a *planted* cycle
+    (the positive control this module is held to). ``phase_offset`` rotates the learned phase
+    (0 for the strategy, random per null draw); the amplitude gate zeroes days where the
+    in-sample cycle is weak (amp < gate·σ).
     """
     amp, phase0, period, sigma = sched["amp"], sched["phase0"], sched["period"], sched["sigma"]
     valid = np.isfinite(amp) & np.isfinite(period)
@@ -184,7 +192,7 @@ def _positions_from_schedule(
         w = 2.0 * np.pi / period
         ph = phase0 + phase_offset
         now = amp * np.cos(w * t - ph)
-        fut = amp * np.cos(w * (t + horizon) - ph)
+        fut = amp * np.cos(w * (t + 1.0) - ph)
         pos = np.where(valid & ((fut - now) < 0), 1.0, 0.0)
         if amp_gate > 0.0:
             pos = np.where(valid & (amp >= amp_gate * sigma), pos, 0.0)
@@ -195,7 +203,6 @@ def phase_trade(
     logvix: pd.Series,
     spx: pd.Series,
     band=spectral.DEFAULT_BAND,
-    horizon: int = 20,
     min_train: int = 750,
     refit: int = 5,
     width_frac: float = 0.5,
@@ -205,13 +212,15 @@ def phase_trade(
     fixed_period: float | None = None,
     amp_gate: float = 0.0,
 ) -> TradeResult:
-    """Trade the cycle: long the S&P when the VIX cycle is projected to fall, else flat.
+    """Trade the cycle: long the S&P for the sessions the VIX cycle is projected to fall.
 
     The honest tradeable form of "stocks bottom on the cycle and rally": you can't buy spot
     VIX, but you *can* act on its forecast in the index. Positions are causal (refit on the
-    past only). Net daily return = ``pos·r_spx − cost`` charged on every position change.
-    Reported against **buy-and-hold** and a **random-phase null** Sharpe distribution — if the
-    learned phase doesn't beat scrambled timing, the cycle adds nothing over being long.
+    past only) and read the fitted cycle's one-session projected slope (see
+    :func:`_positions_from_schedule` for why). Net daily return = ``pos·r_spx − cost`` charged
+    on every position change. Reported against **buy-and-hold** and a **random-phase null**
+    Sharpe distribution — if the learned phase doesn't beat scrambled timing, the cycle adds
+    nothing over being long.
 
     Returns a :class:`TradeResult` whose ``stats`` carry Sharpe, monthly return, exposure,
     the buy-hold Sharpe, and the null p-value.
@@ -228,29 +237,37 @@ def phase_trade(
         return held * r_spx - turn * cost
 
     sched = _fit_schedule(lv, band, min_train, refit, fixed_period)
-    pos = _positions_from_schedule(sched, horizon, 0.0, amp_gate)
+    pos = _positions_from_schedule(sched, 0.0, amp_gate)
     strat = _returns(pos)
     daily = pd.Series(strat, index=df.index, name="r_cycle")
 
     rng = np.random.default_rng(seed)
     null_sharpes = []
     for _ in range(n_null):
-        pn = _positions_from_schedule(sched, horizon, rng.uniform(0, 2 * np.pi), amp_gate)
+        pn = _positions_from_schedule(sched, rng.uniform(0, 2 * np.pi), amp_gate)
         null_sharpes.append(_sharpe(_returns(pn)))
     null_sharpes = np.array(null_sharpes)
 
     sh = _sharpe(strat)
     bh = _sharpe(r_spx[min_train:])
     active = daily.iloc[min_train:]
-    p_value = (int(np.sum(null_sharpes >= sh)) + 1) / (n_null + 1)
+    # A degenerate strategy (e.g. a gate that never fires) has no return stream and hence no
+    # Sharpe; its p-value is *undefined*, not tiny. Comparing NaN against the null with >= would
+    # count zero exceedances and report a spuriously significant (1)/(n+1) — so the comparison
+    # is made only across finite values, and NaN-vs-null is reported as NaN.
+    finite_null = null_sharpes[np.isfinite(null_sharpes)]
+    if np.isfinite(sh) and finite_null.size > 0:
+        p_value = (int(np.sum(finite_null >= sh)) + 1) / (finite_null.size + 1)
+    else:
+        p_value = float("nan")
     stats = {
         "sharpe_net": float(sh),
         "monthly_net": float(active.mean() * 21),
         "exposure": float(pos[min_train:].mean()),
         "n_trades": int(np.abs(np.diff(pos)).sum()),
         "buyhold_sharpe": float(bh),
-        "null_sharpe_mean": float(null_sharpes.mean()),
-        "null_sharpe_p95": float(np.quantile(null_sharpes, 0.95)),
+        "null_sharpe_mean": float(finite_null.mean()) if finite_null.size else float("nan"),
+        "null_sharpe_p95": float(np.quantile(finite_null, 0.95)) if finite_null.size else float("nan"),
         "p_value_vs_null": float(p_value),
         "max_drawdown": float(_max_drawdown(active)),
     }

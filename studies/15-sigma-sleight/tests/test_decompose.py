@@ -68,3 +68,31 @@ def test_window_increment_is_real_but_not_from_sigma(close):
     present in raw RSI(long) already; the σ-rescaling contributes none of it (previous test)."""
     out = decompose.rescale_increment(close, target_length=14, long_length=70, horizon=5)
     assert abs(out["incremental_ic_window_over_native"]) > 0.03
+
+
+# 5 · the Reality-Check panels — the pre-registered bar's plumbing ------------
+
+def test_race_panel_shapes_and_margin_identity(close):
+    """The RC universes are built from the single payoff definition: the declared panel carries
+    adaptive+fixed per length, the full panel adds every reopt-grid constant, and the margin
+    panel is exactly adaptive − fixed, column for column."""
+    lengths = (2, 5, 14)
+    declared = decompose.race_panel(close, lengths=lengths, cost_bps=1.0)
+    assert list(declared.columns) == [c for n in lengths for c in (f"adaptive_n{n}", f"fixed_n{n}")]
+    full = decompose.race_panel(close, lengths=lengths, cost_bps=1.0, include_grid=True)
+    assert full.shape[1] == len(lengths) * (2 + 40)   # named variants + lower 5..44 grid
+    margins = decompose.margin_panel(close, lengths=lengths, cost_bps=1.0)
+    for n in lengths:
+        np.testing.assert_allclose(
+            margins[f"margin_n{n}"], declared[f"adaptive_n{n}"] - declared[f"fixed_n{n}"])
+
+
+def test_margin_reality_check_is_dead_even_with_a_real_edge(close):
+    """The study's mirage line, on the synthetic positive control: the tape HAS a real oversold
+    edge (test_real_edge_exists_for_some_band), yet the σ-band's margin over fixed 30/50 still
+    fails the White RC — the σ-calibration adds nothing even when there is something to add."""
+    from quantlab import bayes
+    margins = decompose.margin_panel(close, lengths=(2, 5, 14), cost_bps=1.0)
+    rc = bayes.reality_check(margins, n_boot=200, seed=0)
+    assert rc["n_series"] == 3
+    assert rc["reality_check_pvalue"] > 0.10

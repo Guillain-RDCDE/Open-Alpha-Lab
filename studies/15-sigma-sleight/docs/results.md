@@ -4,9 +4,9 @@
 ~10y. The σ↔RSI relabel and the cheat-sheet are arithmetic (they need no market data — see the
 offline core); what the real tape decides is the **horse race**: across lengths, does the
 σ-implied per-length band beat naive 70/30, and does it beat a re-optimised constant? As-of
-**2026-06-01**; match the per-tape fingerprint below to confirm you hold the same tape. Sharpes are
-gross of the multiple-testing the `reopt` grid incurs — the real Reality-Check correction is the
-quants' notebook's job.*
+**2026-06-01**; match the per-tape fingerprint below to confirm you hold the same tape. The
+multiple-testing the `reopt` grid (and the race itself) incurs is priced explicitly below with a
+White (2000) **Reality Check** — the pre-registered bar, executed.*
 
 ## The verdict, earned — Signal `WEAK` · Tradability `MIRAGE` · σ adds signal? `RELABEL`
 
@@ -15,55 +15,129 @@ The real tape resolves the one empirical leg, and harder than the pre-registrati
 fixed 70/30 in only **1/6**, and beats a re-optimised constant in
 **0/6** (never — it *is* one of those constants). The σ-implied levels are
 often *more* extreme than 70/30 (e.g. RSI(2) `−√3σ` = RSI 3.0), so they trade rarely and worse, not
-better. Meanwhile the two identities hold exactly on the tape: the σ-band's trades match their
-implied constant band to the bar (**max crossing diff = 0.0** over all cells), and
-Rescaled RSI keeps the *exact* rank IC of the raw long RSI. **The σ-transform reads no better than a
-plain constant — it relabels it.** The one genuine idea, that 70/30 is length-naive, is real but is
-a re-statement of RSI arithmetic, not an edge.
+better. The pre-registered mirage line — the σ-band beating 70/30 *by a margin surviving a White
+Reality Check* — is now run, not promised: the best adaptive-over-fixed margin is *negative* in
+both tapes and draws **p = 0.99 / 0.97** (SPY / QQQ), nowhere near the bar, and in the
+absolute universes the best strategy is never the σ-band — it is the plain constant band the
+σ-apparatus renames. Meanwhile the two identities hold exactly on the tape: the σ-band's
+trades match their implied constant band to the bar (**max crossing diff = 0.0** over
+all cells), and Rescaled RSI keeps the *exact* rank IC of the raw long RSI. **The σ-transform reads
+no better than a plain constant — it relabels it.** The one genuine idea, that 70/30 is
+length-naive, is real but is a re-statement of RSI arithmetic, not an edge.
 
 ## Data stamp
 
-- **SPY**: 2016-06-09 → 2026-06-01, fingerprint `d64c5fbb539b`
-- **QQQ**: 2016-06-09 → 2026-06-01, fingerprint `a31752847599`
+- **SPY**: 2016-06-13 → 2026-06-01, fingerprint `1805c35f4dd4`
+- **QQQ**: 2016-06-13 → 2026-06-01, fingerprint `067bd322c30e`
 
-## SPY — the horse race (2508 bars)
+## The Reality Check — the pre-registered bar, executed
+
+*White (2000) Reality Check via `quantlab.bayes.reality_check` — stationary bootstrap
+(Politis–Romano), **2,000** draws, net of 1 bps/turn — same as-of
+(**2026-06-01**) and fingerprints as the data stamp above. Three universes per tape: **declared**
+(the named variants the race scores: adaptive `−√3σ` + fixed 30/50 at each length), **full
+search** (declared + every constant the `reopt` grid tries — the whole space the in-sample
+re-optimisation snoops), and **σ-margin** (the adaptive−fixed daily return difference per
+length — the literal pre-registered line: the σ-band must beat 70/30 by a margin that survives
+this test).*
+
+| tape | universe | n strategies | best variant | best net Sharpe | RC p |
+|---|---|---|---|---|---|
+| SPY | declared | 6 | `fixed_n2` | +0.62 | **0.0160** |
+| SPY | full search | 126 | `const8_n2` | +0.97 | **<0.0005** |
+| SPY | σ-margin | 3 | `margin_n5` | -0.26 | **0.9910** |
+| QQQ | declared | 6 | `fixed_n2` | +1.05 | **<0.0005** |
+| QQQ | full search | 126 | `const25_n2` | +1.10 | **<0.0005** |
+| QQQ | σ-margin | 3 | `margin_n5` | -0.20 | **0.9750** |
+
+- **The σ-margin RC is the verdict's spine**: the best adaptive-over-fixed margin is *negative*
+  on both tapes (p = 0.99 / 0.97) — the σ-calibration never beats naive 70/30 at all, let
+  alone by a margin that would survive the search over lengths. The pre-registered escape from
+  `WEAK`/`MIRAGE` is closed.
+- **Something does survive the absolute RCs — and it isn't the σ-band.** The declared and
+  full-search universes flag a survivor (p = <0.0005 / <0.0005 on the full grid), but the winner is
+  always a *plain constant band* (`fixed_n2` / a grid constant), never `adaptive_*`. Read it for
+  what it is: these are long/flat rules on a ~10-year bull tape scored against a **zero-mean**
+  null — the RC says "this rule made money", not "this rule beat the market" (buy-and-hold,
+  which times nothing, prints Sharpe +0.91 / +1.01 on the same tapes and is not in the universe).
+  What survives is equity drift plus the *known* short-length RSI dip-buying effect — an effect
+  that lives at a sensibly-chosen constant level and contains zero σ-content: the σ-band loses
+  to the very constants it renames.
+
+## SPY — the horse race (2506 bars)
 
 Net Sharpe (after 1 bps/turn), per RSI length, for the three threshold rules:
 
 | length | fixed 30/50 | adaptive −√3σ (= const) | re-optimised const | adaptive − reopt | crossing diff |
 |---|---|---|---|---|---|
-| 2 | +0.61 | +0.32 (RSI 3.0) | +0.97 (lower 8) | -0.65 | 0.0 |
-| 5 | +0.40 | +0.34 (RSI 15.0) | +0.75 (lower 19) | -0.41 | 0.0 |
-| 14 | +0.34 | +0.17 (RSI 27.7) | +0.51 (lower 36) | -0.34 | 0.0 |
+| 2 | +0.62 | +0.33 (RSI 3.0) | +0.97 (lower 8) | -0.65 | 0.0 |
+| 5 | +0.39 | +0.31 (RSI 15.0) | +0.70 (lower 18) | -0.38 | 0.0 |
+| 14 | +0.34 | +0.17 (RSI 27.7) | +0.48 (lower 36) | -0.31 | 0.0 |
 
+Cost ladder — net Sharpe across the desk's standard 0/1/2/5
+bps/turn sweep (`reopt` is re-optimised at each cost, so it stays the honest in-sample ceiling):
+
+| length | rule | 0 bps | 1 bps | 2 bps | 5 bps |
+|---|---|---|---|---|---|
+| 2 | fixed 30/50 | +0.66 | +0.62 | +0.57 | +0.44 |
+| 2 | adaptive −√3σ | +0.34 | +0.33 | +0.31 | +0.28 |
+| 2 | re-opt const | +1.00 | +0.97 | +0.95 | +0.87 |
+| 5 | fixed 30/50 | +0.40 | +0.39 | +0.37 | +0.33 |
+| 5 | adaptive −√3σ | +0.32 | +0.31 | +0.31 | +0.29 |
+| 5 | re-opt const | +0.71 | +0.70 | +0.69 | +0.66 |
+| 14 | fixed 30/50 | +0.34 | +0.34 | +0.34 | +0.33 |
+| 14 | adaptive −√3σ | +0.18 | +0.17 | +0.17 | +0.17 |
+| 14 | re-opt const | +0.49 | +0.48 | +0.48 | +0.46 |
+
+- **The cost ladder changes the ordering nowhere**: the adaptive band's deficit to the
+  re-optimised constant (and its 70/30 scoreline) is a property of *where the level sits*, not of
+  the cost assumption — it loses gross (0 bps) and keeps losing at 5 bps.
 - **The relabel holds on the tape**: the adaptive σ-band's trades match its implied constant band
   to the bar (crossing diff **0.0** every length) — within a length, "adaptive" *is* a constant.
 - **σ-calibration vs a re-optimised constant**: the `adaptive − reopt` column is **≤ 0** by
   construction (the σ-implied band is one of the constants the grid searches). The open empirical
   question is only whether the σ-implied band beats *naive 70/30* — read `adaptive` vs `fixed`.
-- **Rescaling is rank-invariant here too**: raw RSI(70) IC **-0.098** equals
-  rescaled-to-14 IC **-0.098** (gap **+0.0e+00**). Any
+- **Rescaling is rank-invariant here too**: raw RSI(70) IC **-0.110** equals
+  rescaled-to-14 IC **-0.110** (gap **+0.0e+00**). Any
   edge of the long window over native RSI(14) (partial IC
-  **-0.053**) is the *window*, already in raw RSI(70) — the
+  **-0.068**) is the *window*, already in raw RSI(70) — the
   σ-translation adds none of it.
 
-## QQQ — the horse race (2508 bars)
+## QQQ — the horse race (2506 bars)
 
 Net Sharpe (after 1 bps/turn), per RSI length, for the three threshold rules:
 
 | length | fixed 30/50 | adaptive −√3σ (= const) | re-optimised const | adaptive − reopt | crossing diff |
 |---|---|---|---|---|---|
-| 2 | +1.04 | +0.42 (RSI 3.0) | +1.09 (lower 25) | -0.68 | 0.0 |
-| 5 | +0.52 | +0.67 (RSI 15.0) | +0.99 (lower 19) | -0.33 | 0.0 |
-| 14 | +0.39 | +0.31 (RSI 27.7) | +0.52 (lower 35) | -0.21 | 0.0 |
+| 2 | +1.05 | +0.43 (RSI 3.0) | +1.10 (lower 25) | -0.67 | 0.0 |
+| 5 | +0.51 | +0.66 (RSI 15.0) | +0.99 (lower 19) | -0.33 | 0.0 |
+| 14 | +0.39 | +0.31 (RSI 27.7) | +0.52 (lower 27) | -0.21 | 0.0 |
 
+Cost ladder — net Sharpe across the desk's standard 0/1/2/5
+bps/turn sweep (`reopt` is re-optimised at each cost, so it stays the honest in-sample ceiling):
+
+| length | rule | 0 bps | 1 bps | 2 bps | 5 bps |
+|---|---|---|---|---|---|
+| 2 | fixed 30/50 | +1.09 | +1.05 | +1.01 | +0.90 |
+| 2 | adaptive −√3σ | +0.44 | +0.43 | +0.42 | +0.39 |
+| 2 | re-opt const | +1.14 | +1.10 | +1.07 | +0.98 |
+| 5 | fixed 30/50 | +0.53 | +0.51 | +0.50 | +0.47 |
+| 5 | adaptive −√3σ | +0.66 | +0.66 | +0.65 | +0.64 |
+| 5 | re-opt const | +1.00 | +0.99 | +0.98 | +0.96 |
+| 14 | fixed 30/50 | +0.39 | +0.39 | +0.39 | +0.38 |
+| 14 | adaptive −√3σ | +0.31 | +0.31 | +0.31 | +0.31 |
+| 14 | re-opt const | +0.53 | +0.52 | +0.52 | +0.52 |
+
+- **The cost ladder changes the ordering nowhere**: the adaptive band's deficit to the
+  re-optimised constant (and its 70/30 scoreline) is a property of *where the level sits*, not of
+  the cost assumption — it loses gross (0 bps) and keeps losing at 5 bps.
 - **The relabel holds on the tape**: the adaptive σ-band's trades match its implied constant band
   to the bar (crossing diff **0.0** every length) — within a length, "adaptive" *is* a constant.
 - **σ-calibration vs a re-optimised constant**: the `adaptive − reopt` column is **≤ 0** by
   construction (the σ-implied band is one of the constants the grid searches). The open empirical
   question is only whether the σ-implied band beats *naive 70/30* — read `adaptive` vs `fixed`.
-- **Rescaling is rank-invariant here too**: raw RSI(70) IC **-0.077** equals
-  rescaled-to-14 IC **-0.077** (gap **+0.0e+00**). Any
+- **Rescaling is rank-invariant here too**: raw RSI(70) IC **-0.088** equals
+  rescaled-to-14 IC **-0.088** (gap **+0.0e+00**). Any
   edge of the long window over native RSI(14) (partial IC
-  **-0.051**) is the *window*, already in raw RSI(70) — the
+  **-0.066**) is the *window*, already in raw RSI(70) — the
   σ-translation adds none of it.

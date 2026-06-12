@@ -42,6 +42,12 @@ OUT = os.path.join(_STUDY, "docs", "results.md")
 BAND = (15.0, 400.0)            # the weeks-to-months cycle band the claim lives in
 TARGETS = (40.0, 80.0, 100.0, 250.0, 1000.0)   # the tweet's own clocks (sessions)
 N_SIM = 2000
+N_NULL_SKILL = 999              # phase rotations for the walk-forward null (floor 1/1000)
+
+
+def _round4(d: dict) -> dict:
+    """Round the numeric values of a stats dict, passing strings (e.g. method tags) through."""
+    return {k: (round(v, 4) if isinstance(v, (int, float)) else v) for k, v in d.items()}
 
 
 def main():
@@ -75,19 +81,19 @@ def main():
     skill_rows = []
     for h in (10, 20, 40):
         r = backtest.oos_direction_skill(logv, band=BAND, horizon=h, min_train=750,
-                                         step=10, n_null=500, seed=0)
+                                         step=10, n_null=N_NULL_SKILL, seed=0)
         skill_rows.append({"horizon": h, "skill": r["skill"], "null_mean": r["null_mean"],
                            "p_value": r["p_value"], "n_calls": r["n_calls"]})
     skill = pd.DataFrame(skill_rows).set_index("horizon")
     print("\n[walk-forward direction skill vs random-phase null]\n", skill.round(4).to_string())
 
     # 5 · the tradeable expression
-    trade = backtest.phase_trade(logv, spx, band=BAND, horizon=20, min_train=750,
+    trade = backtest.phase_trade(logv, spx, band=BAND, min_train=750,
                                  refit=5, cost_bps=1.0, n_null=200, seed=0)
     boot = robustness.bootstrap_sharpe(trade.daily.iloc[750:])
     print("\n[cycle trade — long S&P when VIX cycle projected to fall]")
-    print({k: round(v, 4) for k, v in trade.stats.items()})
-    print("  bootstrap Sharpe CI:", {k: round(v, 4) for k, v in boot.items()})
+    print(_round4(trade.stats))
+    print("  bootstrap Sharpe CI:", _round4(boot))
 
     # 6 · sub-period skill (does it ever work?)
     sub = robustness.subperiod_skill(logv, band=BAND, horizon=20, min_train=500,
@@ -139,16 +145,29 @@ Rolling 4-year (1000-session) windows, dominant in-band period:
 
 ## 4 · Walk-forward direction skill vs random-phase null
 *Fit the dominant period + cosine on the past only, project the sign of the next-horizon
-VIX move, score the hit rate. The null scrambles only the phase (period & amplitude kept):
-p asks whether the **learned timing** beats an arbitrary one.*
+VIX move, score the hit rate. The null scrambles only the phase (period & amplitude kept),
+**{N_NULL_SKILL} rotations**: p asks whether the **learned timing** beats an arbitrary one. One
+honesty note on resolution: because the score is a hit rate over discrete calls, the null's
+support is a step function of the rotation — ties with the observed skill count against it,
+so p has an effective floor well above 1/{N_NULL_SKILL + 1:,} (see the fixed-80d discussion in
+[extensions.md](extensions.md)).*
 {md(skill)}
 
-## 5 · The trade — long the S&P when the VIX cycle is projected to fall
-`{ {k: round(v, 4) for k, v in trade.stats.items()} }`
-- bootstrap Sharpe CI: `{ {k: round(v, 4) for k, v in boot.items()} }`
+## 5 · The trade — long the S&P while the VIX cycle is projected to fall
+*Positions read the fitted cycle's one-session projected slope — the alignment under which the
+harness **banks a planted cycle** (the positive control in the notebooks and
+`tests/test_backtest.py`), so its silence here is the market's, not the code's.*
+`{_round4(trade.stats)}`
+- bootstrap Sharpe CI: `{_round4(boot)}`
 
 ## 6 · Direction skill by decade (does it ever work?)
 {md(sub)}
+
+---
+*Multiplicity, stated plainly: nothing above (or in [extensions.md](extensions.md)) is
+corrected for the number of looks — ~5 target periods × 3 horizons × 4 rescue variants ×
+4 sub-periods. At that count, a raw p in the few-percent range somewhere in the grid is
+roughly what chance owes us.*
 """)
 
 

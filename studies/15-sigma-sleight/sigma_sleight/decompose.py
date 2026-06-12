@@ -26,6 +26,12 @@ Four questions, four tools, in the order an honest investigation runs them:
    single-horizon tape the increment is ~0 (the baked-in null); the real run asks if markets,
    with their multiple horizons, differ.
 
+5. **Does anything in the race survive a multiplicity-aware null?**
+   :func:`race_panel` and :func:`margin_panel` lay the tested strategies out one-per-column so
+   ``quantlab.bayes.reality_check`` (White 2000, stationary bootstrap) can price the search:
+   the best absolute Sharpe in the universe, and the best adaptive-over-fixed *margin* — the
+   study's pre-registered mirage line — each get an honest p-value.
+
 Pure NumPy/pandas; deterministic. The robust-inference and as-of machinery for the *real* run
 lives in :mod:`quantlab`; this module is the offline core the tests pin.
 """
@@ -117,12 +123,19 @@ def zone_arithmetic(lengths=(2, 5, 14, 50, 200)) -> dict:
 # 3 · The cost-charged horse race
 # --------------------------------------------------------------------------- #
 
+def strategy_net_returns(close: pd.Series, pos: pd.Series, cost_bps: float) -> pd.Series:
+    """Net daily return series of a long/flat position, charged ``cost_bps`` per unit of
+    turnover (entry + exit each pay once). The single payoff definition every stat — and the
+    Reality-Check panel — is built from."""
+    ret = close.pct_change().fillna(0.0)
+    turn = pos.diff().abs().fillna(pos.abs())
+    return pos * ret - turn * (cost_bps / 1e4)
+
+
 def _strategy_stats(close: pd.Series, pos: pd.Series, cost_bps: float) -> dict:
     """Net annualised return, Sharpe and trade count of a long/flat position, charged ``cost_bps``
     per unit of turnover (entry + exit each pay once)."""
-    ret = close.pct_change().fillna(0.0)
-    turn = pos.diff().abs().fillna(pos.abs())
-    net = pos * ret - turn * (cost_bps / 1e4)
+    net = strategy_net_returns(close, pos, cost_bps)
     mean, sd = net.mean(), net.std()
     sharpe = float(mean / sd * np.sqrt(_TRADING_DAYS)) if sd > 0 else 0.0
     return {
@@ -184,6 +197,54 @@ def strategy_compare(close: pd.Series, length: int = 2, lower_sigma: float | Non
         "adaptive_vs_fixed_sharpe": adaptive["sharpe"] - fixed["sharpe"],
         "adaptive_vs_reopt_sharpe": adaptive["sharpe"] - reopt["sharpe"],
     }
+
+
+def race_panel(close: pd.Series, lengths=(2, 5, 14), cost_bps: float = 1.0,
+               lower_sigma: float | None = None, grid=None,
+               include_grid: bool = False) -> pd.DataFrame:
+    """One column of net daily returns per strategy in the race — the Reality-Check universe.
+
+    The declared universe is every named variant the horse race scores: the σ-implied adaptive
+    band and the naive fixed 30/50 band, at each RSI ``length``. With ``include_grid=True`` the
+    panel also carries every constant the ``reopt`` search tries (lower 5…44, exit 50, per
+    length) — the *full* set of strategies the in-sample re-optimisation looks at, so a White
+    (2000) Reality Check on that panel prices the snooping of the whole search, not just the
+    named variants. Columns are labelled ``adaptive_n{len}``, ``fixed_n{len}``,
+    ``const{lower}_n{len}``.
+    """
+    if lower_sigma is None:
+        lower_sigma = -ZONE_SIGMA["trend"]
+    if grid is None:
+        grid = np.arange(5.0, 45.0, 1.0)
+
+    cols = {}
+    for n in lengths:
+        rsi = wilder_rsi(close, n)
+        cols[f"adaptive_n{n}"] = strategy_net_returns(
+            close, signals.sigma_band_positions(rsi, n, lower_sigma, 0.0), cost_bps)
+        cols[f"fixed_n{n}"] = strategy_net_returns(
+            close, signals.rsi_band_positions(rsi, 30.0, 50.0), cost_bps)
+        if include_grid:
+            for lower in grid:
+                cols[f"const{int(lower)}_n{n}"] = strategy_net_returns(
+                    close, signals.rsi_band_positions(rsi, float(lower), 50.0), cost_bps)
+    return pd.DataFrame(cols)
+
+
+def margin_panel(close: pd.Series, lengths=(2, 5, 14), cost_bps: float = 1.0,
+                 lower_sigma: float | None = None) -> pd.DataFrame:
+    """Per length, the daily return *margin* of the adaptive σ-band over fixed 30/50.
+
+    This is the pre-registered mirage line as a panel: Signal beats `WEAK` only if the σ-band
+    beats fixed 70/30 *by a margin surviving a White Reality Check*. Each column is
+    ``adaptive − fixed`` net daily returns at one length; the RC on this panel asks whether the
+    best such margin, across the lengths tested, is distinguishable from zero once the search
+    over lengths is priced.
+    """
+    panel = race_panel(close, lengths=lengths, cost_bps=cost_bps, lower_sigma=lower_sigma)
+    return pd.DataFrame({
+        f"margin_n{n}": panel[f"adaptive_n{n}"] - panel[f"fixed_n{n}"] for n in lengths
+    })
 
 
 # --------------------------------------------------------------------------- #
