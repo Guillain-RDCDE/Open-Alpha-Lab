@@ -163,9 +163,11 @@ kind of number every time:
 
 1. **Decompose / measure** the raw effect with exact identities — no fitting, no
    free parameters. *(`quantlab/decompose.py`)*
-2. **Robust inference** — Newey-West (HAC) and Lo (2002) standard errors, bootstrap
-   CIs, White (2000) Reality Check for data-snooping. *Is it real?*
-   *(`quantlab/analytics.py`, `stats.py`, `bayes.py`)*
+2. **Robust inference** — Newey-West (HAC) and Lo/Mertens standard errors,
+   **circular block bootstrap** CIs (i.i.d. resampling destroys the volatility
+   clustering the inference is supposed to respect), White (2000) Reality Check
+   on the **stationary bootstrap** (Politis-Romano), as White prescribes. *Is it
+   real?* *(`quantlab/analytics.py`, `stats.py`, `bayes.py`)*
 3. **Critique the magnitude** — compounding, log-scale illusions, unit errors, data
    artefacts (splits/dividends), selection. *(`quantlab/diagnostics.py`)*
 4. **Alpha vs beta** — how much of the "edge" is just a risk premium you were always
@@ -177,6 +179,29 @@ kind of number every time:
 
 Everything is deterministic (fixed seeds), tested (`pytest`, CI on Python
 3.10–3.12), and reproducible from cached or freshly-fetched data.
+
+### The inference bar — what each stamp must show
+
+A bench-wide audit taught us that the stamps drift upward unless the bar is
+written down. So it is:
+
+- **`REAL` is earned by the tape, not the literature.** It requires an
+  autocorrelation-robust statistic (HAC *t*, Lo *t*) clearing **2** on the
+  *real* data the study ran. Three decades of published support plus a
+  sub-2 *t* on our sample reads **`WEAK`** — say "the literature says real;
+  this tape alone can't certify it" and stamp accordingly.
+- **A synthetic control is a machinery proof, never market evidence.** It shows
+  the harness *can* detect the effect it plants (and every harness must pass
+  that positive control — a pipeline that can't bank a planted signal proves
+  nothing by finding nothing). Quoting a synthetic Sharpe in support of a
+  Signal stamp is circular, full stop.
+- **No conditional claim without uncertainty.** Conditional accuracies carry
+  Wilson intervals; sub-period contrasts ("decayed since…", "faded after…")
+  carry a block-bootstrap or exact test of the *difference*, on a split that is
+  justified, not snooped. Words like *unambiguous* are banned below *t* = 2.
+- **`MIXED` (amber)** is allowed when the verdict genuinely splits by regime or
+  leg — but only as shorthand for a split spelled out on the front-card
+  (*"Real on the level · None on the spike"*).
 
 ---
 
@@ -201,6 +226,41 @@ A few non-negotiables that keep the desk honest:
   explicit as-of date and print a content fingerprint of the inputs
   (`quantlab/repro.py`). A reader who reruns and matches the fingerprint holds your
   exact data; a mismatch flags drift *loudly*, instead of a silently different number.
+  Two corollaries: **an as-of date is never in the future** (a `resample("ME")`
+  label is not a pull date), and **a stamped run never includes a partial month
+  or year** — drop the in-progress bar before the stats.
+- **Survivorship is named on the Signal axis, not just buried in Tradability.**
+  Any cross-sectional panel goes through the opt-in guard
+  (`allow_survivorship_bias=True` — `quantlab/universe.py`, `hf_data.py`) and the
+  caveat travels with every place the stamp appears. A current-membership panel
+  can *invert* an anomaly outright (it manufactured a "significantly negative"
+  premium once on this bench), and a bias can point *against* the effect as
+  easily as for it — reason about its direction explicitly, in writing. A
+  control that shares the bias (same-month vs other-month) can support
+  *existence*; it can never certify *magnitude*.
+- **One execution lag, documented exactly.** The convention is: signal known at
+  the close of *t* earns the return of *t+1* — one `shift`, applied once. A
+  second silent shift hiding in `book_returns` once made a one-day reversal
+  study measure a two-day-old signal and call the premium dead. Docstrings state
+  the *effective* lag, and calendar-known rules (turn-of-month windows) need no
+  lag at all. Conservative-by-accident is still wrong.
+- **Costs are counted one-way, legs are counted both, and shorts pay borrow.**
+  Define turnover as one-way × NAV and say so next to every break-even. Charge
+  financing on a levered book exactly once (the bench's worst self-inflicted
+  wound was charging the risk-free rate twice). And when one side of a race is
+  in cash part-time, compare **excess-of-cash to excess-of-cash** — a raw-Sharpe
+  vs excess-Sharpe race once manufactured a verdict here.
+- **Gross is labeled gross, net is labeled net,** in every table, sub-period
+  included. A net-of-2bp row sold as "gross" survived three documents before an
+  audit caught it. Same discipline for *price-only* vs *total-return* series —
+  `^GSPC` has no dividends in it, don't call it total return.
+- **Synthetic cells never wear a real-tape banner.** When the executed cells run
+  the offline control and the headline numbers come from a pinned real run, the
+  notebook hero says exactly that — "Beat 0 · Verdict (real tape)", numbers
+  sourced to `docs/results.md` — and the real figures live in **one** place
+  (a single dict at the top of `build_notebooks.py`, mirroring `results.md`).
+  Hard-coded prose numbers rot: every re-run of `verify.py` triggers a notebook
+  rebuild, or the numbers will drift apart (they did, seven studies' worth).
 - **Friendly, human, and honest.** We write like a person explaining something they
   find genuinely cool — not like a textbook, and never like a sales deck.
 
@@ -224,16 +284,25 @@ turn CI red. When you add the row, the study must pass:
 - [ ] **Both notebooks present and _executed_** — `01_for_the_curious` and `02_for_the_quants`,
   generated by `notebooks/build_notebooks.py` and then **re-run through nbconvert so every code
   cell carries its outputs and figures**. A rebuilt-but-unexecuted skeleton is a broken
-  deliverable, and the gate rejects it:
+  deliverable, and the gate rejects it — as it now also rejects notebooks with error
+  cells or with all outputs stripped:
   `jupyter nbconvert --to notebook --execute --inplace 01_*.ipynb 02_*.ipynb` (from the
   `notebooks/` dir — cwd matters for any `_cache/`).
 - [ ] **Tests wired into CI** — if the study has a `tests/test_*.py` suite, add its step to
   [`.github/workflows/tests.yml`](.github/workflows/tests.yml). A test nobody runs guards nothing.
 - [ ] **`docs/references.md`** — the literature map. `docs/` is never empty.
 - [ ] **A fingerprinted results doc** — `docs/results.md` (or `docs/results_*.md`), the
-  reproducible headline run with an as-of date + content fingerprint (`quantlab/repro.py`).
-  *(Recommended; the gate warns rather than fails, since the earliest studies keep their numbers
-  in the notebooks.)*
+  reproducible headline run with an **explicit as-of date** + content fingerprint
+  (`quantlab/repro.py`). **Required for every new study** (the gate still only warns,
+  for the sake of history — but as of study 50 every study on the bench has one, and
+  yours will too). The doc is the single source of truth the notebooks quote from.
+- [ ] **The bench map is regenerated** — if your row changes the README table, run
+  `python tools/make_bench_figures.py` so [`docs/bench_map.png`](docs/bench_map.png) and
+  the counts in [`docs/bench.md`](docs/bench.md) stay in sync with the table they parse.
+- [ ] **Caches for the pinned run exist locally** — `_cache/` is gitignored, so third-party
+  fingerprint verification goes through the release bundle
+  (`tools/make_repro_bundle.py`, policy in [`docs/reproducibility.md`](docs/reproducibility.md)).
+  Keep the parquets your `verify.py` pinned; they are the proof behind your fingerprint.
 - [ ] **Dual-track asides** — `02_for_the_quants` carries `> 💡 In plain words` asides; the
   curious notebook may carry `> 🔬 For the quants` asides.
 

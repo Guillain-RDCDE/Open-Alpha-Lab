@@ -19,14 +19,23 @@ enforces the **bold** ones and will fail the build otherwise.
   [`.github/workflows/tests.yml`](../../.github/workflows/tests.yml).
 - [ ] **`docs/references.md`** — the literature map (the claim's source + the relevant papers +
   the shared method citations). `docs/` is never empty.
-- [ ] **`docs/results.md`** (recommended) — the fingerprinted, as-of'd reproducible headline run
-  (`quantlab/repro.py`).
+- [ ] **`docs/results.md`** — the fingerprinted, as-of'd reproducible headline run
+  (`quantlab/repro.py`). Required for new studies; the single source of truth the
+  notebooks quote from. The as-of is never in the future; partial months/years are dropped.
 - [ ] **Dual-track asides** — `02_for_the_quants` carries `> 💡 In plain words` notes; the
   curious notebook may carry `> 🔬 For the quants` notes.
 - [ ] **Verdict rubric** — Signal `REAL`/`WEAK`/`NONE` + Tradability `INVESTABLE`/`FRAGILE`/`MIRAGE`
   (+ an optional 3rd myth-check axis), with the shared shields palette.
+  **`REAL` needs a robust *t* ≥ 2 on the real tape** — literature support alone reads `WEAK`
+  (see METHODOLOGY → *The inference bar*).
 - [ ] **Deterministic & offline** — fixed seeds; the reproducible core and tests run with no
   network (live data only on an explicit cache miss).
+- [ ] **The honesty checks that audits keep catching** — one execution lag, documented exactly;
+  costs one-way × NAV with shorts paying borrow; excess-vs-excess Sharpe races; gross/net and
+  price-only/total-return labeled everywhere; survivorship named on the *Signal* axis (panel
+  loaders go through the opt-in guard); synthetic cells never under a real-tape banner — real
+  numbers live in one dict in `build_notebooks.py`, mirroring `results.md`.
+- [ ] **Bench map regenerated** — `python tools/make_bench_figures.py` after adding your row.
 
 Verify locally before publishing:
 ```bash
