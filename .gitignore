@@ -27,6 +27,16 @@ out_*.png
 # Internal handoff/planning doc — kept local, not part of the public repo.
 PROJECT_BRIEF.md
 
+# Root-level scratch/work scripts and their outputs — local only.
+/_*.py
+/_*.out
+
+# Editor/build temp droppings (e.g. build_notebooks.py.tmp.<pid>.<hash>)
+*.tmp.*
+
+# Release reproducibility bundles (attached to GitHub Releases, not tracked)
+repro_bundle_*.zip
+
 # Notebooks
 .ipynb_checkpoints/
 

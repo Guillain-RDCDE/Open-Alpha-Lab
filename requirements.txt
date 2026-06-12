@@ -1,10 +1,9 @@
-numpy>=1.24
-pandas>=2.0
-matplotlib>=3.7
-yfinance>=0.2.40
-pyarrow>=14.0
-duckdb>=0.10   # quantlab.hf_data: push-down reads of the free PWB Stocks-Daily-Price table
-# dev / tests
-pytest>=8.0
+# Dependency source of truth: pyproject.toml. This file is the one-line alias
+# the README points at — it builds the full research environment: the quantlab
+# engine (editable, with its runtime deps incl. duckdb), the studies'
+# econometrics/ML stack ([studies] extra: scipy, statsmodels, arch,
+# scikit-learn) and the dev/test tooling ([dev] extra: pytest, notebook tools).
+-e .[studies,dev]
+
 # optional, live trading template only (install manually):
 # MetaTrader5>=5.0.45

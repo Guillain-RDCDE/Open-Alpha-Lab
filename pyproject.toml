@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "open-alpha-lab"
-version = "0.1.0"
+version = "0.2.0"
 description = "Open-Alpha-Lab: an open quant research desk. A reusable engine (quantlab) plus rigorous, reproducible audits of trading ideas — edge or mirage."
 readme = "README.md"
 license = { text = "MIT" }
@@ -23,15 +23,27 @@ classifiers = [
   "Intended Audience :: Financial and Insurance Industry",
   "Topic :: Office/Business :: Financial :: Investment",
 ]
+# Single source of truth for dependencies (requirements.txt is a thin alias
+# that installs `-e .[studies,dev]`; CI installs via requirements.txt too).
 dependencies = [
   "numpy>=1.24",
   "pandas>=2.0",
   "matplotlib>=3.7",
   "yfinance>=0.2.40",
   "pyarrow>=14.0",
+  # quantlab.hf_data: push-down reads of the free PWB Stocks-Daily-Price table
+  "duckdb>=0.10",
 ]
 
 [project.optional-dependencies]
+# Econometrics/ML stack backing the studies (12 Paper-Prophet, 13 Crimson-Hour,
+# 17 Glass-Ceiling, 22 Crystal-Ball, 39 Black-Box, ...).
+studies = [
+  "scipy>=1.10",
+  "statsmodels>=0.14",
+  "arch>=6.0",
+  "scikit-learn>=1.3",
+]
 dev = ["pytest>=8.0", "nbformat", "nbconvert", "ipykernel", "jupyter"]
 
 [project.urls]
@@ -45,7 +57,12 @@ packages = ["quantlab", "quantlab.brokers"]
 # run via `pytest` (console script) or `python -m pytest`.
 pythonpath = ["."]
 testpaths = ["tests"]
-addopts = "-q"
+# importlib import mode: every study ships a tests/test_<study>.py without an
+# __init__.py; the default prepend mode would refuse to collect two same-named
+# modules (`python -m pytest studies` died with 50+ collection errors).
+# importlib gives each test file a unique module identity, so cross-study runs
+# collect cleanly while per-study suites behave exactly as before.
+addopts = "-q --import-mode=importlib"
 markers = [
     "network: test needs live network + optional deps (duckdb); skips when absent.",
 ]

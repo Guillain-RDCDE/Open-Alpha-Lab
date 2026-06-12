@@ -33,7 +33,7 @@ DEFAULT_EVIDENCE = [
     ("Basic night > day pattern", 1.00, "predicted by both hypotheses; non-discriminating"),
     ("Foreign-ETF sign inversion (listing clock)", 0.40, "predicted by microstructure; awkward for one global actor"),
     ("Chinese T+1 inversion", 0.50, "a settlement-rule natural experiment, not manipulation"),
-    ("Per-hour edge ~1.3x (clock illusion)", 0.65, "much of the magnitude is calendar time, not a scheme"),
+    ("Per-hour edge ~1.4x (clock illusion)", 0.65, "much of the magnitude is calendar time, not a scheme"),
     ("Negative net P&L at world-moving scale", 0.35, "the alleged mechanism is economically self-defeating"),
     ("Post-publication Sharpe decay (~2 to ~0.5)", 0.55, "an ongoing scheme would not fade as it is documented"),
 ]
