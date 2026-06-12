@@ -1,12 +1,12 @@
-# What 70 teardowns taught us
+# What 71 teardowns taught us
 
-*Seventy famous trading ideas — anomalies, folk strategies, vendor backtests, things
+*Seventy-one famous trading ideas — anomalies, folk strategies, vendor backtests, things
 people swear by — each put through the [same protocol](../METHODOLOGY.md) and
 stamped twice: **is the signal real?** and **does it survive real execution and
 scale?** This page is the view from above. It aggregates; it doesn't re-judge —
 every verdict below links back to the study that earned it.*
 
-![The bench map — 70 studies on a Signal × Tradability grid](bench_map.png)
+![The bench map — 71 studies on a Signal × Tradability grid](bench_map.png)
 
 *(Regenerate with `python tools/make_bench_figures.py` — it parses the
 [README table](../README.md), so it's always in sync.)*
@@ -15,24 +15,24 @@ every verdict below links back to the study that earned it.*
 
 ## The score
 
-Of the 70 studies on the bench, 69 carry final stamps (study
+Of the 71 studies on the bench, 70 carry final stamps (study
 [14](../studies/14-gamma-gospel/) is pre-registered, verdict pending):
 
 | | Investable | Fragile | Mirage | |
 |---|:--:|:--:|:--:|:--:|
-| **Real** | **2** | 7 | 8 | 17 |
+| **Real** | **2** | 8 | 8 | 18 |
 | **Weak** | 0 | 12 | 18 | 30 |
 | **None** | 0 | 3 | 19 | 22 |
-| | **2** | **22** | **45** | **69** |
+| | **2** | **23** | **45** | **70** |
 
 Read it the way the colours tell you to:
 
-- **17 / 69 signals are statistically real.** Roughly one famous idea in four
+- **18 / 70 signals are statistically real.** Roughly one famous idea in four
   survives autocorrelation-robust inference. The other three-quarters are weak
   (30) or plain noise (22).
-- **45 / 69 are mirages once you try to trade them.** Costs, capacity,
+- **45 / 70 are mirages once you try to trade them.** Costs, capacity,
   decay, or the discovery that the "edge" was beta all along.
-- **Exactly 2 / 69 are investable.** [Storm-Shy](../studies/16-storm-shy/) and
+- **Exactly 2 / 70 are investable.** [Storm-Shy](../studies/16-storm-shy/) and
   [All-Weather](../studies/68-all-weather/) — and tellingly, neither is a
   return predictor. One is a risk-management overlay, the other is
   diversification. The bench's only greens don't forecast anything.
@@ -51,7 +51,7 @@ Fragile stamp as plain diversifiers. The story dies; the asset survives.
 
 ## Where ideas go to die — mortality by family
 
-We sorted the 70 into rough families. The boundaries are judgement calls (is
+We sorted the 71 into rough families. The boundaries are judgement calls (is
 the 52-week high a chart pattern or a momentum factor? we said factor) — the
 totals below are honest, the taxonomy is approximate.
 
@@ -63,7 +63,7 @@ totals below are honest, the taxonomy is approximate.
 | Momentum & trend — [20](../studies/20-freight-train/) [24](../studies/24-stampede/) [25](../studies/25-clean-slate/) [28](../studies/28-carousel/) [31](../studies/31-trade-winds/) [40](../studies/40-paper-tiger/) | 6 | 0 | 5 | 0 |
 | Carry, curves & commodities — [27](../studies/27-steamroller/) [29](../studies/29-hedgers-toll/) [35](../studies/35-contango/) [36](../studies/36-greenback/) [59](../studies/59-downhill/) [60](../studies/60-long-shot/) | 6 | 1 | 4 | 0 |
 | Calendar & seasonal — [01](../studies/01-overnight-anomaly/) [41](../studies/41-hangover/) [42](../studies/42-last-call/) [48](../studies/48-groundhog/) [55](../studies/55-summer-lull/) [67](../studies/67-fed-drift/) | 6 | 4 | 2 | 0 |
-| Mean reversion & stat-arb — [05](../studies/05-twin-spread/) [23](../studies/23-broken-tether/) [26](../studies/26-sand-castle/) [32](../studies/32-rip-tide/) [33](../studies/33-slingshot/) | 5 | 2 | 0 | 0 |
+| Mean reversion & stat-arb — [05](../studies/05-twin-spread/) [23](../studies/23-broken-tether/) [26](../studies/26-sand-castle/) [32](../studies/32-rip-tide/) [33](../studies/33-slingshot/) [71](../studies/71-ambush/) | 6 | 3 | 1 | 0 |
 | Macro & valuation timing — [37](../studies/37-barometer/) [47](../studies/47-paper-moon/) [49](../studies/49-black-gold/) [56](../studies/56-tide-table/) [66](../studies/66-inverted/) | 5 | 2 | 3 | 0 |
 | ML & model forecasting — [10](../studies/10-markov-mint/) [12](../studies/12-paper-prophet/) [39](../studies/39-black-box/) | 3 | 0 | 0 | 0 |
 | Microstructure & crowds — [04](../studies/04-social-oracle/) [09](../studies/09-phantom-kernel/) [11](../studies/11-vanishing-penny/) | 3 | 1 | 1 | 0 |
@@ -94,7 +94,7 @@ Three patterns jump out:
 These aren't opinions — each one fell out of multiple studies independently.
 
 **1 · The edge dies at the costs line, not the signal line.**
-Of the 17 statistically real signals, 15 failed or barely survived
+Of the 18 statistically real signals, 16 failed or barely survived
 tradability. The overnight drift is real and untradable
 [[01](../studies/01-overnight-anomaly/)]; intraday reversal is real with a
 3.31 bp break-even that lives in the least-liquid names
@@ -188,13 +188,14 @@ decaying, or capacity-starved. Worth knowing; not worth quitting your job for:
 | [63](../studies/63-free-fall/) | Free-Fall | Short-vol carry, +12%/yr (SVXY) | Skew −4.8, one −83% day; five crash days wiped 95% |
 | [66](../studies/66-inverted/) | Inverted | Curve inversion → +1% next 18m vs +16% normal | ~5% of months, a year of melt-up first — no sell button |
 | [67](../studies/67-fed-drift/) | Fed-Drift | Pre-FOMC drift carried 11.5% of SPY's return | Publication killed it: +0.24%/day → +0.09% after 2011 |
+| [71](../studies/71-ambush/) | Ambush | Confluence of four dead-net edges: +19.6 bp/day at K≥3 (HAC *t* = 3.1), undecayed, costs defeated by rarity | ~15 trades/yr → +1.2%/yr excess; OOS Sharpe +0.28 under the frozen 0.30 bar |
 
 ---
 
 ## Challenge the bench
 
-This page will be wrong eventually — that's the design. Seventy verdicts is
-seventy falsifiable claims, each with reproducible code, pinned data
+This page will be wrong eventually — that's the design. Seventy-one verdicts is
+seventy-one falsifiable claims, each with reproducible code, pinned data
 fingerprints, and the exact line where we think the dream dies.
 
 - **Think a Mirage is tradable?** Fork the study, change the cost model or
