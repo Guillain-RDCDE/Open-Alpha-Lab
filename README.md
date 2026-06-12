@@ -40,12 +40,12 @@ style is written up in **[METHODOLOGY.md](METHODOLOGY.md)**.
 ## The map
 
 The whole bench on one grid — every study is a numbered chip, sorted by its two stamps.
-Almost everything ends up bottom-right; one chip is green.
+Almost everything ends up bottom-right; two chips are green — and neither one predicts returns.
 
 ![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 60 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 70 teardowns taught us](docs/bench.md)**.
 
 ---
 

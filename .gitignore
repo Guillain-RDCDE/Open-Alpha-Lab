@@ -61,3 +61,9 @@ secrets.*
 !studies/01-overnight-anomaly/paper/overnight_alpha.pdf
 !studies/01-overnight-anomaly/paper/figures/
 !studies/01-overnight-anomaly/paper/figures/*.pdf
+
+# LaTeX build artefacts
+*.aux
+*.toc
+studies/*/paper/*.log
+studies/*/paper/*.out
