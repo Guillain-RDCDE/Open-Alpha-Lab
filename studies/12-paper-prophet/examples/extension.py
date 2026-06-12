@@ -82,20 +82,22 @@ Sharpe(stack) − Sharpe(vol-targeting) (the forecast's contribution; **≤ 0 = 
 
 ## What it shows
 
-1. **The forecast carries no directional skill on any asset.** Directional hit-rates sit on ~50%
-   (50.1–52.3%) with **|HAC *t*| < 2 across all {len(panel)} assets** — not one shows a significant
-   tilt. Signal `NONE` is not an SPY accident; it is universal.
+1. **The forecast carries no directional skill that survives scrutiny.** Directional hit-rates sit
+   on ~50% (50.1–52.5%), with **|HAC *t*| < 2 on seven of the {len(panel)} assets**. EWJ alone
+   grazes the bar (*t* = 2.06 at a 52.0% hit-rate) — exactly the single borderline reading eight
+   uncorrected tests are expected to produce, on the asset with no prior claim to the effect.
+   Signal `NONE` is not an SPY accident; it is universal.
 
 2. **The ARIMA increment's sign just tracks each asset's drift, not skill.** It is negative on the
-   *risers* (SPY −0.35, QQQ −0.22, GLD −0.30: going ~50% short forfeits the climb) and positive on
-   the *fallers* (USO +0.43, EWJ, TLT: shorting a sinking asset happens to help). With hit-rates on
-   the coin and |*t*| < 2 everywhere, that is drift mechanics, not forecasting — the forecast adds
-   value nowhere *because* it predicts, only where the asset fell anyway.
+   *risers* (SPY −0.35, GLD −0.31, QQQ −0.18: going ~50% short forfeits the climb) and positive on
+   the *fallers* (USO +0.29, EWJ, TLT: shorting a sinking asset happens to help). With hit-rates on
+   the coin, that is drift mechanics, not forecasting — the forecast adds value nowhere *because*
+   it predicts, only where the asset fell anyway.
 
 3. **The sizing tailwind is real but small and not a clean equity-vs-rest split.** The vol-targeting
-   lift over buy-and-hold is modest where positive (QQQ +0.28, GLD +0.09, SPY +0.07, USO +0.09) and
+   lift over buy-and-hold is modest where positive (QQQ +0.28, GLD +0.09, SPY +0.07, USO +0.05) and
    ~zero or negative on EWJ, EWZ, TLT, UUP — *including* equity indices. The leverage-effect proxy
-   is noisy (QQQ even positive). So the headline's "vol-targeting is the part that works" holds on
+   is noisy. So the headline's "vol-targeting is the part that works" holds on
    the SPY sample but is **not a reliable cross-asset free lunch**: on several tapes the GARCH sizing
    does not even beat holding the asset. The one thing that is rock-solid across all eight is the
    *absence of a forecast edge*.
