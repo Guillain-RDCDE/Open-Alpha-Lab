@@ -159,9 +159,11 @@ def build_curious():
             "ax.legend(); ax.grid(alpha=.3); plt.show()"
         ),
         md(
-            "The line drifts up a little — *looks* encouraging! But remember the trap: the "
-            "market drifts up after a *random* day too. So is this bounce actually bigger "
-            "than normal? Let's run the decisive comparison — the dip vs a random day:"
+            "The line sags for a week, then crawls back above zero — by the end of the "
+            "month you're up a touch. *Looks* like the bounce eventually shows up! But "
+            "remember the trap: the market drifts up after a *random* day too. So is this "
+            "recovery actually bigger than normal? Let's run the decisive comparison — the "
+            "dip vs a random day:"
         ),
         code(
             "bench = benchmark.conditional_vs_unconditional(qqq, ev_qqq, horizons=(1, 5, 10, 20))\n"
@@ -174,11 +176,11 @@ def build_curious():
             "view"
         ),
         md(
-            "There it is. **\"After dip\" and \"after random day\" are basically the same.** "
-            "The *excess* — the only thing that matters — hovers around zero, and the "
-            "p-value is nowhere near significant (you want it below 0.05). Buying the −3% "
-            "Nasdaq dip is statistically the same as buying any old Tuesday. **The famous "
-            "rule is folklore.**\n\n"
+            "There it is. **\"After dip\" never beats \"after random day\".** The *excess* — "
+            "the only thing that matters — sits at zero or **below** at every horizon, and "
+            "the p-value is nowhere near significant (you want it below 0.05; here it's "
+            "0.5–0.99). Buying the −3% Nasdaq dip earns you, at best, what buying any old "
+            "Tuesday earns you. **The famous rule is folklore.**\n\n"
             "But wait — maybe −3% just isn't scary enough. What if we only buy *real* "
             "panic? Let's deepen the drop and overlay the average paths:"
         ),
@@ -339,13 +341,17 @@ def build_quants():
             "Here's what rides on getting this right, stated as the mistake almost every "
             "dip backtest makes. In a synthetic market with **no dip-edge at all** — just "
             "upward drift and clustered volatility — a family scan still coughs up a rule "
-            "with **Sharpe > 2** that even *survives* a deflated-Sharpe selection test. It "
-            "isn't skill; it's the market's drift, harvested by an asymmetric "
-            "take-profit/stop and dressed up as alpha.\n\n"
-            "The **only** tool that correctly flags it as fake is the "
+            "with **Sharpe > 2** (run `examples/run_synthetic_demo.py`). It isn't skill; "
+            "it's the market's drift, harvested by an asymmetric take-profit/stop and "
+            "dressed up as alpha.\n\n"
+            "Deflating that Sharpe for the search helps only if you count honestly: use the "
+            "**active days actually behind the winner** (these rules are flat >90% of the "
+            "time), not the calendar length — inflate `n_obs` to the full sample and even "
+            "the drift-harvester \"survives selection\". And deflation at its best only "
+            "rules out selection luck, never drift: the tool that exposes the fake is the "
             "conditional-vs-random-day benchmark (excess ≈ 0). So the stakes here are "
-            "methodological: *a high, even selection-robust, backtest Sharpe can be pure "
-            "beta.* Everything below is built to not get fooled by it."
+            "methodological: *a high backtest Sharpe can be pure beta.* Everything below "
+            "is built to not get fooled by it."
         ),
 
         # ---- BEAT 3 — HOW WE'D KNOW ------------------------------------------
@@ -411,10 +417,13 @@ def build_quants():
         ),
         md(
             "On 40 years of ^NDX the −3% close is **worse** than a random day (negative "
-            "excess, p≈0.8). On QQQ there's a faint positive lean by +10d but at p≈0.07 it "
-            "is **not** distinguishable from drift. **At −3%, there is no edge.**\n\n"
-            "> 💡 **In plain words** — buying the −3% dip earns you what buying any day earns "
-            "you. The drama is free; the alpha is not there."
+            "excess, p≈0.8). On QQQ the excess is negative at **every** horizon (p≈0.5–0.99) "
+            "— if anything the dip day does worse than an ordinary one. (An earlier revision "
+            "of the data layer showed QQQ a faint positive lean by +10d; it was an artefact — "
+            "a double split-adjustment fabricated a ~+100% overnight gap at QQQ's 2000-03-20 "
+            "split, right in the middle of the dot-com events.) **At −3%, there is no edge.**\n\n"
+            "> 💡 **In plain words** — buying the −3% dip earns you, at best, what buying any "
+            "day earns you. The drama is free; the alpha is not there."
         ),
         md(
             "### 4.3 Clustering-aware: the block bootstrap\n\n"
@@ -485,8 +494,12 @@ def build_quants():
             "print(f'{len(scan)} (trigger x exit) combos; top 6 by net Sharpe:')\n"
             "display(scan.head(6).round(3))\n"
             "best = scan.iloc[0]\n"
-            "dsr = robustness.deflated_sharpe(best['sharpe'], n_trials=len(scan), n_obs=len(qqq))\n"
-            "print(f\"best raw Sharpe = {best['sharpe']:.2f} ({best['trigger']}) over {len(scan)} trials -> \"\n"
+            "# n_obs = the active days behind the winning Sharpe, NOT the calendar length:\n"
+            "# the strategy is flat >90% of the time, and inflating n_obs to the full sample\n"
+            "# makes the deflation test trivially easy to pass.\n"
+            "dsr = robustness.deflated_sharpe(best['sharpe'], n_trials=len(scan), n_obs=int(best['active_days']))\n"
+            "print(f\"best raw Sharpe = {best['sharpe']:.2f} ({best['trigger']}) over {len(scan)} trials, \"\n"
+            "      f\"{int(best['active_days'])} active days -> \"\n"
             "      f\"deflated PSR = {dsr:.2f} ({'survives selection' if dsr and dsr>0.95 else 'consistent with luck'})\")\n"
             "pivot = scan.pivot(index='trigger', columns='exit', values='sharpe')\n"
             "vmax = np.nanmax(np.abs(pivot.to_numpy()))\n"
@@ -498,9 +511,12 @@ def build_quants():
             "fig.colorbar(im, ax=ax, shrink=0.8, label='Sharpe'); plt.show()"
         ),
         md(
-            "The best cell can post a Sharpe that even *survives* deflation — tempting. But "
-            "watch what a **regime split** does to it. Run the representative tradeable rule "
-            "and break the P&L out by era:"
+            "Counted honestly — `n_obs` = the ~250 days the winner actually spends in the "
+            "market, not the ~6,800-day calendar — the best cell **fails deflation** "
+            "(PSR far below the 0.95 bar): the prettiest Sharpe in the grid is consistent "
+            "with picking the luckiest of 70 coin-flips. And even if it had survived, watch "
+            "what a **regime split** does to it. Run the representative tradeable rule and "
+            "break the P&L out by era:"
         ),
         code(
             "best_sig = triggers.first_crossings(sigs[best['trigger']], cooldown=20)\n"

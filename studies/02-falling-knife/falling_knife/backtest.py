@@ -149,6 +149,11 @@ def _performance(daily: pd.Series, equity: pd.Series, trades: list[Trade], costs
 
     return {
         "n_trades": len(trades),
+        # Days actually in the market — the observation count behind `sharpe`
+        # (computed on active days only). Deflated-Sharpe checks must use THIS,
+        # not the calendar length: an event strategy that is flat 93% of the
+        # time has far fewer real observations than the sample has days.
+        "active_days": int(len(active)),
         "total_return": total_return,
         "cagr": cagr,
         "sharpe": float(sharpe) if sharpe == sharpe else np.nan,
@@ -219,6 +224,7 @@ def family_scan(
                 "trigger": tname,
                 "exit": rule.label(),
                 "n_trades": s["n_trades"],
+                "active_days": s["active_days"],
                 "cagr": s["cagr"],
                 "sharpe": s["sharpe"],
                 "total_return": s["total_return"],

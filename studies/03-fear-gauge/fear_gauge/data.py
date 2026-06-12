@@ -114,27 +114,35 @@ def _download(ticker: str, mode: AdjustMode) -> pd.DataFrame:
 def _apply_mode(raw: pd.DataFrame, mode: AdjustMode) -> pd.DataFrame:
     """Build OHLC under the requested adjustment convention.
 
-    The VIX carries no splits/dividends, so ``Adj Close == Close`` and every mode
-    collapses to raw — harmless. For the market the three modes behave exactly as
-    in Study 02.
+    Yahoo's ``auto_adjust=False`` OHLC is ALREADY split-adjusted (convention
+    pinned in ``quantlab/data.py`` and its live test); ``Adj Close`` carries the
+    dividend adjustment on top. So ``split_only`` is a no-op on the downloaded
+    data — kept as a named mode so the choice stays explicit. (An earlier
+    revision divided by a reconstructed split factor a *second* time — a double
+    adjustment that fabricated an overnight gap of roughly the split ratio at
+    every split date. Harmless here only by luck: ^GSPC, SPY and the VIX have
+    never split.) The VIX carries no splits/dividends at all, so every mode
+    collapses to the same series for the gauge.
     """
     base = raw[[c for c in OHLC_COLS]].copy()
     base.columns = OHLC_COLS
 
-    if mode == "raw":
+    if mode == "split_only":
         out = base
     elif mode == "total_return":
         if "Adj Close" not in raw.columns:
             raise RuntimeError("Adj Close missing; cannot build total_return mode.")
         factor = raw["Adj Close"] / raw["Close"]
         out = base.mul(factor, axis=0)
-    elif mode == "split_only":
+    elif mode == "raw":
+        # As-traded: multiply Yahoo's split adjustment back out (strictly-future
+        # split ratios; the split day itself already trades in new units).
         split = raw["Stock Splits"].replace(0.0, 1.0) if "Stock Splits" in raw else None
         if split is None or (split == 1.0).all():
-            out = base
+            out = base  # never split: split-adjusted == as-traded
         else:
-            cum = split.replace(1.0, 1.0)[::-1].cumprod()[::-1].shift(-1).fillna(1.0)
-            out = base.div(cum, axis=0)
+            cum = split[::-1].cumprod()[::-1].shift(-1).fillna(1.0)
+            out = base.mul(cum, axis=0)
     else:  # pragma: no cover - guarded by Literal typing
         raise ValueError(f"Unknown adjustment mode: {mode!r}")
 

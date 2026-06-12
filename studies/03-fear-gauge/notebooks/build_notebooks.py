@@ -190,13 +190,17 @@ def build_curious():
         # ---- BEAT 5 — THE VERDICT --------------------------------------------
         md(
             "## 5 · The verdict ⚖️\n\n"
-            "Read the three tables together. The expected story — to be confirmed when this "
-            "runs on live data:\n\n"
-            "- **Signal `REAL`:** vol mean-reverts; the bounce clears the random-day null at "
-            "least at short horizons. The gauge genuinely carries information.\n"
-            "- **But it's a risk premium, not alpha:** the excess shrinks against the price "
-            "drop and against the full-history window. You're harvesting the *variance risk "
-            "premium* — paid to hold the tail.\n\n"
+            "Read the three tables together — they're the whole story:\n\n"
+            "- **Signal `REAL`:** after a VIX≥30 cross the S&P beats a random day by about "
+            "**+1.0% over a week and +1.3% over a month**, and the p-values clear the bar "
+            "(≈0.00 and ≈0.01). Unlike the −3% dip of Study 02, the gauge genuinely "
+            "carries information.\n"
+            "- **But it's a risk premium, not alpha:** pit VIX-30 against a plain −3% "
+            "price day and the gap (≈+0.9–1.3%) **fails significance** (p≈0.13–0.20) — "
+            "most of the \"VIX edge\" is the falling knife in vol coordinates. And the "
+            "viral chart's 2016–2026 window shows a fatter excess (+1.9%) than the full "
+            "history (+1.3%): part of what's being sold is the *window*. What you're "
+            "harvesting is the **variance risk premium** — payment for holding the tail.\n\n"
             "Which sets up the only question that decides whether you'd touch it…"
         ),
 
@@ -206,17 +210,26 @@ def build_curious():
             "You can't buy spot VIX — the trade is the S&P (SPY) or a vol product with its own "
             "decay. And the rule's killer is the second half: **\"double down at 50.\"** That's "
             "a *martingale* — you size **up** exactly as the tail fattens. Let's run it through "
-            "history and count how often it would have blown past a ruinous drawdown **before** "
-            "the bounce arrived."
+            "history: every VIX-30 episode since 1990, doubled at 50 when it got there, held a "
+            "quarter, tracking the deepest mark-to-market drawdown along the way (the bar is "
+            "−20%, margin-call territory for anyone levered)."
         ),
         code(
-            "ruin = robustness.martingale_ruin(spx, vix, rung1=30, rung2=50, ruin_drawdown=-0.50)\n"
+            "ruin = robustness.martingale_ruin(spx, vix, rung1=30, rung2=50)  # hold 63d, ruin bar -20%\n"
             "pd.Series(ruin)"
         ),
         md(
-            "> The chart that sells \"double down at 50\" is drawn on the one decade with no "
-            "2008. Put 2008 back and the martingale's whole appeal — *it always comes back* — "
-            "is exactly the assumption that ruins it the one time it doesn't."
+            "Read it honestly: **most of the time the martingale is fine.** 30 of 32 episodes "
+            "stay above the bar and the average episode ends about **+5%**. The case against "
+            "it is the **tail**: the worst episode (2008) sat **−33% under water** before the "
+            "quarter was up — stretch the hold to six months and that deepens to about "
+            "**−40%** — and still *ended* −21% down. \"It always comes back\" is exactly the "
+            "assumption that fails the one time it matters, and doubling down means you "
+            "meet that failure with twice the capital.\n\n"
+            "> The chart that sells \"double down at 50\" is drawn on the one decade whose "
+            "worst episode ended just **−3.6%** down. It's not that the no-2008 window has "
+            "fewer scary episodes — it's that it has no *fatal* one. The window hides the "
+            "severity, not the frequency."
         ),
 
         # ---- BEAT 7 — GOING FURTHER ------------------------------------------
@@ -352,12 +365,41 @@ def build_quants():
         # ---- BEAT 5 ----------------------------------------------------------
         md(
             "## 5 · The verdict, with the numbers\n\n"
-            "Collate the decisive figures: random-day `p_greater`, the price-drop `gap` and its "
-            "p-value, the block-bootstrap CI, and the window swing. Fill the README's beat-5 "
-            "stamps from this cell once it's run on live data.\n\n"
-            "Expected shape: **Signal `REAL`** at short horizons (vol mean-reversion is robust) "
-            "but **Tradability `MIRAGE`/`FRAGILE`** — the excess is VRP, it doesn't clearly "
-            "beat the price drop, and it's carried by a handful of clustered crises."
+            "Collate the decisive figures from the executed cells above — random-day "
+            "`p_greater`, the price-drop `gap` and its p-value, the block-bootstrap CI, the "
+            "window swing. The README's beat-5 stamps are filled from this table."
+        ),
+        code(
+            "# No re-computation: every figure below is pulled from the cells above.\n"
+            "verdict = pd.DataFrame([\n"
+            "    {'question': 'V1_level_30 beats a random day?  (+1w / +1mo)',\n"
+            "     'figure': f\"excess {null_tbl.loc[('V1_level_30',5),'excess']:+.2%} (p={null_tbl.loc[('V1_level_30',5),'p_greater']:.3f})\"\n"
+            "               f\"  /  {null_tbl.loc[('V1_level_30',21),'excess']:+.2%} (p={null_tbl.loc[('V1_level_30',21),'p_greater']:.3f})\"},\n"
+            "    {'question': 'V2_spike beats a random day?  (+1mo, full history)',\n"
+            "     'figure': f\"excess {null_tbl.loc[('V2_spike',21),'excess']:+.2%} (p={null_tbl.loc[('V2_spike',21),'p_greater']:.3f})\"},\n"
+            "    {'question': 'V1_level_30 beats the -3% price day?  (gap, +1w / +1mo)',\n"
+            "     'figure': f\"gap {ctrl['V1_level_30'].loc[5,'gap']:+.2%} (p={ctrl['V1_level_30'].loc[5,'p_signal_gt_alt']:.3f})\"\n"
+            "               f\"  /  {ctrl['V1_level_30'].loc[21,'gap']:+.2%} (p={ctrl['V1_level_30'].loc[21,'p_signal_gt_alt']:.3f})\"},\n"
+            "    {'question': 'V1_level_30 survives clustering?  (+1mo excess, block bootstrap)',\n"
+            "     'figure': f\"CI [{boot['V1_level_30']['ci_low']:+.2%}, {boot['V1_level_30']['ci_high']:+.2%}]\"\n"
+            "               f\"  P(excess<=0)={boot['V1_level_30']['p_excess_le_0']:.3f}\"},\n"
+            "]).set_index('question')\n"
+            "pd.set_option('display.max_colwidth', 120)\n"
+            "verdict"
+        ),
+        md(
+            "Reading the table:\n\n"
+            "- **Signal `REAL` on the level, `NONE` on the spike.** VIX≥30 beats a random "
+            "day by ~+1.0% at a week (p≈0.00) and ~+1.3% at a month (p≈0.01). The famous "
+            "**+30% one-day spike** — the viral chart's trigger — carries **no** "
+            "full-history excess at a month (p≈0.5); its entire showing lives inside the "
+            "2016–2026 window (see the window-sensitivity table above).\n"
+            "- **Tradability `MIRAGE`.** The level does **not** significantly beat the −3% "
+            "price day Study 02 already tested (gap p≈0.13–0.20) — most of the \"VIX edge\" "
+            "is the same panic, read off a different dial — and once clustering is "
+            "respected the month-horizon CI touches zero (P(excess≤0)≈0.05).\n\n"
+            "What's left is a **variance risk premium**: real, modest, crisis-clustered — "
+            "compensation for holding the tail, not a free lunch."
         ),
 
         # ---- BEAT 6 — capacity + ruin ----------------------------------------
@@ -370,16 +412,25 @@ def build_quants():
             "sells it."
         ),
         md(
-            "**First, trade the level honestly.** Buy SPY at the VIX≥30 cross, hold a "
-            "month, charge realistic costs (including entry slippage into the spike). The "
-            "Sharpe is modest and you sit in cash ~88% of the time — market-timing that "
-            "underperforms buy-and-hold, not an edge."
+            "**First, trade the level honestly,** with buy-and-hold computed on the *same* "
+            "sample as the benchmark. Buy at the VIX≥30 cross, hold a month, charge "
+            "realistic costs (including entry slippage into the spike). You sit in cash "
+            "~88% of the time: the per-active-day Sharpe comes out *above* buy-and-hold's, "
+            "but with so little capital at work the strategy compounds a fraction of "
+            "buy-and-hold's return — market-timing that underperforms the index it times, "
+            "not an edge."
         ),
         code(
             "sig30 = triggers.first_crossings(triggers.level(vix, 30), cooldown=21)\n"
             "res = backtest.run(spx, sig30, exits.ExitRule(max_hold=21), backtest.CostModel())\n"
-            "print({k: (round(v, 4) if isinstance(v, float) else v) for k, v in res.stats.items()\n"
-            "       if k in ('n_trades','cagr','sharpe','max_drawdown','win_rate','exposure')})\n"
+            "print('VIX>=30, hold<=21d :', {k: (round(v, 4) if isinstance(v, float) else v)\n"
+            "      for k, v in res.stats.items()\n"
+            "      if k in ('n_trades','cagr','sharpe','max_drawdown','win_rate','exposure')})\n"
+            "# Buy-and-hold on the SAME sample — the benchmark the claim must beat.\n"
+            "bh = spx['r_cc'].dropna(); eq = (1 + bh).cumprod(); years = len(bh) / 252\n"
+            "print('buy-and-hold ^GSPC :', {'cagr': round(float(eq.iloc[-1]**(1/years) - 1), 4),\n"
+            "      'sharpe': round(float(bh.mean()/bh.std(ddof=1)*np.sqrt(252)), 4),\n"
+            "      'max_drawdown': round(float((eq/eq.cummax() - 1).min()), 4), 'exposure': 1.0})\n"
             "backtest.cost_sweep(spx, sig30, exits.ExitRule(max_hold=21))  # entry-slippage sweep"
         ),
         md(
@@ -398,15 +449,36 @@ def build_quants():
             "scan.head(5)"
         ),
         md(
-            "**Now the martingale.** \"Double down at 50\", held a fixed quarter, tracking the "
-            "deepest drawdown along the way — on the full sample versus the no-2008 window "
-            "that sells the rule."
+            "**Now the martingale.** \"Double down at 50\", held a fixed quarter (and, as a "
+            "stress, a fixed six months), tracking the deepest drawdown along the way — on "
+            "the full sample versus the no-2008 window that sells the rule. The ruin bar is "
+            "a −20% mark-to-market drawdown: margin-call territory for anyone running this "
+            "levered."
         ),
         code(
-            "full = robustness.martingale_ruin(spx, vix, rung1=30, rung2=50)\n"
-            "win  = spx.index >= '2016-06-01'\n"
-            "windowed = robustness.martingale_ruin(spx[win], vix[win], rung1=30, rung2=50)\n"
-            "pd.DataFrame({'full history': full, 'chart window (2016–2026)': windowed})"
+            "win = spx.index >= '2016-06-01'\n"
+            "pd.DataFrame({\n"
+            "    'full history':              robustness.martingale_ruin(spx, vix, rung1=30, rung2=50),\n"
+            "    'full, 6-month hold':        robustness.martingale_ruin(spx, vix, rung1=30, rung2=50, hold_days=126),\n"
+            "    'chart window (2016–2026)':  robustness.martingale_ruin(spx[win], vix[win], rung1=30, rung2=50),\n"
+            "})"
+        ),
+        md(
+            "Read the columns honestly — the numbers are more interesting than the slogan:\n\n"
+            "- **Breach *frequency* is low everywhere, and the chart window's is actually "
+            "the *highest*** (1 of 11 episodes ≈ 9% vs 2 of 32 ≈ 6% full-history — March "
+            "2020 is inside the window). The no-2008 decade does **not** look safer by "
+            "this measure, and the average episode ends positive in both samples. The "
+            "window trick is *not* hiding how often you get hurt.\n"
+            "- **What the window hides is severity.** Full history, the worst episode "
+            "(2008) sits **−33%** under water on a quarter hold, **−40%** on a six-month "
+            "hold, and still *ends* **−21%** (−31% at six months). In the chart window the "
+            "worst *terminal* loss is **−3.6%** — every drawdown healed by the bell. "
+            "That's the line that sells the rule: *it always came back.* In 2008 it "
+            "didn't, and the doubling rule had you meet that one path with twice the "
+            "capital.\n\n"
+            "A martingale doesn't fail often — that's its sales pitch. It fails *big*, "
+            "and only the windows that contain a 2008 let you see it."
         ),
 
         # ---- BEAT 7 ----------------------------------------------------------
@@ -415,8 +487,6 @@ def build_quants():
             "- **VRP-hedged return** as the dependent variable — does any excess survive once "
             "you strip the variance premium? If not, case closed.\n"
             "- **Term-structure conditioning** (VIX vs VIX3M backwardation at the event).\n"
-            "- **Deflated Sharpe** over the full (trigger × horizon × exit) grid, à la Study 02, "
-            "for the backtest layer when `backtest.py` lands.\n"
             "- **Cross-asset replication** on MOVE (bonds) and DVOL (crypto).\n\n"
             "Engine: [`../../../quantlab/`](../../../quantlab/). Method: "
             "[`METHODOLOGY.md`](../../../METHODOLOGY.md)."

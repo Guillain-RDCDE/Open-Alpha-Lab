@@ -11,14 +11,22 @@ We deliberately support BOTH faces of the same index:
 Crossing the two is the whole point: ``^NDX`` tells you whether the effect is
 *real and stable*, ``QQQ`` tells you whether it is *capturable*.
 
-Adjustment mode matters and is a *decision*, not a detail:
+Adjustment mode matters and is a *decision*, not a detail. Yahoo's convention,
+pinned empirically in ``quantlab/data.py`` and its live test: ``auto_adjust=False``
+OHLC arrives **already split-adjusted**; only ``Adj Close`` adds the dividends.
+
     * ``'split_only'`` (default) — adjust for splits only. Dividend drops stay in
       the price, so a dividend looks like a small overnight gap. Closest to what
-      a price-taker sees on the tape.
-    * ``'total_return'`` — Yahoo's fully adjusted close (splits + dividends).
-      Cleaner for long-horizon compounding, but it silently moves return between
-      sessions.
-    * ``'raw'`` — no adjustment at all (splits visible). For diagnostics only.
+      a price-taker sees on the tape. Given Yahoo's convention this is a NO-OP on
+      the downloaded data — kept as a named mode so the choice stays explicit.
+      (An earlier revision divided by a reconstructed split factor a *second*
+      time, manufacturing a fake ~+100% overnight gap at QQQ's 2000-03-20 split —
+      in the middle of the dot-com sample the crash events live in.)
+    * ``'total_return'`` — fully adjusted (splits + dividends). Cleaner for
+      long-horizon compounding, but it silently moves return between sessions.
+    * ``'raw'`` — as-traded prices: the split adjustment is multiplied BACK OUT
+      using Yahoo's split events. Maximises artefacts across split dates; for
+      diagnostics only, never to trade on.
 
 All downloads are cached as parquet under ``_cache/`` so reruns are offline.
 """
@@ -119,32 +127,43 @@ def _download(ticker: str, mode: AdjustMode) -> pd.DataFrame:
 def _apply_mode(raw: pd.DataFrame, mode: AdjustMode) -> pd.DataFrame:
     """Build OHLC under the requested adjustment convention.
 
-    Yahoo gives us raw OHLC plus an ``Adj Close`` (splits + dividends). We derive
-    a per-day adjustment factor and apply it consistently across O/H/L/C so the
-    intraday geometry (high>=close>=low etc.) is preserved.
+    Yahoo's ``auto_adjust=False`` OHLC is ALREADY split-adjusted (convention
+    pinned in ``quantlab/data.py`` and its live test); ``Adj Close`` carries the
+    dividend adjustment on top. Whatever the mode, the per-day factor is applied
+    consistently across O/H/L/C so the intraday geometry (high>=close>=low etc.)
+    is preserved.
+
+      split_only   -> no-op: the prices are already what this mode means. (The
+                      bug this replaces: rebuilding a cumulative split factor
+                      from 'Stock Splits' and dividing AGAIN — a double
+                      adjustment that grew a fabricated overnight gap of roughly
+                      the split ratio at every split date.)
+      total_return -> scale OHLC by Adj Close / Close (the dividend factor).
+      raw          -> as-traded: multiply OHLC back up by the cumulative product
+                      of all strictly-later split ratios (the split applies from
+                      the split date's open, so that day is already in new units).
     """
     cols = {c: c for c in OHLC_COLS}
     base = raw[[cols[c] for c in OHLC_COLS]].copy()
     base.columns = OHLC_COLS
 
-    if mode == "raw":
+    if mode == "split_only":
         out = base
     elif mode == "total_return":
         if "Adj Close" not in raw.columns:
             raise RuntimeError("Adj Close missing; cannot build total_return mode.")
         factor = raw["Adj Close"] / raw["Close"]
         out = base.mul(factor, axis=0)
-    elif mode == "split_only":
-        # Splits move every price by the same ratio; dividends do not. We back
-        # out the split-only factor from Yahoo's split history when present,
-        # otherwise fall back to raw (no splits in the window).
+    elif mode == "raw":
+        # Undo Yahoo's split adjustment to recover the as-traded tape.
         split = raw["Stock Splits"].replace(0.0, 1.0) if "Stock Splits" in raw else None
         if split is None or (split == 1.0).all():
-            out = base
+            out = base  # never split: split-adjusted == as-traded
         else:
-            # Cumulative split factor, applied retroactively (older bars shrink).
-            cum = split.replace(1.0, 1.0)[::-1].cumprod()[::-1].shift(-1).fillna(1.0)
-            out = base.div(cum, axis=0)
+            # Cumulative factor of strictly-future splits: days BEFORE a k:1
+            # split are multiplied back up by k.
+            cum = split[::-1].cumprod()[::-1].shift(-1).fillna(1.0)
+            out = base.mul(cum, axis=0)
     else:  # pragma: no cover - guarded by Literal typing
         raise ValueError(f"Unknown adjustment mode: {mode!r}")
 

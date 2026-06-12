@@ -104,9 +104,13 @@ def analyse(name, ohlc):
     print("\n[Family scan] top 5 by ABSOLUTE Sharpe (this number is a trap, see below):")
     print(scan.head(5).to_string(index=False, float_format=lambda v: f"{v:.3f}"))
     best = scan.iloc[0]
-    dsr = robustness.deflated_sharpe(best["sharpe"], n_trials=len(scan), n_obs=len(ohlc))
+    # n_obs = active days behind the winning Sharpe, not the calendar length —
+    # an event strategy that is flat >90% of the time has far fewer observations.
+    dsr = robustness.deflated_sharpe(best["sharpe"], n_trials=len(scan),
+                                     n_obs=int(best["active_days"]))
     print(f"\n[Selection check] deflated Sharpe rules out SELECTION luck only — not drift.")
-    print(f"   best raw Sharpe={best['sharpe']:.2f} over {len(scan)} trials -> deflated PSR={dsr:.2f}")
+    print(f"   best raw Sharpe={best['sharpe']:.2f} over {len(scan)} trials, "
+          f"{int(best['active_days'])} active days -> deflated PSR={dsr:.2f}")
 
     # 5) The ONLY verdict that separates a real edge from harvested drift.
     row5 = bench.loc[5]

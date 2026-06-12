@@ -26,7 +26,7 @@ autocorrelation-robust inference and at the individual-firm level---then audit
 the inference. We show that (i)~the headline magnitudes are inflated by
 compounding, data artefacts, and above all a \emph{calendar-time} confound: the
 overnight window spans $\sim$28 hours versus the 6.5-hour day, so per hour the
-edge is $\sim$1.3$\times$, not $\sim$4$\times$; (ii)~what survives is largely a
+edge is $\sim$1.4$\times$, not $\sim$4$\times$; (ii)~what survives is largely a
 gap-risk premium (beta), sits below realistic trading costs, and has decayed from
 a 5-year Sharpe near 2 to near 0.5; (iii)~the strategy is uninvestable at scale,
 with square-root market-impact capacity in the single-digit millions of dollars;
@@ -66,20 +66,22 @@ the open), with \texttt{split\_only} the default. The test suite verifies the
 identity to machine precision ($\sim 10^{-16}$).
 
 \section{The fact is real}
-On SPY the overnight mean is $+3.25$ bps/day with a Newey--West (HAC)
-$t\approx 4.9$ \cite{neweywest1987}; the intraday mean is insignificant
-($t\approx 0.9$). The Lo~\cite{lo2002} Sharpe-ratio $t$-statistic is $\approx 4.5$.
+On SPY the overnight mean is $+3.27$ bps/day with a Newey--West (HAC)
+$t\approx 5.0$ \cite{neweywest1987}; the intraday mean is insignificant
+($t\approx 0.8$). The Lo~\cite{lo2002} Sharpe-ratio $t$-statistic is $\approx 4.5$.
 The effect is not an artefact of assuming i.i.d.\ returns.
 
 It is also not a handful of cherry-picked indices. At the \emph{firm} level
-across S\&P~500 members ($N\approx 441$ with clean post-2010 history),
+across S\&P~500 members ($N=497$ with clean post-2010 history),
 $\sim$69\% of stocks have a higher overnight than intraday Sharpe; the median
-overnight Sharpe ($\approx 0.56$) exceeds the median intraday Sharpe
-($\approx 0.34$); and an equal-weight cross-section earns $+372\%$ overnight
-versus $+233\%$ intraday (HAC $t\approx 3.8$), echoing \cite{lou2019}
+overnight Sharpe ($\approx 0.57$) exceeds the median intraday Sharpe
+($\approx 0.33$); and an equal-weight cross-section earns $+384\%$ overnight
+versus $+229\%$ intraday (HAC $t\approx 3.9$), echoing \cite{lou2019}
 (Figure~\ref{fig:xs}). Finally, a White~\cite{white2000} Reality
-Check over a universe of major indices rejects the null that the best overnight
-Sharpe is a product of multiplicity ($p\approx 0$): on liquid indices the effect
+Check over a universe of major indices---bootstrapped with the stationary
+(block) resampling of Politis and Romano~\cite{politis1994} so that serial
+dependence survives into the null---rejects the null that the best overnight
+Sharpe is a product of multiplicity ($p<0.001$): on liquid indices the effect
 survives a data-snooping correction. We therefore concede the fact without
 reservation. The interesting questions are about magnitude, cause, and
 exploitability.
@@ -105,7 +107,7 @@ The explosion is the exponent, not a mechanism.
 day: it runs from the 16:00 close to the 09:30 open (17.5h on weeknights) and
 across weekends and holidays (65h$+$), averaging $\sim$28 calendar hours. Placing
 both legs on a per-hour footing collapses SPY's overnight advantage from
-$\sim$4.1$\times$ \emph{per session} to $\sim$1.3$\times$ \emph{per calendar
+$\sim$4.2$\times$ \emph{per session} to $\sim$1.4$\times$ \emph{per calendar
 hour}. Most of the famous gap is a unit error; a modest genuine premium remains.
 
 \paragraph{Data artefacts.} A few mis-adjusted split/dividend prints mechanically
@@ -216,6 +218,7 @@ figure script (\texttt{paper/make\_figures.py}). \emph{Not investment advice.}
 \bibitem{lou2019} Lou, D., C.\ Polk, and S.\ Skouras. 2019. A Tug of War: Overnight versus Intraday Expected Returns. \emph{JFE} 134(1): 192--213.
 \bibitem{mclean2016} McLean, R.\ D., and J.\ Pontiff. 2016. Does Academic Research Destroy Stock Return Predictability? \emph{Journal of Finance} 71(1): 5--32.
 \bibitem{neweywest1987} Newey, W.\ K., and K.\ D.\ West. 1987. A Simple, Positive Semi-Definite, HAC Covariance Matrix. \emph{Econometrica} 55(3): 703--708.
+\bibitem{politis1994} Politis, D.\ N., and J.\ P.\ Romano. 1994. The Stationary Bootstrap. \emph{Journal of the American Statistical Association} 89(428): 1303--1313.
 \bibitem{qiao2020} Qiao, K., and L.\ Dam. 2020. The Overnight Return Puzzle and the ``T+1'' Trading Rule in Chinese Stock Markets. \emph{Journal of Financial Markets} 50: 100534.
 \bibitem{white2000} White, H. 2000. A Reality Check for Data Snooping. \emph{Econometrica} 68(5): 1097--1126.
 \end{thebibliography}

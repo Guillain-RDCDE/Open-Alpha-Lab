@@ -20,8 +20,8 @@ Legend: 🟢 we agree · 🟡 we partly agree / it's overstated · 🔴 we disag
 ### Claim 1 — "Across world markets, overnight returns are large and positive while intraday returns are flat to negative, for decades." 🟢
 
 **We agree, and we don't hedge it.** On SPY, the overnight mean is
-+3.25 bps/day with a **Newey-West (HAC) t ≈ 4.9**; the intraday mean is
-insignificant (t ≈ 0.9). The Lo (2002) Sharpe t-stat is ≈ 4.5. The fact is
++3.27 bps/day with a **Newey-West (HAC) t ≈ 5.0**; the intraday mean is
+insignificant (t ≈ 0.8). The Lo (2002) Sharpe t-stat is ≈ 4.5. The fact is
 statistically robust, not a fluke of i.i.d. assumptions.
 → *§2 of the quant notebook;* [`quantlab/analytics.py`](../../quantlab/analytics.py)
 `mean_tstat_hac`, `sharpe_with_se`.
@@ -38,7 +38,7 @@ statistically robust, not a fluke of i.i.d. assumptions.
 2. **The clock illusion (the big one).** The overnight window averages **~28
    calendar hours** (it includes evenings, mornings, weekends and holidays) vs
    the **6.5-hour** trading day. Put both legs on a per-hour footing and the
-   night's advantage collapses **from ~4× per session to ~1.3× per calendar
+   night's advantage collapses **from ~4× per session to ~1.4× per calendar
    hour**. Most of the "anomaly" is a unit error. → `analytics.time_normalized_summary`.
 3. **Data artefacts.** A handful of mis-adjusted split/dividend prints
    mechanically shovels return from the day into the night; our detector flags
@@ -92,9 +92,10 @@ to *move world markets* would pay impact an order of magnitude larger than the
   York while their underlying markets trade during the US *night*. The split is
   relative to the **listing clock**, not a universal anomaly. One global
   manipulator cannot explain why the sign depends on where an ETF is *listed*.
-- **China inverts too,** cleanly explained by the **T+1** settlement rule (Qiao
-  and Dam 2020) — and our FXI proxy's overnight Sharpe (~0.26) is **not
-  statistically distinguishable from zero**. → *§4.*
+- **China is flat,** cleanly explained by the **T+1** settlement rule (Qiao
+  and Dam 2020) — our FXI proxy's overnight Sharpe (~0.15, t ≈ 0.7) is **not
+  statistically distinguishable from zero**, and its intraday leg actually
+  out-earns its night. → *§4.*
 
 ---
 

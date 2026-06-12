@@ -449,9 +449,12 @@ def build_quants():
             "table"
         ),
         md(
-            "The US (SPY, QQQ) and Brazil show the classic shape (night Sharpe ~0.7); "
-            "Europe and Japan are **inverted** — hold that thought, it's a tell (§4.4). "
-            "First, is any of this real?"
+            "Six of the ten show the classic shape — the US (SPY, QQQ), Brazil, Hong "
+            "Kong and India carry night Sharpes from ~0.3 to ~0.9 with flat-to-negative "
+            "days. But it is **not** universal: Europe and Japan are **inverted** (night "
+            "negative, day positive) — hold that thought, it's a tell (§4.4) — and "
+            "China's night is indistinguishable from zero (§4.5). First, is any of this "
+            "real?"
         ),
         md(
             "### 4.2 Is it real? Autocorrelation-robust inference\n\n"
@@ -645,7 +648,8 @@ def build_quants():
             "panel_idx = pd.DataFrame({tk: d['r_overnight'] for tk, d in decs.items()})\n"
             "rc = bayes.reality_check(panel_idx, n_boot=2000, seed=0)\n"
             "print(f\"Universe of {rc['n_series']} indices | best overnight Sharpe = {rc['observed_max_sharpe']:.2f}\")\n"
-            "print(f\"Reality-Check p-value (searching {rc['n_series']} series): {rc['reality_check_pvalue']:.3f}\")"
+            "print(f\"Reality-Check p-value (searching {rc['n_series']} series, {rc['bootstrap_method']} \"\n"
+            "      f\"bootstrap, mean block ~{rc['mean_block_length']:.0f} days): {rc['reality_check_pvalue']:.3f}\")"
         ),
         md(
             "On liquid major indices the best overnight Sharpe **survives** the "
