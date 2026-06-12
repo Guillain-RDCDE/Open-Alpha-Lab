@@ -1,12 +1,12 @@
-# What 71 teardowns taught us
+# What 72 teardowns taught us
 
-*Seventy-one famous trading ideas — anomalies, folk strategies, vendor backtests, things
+*Seventy-two famous trading ideas — anomalies, folk strategies, vendor backtests, things
 people swear by — each put through the [same protocol](../METHODOLOGY.md) and
 stamped twice: **is the signal real?** and **does it survive real execution and
 scale?** This page is the view from above. It aggregates; it doesn't re-judge —
 every verdict below links back to the study that earned it.*
 
-![The bench map — 71 studies on a Signal × Tradability grid](bench_map.png)
+![The bench map — 72 studies on a Signal × Tradability grid](bench_map.png)
 
 *(Regenerate with `python tools/make_bench_figures.py` — it parses the
 [README table](../README.md), so it's always in sync.)*
@@ -15,24 +15,24 @@ every verdict below links back to the study that earned it.*
 
 ## The score
 
-Of the 71 studies on the bench, 70 carry final stamps (study
+Of the 72 studies on the bench, 71 carry final stamps (study
 [14](../studies/14-gamma-gospel/) is pre-registered, verdict pending):
 
 | | Investable | Fragile | Mirage | |
 |---|:--:|:--:|:--:|:--:|
 | **Real** | **2** | 8 | 8 | 18 |
 | **Weak** | 0 | 12 | 18 | 30 |
-| **None** | 0 | 3 | 19 | 22 |
-| | **2** | **23** | **45** | **70** |
+| **None** | 0 | 3 | 20 | 23 |
+| | **2** | **23** | **46** | **71** |
 
 Read it the way the colours tell you to:
 
-- **18 / 70 signals are statistically real.** Roughly one famous idea in four
+- **18 / 71 signals are statistically real.** Roughly one famous idea in four
   survives autocorrelation-robust inference. The other three-quarters are weak
-  (30) or plain noise (22).
-- **45 / 70 are mirages once you try to trade them.** Costs, capacity,
+  (30) or plain noise (23).
+- **46 / 71 are mirages once you try to trade them.** Costs, capacity,
   decay, or the discovery that the "edge" was beta all along.
-- **Exactly 2 / 70 are investable.** [Storm-Shy](../studies/16-storm-shy/) and
+- **Exactly 2 / 71 are investable.** [Storm-Shy](../studies/16-storm-shy/) and
   [All-Weather](../studies/68-all-weather/) — and tellingly, neither is a
   return predictor. One is a risk-management overlay, the other is
   diversification. The bench's only greens don't forecast anything.
@@ -51,7 +51,7 @@ Fragile stamp as plain diversifiers. The story dies; the asset survives.
 
 ## Where ideas go to die — mortality by family
 
-We sorted the 71 into rough families. The boundaries are judgement calls (is
+We sorted the 72 into rough families. The boundaries are judgement calls (is
 the 52-week high a chart pattern or a momentum factor? we said factor) — the
 totals below are honest, the taxonomy is approximate.
 
@@ -59,7 +59,7 @@ totals below are honest, the taxonomy is approximate.
 |---|:--:|:--:|:--:|:--:|
 | Equity factors & fundamentals — [18](../studies/18-dull-roar/) [34](../studies/34-aftershock/) [38](../studies/38-chorus/) [43](../studies/43-free-lunch/) [44](../studies/44-growth-spurt/) [45](../studies/45-vanishing-act/) [46](../studies/46-bargain-bin/) [50](../studies/50-high-water/) [51](../studies/51-blue-chip/) [52](../studies/52-smoke-screen/) [53](../studies/53-jackpot/) [54](../studies/54-static/) [57](../studies/57-yield-trap/) [58](../studies/58-bunker/) [64](../studies/64-share-shuffle/) [65](../studies/65-scorecard/) | 16 | 1 | 3 | 0 |
 | Vol, hedges & allocation — [03](../studies/03-fear-gauge/) [06](../studies/06-clockwork-vol/) [16](../studies/16-storm-shy/) [30](../studies/30-house-edge/) [61](../studies/61-slow-burn/) [62](../studies/62-premium-seller/) [63](../studies/63-free-fall/) [68](../studies/68-all-weather/) [69](../studies/69-safe-haven/) [70](../studies/70-digital-gold/) | 10 | 5 | 5 | **2** |
-| Technical & chart patterns — [02](../studies/02-falling-knife/) [07](../studies/07-coiled-spring/) [08](../studies/08-true-strength/) [13](../studies/13-crimson-hour/) [15](../studies/15-sigma-sleight/) [17](../studies/17-glass-ceiling/) [19](../studies/19-rubber-band/) [21](../studies/21-fools-gold/) [22](../studies/22-crystal-ball/) | 9 | 1 | 1 | 0 |
+| Technical & chart patterns — [02](../studies/02-falling-knife/) [07](../studies/07-coiled-spring/) [08](../studies/08-true-strength/) [13](../studies/13-crimson-hour/) [15](../studies/15-sigma-sleight/) [17](../studies/17-glass-ceiling/) [19](../studies/19-rubber-band/) [21](../studies/21-fools-gold/) [22](../studies/22-crystal-ball/) [72](../studies/72-loaded-dice/) | 10 | 1 | 1 | 0 |
 | Momentum & trend — [20](../studies/20-freight-train/) [24](../studies/24-stampede/) [25](../studies/25-clean-slate/) [28](../studies/28-carousel/) [31](../studies/31-trade-winds/) [40](../studies/40-paper-tiger/) | 6 | 0 | 5 | 0 |
 | Carry, curves & commodities — [27](../studies/27-steamroller/) [29](../studies/29-hedgers-toll/) [35](../studies/35-contango/) [36](../studies/36-greenback/) [59](../studies/59-downhill/) [60](../studies/60-long-shot/) | 6 | 1 | 4 | 0 |
 | Calendar & seasonal — [01](../studies/01-overnight-anomaly/) [41](../studies/41-hangover/) [42](../studies/42-last-call/) [48](../studies/48-groundhog/) [55](../studies/55-summer-lull/) [67](../studies/67-fed-drift/) | 6 | 4 | 2 | 0 |
@@ -194,8 +194,8 @@ decaying, or capacity-starved. Worth knowing; not worth quitting your job for:
 
 ## Challenge the bench
 
-This page will be wrong eventually — that's the design. Seventy-one verdicts is
-seventy-one falsifiable claims, each with reproducible code, pinned data
+This page will be wrong eventually — that's the design. Seventy-two verdicts is
+seventy-two falsifiable claims, each with reproducible code, pinned data
 fingerprints, and the exact line where we think the dream dies.
 
 - **Think a Mirage is tradable?** Fork the study, change the cost model or

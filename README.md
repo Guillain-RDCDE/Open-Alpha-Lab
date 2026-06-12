@@ -45,7 +45,7 @@ Almost everything ends up bottom-right; two chips are green — and neither one 
 ![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 71 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 72 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -124,6 +124,7 @@ teaching are in **[What 71 teardowns taught us](docs/bench.md)**.
 | **[69](studies/69-safe-haven/)** | **Safe-Haven** | Does gold hedge inflation and crashes? As an inflation hedge: no — YoY gold vs YoY CPI correlate just +0.09, and gold earned the same in high-inflation months (+10.6%) as low (+10.2%). As a crisis hedge: only half-true — flat in equity crashes (−0.2% vs SPY −10%) and uncorrelated, but up in just 50% of them. A real diversifier, oversold as inflation insurance. | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
 | **[70](studies/70-digital-gold/)** | **Digital-Gold** | Is bitcoin "digital gold"? No: it's ~uncorrelated with gold (+0.09), its correlation with stocks has *risen* (+0.13→+0.36), and in equity crashes it fell harder than stocks (−18% vs −10%), up in 0% of them — the opposite of a haven. It was a phenomenal risk asset (+64%/yr, −83% drawdown), so a small sleeve lifted Sharpe — but as a leveraged growth bet, not a store of value. | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
 | **[71](studies/71-ambush/)** | **Ambush** | The bench's own inversion, pre-registered: four edges that died *net* to daily turnover (low IBS, turn-of-month, red close, VIX stress) are gated to fire only at their confluence. The premium is real and monotone (+0.6 → +42 bp next-day across 0…4 signals; HAC t=+3.1 at K≥3, RC p=0.009) and *undecayed* since 2015 — and rarity defeats the costs by design (~25% of gross vs >100% traded daily). But at ~15 trades/yr under a 1%/day risk budget the prize is +1.2%/yr excess, OOS Sharpe +0.28 under the frozen 0.30 bar. A real overlay, not a fund. | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[72](studies/72-loaded-dice/)** | **Loaded-Dice** | The 5-minute SMA(5/10) crossover scalp — "a coin flip with the trend on your side." Measured with a direction-fair ±1 ATR barrier across eight liquid tapes, the cross earns −0.39 bps/trade (HAC t=−1.12) and *ties a random-direction coin* (Δ=−0.53 bp); the bragged-about 90%+ win-rate is pure exit-asymmetry (skew −8.0, mean t=1.35), and at ~11 trades/day costs make it a ~40%/yr loser. The synthetic control proves the engine harvests momentum when it exists — the 5-minute tape simply has none. The die isn't loaded. | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 > **Click any study** for the full teardown — two narrative notebooks (one for the curious,
 > one for the quant), reproducible code, and every number behind the two stamps.

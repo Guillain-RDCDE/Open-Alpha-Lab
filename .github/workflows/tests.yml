@@ -249,10 +249,14 @@ jobs:
       - name: Study 71 — Ambush test-suite
         run: pytest -q studies/71-ambush/tests
 
+      - name: Study 72 — Loaded-Dice test-suite
+        run: pytest -q studies/72-loaded-dice/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
           python studies/71-ambush/examples/run_synthetic_demo.py
+          python studies/72-loaded-dice/examples/run_synthetic_demo.py
           python studies/03-fear-gauge/examples/run_synthetic_demo.py
           python studies/04-social-oracle/examples/run_synthetic_demo.py
           python studies/05-twin-spread/examples/run_synthetic_demo.py
