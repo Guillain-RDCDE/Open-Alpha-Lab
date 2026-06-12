@@ -45,7 +45,7 @@ Almost everything ends up bottom-right; two chips are green — and neither one 
 ![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 70 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 71 teardowns taught us](docs/bench.md)**.
 
 ---
 
