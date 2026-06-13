@@ -297,6 +297,51 @@ jobs:
       - name: Study 87 — Center-Line test-suite
         run: pytest -q studies/87-center-line/tests
 
+      - name: Study 88 — Dogs-of-the-Dow test-suite
+        run: pytest -q studies/88-dogs-of-the-dow/tests
+
+      - name: Study 89 — Turn-of-the-Month test-suite
+        run: pytest -q studies/89-turn-of-the-month/tests
+
+      - name: Study 90 — Weekend test-suite
+        run: pytest -q studies/90-weekend/tests
+
+      - name: Study 91 — Death-Cross test-suite
+        run: pytest -q studies/91-death-cross/tests
+
+      - name: Study 92 — Easy-Money test-suite
+        run: pytest -q studies/92-easy-money/tests
+
+      - name: Study 93 — Round-Numbers test-suite
+        run: pytest -q studies/93-round-numbers/tests
+
+      - name: Study 94 — Level-Pegging test-suite
+        run: pytest -q studies/94-level-pegging/tests
+
+      - name: Study 95 — Holiday-Cheer test-suite
+        run: pytest -q studies/95-holiday-cheer/tests
+
+      - name: Study 96 — New-Year-Pop test-suite
+        run: pytest -q studies/96-new-year-pop/tests
+
+      - name: Study 97 — Balancing-Act test-suite
+        run: pytest -q studies/97-balancing-act/tests
+
+      - name: Study 98 — High-Noon test-suite
+        run: pytest -q studies/98-high-noon/tests
+
+      - name: Study 99 — Safety-Net test-suite
+        run: pytest -q studies/99-safety-net/tests
+
+      - name: Study 100 — Melting-Ice test-suite
+        run: pytest -q studies/100-melting-ice/tests
+
+      - name: Study 101 — Slow-and-Steady test-suite
+        run: pytest -q studies/101-slow-and-steady/tests
+
+      - name: Study 102 — Free-Rebalance test-suite
+        run: pytest -q studies/102-free-rebalance/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

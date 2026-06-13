@@ -45,7 +45,7 @@ Almost everything ends up bottom-right; two chips are green — and neither one 
 ![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 87 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 102 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -140,6 +140,21 @@ teaching are in **[What 87 teardowns taught us](docs/bench.md)**.
 | **[85](studies/85-dr-copper/)** | **Dr-Copper** | Does the copper/gold ratio forecast the economy, or just echo it? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[86](studies/86-tail-radar/)** | **Tail-Radar** | Does the CBOE SKEW index see black swans coming? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[87](studies/87-center-line/)** | **Center-Line** | Does price really get pulled back to the intraday VWAP? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[88](studies/88-dogs-of-the-dow/)** | **Dogs-of-the-Dow** | Buy the ten highest-yielding Dow stocks each January — do you really beat the Dow? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[89](studies/89-turn-of-the-month/)** | **Turn-of-the-Month** | Do almost all the market's gains really land in the ~4 days around month-end? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[90](studies/90-weekend/)** | **Weekend** | Are Mondays really negative, and does buying Tuesday beat the market? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[91](studies/91-death-cross/)** | **Death-Cross** | When the 50-day crosses below the 200-day, should you really sell? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[92](studies/92-easy-money/)** | **Easy-Money** | Vol ETPs bleed lower every day — so can you just short them and collect free money? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[93](studies/93-round-numbers/)** | **Round-Numbers** | Prices pile up at whole dollars — but can you trade the magnetism? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[94](studies/94-level-pegging/)** | **Level-Pegging** | Does equal-weighting the S&P *always* beat cap-weighting? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[95](studies/95-holiday-cheer/)** | **Holiday-Cheer** | Do stocks really pop the day before every market holiday — and can you buy it? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[96](studies/96-new-year-pop/)** | **New-Year-Pop** | Do small-cap stocks really pop versus large caps every January? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[97](studies/97-balancing-act/)** | **Balancing-Act** | Is the classic 60/40 portfolio the sensible default — and do bonds really cushion every crash? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Investable](https://img.shields.io/badge/Investable-2ea44f?style=flat-square) |
+| **[98](studies/98-high-noon/)** | **High-Noon** | Is buying at an all-time high really the riskiest moment to invest? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[99](studies/99-safety-net/)** | **Safety-Net** | Does a trailing stop-loss really protect your capital and improve returns? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[100](studies/100-melting-ice/)** | **Melting-Ice** | Do 3x ETFs like TQQQ really "decay to zero", so you must never hold them overnight? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[101](studies/101-slow-and-steady/)** | **Slow-and-Steady** | Dollar-cost averaging: safer *and* smarter than going all-in, or just a way to stay less invested? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[102](studies/102-free-rebalance/)** | **Free-Rebalance** | Is rebalancing really a free lunch that adds return on top of the risk control? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 > **Click any study** for the full teardown — two narrative notebooks (one for the curious,
 > one for the quant), reproducible code, and every number behind the two stamps.
