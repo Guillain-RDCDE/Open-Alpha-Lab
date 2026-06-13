@@ -45,7 +45,7 @@ Almost everything ends up bottom-right; two chips are green — and neither one 
 ![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 102 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 117 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -155,6 +155,21 @@ teaching are in **[What 102 teardowns taught us](docs/bench.md)**.
 | **[100](studies/100-melting-ice/)** | **Melting-Ice** | Do 3x ETFs like TQQQ really "decay to zero", so you must never hold them overnight? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[101](studies/101-slow-and-steady/)** | **Slow-and-Steady** | Dollar-cost averaging: safer *and* smarter than going all-in, or just a way to stay less invested? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[102](studies/102-free-rebalance/)** | **Free-Rebalance** | Is rebalancing really a free lunch that adds return on top of the risk control? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[103](studies/103-turtle-trader/)** | **Turtle-Trader** | Did the legendary Turtle breakout actually beat entering at random? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[104](studies/104-bollinger-reversion/)** | **Bollinger-Reversion** | Does piercing the lower Bollinger band beat just buying a random day? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[105](studies/105-coppock-curve/)** | **Coppock-Curve** | Can a 1962 indicator built for grief really time bear-market bottoms? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[106](studies/106-supertrend/)** | **Supertrend** | Does TradingView's most-watched ATR flip actually beat a coin? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[107](studies/107-stochastic-oscillator/)** | **Stochastic-Oscillator** | Does the stochastic oversold crossover beat a coin? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[108](studies/108-adx-filter/)** | **ADX-Filter** | Does "only trade when the trend is strong" (ADX > 25) add anything? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[109](studies/109-obv-divergence/)** | **OBV-Divergence** | Does on-balance volume really precede price? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[110](studies/110-faber-timing/)** | **Faber-Timing** | Does the famous 200-day timing rule beat buy-and-hold, or just cut risk? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[111](studies/111-vix-term-structure/)** | **VIX-Term-Structure** | Does the VIX term-structure slope time the market? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[112](studies/112-move-index/)** | **Move-Index** | Does bond-market volatility (MOVE) warn of equity drawdowns? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[113](studies/113-gold-silver-ratio/)** | **Gold-Silver-Ratio** | Does the gold/silver ratio reliably mean-revert into a trade? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[114](studies/114-dollar-smile/)** | **Dollar-Smile** | Does the dollar's direction forecast stocks, or just move with them? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[115](studies/115-credit-spreads/)** | **Credit-Spreads** | Does widening high-yield credit warn equities before they fall? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[116](studies/116-power-hour/)** | **Power-Hour** | Does the last "power hour" continue the day's move — or fade it? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[117](studies/117-pi-cycle-top/)** | **Pi-Cycle-Top** | Does Bitcoin's Pi-Cycle Top indicator really call the top? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 > **Click any study** for the full teardown — two narrative notebooks (one for the curious,
 > one for the quant), reproducible code, and every number behind the two stamps.

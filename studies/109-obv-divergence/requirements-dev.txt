@@ -1,0 +1,6 @@
+-r requirements.txt
+pytest
+nbformat
+nbconvert
+jupyter
+statsmodels

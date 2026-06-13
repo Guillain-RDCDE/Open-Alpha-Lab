@@ -1,12 +1,12 @@
-# What 102 teardowns taught us
+# What 117 teardowns taught us
 
-*One hundred and two famous trading ideas — anomalies, folk strategies, vendor backtests, things
+*One hundred and seventeen famous trading ideas — anomalies, folk strategies, vendor backtests, things
 people swear by — each put through the [same protocol](../METHODOLOGY.md) and
 stamped twice: **is the signal real?** and **does it survive real execution and
 scale?** This page is the view from above. It aggregates; it doesn't re-judge —
 every verdict below links back to the study that earned it.*
 
-![The bench map — 102 studies on a Signal × Tradability grid](bench_map.png)
+![The bench map — 117 studies on a Signal × Tradability grid](bench_map.png)
 
 *(Regenerate with `python tools/make_bench_figures.py` — it parses the
 [README table](../README.md), so it's always in sync.)*
@@ -15,24 +15,24 @@ every verdict below links back to the study that earned it.*
 
 ## The score
 
-Of the 102 studies on the bench, 101 carry final stamps (study
+Of the 117 studies on the bench, 116 carry final stamps (study
 [14](../studies/14-gamma-gospel/) is pre-registered, verdict pending):
 
 | | Investable | Fragile | Mirage | |
 |---|:--:|:--:|:--:|:--:|
-| **Real** | **3** | 10 | 9 | 22 |
-| **Weak** | 0 | 14 | 33 | 47 |
-| **None** | 0 | 3 | 29 | 32 |
-| | **3** | **27** | **71** | **101** |
+| **Real** | **3** | 13 | 9 | 25 |
+| **Weak** | 0 | 18 | 34 | 52 |
+| **None** | 0 | 3 | 36 | 39 |
+| | **3** | **34** | **79** | **116** |
 
 Read it the way the colours tell you to:
 
-- **22 / 101 signals are statistically real.** About one famous idea in five
+- **25 / 116 signals are statistically real.** About one famous idea in five
   survives autocorrelation-robust inference. The other four-fifths are weak
-  (47) or plain noise (32).
-- **71 / 101 are mirages once you try to trade them.** Costs, capacity,
+  (52) or plain noise (39).
+- **79 / 116 are mirages once you try to trade them.** Costs, capacity,
   decay, or the discovery that the "edge" was beta all along.
-- **Exactly 3 / 101 are investable.** [Storm-Shy](../studies/16-storm-shy/),
+- **Exactly 3 / 116 are investable.** [Storm-Shy](../studies/16-storm-shy/),
   [All-Weather](../studies/68-all-weather/) and [Balancing-Act](../studies/97-balancing-act/)
   — and tellingly, none is a return predictor. One scales exposure down in
   turbulence, the other two are diversification (risk parity and the plain
@@ -52,20 +52,20 @@ Fragile stamp as plain diversifiers. The story dies; the asset survives.
 
 ## Where ideas go to die — mortality by family
 
-We sorted the 102 into rough families. The boundaries are judgement calls (is
+We sorted the 117 into rough families. The boundaries are judgement calls (is
 the 52-week high a chart pattern or a momentum factor? we said factor) — the
 totals below are honest, the taxonomy is approximate.
 
 | Family | Studies | Real | Survived costs* | Investable |
 |---|:--:|:--:|:--:|:--:|
 | Equity factors & fundamentals — [18](../studies/18-dull-roar/) [34](../studies/34-aftershock/) [38](../studies/38-chorus/) [43](../studies/43-free-lunch/) [44](../studies/44-growth-spurt/) [45](../studies/45-vanishing-act/) [46](../studies/46-bargain-bin/) [50](../studies/50-high-water/) [51](../studies/51-blue-chip/) [52](../studies/52-smoke-screen/) [53](../studies/53-jackpot/) [54](../studies/54-static/) [57](../studies/57-yield-trap/) [58](../studies/58-bunker/) [64](../studies/64-share-shuffle/) [65](../studies/65-scorecard/) [88](../studies/88-dogs-of-the-dow/) [94](../studies/94-level-pegging/) | 18 | 1 | 4 | 0 |
-| Vol, hedges & allocation — [03](../studies/03-fear-gauge/) [06](../studies/06-clockwork-vol/) [16](../studies/16-storm-shy/) [30](../studies/30-house-edge/) [61](../studies/61-slow-burn/) [62](../studies/62-premium-seller/) [63](../studies/63-free-fall/) [68](../studies/68-all-weather/) [69](../studies/69-safe-haven/) [70](../studies/70-digital-gold/) [83](../studies/83-half-life/) [86](../studies/86-tail-radar/) [92](../studies/92-easy-money/) [97](../studies/97-balancing-act/) [100](../studies/100-melting-ice/) [101](../studies/101-slow-and-steady/) [102](../studies/102-free-rebalance/) | 17 | 8 | 7 | **3** |
-| Technical & chart patterns — [02](../studies/02-falling-knife/) [07](../studies/07-coiled-spring/) [08](../studies/08-true-strength/) [13](../studies/13-crimson-hour/) [15](../studies/15-sigma-sleight/) [17](../studies/17-glass-ceiling/) [19](../studies/19-rubber-band/) [21](../studies/21-fools-gold/) [22](../studies/22-crystal-ball/) [72](../studies/72-loaded-dice/) [73](../studies/73-first-light/) [74](../studies/74-mind-the-gap/) [75](../studies/75-knee-jerk/) [76](../studies/76-rice-paper/) [77](../studies/77-golden-mean/) [78](../studies/78-crossed-wires/) [87](../studies/87-center-line/) [91](../studies/91-death-cross/) [93](../studies/93-round-numbers/) [98](../studies/98-high-noon/) [99](../studies/99-safety-net/) | 21 | 2 | 2 | 0 |
-| Momentum & trend — [20](../studies/20-freight-train/) [24](../studies/24-stampede/) [25](../studies/25-clean-slate/) [28](../studies/28-carousel/) [31](../studies/31-trade-winds/) [40](../studies/40-paper-tiger/) | 6 | 0 | 5 | 0 |
-| Carry, curves & commodities — [27](../studies/27-steamroller/) [29](../studies/29-hedgers-toll/) [35](../studies/35-contango/) [36](../studies/36-greenback/) [59](../studies/59-downhill/) [60](../studies/60-long-shot/) | 6 | 1 | 4 | 0 |
+| Vol, hedges & allocation — [03](../studies/03-fear-gauge/) [06](../studies/06-clockwork-vol/) [16](../studies/16-storm-shy/) [30](../studies/30-house-edge/) [61](../studies/61-slow-burn/) [62](../studies/62-premium-seller/) [63](../studies/63-free-fall/) [68](../studies/68-all-weather/) [69](../studies/69-safe-haven/) [70](../studies/70-digital-gold/) [83](../studies/83-half-life/) [86](../studies/86-tail-radar/) [92](../studies/92-easy-money/) [97](../studies/97-balancing-act/) [100](../studies/100-melting-ice/) [101](../studies/101-slow-and-steady/) [102](../studies/102-free-rebalance/) [110](../studies/110-faber-timing/) [111](../studies/111-vix-term-structure/) [112](../studies/112-move-index/) [117](../studies/117-pi-cycle-top/) | 21 | 9 | 8 | **3** |
+| Technical & chart patterns — [02](../studies/02-falling-knife/) [07](../studies/07-coiled-spring/) [08](../studies/08-true-strength/) [13](../studies/13-crimson-hour/) [15](../studies/15-sigma-sleight/) [17](../studies/17-glass-ceiling/) [19](../studies/19-rubber-band/) [21](../studies/21-fools-gold/) [22](../studies/22-crystal-ball/) [72](../studies/72-loaded-dice/) [73](../studies/73-first-light/) [74](../studies/74-mind-the-gap/) [75](../studies/75-knee-jerk/) [76](../studies/76-rice-paper/) [77](../studies/77-golden-mean/) [78](../studies/78-crossed-wires/) [87](../studies/87-center-line/) [91](../studies/91-death-cross/) [93](../studies/93-round-numbers/) [98](../studies/98-high-noon/) [99](../studies/99-safety-net/) [104](../studies/104-bollinger-reversion/) [106](../studies/106-supertrend/) [107](../studies/107-stochastic-oscillator/) [108](../studies/108-adx-filter/) [109](../studies/109-obv-divergence/) [116](../studies/116-power-hour/) | 27 | 3 | 5 | 0 |
+| Momentum & trend — [20](../studies/20-freight-train/) [24](../studies/24-stampede/) [25](../studies/25-clean-slate/) [28](../studies/28-carousel/) [31](../studies/31-trade-winds/) [40](../studies/40-paper-tiger/) [103](../studies/103-turtle-trader/) [105](../studies/105-coppock-curve/) | 8 | 1 | 7 | 0 |
+| Carry, curves & commodities — [27](../studies/27-steamroller/) [29](../studies/29-hedgers-toll/) [35](../studies/35-contango/) [36](../studies/36-greenback/) [59](../studies/59-downhill/) [60](../studies/60-long-shot/) [113](../studies/113-gold-silver-ratio/) | 7 | 1 | 5 | 0 |
 | Calendar & seasonal — [01](../studies/01-overnight-anomaly/) [41](../studies/41-hangover/) [42](../studies/42-last-call/) [48](../studies/48-groundhog/) [55](../studies/55-summer-lull/) [67](../studies/67-fed-drift/) [79](../studies/79-sleigh-ride/) [80](../studies/80-cold-open/) [81](../studies/81-four-year-itch/) [82](../studies/82-witching-hour/) [89](../studies/89-turn-of-the-month/) [90](../studies/90-weekend/) [95](../studies/95-holiday-cheer/) [96](../studies/96-new-year-pop/) | 14 | 4 | 3 | 0 |
 | Mean reversion & stat-arb — [05](../studies/05-twin-spread/) [23](../studies/23-broken-tether/) [26](../studies/26-sand-castle/) [32](../studies/32-rip-tide/) [33](../studies/33-slingshot/) [71](../studies/71-ambush/) | 6 | 3 | 1 | 0 |
-| Macro & valuation timing — [37](../studies/37-barometer/) [47](../studies/47-paper-moon/) [49](../studies/49-black-gold/) [56](../studies/56-tide-table/) [66](../studies/66-inverted/) [85](../studies/85-dr-copper/) | 6 | 2 | 3 | 0 |
+| Macro & valuation timing — [37](../studies/37-barometer/) [47](../studies/47-paper-moon/) [49](../studies/49-black-gold/) [56](../studies/56-tide-table/) [66](../studies/66-inverted/) [85](../studies/85-dr-copper/) [114](../studies/114-dollar-smile/) [115](../studies/115-credit-spreads/) | 8 | 2 | 3 | 0 |
 | ML & model forecasting — [10](../studies/10-markov-mint/) [12](../studies/12-paper-prophet/) [39](../studies/39-black-box/) [84](../studies/84-moon-math/) | 4 | 0 | 0 | 0 |
 | Microstructure & crowds — [04](../studies/04-social-oracle/) [09](../studies/09-phantom-kernel/) [11](../studies/11-vanishing-penny/) | 3 | 1 | 1 | 0 |
 | Pre-registered — [14](../studies/14-gamma-gospel/) | 1 | — | — | — |
@@ -84,8 +84,8 @@ Three patterns jump out:
   ([42](../studies/42-last-call/), [55](../studies/55-summer-lull/)) — or dies
   the moment it's published ([67](../studies/67-fed-drift/)).
 - **Momentum, trend and carry don't die — they limp.** These families
-  collect Fragile stamps, not Mirage ones (momentum 5/6 alive-but-thin, carry
-  4/6): premia with a century of literature that one tape can't certify and
+  collect Fragile stamps, not Mirage ones (momentum 7/8 alive-but-thin, carry
+  5/7): premia with a century of literature that one tape can't certify and
   costs nearly erase.
 
 ---
@@ -95,7 +95,7 @@ Three patterns jump out:
 These aren't opinions — each one fell out of multiple studies independently.
 
 **1 · The edge dies at the costs line, not the signal line.**
-Of the 22 statistically real signals, 19 failed or barely survived
+Of the 25 statistically real signals, 22 failed or barely survived
 tradability. The overnight drift is real and untradable
 [[01](../studies/01-overnight-anomaly/)]; intraday reversal is real with a
 3.31 bp break-even that lives in the least-liquid names
@@ -196,13 +196,16 @@ decaying, or capacity-starved. Worth knowing; not worth quitting your job for:
 | [67](../studies/67-fed-drift/) | Fed-Drift | Pre-FOMC drift carried 11.5% of SPY's return | Publication killed it: +0.24%/day → +0.09% after 2011 |
 | [71](../studies/71-ambush/) | Ambush | Confluence of four dead-net edges: +19.6 bp/day at K≥3 (HAC *t* = 3.1), undecayed, costs defeated by rarity | ~15 trades/yr → +1.2%/yr excess; OOS Sharpe +0.28 under the frozen 0.30 bar |
 | [75](../studies/75-knee-jerk/) | Knee-Jerk | Connors RSI(2) oversold bounce: pooled HAC *t* = 10.7, beats a coin by +57 bp/trade | Decayed 35% since the 2008 book; long-only beta in a bull market; the 200-SMA filter *hurts* |
+| [103](../studies/103-turtle-trader/) | Turtle-Trader | The Turtles' Donchian breakout: a real long-side trend premium, HAC *t* = +11 | Shorts are a structural trap on up-drifting markets; edge ~halved post-publication; years-long drawdowns |
+| [106](../studies/106-supertrend/) | Supertrend | The ATR(10,3) daily flip beats a coin (HAC *t* = +3.3, bootstrap CI clear of zero) | Only the canonical multiplier works (2 and 4 are noise); ~2.5%/yr gross at ~8 flips/yr |
+| [110](../studies/110-faber-timing/) | Faber-Timing | The 200-day timing rule lifts SPY's Sharpe 0.55→0.73 and halves the drawdown (−55%→−22%) | Pure risk reduction, not alpha; lags in bull markets; whipsaw + switching/tax drag |
 
 ---
 
 ## Challenge the bench
 
-This page will be wrong eventually — that's the design. One hundred and two verdicts is
-one hundred and two falsifiable claims, each with reproducible code, pinned data
+This page will be wrong eventually — that's the design. One hundred and seventeen verdicts is
+one hundred and seventeen falsifiable claims, each with reproducible code, pinned data
 fingerprints, and the exact line where we think the dream dies.
 
 - **Think a Mirage is tradable?** Fork the study, change the cost model or

@@ -342,6 +342,51 @@ jobs:
       - name: Study 102 — Free-Rebalance test-suite
         run: pytest -q studies/102-free-rebalance/tests
 
+      - name: Study 103 — Turtle-Trader test-suite
+        run: pytest -q studies/103-turtle-trader/tests
+
+      - name: Study 104 — Bollinger-Reversion test-suite
+        run: pytest -q studies/104-bollinger-reversion/tests
+
+      - name: Study 105 — Coppock-Curve test-suite
+        run: pytest -q studies/105-coppock-curve/tests
+
+      - name: Study 106 — Supertrend test-suite
+        run: pytest -q studies/106-supertrend/tests
+
+      - name: Study 107 — Stochastic-Oscillator test-suite
+        run: pytest -q studies/107-stochastic-oscillator/tests
+
+      - name: Study 108 — ADX-Filter test-suite
+        run: pytest -q studies/108-adx-filter/tests
+
+      - name: Study 109 — OBV-Divergence test-suite
+        run: pytest -q studies/109-obv-divergence/tests
+
+      - name: Study 110 — Faber-Timing test-suite
+        run: pytest -q studies/110-faber-timing/tests
+
+      - name: Study 111 — VIX-Term-Structure test-suite
+        run: pytest -q studies/111-vix-term-structure/tests
+
+      - name: Study 112 — Move-Index test-suite
+        run: pytest -q studies/112-move-index/tests
+
+      - name: Study 113 — Gold-Silver-Ratio test-suite
+        run: pytest -q studies/113-gold-silver-ratio/tests
+
+      - name: Study 114 — Dollar-Smile test-suite
+        run: pytest -q studies/114-dollar-smile/tests
+
+      - name: Study 115 — Credit-Spreads test-suite
+        run: pytest -q studies/115-credit-spreads/tests
+
+      - name: Study 116 — Power-Hour test-suite
+        run: pytest -q studies/116-power-hour/tests
+
+      - name: Study 117 — Pi-Cycle-Top test-suite
+        run: pytest -q studies/117-pi-cycle-top/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
