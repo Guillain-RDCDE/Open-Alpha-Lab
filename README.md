@@ -45,7 +45,7 @@ Almost everything ends up bottom-right; two chips are green — and neither one 
 ![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 117 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 137 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -170,6 +170,26 @@ teaching are in **[What 117 teardowns taught us](docs/bench.md)**.
 | **[115](studies/115-credit-spreads/)** | **Credit-Spreads** | Does widening high-yield credit warn equities before they fall? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[116](studies/116-power-hour/)** | **Power-Hour** | Does the last "power hour" continue the day's move — or fade it? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
 | **[117](studies/117-pi-cycle-top/)** | **Pi-Cycle-Top** | Does Bitcoin's Pi-Cycle Top indicator really call the top? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[118](studies/118-fed-model/)** | **Fed-Model** | Does the earnings yield minus the 10-year bond yield tell you when to own stocks? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[119](studies/119-real-rate-regime/)** | **Real-Rate-Regime** | Should you step aside when real long rates are high or rising? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[120](studies/120-excess-cape-yield/)** | **Excess-CAPE-Yield** | Does Shiller's ECY forecast the next decade's equity risk premium? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[121](studies/121-magic-formula/)** | **Magic-Formula** | Does Greenblatt's quality-plus-value rank beat the S&P 500? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[122](studies/122-gross-profitability/)** | **Gross-Profitability** | Does Novy-Marx's gross profitability still earn a spread on large caps? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[123](studies/123-altman-z/)** | **Altman-Z** | Do financially distressed (low Altman-Z) stocks pay a premium? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[124](studies/124-cash-flow-yield/)** | **Cash-Flow-Yield** | Does buying high operating-cash-flow yield beat plain earnings yield? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[125](studies/125-ichimoku-cloud/)** | **Ichimoku-Cloud** | Does the Ichimoku cloud system beat a coin? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[126](studies/126-parabolic-sar/)** | **Parabolic-SAR** | Does Wilder's stop-and-reverse flip beat a coin once you pay the whipsaws? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[127](studies/127-williams-r/)** | **Williams-R** | Does the Williams %R oversold signal predict a bounce? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[128](studies/128-keltner-channel/)** | **Keltner-Channel** | Keltner breakout or Keltner reversion — is either one signal? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[129](studies/129-heikin-ashi/)** | **Heikin-Ashi** | Do smoothed Heikin-Ashi candles filter noise into an edge? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[130](studies/130-vol-risk-premium/)** | **Vol-Risk-Premium** | Is selling the gap between implied and realized vol a free lunch? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[131](studies/131-utilities-canary/)** | **Utilities-Canary** | Do utilities leading the market warn of a coming drawdown? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[132](studies/132-yield-curve-steepener/)** | **Yield-Curve-Steepener** | Does the curve slope tell you when to own the long bond? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[133](studies/133-crypto-seasonality/)** | **Crypto-Seasonality** | Is "Uptober" — or any month — a real edge in Bitcoin? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[134](studies/134-bitcoin-dominance/)** | **Bitcoin-Dominance** | Does falling Bitcoin dominance call "alt season"? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[135](studies/135-fomc-cycle/)** | **FOMC-Cycle** | Do stock returns really hide in the even weeks of the Fed cycle? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[136](studies/136-mark-twain/)** | **Mark-Twain** | Is October really the most dangerous month to own stocks? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[137](studies/137-mansfield-rs/)** | **Mansfield-RS** | Does Weinstein's Stage-2 relative-strength screen beat the market? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 > **Click any study** for the full teardown — two narrative notebooks (one for the curious,
 > one for the quant), reproducible code, and every number behind the two stamps.

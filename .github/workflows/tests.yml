@@ -387,6 +387,66 @@ jobs:
       - name: Study 117 — Pi-Cycle-Top test-suite
         run: pytest -q studies/117-pi-cycle-top/tests
 
+      - name: Study 118 — Fed-Model test-suite
+        run: pytest -q studies/118-fed-model/tests
+
+      - name: Study 119 — Real-Rate-Regime test-suite
+        run: pytest -q studies/119-real-rate-regime/tests
+
+      - name: Study 120 — Excess-CAPE-Yield test-suite
+        run: pytest -q studies/120-excess-cape-yield/tests
+
+      - name: Study 121 — Magic-Formula test-suite
+        run: pytest -q studies/121-magic-formula/tests
+
+      - name: Study 122 — Gross-Profitability test-suite
+        run: pytest -q studies/122-gross-profitability/tests
+
+      - name: Study 123 — Altman-Z test-suite
+        run: pytest -q studies/123-altman-z/tests
+
+      - name: Study 124 — Cash-Flow-Yield test-suite
+        run: pytest -q studies/124-cash-flow-yield/tests
+
+      - name: Study 125 — Ichimoku-Cloud test-suite
+        run: pytest -q studies/125-ichimoku-cloud/tests
+
+      - name: Study 126 — Parabolic-SAR test-suite
+        run: pytest -q studies/126-parabolic-sar/tests
+
+      - name: Study 127 — Williams-R test-suite
+        run: pytest -q studies/127-williams-r/tests
+
+      - name: Study 128 — Keltner-Channel test-suite
+        run: pytest -q studies/128-keltner-channel/tests
+
+      - name: Study 129 — Heikin-Ashi test-suite
+        run: pytest -q studies/129-heikin-ashi/tests
+
+      - name: Study 130 — Vol-Risk-Premium test-suite
+        run: pytest -q studies/130-vol-risk-premium/tests
+
+      - name: Study 131 — Utilities-Canary test-suite
+        run: pytest -q studies/131-utilities-canary/tests
+
+      - name: Study 132 — Yield-Curve-Steepener test-suite
+        run: pytest -q studies/132-yield-curve-steepener/tests
+
+      - name: Study 133 — Crypto-Seasonality test-suite
+        run: pytest -q studies/133-crypto-seasonality/tests
+
+      - name: Study 134 — Bitcoin-Dominance test-suite
+        run: pytest -q studies/134-bitcoin-dominance/tests
+
+      - name: Study 135 — FOMC-Cycle test-suite
+        run: pytest -q studies/135-fomc-cycle/tests
+
+      - name: Study 136 — Mark-Twain test-suite
+        run: pytest -q studies/136-mark-twain/tests
+
+      - name: Study 137 — Mansfield-RS test-suite
+        run: pytest -q studies/137-mansfield-rs/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
