@@ -447,6 +447,66 @@ jobs:
       - name: Study 137 — Mansfield-RS test-suite
         run: pytest -q studies/137-mansfield-rs/tests
 
+      - name: Study 138 — Random-Forest test-suite
+        run: pytest -q studies/138-random-forest/tests
+
+      - name: Study 139 — AI-Powered-ETF test-suite
+        run: pytest -q studies/139-ai-powered-etf/tests
+
+      - name: Study 140 — Amihud-Illiquidity test-suite
+        run: pytest -q studies/140-amihud-illiquidity/tests
+
+      - name: Study 141 — Turnover-Anomaly test-suite
+        run: pytest -q studies/141-turnover-anomaly/tests
+
+      - name: Study 142 — Split-Drift test-suite
+        run: pytest -q studies/142-split-drift/tests
+
+      - name: Study 143 — Dividend-Capture test-suite
+        run: pytest -q studies/143-dividend-capture/tests
+
+      - name: Study 144 — Permanent-Portfolio test-suite
+        run: pytest -q studies/144-permanent-portfolio/tests
+
+      - name: Study 145 — Home-Bias test-suite
+        run: pytest -q studies/145-home-bias/tests
+
+      - name: Study 146 — Country-Momentum test-suite
+        run: pytest -q studies/146-country-momentum/tests
+
+      - name: Study 147 — FX-Momentum test-suite
+        run: pytest -q studies/147-fx-momentum/tests
+
+      - name: Study 148 — Lunar-Effect test-suite
+        run: pytest -q studies/148-lunar-effect/tests
+
+      - name: Study 149 — Daylight-Saving test-suite
+        run: pytest -q studies/149-daylight-saving/tests
+
+      - name: Study 150 — SAD-Effect test-suite
+        run: pytest -q studies/150-sad-effect/tests
+
+      - name: Study 151 — Stocks-For-Long-Run test-suite
+        run: pytest -q studies/151-stocks-for-long-run/tests
+
+      - name: Study 152 — Inflation-Hedge test-suite
+        run: pytest -q studies/152-inflation-hedge/tests
+
+      - name: Study 153 — Net-Operating-Assets test-suite
+        run: pytest -q studies/153-net-operating-assets/tests
+
+      - name: Study 154 — Leverage-Anomaly test-suite
+        run: pytest -q studies/154-leverage-anomaly/tests
+
+      - name: Study 155 — Asset-Turnover test-suite
+        run: pytest -q studies/155-asset-turnover/tests
+
+      - name: Study 156 — Martingale test-suite
+        run: pytest -q studies/156-martingale/tests
+
+      - name: Study 157 — Kelly-Sizing test-suite
+        run: pytest -q studies/157-kelly-sizing/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

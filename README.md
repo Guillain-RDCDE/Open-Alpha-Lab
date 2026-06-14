@@ -45,7 +45,7 @@ Almost everything ends up bottom-right; two chips are green — and neither one 
 ![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 137 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 157 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -190,6 +190,26 @@ teaching are in **[What 137 teardowns taught us](docs/bench.md)**.
 | **[135](studies/135-fomc-cycle/)** | **FOMC-Cycle** | Do stock returns really hide in the even weeks of the Fed cycle? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[136](studies/136-mark-twain/)** | **Mark-Twain** | Is October really the most dangerous month to own stocks? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[137](studies/137-mansfield-rs/)** | **Mansfield-RS** | Does Weinstein's Stage-2 relative-strength screen beat the market? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[138](studies/138-random-forest/)** | **Random-Forest** | Does a walk-forward Random Forest on price features beat a shuffled-label control? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[139](studies/139-ai-powered-etf/)** | **AI-Powered-ETF** | Can IBM Watson's AI ETF beat a dirt-cheap S&P 500 index fund? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[140](studies/140-amihud-illiquidity/)** | **Amihud-Illiquidity** | Does sorting on price-impact illiquidity earn a premium, or just survivorship? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[141](studies/141-turnover-anomaly/)** | **Turnover-Anomaly** | Do low-turnover stocks deliver the Datar-Naik-Radcliffe liquidity premium? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[142](studies/142-split-drift/)** | **Split-Drift** | Do stocks drift up after a split takes effect? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[143](studies/143-dividend-capture/)** | **Dividend-Capture** | Can you pocket a dividend by buying just before the ex-date? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[144](studies/144-permanent-portfolio/)** | **Permanent-Portfolio** | Does Harry Browne's four-way mix really survive every regime? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[145](studies/145-home-bias/)** | **Home-Bias** | Does diversifying abroad still improve a US investor's portfolio? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[146](studies/146-country-momentum/)** | **Country-Momentum** | Does rotating into the strongest-trending country ETFs pay? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[147](studies/147-fx-momentum/)** | **FX-Momentum** | Does currency momentum still pay after costs? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[148](studies/148-lunar-effect/)** | **Lunar-Effect** | Do stocks really return less around the full moon? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[149](studies/149-daylight-saving/)** | **Daylight-Saving** | Does the market really slump after the clocks change? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[150](studies/150-sad-effect/)** | **SAD-Effect** | Do shorter autumn days really depress stock returns? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[151](studies/151-stocks-for-long-run/)** | **Stocks-For-Long-Run** | Do stocks really always win over the long run? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[152](studies/152-inflation-hedge/)** | **Inflation-Hedge** | Are stocks really an inflation hedge? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[153](studies/153-net-operating-assets/)** | **Net-Operating-Assets** | Does a bloated balance sheet predict low returns? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[154](studies/154-leverage-anomaly/)** | **Leverage-Anomaly** | Do high-leverage firms earn the higher return theory promises? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[155](studies/155-asset-turnover/)** | **Asset-Turnover** | Do capital-efficient (high asset-turnover) firms beat the market? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[156](studies/156-martingale/)** | **Martingale** | Does averaging down ("martingale") beat just buying and holding? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[157](studies/157-kelly-sizing/)** | **Kelly-Sizing** | Does Kelly-optimal position sizing beat fixed sizing in practice? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
 
 > **Click any study** for the full teardown — two narrative notebooks (one for the curious,
 > one for the quant), reproducible code, and every number behind the two stamps.
