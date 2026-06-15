@@ -567,6 +567,105 @@ jobs:
       - name: Study 177 — Megacap-Concentration test-suite
         run: pytest -q studies/177-megacap-concentration/tests
 
+      - name: Study 178 — CCI test-suite
+        run: pytest -q studies/178-cci/tests
+
+      - name: Study 179 — Aroon test-suite
+        run: pytest -q studies/179-aroon/tests
+
+      - name: Study 180 — TRIX test-suite
+        run: pytest -q studies/180-trix/tests
+
+      - name: Study 181 — Ultimate-Oscillator test-suite
+        run: pytest -q studies/181-ultimate-oscillator/tests
+
+      - name: Study 182 — Vortex-Indicator test-suite
+        run: pytest -q studies/182-vortex-indicator/tests
+
+      - name: Study 183 — Fisher-Transform test-suite
+        run: pytest -q studies/183-fisher-transform/tests
+
+      - name: Study 184 — Williams-Fractals test-suite
+        run: pytest -q studies/184-williams-fractals/tests
+
+      - name: Study 185 — Chande-Momentum test-suite
+        run: pytest -q studies/185-chande-momentum/tests
+
+      - name: Study 186 — Morning-Star test-suite
+        run: pytest -q studies/186-morning-star/tests
+
+      - name: Study 187 — Three-Soldiers test-suite
+        run: pytest -q studies/187-three-soldiers/tests
+
+      - name: Study 188 — Head-Shoulders test-suite
+        run: pytest -q studies/188-head-shoulders/tests
+
+      - name: Study 189 — Double-Top test-suite
+        run: pytest -q studies/189-double-top/tests
+
+      - name: Study 190 — NR7 test-suite
+        run: pytest -q studies/190-nr7/tests
+
+      - name: Study 191 — Leap-Year test-suite
+        run: pytest -q studies/191-leap-year/tests
+
+      - name: Study 192 — Tax-Day test-suite
+        run: pytest -q studies/192-tax-day/tests
+
+      - name: Study 193 — Window-Dressing test-suite
+        run: pytest -q studies/193-window-dressing/tests
+
+      - name: Study 194 — Turkey test-suite
+        run: pytest -q studies/194-turkey/tests
+
+      - name: Study 195 — Monthly-OpEx test-suite
+        run: pytest -q studies/195-monthly-opex/tests
+
+      - name: Study 196 — Long-Term-Reversal test-suite
+        run: pytest -q studies/196-long-term-reversal/tests
+
+      - name: Study 197 — Dividend-Payout-Ratio test-suite
+        run: pytest -q studies/197-dividend-payout-ratio/tests
+
+      - name: Study 198 — Cash-Holdings test-suite
+        run: pytest -q studies/198-cash-holdings/tests
+
+      - name: Study 199 — Sales-Growth test-suite
+        run: pytest -q studies/199-sales-growth/tests
+
+      - name: Study 200 — ROE-Quality test-suite
+        run: pytest -q studies/200-roe-quality/tests
+
+      - name: Study 201 — Dividend-Growth test-suite
+        run: pytest -q studies/201-dividend-growth/tests
+
+      - name: Study 202 — Fifty-Two-Week-Low test-suite
+        run: pytest -q studies/202-fifty-two-week-low/tests
+
+      - name: Study 203 — Golden-Butterfly test-suite
+        run: pytest -q studies/203-golden-butterfly/tests
+
+      - name: Study 204 — Talmud-Portfolio test-suite
+        run: pytest -q studies/204-talmud-portfolio/tests
+
+      - name: Study 205 — Three-Fund test-suite
+        run: pytest -q studies/205-three-fund/tests
+
+      - name: Study 206 — Dividend-Aristocrats test-suite
+        run: pytest -q studies/206-dividend-aristocrats/tests
+
+      - name: Study 207 — REITs-Diversifier test-suite
+        run: pytest -q studies/207-reits-diversifier/tests
+
+      - name: Study 208 — Gold-Miners test-suite
+        run: pytest -q studies/208-gold-miners/tests
+
+      - name: Study 209 — ETH-BTC-Ratio test-suite
+        run: pytest -q studies/209-eth-btc-ratio/tests
+
+      - name: Study 210 — Crypto-Trend test-suite
+        run: pytest -q studies/210-crypto-trend/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
