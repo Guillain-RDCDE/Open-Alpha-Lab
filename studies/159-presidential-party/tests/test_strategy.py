@@ -11,6 +11,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from presidential_party import strategy as st  # noqa: E402
 from presidential_party import data  # noqa: E402
 
+# Shiller cache is git-ignored (absent in CI); skip the real-tape test there.
+requires_shiller = pytest.mark.skipif(
+    not os.path.exists(data._SHILLER_CACHE),
+    reason="Shiller cache not present (offline CI); covered by synthetic tests",
+)
+
 
 # ---------------------------------------------------------------------------
 # party_returns
@@ -77,6 +83,7 @@ def test_dem_minus_rep_returns_required_keys(null_tape):
     assert required.issubset(gap.keys())
 
 
+@requires_shiller
 def test_dem_minus_rep_on_real_shiller():
     """The real Shiller tape should have a positive D-R gap (Santa-Clara & Valkanov)."""
     df = data.load_shiller()

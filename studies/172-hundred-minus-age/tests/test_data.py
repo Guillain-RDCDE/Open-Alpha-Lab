@@ -11,6 +11,13 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from hundred_minus_age import data  # noqa: E402
 
+# The Shiller cache is git-ignored (pre-staged locally, absent in CI), so real-tape
+# tests must skip cleanly when it is missing; the synthetic tests cover the logic.
+requires_shiller = pytest.mark.skipif(
+    not os.path.exists(data.SHILLER_PATH),
+    reason="Shiller cache not present (offline CI); covered by synthetic tests",
+)
+
 
 def test_synthetic_shape_and_columns():
     prices, truth = data.synthetic_lifecycle(n_years=40, seed=172)
@@ -60,6 +67,7 @@ def test_shiller_loader_raises_without_cache(tmp_path):
         data.load_shiller(cache_path=str(tmp_path / "nope.parquet"))
 
 
+@requires_shiller
 def test_shiller_returns_sensible_values():
     """Equity real annual return ~6-8%; bond real annual return ~3-5% historically."""
     ret = data.load_shiller()
@@ -70,6 +78,7 @@ def test_shiller_returns_sensible_values():
     assert eq_ann > bd_ann, "Equities should earn more than bonds over 1881-2023"
 
 
+@requires_shiller
 def test_shiller_covers_enough_history():
     """The real tape must cover at least 100 years to give meaningful cohort counts."""
     ret = data.load_shiller()
@@ -77,6 +86,7 @@ def test_shiller_covers_enough_history():
     assert n_years > 100, f"Only {n_years:.1f} years of Shiller data"
 
 
+@requires_shiller
 def test_shiller_no_nan_in_core_columns():
     ret = data.load_shiller()
     assert not ret["EQ"].isna().any()
