@@ -45,7 +45,7 @@ Almost everything ends up bottom-right; two chips are green — and neither one 
 ![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 157 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 177 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -210,6 +210,26 @@ teaching are in **[What 157 teardowns taught us](docs/bench.md)**.
 | **[155](studies/155-asset-turnover/)** | **Asset-Turnover** | Do capital-efficient (high asset-turnover) firms beat the market? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[156](studies/156-martingale/)** | **Martingale** | Does averaging down ("martingale") beat just buying and holding? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[157](studies/157-kelly-sizing/)** | **Kelly-Sizing** | Does Kelly-optimal position sizing beat fixed sizing in practice? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[158](studies/158-super-bowl/)** | **Super-Bowl** | Can a football game predict the stock market? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[159](studies/159-presidential-party/)** | **Presidential-Party** | Do stocks really do better under Democrats — or did the crashes just land on one party's watch? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[160](studies/160-skyscraper-curse/)** | **Skyscraper-Curse** | Does the world's next record skyscraper signal a crash? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[161](studies/161-year-ending-five/)** | **Year-Ending-Five** | Are years ending in 5 really the best for stocks? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[162](studies/162-rosh-hashanah/)** | **Rosh-Hashanah** | Should you really "sell Rosh Hashanah, buy Yom Kippur"? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[163](studies/163-friday-13th/)** | **Friday-13th** | Is Friday the 13th unlucky for the stock market? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[164](studies/164-mercury-retrograde/)** | **Mercury-Retrograde** | Does Mercury retrograde really wreck the market? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[165](studies/165-chinese-zodiac/)** | **Chinese-Zodiac** | Is the Year of the Dragon lucky for stocks? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[166](studies/166-first-five-days/)** | **First-Five-Days** | Do January's first five days really forecast the whole year? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[167](studies/167-hindenburg-omen/)** | **Hindenburg-Omen** | Does the Hindenburg Omen actually warn of crashes? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[168](studies/168-advance-decline/)** | **Advance-Decline** | Does a fading advance-decline line call the top? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[169](studies/169-fluent-tickers/)** | **Fluent-Tickers** | Do stocks with pronounceable tickers outperform? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[170](studies/170-alphabetical-bias/)** | **Alphabetical-Bias** | Do early-alphabet tickers get an edge? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[171](studies/171-naive-1-over-n/)** | **Naive-1-Over-N** | Does "optimal" portfolio math beat a naive equal split? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[172](studies/172-hundred-minus-age/)** | **Hundred-Minus-Age** | Is "100 minus your age in stocks" smart, or just less invested? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[173](studies/173-four-percent-rule/)** | **Four-Percent-Rule** | Does the 4% retirement withdrawal rule actually survive history? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[174](studies/174-bitcoin-rainbow/)** | **Bitcoin-Rainbow** | Does Bitcoin's Rainbow Chart actually time the cycle? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[175](studies/175-crypto-weekend/)** | **Crypto-Weekend** | Is there a tradable Bitcoin weekend effect? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[176](studies/176-hot-hand/)** | **Hot-Hand** | After a winning streak, is the market "hot" — or "due" for a reversal? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[177](studies/177-megacap-concentration/)** | **Megacap-Concentration** | Does just buying the biggest stocks beat the index? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 > **Click any study** for the full teardown — two narrative notebooks (one for the curious,
 > one for the quant), reproducible code, and every number behind the two stamps.

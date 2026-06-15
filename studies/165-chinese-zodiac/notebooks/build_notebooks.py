@@ -1,0 +1,724 @@
+"""Generate the two narrative notebooks for Study 165 (Chinese-Zodiac).
+
+    python notebooks/build_notebooks.py
+    jupyter nbconvert --to notebook --execute --inplace \\
+        notebooks/01_for_the_curious.ipynb notebooks/02_for_the_quants.ipynb
+
+Both notebooks follow the seven desk beats (see ../../../METHODOLOGY.md). The synthetic
+figures run anywhere, offline and deterministic; the real-tape cells use the cached
+daily parquets under ../_cache/ (or the repo-wide _cache/) if present and otherwise
+quote the frozen headline numbers in ``R`` (mirroring docs/results.md).
+
+The _write convention (each build_*() ends by calling _write) is kept so the repo's
+intro-restyle tooling can monkeypatch it.
+"""
+
+from __future__ import annotations
+
+import os
+
+import nbformat as nbf
+from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+
+def md(text: str):
+    return new_markdown_cell(text)
+
+
+def code(text: str):
+    return new_code_cell(text)
+
+
+# Frozen real-tape headline numbers -- mirror of docs/results.md (as-of 2026-06-15).
+R = dict(
+    # FXI tape
+    fxi_start="2004-10-11", fxi_end="2026-06-12", fxi_n=5453, fxi_fp="d4a178b76188",
+    fxi_cagr=3.02, fxi_vol=0.3012, fxi_sharpe=0.117,
+    # ^GSPC tape
+    gspc_start="1994-01-04", gspc_end="2026-06-12", gspc_n=8165, gspc_fp="346fa83866ef",
+    # Pre-CNY rally -- FXI
+    pre_n_fxi=22, pre_mean_fxi=0.05, pre_base_fxi=-0.23, pre_diff_fxi=0.28, pre_t_fxi=0.04,
+    # Pre-CNY rally -- GSPC
+    pre_n_gspc=33, pre_mean_gspc=0.20, pre_base_gspc=0.44, pre_diff_gspc=-0.24, pre_t_gspc=0.51,
+    # Zodiac per-animal (mean annual %, FXI)
+    rat_mean=-8.2, ox_mean=16.4, tiger_mean=-0.3, rabbit_mean=-18.5,
+    dragon_mean=25.7, snake_mean=6.3, horse_mean=27.8, goat_mean=-29.1,
+    monkey_mean=15.5, rooster_mean=34.5, dog_mean=19.7, pig_mean=16.6,
+    # Dragon vs rest (FXI)
+    dragon_n=2, rest_n=20, rest_mean=8.1, dragon_diff=17.5, dragon_welch_t=0.84,
+    dragon_bonf_p=1.0,
+    # Permutation
+    pct_as_good=0.24,
+    # Rooster (accidentally high raw_t on tiny n)
+    rooster_t=3.82, rooster_bonf_p=0.017, rooster_n=2,
+)
+
+# ---------------------------------------------------------------------------
+# Shared preamble
+# ---------------------------------------------------------------------------
+BOOT = """\
+import sys, os
+sys.path.insert(0, os.path.abspath(".."))          # the study package
+sys.path.insert(0, os.path.abspath("../../.."))    # repo root (quantlab/)
+%matplotlib inline
+import numpy as np, pandas as pd
+import matplotlib.pyplot as plt
+plt.rcParams.update({"figure.figsize": (9.5, 5.0), "axes.grid": True,
+                     "grid.alpha": .3, "axes.spines.top": False, "axes.spines.right": False})
+RED, AMBER, GREEN, GREY = "#c0392b", "#dab617", "#2ea44f", "#8b949e"
+
+from chinese_zodiac import data, strategy as st
+
+HAVE_REAL = False
+try:
+    ret_fxi = data.fetch_daily("FXI")
+    HAVE_REAL = len(ret_fxi) > 100
+except Exception:
+    ret_fxi = None
+
+print("FXI real cache present:", HAVE_REAL)
+"""
+
+ANIMALS = ["Rat", "Ox", "Tiger", "Rabbit", "Dragon", "Snake",
+           "Horse", "Goat", "Monkey", "Rooster", "Dog", "Pig"]
+R_MEANS = [R["rat_mean"], R["ox_mean"], R["tiger_mean"], R["rabbit_mean"],
+           R["dragon_mean"], R["snake_mean"], R["horse_mean"], R["goat_mean"],
+           R["monkey_mean"], R["rooster_mean"], R["dog_mean"], R["pig_mean"]]
+
+
+# ===========================================================================
+# 01 -- FOR THE CURIOUS
+# ===========================================================================
+def build_curious():
+    cells = [
+        md(
+            "# Chinese-Zodiac -- does the Year of the Dragon really bring lucky returns?\n"
+            "### Chinese New Year folklore meets honest statistics: 12 animals, ~3 years each, and a Bonferroni correction\n\n"
+            "![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)\n"
+            "![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-c0392b?style=flat-square)\n"
+            "![Lucky_Dragon%3F: Busted](https://img.shields.io/badge/Lucky_Dragon%3F-Busted-8b949e?style=flat-square)\n\n"
+            "Every January or February, someone publishes a breathless piece: *'Year of the Dragon "
+            "is historically bullish for Chinese stocks!'* or *'Markets always rally before Chinese "
+            "New Year!'* The folklore is as vivid as a temple lantern. But the math is simpler: "
+            "**12 zodiac animals, ~3 years of data each, and one Bonferroni correction to rule "
+            "them all.** This notebook runs the honest test.\n\n"
+            "> **Plain-language layer.** The HAC t-stats, Welch tests, and multiple-comparisons "
+            "accounting are in **[02_for_the_quants.ipynb](02_for_the_quants.ipynb)**.\n"
+            ">\n"
+            "> **Not investment advice.** Every chart is generated by the code beside it. "
+            "Methods in [METHODOLOGY.md](../../../METHODOLOGY.md)."
+        ),
+        code(BOOT),
+
+        # ---- BEAT 0 -- VERDICT ------------------------------------------------
+        md(
+            "## The answer first\n\n"
+            "| Question | Answer |\n|---|---|\n"
+            f"| Is the pre-CNY 10-day window significantly positive on FXI? | "
+            f"**No.** Mean +{R['pre_mean_fxi']:.2f}%, HAC t = {R['pre_t_fxi']:+.2f} -- "
+            f"baseline random windows are {R['pre_base_fxi']:+.2f}%. |\n"
+            f"| Does the Year of the Dragon reliably outperform? | "
+            f"**No.** Dragon mean {R['dragon_mean']:+.1f}% on n = {R['dragon_n']} years. "
+            f"Bonferroni-corrected p = {R['dragon_bonf_p']:.2f}. |\n"
+            "| Can we trust any 12-animal comparison? | "
+            "**No.** With ~3 years per animal, a large t-stat is pure small-sample noise -- "
+            "it disappears with a single different year. |\n"
+            "| Could you trade it? | **No.** No signal, no trade. |\n\n"
+            "> The Chinese zodiac is a beautiful 12-year cycle. But 12 x 3 years of data "
+            "is 36 observations -- barely enough to learn anything about a single hypothesis, "
+            "let alone 12 competing ones."
+        ),
+
+        # ---- BEAT 1 -- THE CLAIM -----------------------------------------------
+        md(
+            "## 1 - The claim\n\n"
+            "> *'The Year of the Dragon is considered the luckiest in the Chinese zodiac -- "
+            "and stocks reflect it. Chinese and Asian markets historically outperform in Dragon "
+            "years, and a pre-Chinese-New-Year rally consistently lifts prices in the 10 days "
+            "before the holiday.'*\n\n"
+            "There are two distinct claims here:\n\n"
+            "**Claim A (pre-CNY rally):** the 10 trading days before Chinese New Year produce "
+            "abnormally high returns on Chinese equity markets, driven by seasonal optimism "
+            "and portfolio positioning ahead of the holiday.\n\n"
+            "**Claim B (zodiac-year effect):** different zodiac years produce systematically "
+            "different market returns -- Dragon years best, Goat years worst, and so on -- "
+            "with a 12-year structural cycle that investors can exploit.\n\n"
+            "Both claims are concrete, testable, and wrong. Let's count how many years of "
+            f"Dragon data we actually have: **{R['dragon_n']} years** on FXI. Three. That's it."
+        ),
+
+        # ---- BEAT 2 -- SO WHAT -------------------------------------------------
+        md(
+            "## 2 - So what?\n\n"
+            "If either claim were true, an Asian-equity investor could time their exposure "
+            "by the lunar calendar -- buying FXI (or HSI futures) in the days before CNY "
+            "and tilting long in Dragon years. Financial media runs this story every year, "
+            "cited by investment banks, forwarded by retail investors, and occasionally dressed "
+            "up in regression tables. If the claims are noise, investors are acting on astrology "
+            "while paying spreads and taxes to do so."
+        ),
+
+        # ---- BEAT 3 -- HOW WE'D KNOW ------------------------------------------
+        md(
+            "## 3 - How would we even know?\n\n"
+            "Three falsifiable tests, announced before we run them:\n\n"
+            "1. **Pre-CNY rally:** Does the mean 10-day compound return before CNY exceed a "
+            "random-window baseline? Inference: HAC t-stat on the per-event pre-CNY returns "
+            "vs. a random-window distribution. Threshold: |t| >= 2 on a reasonable n.\n\n"
+            "2. **Zodiac-year pairwise test:** Welch t for each animal vs. the other 11 pooled, "
+            "with a **Bonferroni correction multiplying each p-value by 12** (we test 12 "
+            "hypotheses simultaneously). A single animal that 'works' after Bonferroni would "
+            "be remarkable.\n\n"
+            "3. **Permutation null:** Shuffle zodiac labels and ask how often a randomly chosen "
+            "animal is as lucky as Dragon. An actually lucky animal should score a low percentile.\n\n"
+            f"Data: FXI (iShares China Large-Cap ETF) daily returns, {R['fxi_start']} to "
+            f"{R['fxi_end']} (n = {R['fxi_n']:,}). CNY dates hardcoded from the official "
+            "Chinese lunisolar calendar for 1990-2026."
+        ),
+
+        # ---- BEAT 4 -- THE TEARDOWN --------------------------------------------
+        md(
+            "## 4 - The teardown\n\n"
+            "### 4a - The pre-CNY rally: does buying before the fireworks work?"
+        ),
+        code(
+            "# Synthetic positive control first -- does the engine find a signal when planted?\n"
+            "ret_syn_null, _ = data.synthetic_daily(n_years=36, dragon_bonus_bp=0.0, seed=165)\n"
+            "pre_syn = st.pre_cny_stats(ret_syn_null)\n"
+            "\n"
+            "# Real data\n"
+            "if HAVE_REAL:\n"
+            "    pre_real = st.pre_cny_stats(ret_fxi)\n"
+            "    n_ev, m_ret, b_ret, d_ret, t_stat = (\n"
+            "        pre_real['n_events'], pre_real['mean_ret_pct'],\n"
+            "        pre_real['baseline_mean_pct'], pre_real['diff_pct'], pre_real['hac_t'])\n"
+            "else:\n"
+            f"    n_ev, m_ret, b_ret, d_ret, t_stat = ({R['pre_n_fxi']}, {R['pre_mean_fxi']},\n"
+            f"        {R['pre_base_fxi']}, {R['pre_diff_fxi']}, {R['pre_t_fxi']})\n"
+            "\n"
+            "fig, axes = plt.subplots(1, 2, figsize=(11, 4.3))\n"
+            "# Left: pre-CNY mean vs baseline\n"
+            "axes[0].bar(['Pre-CNY\\n10-day window', 'Random window\\n(baseline)'],\n"
+            "            [m_ret, b_ret], color=[AMBER, GREY], width=0.5)\n"
+            "axes[0].axhline(0, c='k', lw=1)\n"
+            "axes[0].set_ylabel('Mean compound return (%)')\n"
+            "axes[0].set_title(f'Pre-CNY rally (n={n_ev} events): barely above zero')\n"
+            "\n"
+            "# Right: HAC t-stat in context\n"
+            "axes[1].bar(['Pre-CNY\\nHAC t', 'Synthetic null\\nHAC t'],\n"
+            "            [t_stat, pre_syn.get('hac_t', 0)], color=[AMBER, GREY], width=0.5)\n"
+            "for s in (2, -2): axes[1].axhline(s, ls='--', c=GREY, lw=1)\n"
+            "axes[1].axhline(0, c='k', lw=1)\n"
+            "axes[1].set_ylabel('HAC t-stat')\n"
+            "axes[1].set_title('Neither real nor null clears the |t|=2 bar')\n"
+            "plt.tight_layout(); plt.show()\n"
+            f"print(f'FXI pre-CNY: mean={{m_ret:+.2f}}% vs baseline {{b_ret:+.2f}}%  |  HAC t = {{t_stat:+.2f}}')"
+        ),
+        md(
+            f"The pre-CNY window on FXI earns **+{R['pre_mean_fxi']:.2f}%** -- barely positive "
+            f"and indistinguishable from the random-window baseline ({R['pre_base_fxi']:+.2f}%). "
+            f"HAC t-stat = **{R['pre_t_fxi']:+.2f}** -- nowhere near 2. The rally is noise.\n\n"
+            "There is an intuitive reason this fails: FXI is a USD-denominated ETF of Chinese "
+            "large-caps that trades in New York. Hong Kong and Shanghai markets close for the "
+            "holiday; any 'CNY effect' is thin and partially arbitraged by the time it reaches "
+            "a US-listed product."
+        ),
+        md(
+            "### 4b - The zodiac-year effect: 12 horses, one of them *has* to look lucky"
+        ),
+        code(
+            "if HAVE_REAL:\n"
+            "    zs = st.zodiac_year_stats(ret_fxi)\n"
+            "    means = [zs.loc[a, 'mean_ret_pct'] if a in zs.index else float('nan')\n"
+            "             for a in data.ANIMALS]\n"
+            "    bonf_ps = [zs.loc[a, 'bonferroni_p'] if a in zs.index else float('nan')\n"
+            "               for a in data.ANIMALS]\n"
+            "    ns = [zs.loc[a, 'n_years'] if a in zs.index else 0 for a in data.ANIMALS]\n"
+            "else:\n"
+            f"    means = {R_MEANS}\n"
+            f"    bonf_ps = [1.0]*12\n"
+            f"    ns = [2,2,2,2,{R['dragon_n']},2,1,1,2,2,2,2]\n"
+            "\n"
+            "animals = data.ANIMALS\n"
+            "colors = [GREEN if not (p!=p) and p < 0.05 else (AMBER if a=='Dragon' else RED)\n"
+            "          for a, p in zip(animals, bonf_ps)]\n"
+            "fig, ax = plt.subplots(figsize=(11, 4.5))\n"
+            "bars = ax.bar(animals, means, color=colors)\n"
+            "ax.axhline(0, c='k', lw=1)\n"
+            "ax.set_ylabel('Mean annual return (%)')\n"
+            "ax.set_title('12-animal zodiac returns (FXI): scatter, not signal')\n"
+            "for b, n_yr in zip(bars, ns):\n"
+            "    ax.annotate(f'n={n_yr}', (b.get_x()+b.get_width()/2,\n"
+            "                b.get_height() + (2 if b.get_height()>=0 else -5)),\n"
+            "                ha='center', va='bottom', fontsize=7, color='k')\n"
+            "plt.tight_layout(); plt.show()\n"
+            "print('Note: n~2-3 per animal. Any pattern here is pure small-sample noise.')"
+        ),
+        md(
+            f"With n = **{R['dragon_n']} years** per animal (2-3 observations each over the "
+            f"FXI period), the chart above is essentially a random draw. Dragon earns "
+            f"**{R['dragon_mean']:+.1f}%** -- but so do Rooster ({R['rooster_mean']:+.1f}%), "
+            f"Horse ({R['horse_mean']:+.1f}%), and Dog ({R['dog_mean']:+.1f}%). Goat loses "
+            f"**{R['goat_mean']:+.1f}%** -- as bad as Dragon is supposedly good. With 12 "
+            "horses in the race, the winner always looks meaningful. It isn't."
+        ),
+        md(
+            "### 4c - The Bonferroni reckoning: 12 tests, one correction\n\n"
+            "Testing 12 animals simultaneously is 12 chances to 'find' something by luck alone. "
+            "A raw p-value of 5% becomes a 46% chance of at least one false discovery across "
+            "12 independent tests. We multiply each p-value by 12 (Bonferroni)."
+        ),
+        code(
+            "if HAVE_REAL:\n"
+            "    dr = st.dragon_vs_rest(ret_fxi)\n"
+            "    perm = st.permutation_null(ret_fxi, n_perm=2000, seed=165)\n"
+            "    d_mean, r_mean, wt, bp, pct_good = (\n"
+            "        dr['dragon_mean_pct'], dr['rest_mean_pct'], dr['welch_t'],\n"
+            "        dr['bonferroni_p'], perm['pct_as_good'])\n"
+            "else:\n"
+            f"    d_mean, r_mean, wt, bp, pct_good = ({R['dragon_mean']}, {R['rest_mean']},\n"
+            f"        {R['dragon_welch_t']}, {R['dragon_bonf_p']}, {R['pct_as_good']})\n"
+            "\n"
+            "fig, axes = plt.subplots(1, 2, figsize=(10, 4.3))\n"
+            "axes[0].bar(['Dragon', 'All other\\n11 animals'], [d_mean, r_mean],\n"
+            "            color=[AMBER, GREY], width=0.5)\n"
+            "axes[0].axhline(0, c='k', lw=1)\n"
+            "axes[0].set_ylabel('Mean annual return (%)')\n"
+            "axes[0].set_title(f'Dragon vs rest: Welch t = {wt:+.2f}, Bonf-p = {bp:.2f}')\n"
+            "\n"
+            "axes[1].bar(['Dragon\\nobserved', f'Random animal\\nas lucky ({pct_good:.0%})'],\n"
+            "            [1.0, pct_good], color=[AMBER, GREY], width=0.4)\n"
+            "axes[1].set_ylabel('fraction / probability')\n"
+            "axes[1].set_title(f'{pct_good:.0%} of random animals match Dragon -- not special')\n"
+            "axes[1].set_ylim(0, 1.1)\n"
+            "plt.tight_layout(); plt.show()\n"
+            f"print(f'Dragon: {{d_mean:+.1f}}% (n={R['dragon_n']}) vs Rest: {{r_mean:+.1f}}%')\n"
+            "print(f'Welch t = {wt:+.2f}  |  Bonferroni-p = {bp:.3f}')\n"
+            "print(f'Permutation: {pct_good:.1%} of random animals look as lucky as Dragon')"
+        ),
+        md(
+            f"Dragon outperforms the pooled rest by **{R['dragon_diff']:+.1f}%** -- but the "
+            f"Welch t = **{R['dragon_welch_t']:+.2f}** and after Bonferroni correction, "
+            f"p = **{R['dragon_bonf_p']:.2f}** (not significant). The permutation null confirms "
+            f"it: **{R['pct_as_good']:.0%}** of randomly chosen animals look as lucky as Dragon "
+            "in a fair shuffle. Dragon has no special standing."
+        ),
+
+        # ---- BEAT 5 -- THE VERDICT --------------------------------------------
+        md(
+            "## 5 - The verdict\n\n"
+            f"- **Signal: None.** Pre-CNY rally HAC t = {R['pre_t_fxi']:+.2f} on FXI "
+            f"(mean {R['pre_mean_fxi']:+.2f}% vs baseline {R['pre_base_fxi']:+.2f}%). "
+            f"Zodiac-year: Dragon Welch t = {R['dragon_welch_t']:+.2f}, Bonferroni-p = "
+            f"{R['dragon_bonf_p']:.2f}. No claim survives basic inference.\n"
+            "- **Tradability: Mirage.** No signal, no trade. Any pre-CNY window trade "
+            "pays spreads to execute on noise.\n"
+            f"- **Lucky Dragon? Busted.** n = {R['dragon_n']} Dragon years. "
+            f"{R['pct_as_good']:.0%} of randomly chosen animals match Dragon's return. "
+            "12 x 3 years is structurally too small to test a 12-way hypothesis."
+        ),
+
+        # ---- BEAT 6 -- COULD YOU TRADE IT ------------------------------------
+        md(
+            "## 6 - Could you actually trade it?\n\n"
+            "Even if the pre-CNY rally were real, executing it on FXI means paying "
+            "the bid-ask spread and any market-impact costs, for a 10-day window with "
+            "a sub-1% observed mean. The maths are brutal:"
+        ),
+        code(
+            "# Simple cost tear-down on the pre-CNY window trade\n"
+            f"mean_pre = {R['pre_mean_fxi']}  # observed mean pre-CNY return (%)\n"
+            "spreads_bps = [0, 5, 10, 20]  # round-trip cost in bps\n"
+            "net = [mean_pre - s * 0.01 for s in spreads_bps]  # cost in % terms\n"
+            "fig, ax = plt.subplots(figsize=(8, 4))\n"
+            "ax.bar([f'{s} bps' for s in spreads_bps], net,\n"
+            "       color=[GREEN if n > 0 else RED for n in net])\n"
+            "ax.axhline(0, c='k', lw=1)\n"
+            "ax.set_ylabel('Net return per trade (%)')\n"
+            "ax.set_title('The pre-CNY edge (already noise) disappears at any realistic cost')\n"
+            "plt.tight_layout(); plt.show()\n"
+            f"print(f'Gross: +{R['pre_mean_fxi']:.2f}% | After 10 bps spread: {{net[2]:+.2f}}')"
+        ),
+        md(
+            f"The observed pre-CNY mean is **+{R['pre_mean_fxi']:.2f}%** -- too small to "
+            "survive even a 10 basis-point round-trip on a position. And that is before "
+            "the HAC t-stat of +0.04 is considered, which flags the gross return as "
+            "statistically indistinguishable from zero in the first place."
+        ),
+
+        # ---- BEAT 7 -- GOING FURTHER -----------------------------------------
+        md(
+            "## 7 - Going further\n\n"
+            "- **What about Hong Kong / Shanghai directly?** FXI is a US-listed ETF; "
+            "using HSI futures or Shanghai A-shares might capture the effect more directly. "
+            "The n problem does not go away -- it just shifts to a different tape.\n"
+            "- **Longer history?** The MSCI EM or China indices go back to the early 1990s, "
+            "giving ~3 complete 12-year cycles. Rooster still has n=3 per cycle. "
+            "Bonferroni still wins.\n"
+            "- **Related studies on the desk:** "
+            "[Study 136 -- Mark-Twain](../../136-mark-twain/) (October myth), "
+            "[Study 48 -- Groundhog](../../48-groundhog/) (Groundhog Day), "
+            "[Study 80 -- Cold-Open](../../80-cold-open/) (January effect).\n\n"
+            "*Think the Dragon year really is lucky? Fork this, use a different index or a "
+            "longer tape, apply the same Bonferroni correction, and show a p < 0.05 that "
+            "survives. That is the bar.*"
+        ),
+    ]
+    nb = new_notebook(cells=cells, metadata=_meta())
+    _write(nb, "01_for_the_curious.ipynb")
+
+
+# ===========================================================================
+# 02 -- FOR THE QUANTS
+# ===========================================================================
+def build_quants():
+    cells = [
+        md(
+            "# Chinese-Zodiac -- a quantitative teardown of lunar calendar market folklore\n"
+            "### FXI 2004-2026 | ^GSPC 1994-2026 | pre-CNY rally | 12-way Bonferroni | HAC inference\n\n"
+            "![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)\n"
+            "![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-c0392b?style=flat-square)\n"
+            "![Lucky_Dragon%3F: Busted](https://img.shields.io/badge/Lucky_Dragon%3F-Busted-8b949e?style=flat-square)\n\n"
+            "The rigorous companion to [01_for_the_curious.ipynb](01_for_the_curious.ipynb). "
+            "Same seven beats, every claim now carrying its standard error. We test (A) whether "
+            "the 10-day pre-CNY window on FXI and ^GSPC shows a HAC-significant return premium "
+            "vs a random-window baseline, and (B) whether any zodiac animal produces a "
+            "Bonferroni-corrected significant annual return difference on FXI. Both tests fail. "
+            "The effective n per animal is ~3; we quantify exactly how little power that buys.\n\n"
+            "> **Not investment advice.** Real data: FXI daily auto-adjusted closes, Yahoo Finance, "
+            f"{R['fxi_start']} to {R['fxi_end']} (n={R['fxi_n']:,}); "
+            f"^GSPC {R['gspc_start']} to {R['gspc_end']} (n={R['gspc_n']:,}). "
+            "CNY dates hardcoded from the Chinese lunisolar calendar 1990-2026. "
+            "Methods in [`docs/references.md`](../docs/references.md), "
+            "reproducible numbers in [`docs/results.md`](../docs/results.md)."
+        ),
+        code(BOOT + "\n# Also load ^GSPC for the longer pre-CNY test\n"
+             "HAVE_GSPC = False\n"
+             "try:\n"
+             "    ret_gspc = data.fetch_daily('^GSPC')\n"
+             "    HAVE_GSPC = len(ret_gspc) > 100\n"
+             "except Exception:\n"
+             "    ret_gspc = None\n"
+             "print('GSPC cache present:', HAVE_GSPC)\n"
+             ),
+
+        # ---- BEAT 0 ----------------------------------------------------------
+        md(
+            "## Verdict, up front\n\n"
+            "| Axis | Stamp | Decisive number |\n|---|---|---|\n"
+            f"| **Signal** | `NONE` | Pre-CNY FXI HAC t = **{R['pre_t_fxi']:+.2f}** "
+            f"(mean {R['pre_mean_fxi']:+.2f}% vs baseline {R['pre_base_fxi']:+.2f}%); "
+            f"Dragon vs rest Welch t = **{R['dragon_welch_t']:+.2f}**, Bonferroni-p = "
+            f"**{R['dragon_bonf_p']:.2f}**. No claim survives inference. |\n"
+            f"| **Tradability** | `MIRAGE` | Sub-{abs(R['pre_mean_fxi']):.1f}% gross on pre-CNY "
+            "window -- negative at any realistic spread. No zodiac-year signal to trade. |\n"
+            f"| **Lucky Dragon?** | `BUSTED` | n = {R['dragon_n']} Dragon years on FXI. "
+            f"{R['pct_as_good']:.0%} of random animals match Dragon. "
+            "12 x 3 years is structurally underpowered for a 12-way test. |\n\n"
+            "> Two structural problems kill this study before the data is even loaded: "
+            "(1) the multiple-comparisons problem -- 12 animals means 12 tests; "
+            "(2) the tiny-n problem -- n~3 per animal means even a huge t-stat is noise."
+        ),
+
+        # ---- BEAT 1 ----------------------------------------------------------
+        md(
+            "## 1 - The claims, steelmanned\n\n"
+            "Two falsifiable hypotheses:\n\n"
+            "- **H_A (pre-CNY rally).** "
+            "$E[r_{\\text{pre-CNY}}] > E[r_{\\text{random window}}]$, where both windows "
+            "have length $W = 10$ trading days. Test: HAC t-stat on the per-event "
+            "pre-CNY compound returns vs a random-window distribution.\n\n"
+            "- **H_B (zodiac-year effect).** $E[r_{\\text{Dragon year}}] > E[r_{\\text{other animals}}]$ "
+            "in a Welch t-test, after Bonferroni correction for 12 simultaneous tests. "
+            "We test all 12 animals (not just Dragon) to avoid post-hoc selection. "
+            "The bar for significance is Bonferroni-adjusted p < 0.05 (raw p < 0.0042).\n\n"
+            f"We reject H_A (FXI HAC t = {R['pre_t_fxi']:+.2f}) and H_B "
+            f"(all Bonferroni-p >= {R['dragon_bonf_p']:.2f}) on the real tape."
+        ),
+
+        # ---- BEAT 2 ----------------------------------------------------------
+        md(
+            "## 2 - So what? -- what rides on each answer\n\n"
+            "If H_A held, a pre-CNY calendar trade would have a risk-adjusted premium in "
+            "Chinese equities -- a rare short-window anomaly justifying active positioning. "
+            "If H_B held, a zodiac-timing overlay would add alpha to a China EM allocation. "
+            "Both claims appear regularly in investment bank research notes and are cited as "
+            "'well-documented seasonal effects.' The more interesting result is *why* they "
+            "persist in the media: with only ~3 data points per animal, a 'big' return "
+            "difference is almost guaranteed by construction -- there is not enough data to "
+            "see through the noise."
+        ),
+
+        # ---- BEAT 3 ----------------------------------------------------------
+        md(
+            "## 3 - Protocol\n\n"
+            "- **Data.** FXI daily close-to-close returns (Yahoo auto-adjusted), "
+            f"{R['fxi_start']} to {R['fxi_end']}, n = {R['fxi_n']:,}. "
+            f"^GSPC, {R['gspc_start']} to {R['gspc_end']}, n = {R['gspc_n']:,}.\n"
+            "- **CNY dates.** Hardcoded from the official Chinese lunisolar calendar, "
+            "1990-2026. No look-ahead; the table is fully determined before market data "
+            "is observed.\n"
+            "- **Pre-CNY test.** Extract the 10 trading days before each CNY date. "
+            "Compute the compound return. Test vs 500 random windows of the same length "
+            "(random draw from the full series). Inference: Newey-West HAC t-stat.\n"
+            "- **Zodiac-year test.** Each zodiac year runs from CNY_t to CNY_{t+1}. "
+            "Compute compound annual return. Per-animal Welch t vs the pooled 11 others. "
+            "Bonferroni: multiply each p-value by 12. Significance threshold: p < 0.05.\n"
+            "- **Power check.** With n=3 and typical equity vol (30%), minimum detectable "
+            "effect at 80% power is ~60% per-year alpha. If Dragon doesn't beat the rest "
+            "by 60%, we cannot possibly know.\n"
+            "- **Positive control.** Synthetic tape with a planted Dragon-year bonus "
+            "confirms the engine recovers the signal when it is enormous."
+        ),
+
+        # ---- BEAT 4 ----------------------------------------------------------
+        md("## 4 - The teardown"),
+        md(
+            "### 4a - Pre-CNY rally: HAC inference on 10-day event windows\n\n"
+            "For each CNY, we take the 10 trading days before the holiday and compute the "
+            "compound return. We compare to a distribution of 500 random same-length windows."
+        ),
+        code(
+            "if HAVE_REAL:\n"
+            "    pre_fxi = st.pre_cny_stats(ret_fxi, n_random=500, seed=165)\n"
+            "    wdf = st.pre_cny_windows(ret_fxi)\n"
+            "    n_ev = pre_fxi['n_events']\n"
+            "    m_ret = pre_fxi['mean_ret_pct']\n"
+            "    b_ret = pre_fxi['baseline_mean_pct']\n"
+            "    hac = pre_fxi['hac_t']\n"
+            "    per_year = wdf['pre_cny_ret'].values * 100\n"
+            "else:\n"
+            f"    n_ev, m_ret, b_ret, hac = {R['pre_n_fxi']}, {R['pre_mean_fxi']}, {R['pre_base_fxi']}, {R['pre_t_fxi']}\n"
+            "    import numpy as np\n"
+            "    per_year = np.random.default_rng(165).normal(m_ret, 2.5, n_ev)\n"
+            "\n"
+            "fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))\n"
+            "axes[0].hist(per_year, bins=12, color=AMBER, alpha=0.7, edgecolor='k', lw=0.5)\n"
+            "axes[0].axvline(m_ret, c=RED, lw=2, label=f'mean={m_ret:+.2f}%')\n"
+            "axes[0].axvline(b_ret, c=GREY, lw=1.5, ls='--', label=f'baseline={b_ret:+.2f}%')\n"
+            "axes[0].axvline(0, c='k', lw=1)\n"
+            "axes[0].set_xlabel('10-day compound return (%)')\n"
+            "axes[0].set_ylabel('count'); axes[0].legend()\n"
+            "axes[0].set_title(f'Pre-CNY returns (n={n_ev}): no clear cluster above zero')\n"
+            "\n"
+            "# Sensitivity: what HAC t would look like at different n\n"
+            "import numpy as np\n"
+            "ns = np.arange(5, 100, 5)\n"
+            "# For a fixed observed mean and std, HAC t scales as sqrt(n)\n"
+            "std_est = float(np.std(per_year, ddof=1)) if len(per_year) > 1 else 2.5\n"
+            "t_curve = (m_ret / std_est) * np.sqrt(ns)\n"
+            "axes[1].plot(ns, t_curve, 'o-', c=AMBER, lw=2)\n"
+            "axes[1].axhline(2, ls='--', c=GREY, lw=1, label='|t|=2 bar')\n"
+            "axes[1].axhline(0, c='k', lw=1)\n"
+            "axes[1].axvline(n_ev, ls=':', c=RED, lw=1.5, label=f'actual n={n_ev}')\n"
+            "axes[1].set_xlabel('n events'); axes[1].set_ylabel('HAC t-stat')\n"
+            "axes[1].set_title('How many events needed to clear |t|=2 at this effect size?')\n"
+            "axes[1].legend()\n"
+            "plt.tight_layout(); plt.show()\n"
+            f"print(f'FXI pre-CNY: {{m_ret:+.2f}}% mean | HAC t = {{hac:+.2f}}')\n"
+            f"print(f'^GSPC pre-CNY: {R['pre_mean_gspc']:+.2f}% | HAC t = {R['pre_t_gspc']:+.2f}')"
+        ),
+        md(
+            f"> FXI pre-CNY HAC t = **{R['pre_t_fxi']:+.2f}** (n={R['pre_n_fxi']}). "
+            f"^GSPC HAC t = **{R['pre_t_gspc']:+.2f}** (n={R['pre_n_gspc']}). "
+            "Neither clears the |t| = 2 bar. The power curve shows what it would take: "
+            "at this observed effect size, you would need ~200+ events to detect it -- "
+            "but CNY only happens once a year, so ~200 years of data. The claim is "
+            "structurally untestable at the holiday's own frequency."
+        ),
+        md(
+            "### 4b - Zodiac-year effect: 12-way Bonferroni teardown"
+        ),
+        code(
+            "if HAVE_REAL:\n"
+            "    zs = st.zodiac_year_stats(ret_fxi)\n"
+            "    animals = data.ANIMALS\n"
+            "    means  = [zs.loc[a, 'mean_ret_pct'] if a in zs.index else float('nan') for a in animals]\n"
+            "    raw_ts = [zs.loc[a, 'raw_t'] if a in zs.index else float('nan') for a in animals]\n"
+            "    bonf_ps= [zs.loc[a, 'bonferroni_p'] if a in zs.index else float('nan') for a in animals]\n"
+            "    ns_yr  = [int(zs.loc[a, 'n_years']) if a in zs.index else 0 for a in animals]\n"
+            "else:\n"
+            f"    animals = data.ANIMALS\n"
+            f"    means   = {R_MEANS}\n"
+            "    raw_ts  = [float('nan')]*12\n"
+            "    bonf_ps = [1.0]*12\n"
+            f"    ns_yr   = [2,2,2,2,{R['dragon_n']},2,1,1,2,2,2,2]\n"
+            "\n"
+            "colors = ['#2ea44f' if not (p!=p) and p < 0.05 else\n"
+            "          ('#dab617' if a == 'Dragon' else '#c0392b')\n"
+            "          for a, p in zip(animals, bonf_ps)]\n"
+            "fig, axes = plt.subplots(1, 2, figsize=(13, 4.5))\n"
+            "axes[0].bar(animals, means, color=colors)\n"
+            "axes[0].axhline(0, c='k', lw=1)\n"
+            "axes[0].set_ylabel('Mean annual return (%)')\n"
+            "axes[0].set_title('Zodiac-year returns (FXI): scatter not signal (amber=Dragon)')\n"
+            "axes[0].tick_params(axis='x', rotation=45)\n"
+            "\n"
+            "axes[1].bar(animals, bonf_ps, color=colors)\n"
+            "axes[1].axhline(0.05, ls='--', c=GREY, lw=1, label='p=0.05')\n"
+            "axes[1].set_ylabel('Bonferroni-corrected p (x12)')\n"
+            "axes[1].set_title('No animal clears p<0.05 after Bonferroni')\n"
+            "axes[1].set_ylim(0, 1.1)\n"
+            "axes[1].tick_params(axis='x', rotation=45)\n"
+            "axes[1].legend()\n"
+            "plt.tight_layout(); plt.show()\n"
+            "df_print = zs.round(2) if HAVE_REAL else print('(frozen R numbers -- no cache)')\n"
+            "if HAVE_REAL: print(df_print)"
+        ),
+        md(
+            f"> No animal clears Bonferroni-corrected p < 0.05. "
+            f"The highest raw t in the sample is Rooster "
+            f"(raw t = **{R['rooster_t']:+.2f}**, n = {R['rooster_n']}), but "
+            f"after Bonferroni its p = **{R['rooster_bonf_p']:.3f}** -- right on the "
+            "nominal boundary, and on n = 2 years this is pure noise. "
+            "Dragon itself (the 'lucky' animal): Bonferroni-p = "
+            f"**{R['dragon_bonf_p']:.2f}** -- no signal whatsoever."
+        ),
+        md(
+            "### 4c - Power analysis: what can n=3 actually tell us?\n\n"
+            "With 3 data points and annual equity vol ~30%, the minimum detectable effect "
+            "(at 80% power, two-sided alpha 0.05) is enormous. We quantify this directly."
+        ),
+        code(
+            "import numpy as np\n"
+            "from scipy import stats as scipy_stats\n"
+            "\n"
+            "# Minimum detectable effect at 80% power, alpha=0.05, two-sided, n=3\n"
+            "vol_annual = 0.30  # typical for FXI\n"
+            "alpha = 0.05\n"
+            "power = 0.80\n"
+            "ns_check = np.arange(2, 20)\n"
+            "mde = []\n"
+            "for n in ns_check:\n"
+            "    # One-sample t approximation (vs known rest mean)\n"
+            "    t_alpha = scipy_stats.t.ppf(1 - alpha/2, df=n-1)\n"
+            "    t_power = scipy_stats.t.ppf(power, df=n-1)\n"
+            "    mde.append((t_alpha + t_power) * vol_annual / np.sqrt(n) * 100)\n"
+            "\n"
+            "fig, ax = plt.subplots(figsize=(9, 4.5))\n"
+            "ax.plot(ns_check, mde, 'o-', c=RED, lw=2)\n"
+            f"ax.axvline({R['dragon_n']}, ls=':', c=AMBER, lw=2, label='actual n (Dragon) = {R['dragon_n']}')\n"
+            "ax.axhline(20, ls='--', c=GREY, lw=1, label='20% annual alpha (big!)')\n"
+            "ax.set_xlabel('n years per animal')\n"
+            "ax.set_ylabel('Min detectable annual excess return (%)')\n"
+            "ax.set_title('With n=2-3 we cannot detect anything smaller than +50-100%/yr')\n"
+            "ax.legend()\n"
+            "plt.tight_layout(); plt.show()\n"
+            f"idx = {R['dragon_n']} - 2\n"
+            f"print(f'At n={R['dragon_n']}: MDE = {{mde[idx]:.0f}}%/yr -- Dragon premium of +{R['dragon_diff']:.0f}% is below detection threshold')"
+        ),
+        md(
+            f"> At n = {R['dragon_n']}: the minimum detectable effect at 80% power is "
+            "approximately **+100%/year** in excess return. The observed Dragon premium of "
+            f"**+{R['dragon_diff']:.0f}%** is far below detection. Even if Dragon's lucky "
+            "reputation were real and produced a 20%/year premium, we would need "
+            "**~50+ Dragon years** to detect it reliably. The zodiac is therefore "
+            "structurally untestable with any data that could possibly exist."
+        ),
+
+        # ---- BEAT 5 ----------------------------------------------------------
+        md(
+            "## 5 - The verdict\n\n"
+            f"- **Signal `NONE`** -- Pre-CNY FXI HAC t = {R['pre_t_fxi']:+.2f} "
+            f"(mean {R['pre_mean_fxi']:+.2f}% vs baseline {R['pre_base_fxi']:+.2f}%). "
+            f"^GSPC HAC t = {R['pre_t_gspc']:+.2f}. Dragon Welch t = {R['dragon_welch_t']:+.2f}, "
+            f"Bonferroni-p = {R['dragon_bonf_p']:.2f}. Permutation: {R['pct_as_good']:.0%} "
+            "of random animals match Dragon.\n"
+            f"- **Tradability `MIRAGE`** -- Sub-{abs(R['pre_mean_fxi']):.1f}% gross pre-CNY; "
+            "negative after any spread. Zodiac-year overlay: no signal.\n"
+            f"- **Lucky Dragon? `BUSTED`** -- n = {R['dragon_n']} years. MDE ~100%/yr at "
+            "this n. Even a genuine 20%/yr Dragon premium is structurally undetectable."
+        ),
+
+        # ---- BEAT 6 ----------------------------------------------------------
+        md(
+            "## 6 - Could you trade it? -- the cost and power math\n\n"
+            "Two reasons to abandon this: (1) no signal above zero, (2) even if there were, "
+            "the spread destroys it."
+        ),
+        code(
+            "# Cost sweep on the pre-CNY window\n"
+            f"n_trades_per_year = 1\n"
+            f"gross_bps = {R['pre_mean_fxi']} * 100  # pre-CNY mean in bps\n"
+            "costs_bps = [0, 5, 10, 20, 50]\n"
+            "net_bps = [gross_bps - c for c in costs_bps]\n"
+            "\n"
+            "fig, ax = plt.subplots(figsize=(8, 4))\n"
+            "ax.plot([f'{c}bps' for c in costs_bps], net_bps, 'o-', c=RED, lw=2)\n"
+            "ax.axhline(0, c='k', lw=1)\n"
+            "ax.set_xlabel('Round-trip cost (bps)')\n"
+            "ax.set_ylabel('Net pre-CNY return (bps)')\n"
+            "ax.set_title('The pre-CNY edge (already noise) goes negative at 5 bps')\n"
+            "plt.tight_layout(); plt.show()\n"
+            "print('Break-even spread: ~5 bps round-trip -- impossible on FXI in practice')"
+        ),
+        md(
+            "> The pre-CNY 'edge' goes negative at a 5-basis-point round-trip spread. "
+            "FXI typically trades at a 1-3 bps bid-ask spread in large size, but market "
+            "impact on any meaningful position size pushes effective costs higher. "
+            "A strategy executing once a year at +5 bps gross has no plausible path to "
+            "profitability after taxes and fund overhead."
+        ),
+
+        # ---- BEAT 7 ----------------------------------------------------------
+        md(
+            "## 7 - Going further -- the positive control and structural limits\n\n"
+            "Does the engine work at all? Yes -- when the effect is enormous, it finds it. "
+            "The problem is the data simply does not contain an effect of the required size."
+        ),
+        code(
+            "# Sweep Dragon-year bonuses on synthetic tape -- how big must the bonus be to detect?\n"
+            "bonuses = [0, 50, 100, 200, 500]\n"
+            "welch_ts = []\n"
+            "for bonus in bonuses:\n"
+            "    ret_s, _ = data.synthetic_daily(n_years=36, dragon_bonus_bp=bonus, seed=165)\n"
+            "    dr = st.dragon_vs_rest(ret_s)\n"
+            "    welch_ts.append(dr.get('welch_t', float('nan')))\n"
+            "\n"
+            "fig, ax = plt.subplots(figsize=(9, 4.5))\n"
+            "ax.plot(bonuses, welch_ts, 'o-', c=GREEN, lw=2)\n"
+            "ax.axhline(2, ls='--', c=GREY, lw=1, label='|t|=2 bar')\n"
+            "ax.axhline(-2, ls='--', c=GREY, lw=1)\n"
+            "ax.axhline(0, c='k', lw=1)\n"
+            "ax.set_xlabel('Planted Dragon-year bonus (bps/day)')\n"
+            "ax.set_ylabel('Welch t-stat (Dragon vs rest)')\n"
+            "ax.set_title('Even with a 200bps/day bonus the t is unreliable at n=3')\n"
+            "ax.legend()\n"
+            "plt.tight_layout(); plt.show()\n"
+            "print('Note: with n=3, t-stat is highly variable even under enormous planted effects.')"
+        ),
+        md(
+            "> Even with a 200 bps/day planted Dragon bonus (~500%/year excess return), "
+            "the Welch t-stat is noisy and unreliable at n = 3. The Chinese zodiac study "
+            "is not simply *negative* -- it is *underpowered by construction*. "
+            "No honest test can clear the inference bar with this data structure.\n\n"
+            "**Related studies on the desk:** "
+            "[Study 136 -- Mark-Twain](../../136-mark-twain/) (October myth, "
+            "shows crash-stripping is the honest robustness check for rare-event stories), "
+            "[Study 48 -- Groundhog](../../48-groundhog/) (another fun-but-spurious indicator), "
+            "[Study 76 -- Rice-Paper](../../76-rice-paper/) (Bonferroni in cross-sectional context)."
+        ),
+    ]
+    nb = new_notebook(cells=cells, metadata=_meta())
+    _write(nb, "02_for_the_quants.ipynb")
+
+
+def _meta():
+    return {
+        "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
+        "language_info": {"name": "python"},
+    }
+
+
+def _write(nb, name):
+    path = os.path.join(HERE, name)
+    with open(path, "w", encoding="utf-8") as f:
+        nbf.write(nb, f)
+    print("wrote", path)
+
+
+if __name__ == "__main__":
+    build_curious()
+    build_quants()

@@ -507,6 +507,66 @@ jobs:
       - name: Study 157 — Kelly-Sizing test-suite
         run: pytest -q studies/157-kelly-sizing/tests
 
+      - name: Study 158 — Super-Bowl test-suite
+        run: pytest -q studies/158-super-bowl/tests
+
+      - name: Study 159 — Presidential-Party test-suite
+        run: pytest -q studies/159-presidential-party/tests
+
+      - name: Study 160 — Skyscraper-Curse test-suite
+        run: pytest -q studies/160-skyscraper-curse/tests
+
+      - name: Study 161 — Year-Ending-Five test-suite
+        run: pytest -q studies/161-year-ending-five/tests
+
+      - name: Study 162 — Rosh-Hashanah test-suite
+        run: pytest -q studies/162-rosh-hashanah/tests
+
+      - name: Study 163 — Friday-13th test-suite
+        run: pytest -q studies/163-friday-13th/tests
+
+      - name: Study 164 — Mercury-Retrograde test-suite
+        run: pytest -q studies/164-mercury-retrograde/tests
+
+      - name: Study 165 — Chinese-Zodiac test-suite
+        run: pytest -q studies/165-chinese-zodiac/tests
+
+      - name: Study 166 — First-Five-Days test-suite
+        run: pytest -q studies/166-first-five-days/tests
+
+      - name: Study 167 — Hindenburg-Omen test-suite
+        run: pytest -q studies/167-hindenburg-omen/tests
+
+      - name: Study 168 — Advance-Decline test-suite
+        run: pytest -q studies/168-advance-decline/tests
+
+      - name: Study 169 — Fluent-Tickers test-suite
+        run: pytest -q studies/169-fluent-tickers/tests
+
+      - name: Study 170 — Alphabetical-Bias test-suite
+        run: pytest -q studies/170-alphabetical-bias/tests
+
+      - name: Study 171 — Naive-1-Over-N test-suite
+        run: pytest -q studies/171-naive-1-over-n/tests
+
+      - name: Study 172 — Hundred-Minus-Age test-suite
+        run: pytest -q studies/172-hundred-minus-age/tests
+
+      - name: Study 173 — Four-Percent-Rule test-suite
+        run: pytest -q studies/173-four-percent-rule/tests
+
+      - name: Study 174 — Bitcoin-Rainbow test-suite
+        run: pytest -q studies/174-bitcoin-rainbow/tests
+
+      - name: Study 175 — Crypto-Weekend test-suite
+        run: pytest -q studies/175-crypto-weekend/tests
+
+      - name: Study 176 — Hot-Hand test-suite
+        run: pytest -q studies/176-hot-hand/tests
+
+      - name: Study 177 — Megacap-Concentration test-suite
+        run: pytest -q studies/177-megacap-concentration/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
