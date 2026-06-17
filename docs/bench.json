@@ -1,0 +1,2303 @@
+{
+ "total": 251,
+ "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
+ "signals": [
+  "Real",
+  "Weak",
+  "None"
+ ],
+ "tradabilities": [
+  "Investable",
+  "Fragile",
+  "Mirage"
+ ],
+ "counts": {
+  "Real": {
+   "Investable": 3,
+   "Fragile": 20,
+   "Mirage": 10
+  },
+  "Weak": {
+   "Investable": 0,
+   "Fragile": 37,
+   "Mirage": 66
+  },
+  "None": {
+   "Investable": 0,
+   "Fragile": 3,
+   "Mirage": 111
+  }
+ },
+ "studies": [
+  {
+   "num": 1,
+   "name": "Overnight Anomaly",
+   "claim": "Do stocks really make all their money overnight?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/01-overnight-anomaly/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 2,
+   "name": "Falling-Knife",
+   "claim": "Does buying the dip (−3%) beat a random day?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/02-falling-knife/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 3,
+   "name": "Fear-Gauge",
+   "claim": "Does buying the VIX spike pay?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/03-fear-gauge/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 4,
+   "name": "Social-Oracle",
+   "claim": "Does following a viral crowd's stock picks pay?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/04-social-oracle/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 5,
+   "name": "Twin-Spread",
+   "claim": "Does textbook pairs trading still pay after everyone copied it?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/05-twin-spread/",
+   "family": "Mean reversion & stat-arb"
+  },
+  {
+   "num": 6,
+   "name": "Clockwork-Vol",
+   "claim": "Does the VIX run on a fixed-period cycle you can time?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/06-clockwork-vol/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 7,
+   "name": "Coiled-Spring",
+   "claim": "Does the \"20-EMA breakout\" deliver explosive +30% pops?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/07-coiled-spring/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 8,
+   "name": "True-Strength",
+   "claim": "Is the \"True\" Strength Index truer than MACD/RSI?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/08-true-strength/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 9,
+   "name": "Phantom-Kernel",
+   "claim": "Is Avellaneda-Stoikov's \"optimal spread\" built on a real order-arrival law — and does it matter to the P&L?",
+   "signal": "None",
+   "tradability": "Fragile",
+   "href": "studies/09-phantom-kernel/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 10,
+   "name": "Markov-Mint",
+   "claim": "Can a Markov-chain pipeline \"win every trade\" on Polymarket?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/10-markov-mint/",
+   "family": "ML & model forecasting"
+  },
+  {
+   "num": 11,
+   "name": "Vanishing-Penny",
+   "claim": "How fast does a guaranteed \\$40M Polymarket arbitrage close?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/11-vanishing-penny/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 12,
+   "name": "Paper-Prophet",
+   "claim": "Does an ARIMA+GARCH stack forecast the SPY, or is it vol-targeting in a trenchcoat?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/12-paper-prophet/",
+   "family": "ML & model forecasting"
+  },
+  {
+   "num": 13,
+   "name": "Crimson-Hour",
+   "claim": "Does a red opening hour + IB-rejection really call the close at 88%?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/13-crimson-hour/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 14,
+   "name": "Gamma-Gospel",
+   "claim": "Does dealer gamma (GEX) call the day's character, or is it the VIX in a trenchcoat?",
+   "signal": "Pre-reg",
+   "tradability": "Pre-reg",
+   "href": "studies/14-gamma-gospel/",
+   "family": "Pre-registered"
+  },
+  {
+   "num": 15,
+   "name": "Sigma-Sleight",
+   "claim": "Does length-aware \"AdaptiveRSI\" beat fixed 70/30, or is the σ-transform a monotone relabel?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/15-sigma-sleight/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 16,
+   "name": "Storm-Shy",
+   "claim": "Does scaling exposure down when markets get loud actually pay — or is it just selling low?",
+   "signal": "Real",
+   "tradability": "Investable",
+   "href": "studies/16-storm-shy/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 17,
+   "name": "Glass-Ceiling",
+   "claim": "Does a 1:1 resistance breakout have momentum to harvest, or are you just paying the spread to buy the high?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/17-glass-ceiling/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 18,
+   "name": "Dull-Roar",
+   "claim": "The low-volatility anomaly: free alpha on the modern S&P 500, or just a defensive low-beta tilt?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/18-dull-roar/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 19,
+   "name": "Rubber-Band",
+   "claim": "Internal Bar Strength: does a stock that closes near its low really snap back the next day — and can you still cash it?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/19-rubber-band/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 20,
+   "name": "Freight-Train",
+   "claim": "Time-series momentum: does riding the trend across many markets pay — and why would you hold a thin-Sharpe sleeve?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/20-freight-train/",
+   "family": "Momentum & trend"
+  },
+  {
+   "num": 21,
+   "name": "Fools-Gold",
+   "claim": "The \"golden cross\" (50/200 MA): is it a real buy signal, or a trend filter that only shines on the one index everyone quotes?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/21-fools-gold/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 22,
+   "name": "Crystal-Ball",
+   "claim": "An HP-filter detrending strategy backtests at Sharpe 2 — on a coin flip. Is it an edge, or is the filter peeking at the future?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/22-crystal-ball/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 23,
+   "name": "Broken-Tether",
+   "claim": "Pairs trading: two assets drift apart, bet they snap back — but does the cointegration hold out of sample?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/23-broken-tether/",
+   "family": "Mean reversion & stat-arb"
+  },
+  {
+   "num": 24,
+   "name": "Stampede",
+   "claim": "Cross-sectional momentum: do past winners keep winning on the modern S&P 500 — and what does the crash cost?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/24-stampede/",
+   "family": "Momentum & trend"
+  },
+  {
+   "num": 25,
+   "name": "Clean-Slate",
+   "claim": "Residual momentum — is the \"cleaner cousin\" of cross-sectional momentum actually cleaner on this tape?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/25-clean-slate/",
+   "family": "Momentum & trend"
+  },
+  {
+   "num": 26,
+   "name": "Sand-Castle",
+   "claim": "A \"mathematically optimal\" stat-arb portfolio (w ∝ C⁻¹E) backtests beautifully — does inverting an estimated covariance help, or maximize the error?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/26-sand-castle/",
+   "family": "Mean reversion & stat-arb"
+  },
+  {
+   "num": 27,
+   "name": "Steamroller",
+   "claim": "The FX carry trade — borrow cheap, lend dear: a real premium, or rent paid in front of a steamroller?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/27-steamroller/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 28,
+   "name": "Carousel",
+   "claim": "Sector rotation: does chasing the hottest sectors beat just holding all eleven equal-weight — or is it concentration risk for nothing?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/28-carousel/",
+   "family": "Momentum & trend"
+  },
+  {
+   "num": 29,
+   "name": "Hedgers-Toll",
+   "claim": "Are speculators really paid (via CFTC positioning) for taking the other side of producers' commodity hedges — or has the toll booth closed?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/29-hedgers-toll/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 30,
+   "name": "House-Edge",
+   "claim": "Lever a vol-targeted dip-buyer to beat the market — does the edge survive the retail CFD markup?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/30-house-edge/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 31,
+   "name": "Trade-Winds",
+   "claim": "Cross-asset time-series momentum — the cliché closest to surviving: does our 26-year tape certify it, or only the crisis-alpha sleeve?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/31-trade-winds/",
+   "family": "Momentum & trend"
+  },
+  {
+   "num": 32,
+   "name": "Rip-Tide",
+   "claim": "Short-term contrarian on the same 18 futures as Trade-Winds — same machine, opposite sign: does fading the move pay net of turnover?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/32-rip-tide/",
+   "family": "Mean reversion & stat-arb"
+  },
+  {
+   "num": 33,
+   "name": "Slingshot",
+   "claim": "The equity mirror of Rip-Tide — fade each stock against its peers (dollar-neutral): a real reversal, or eaten by the spread?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/33-slingshot/",
+   "family": "Mean reversion & stat-arb"
+  },
+  {
+   "num": 34,
+   "name": "Aftershock",
+   "claim": "Post-earnings drift — the decades-old premium: does it survive on a liquid S&P 500 universe after costs?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/34-aftershock/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 35,
+   "name": "Contango",
+   "claim": "Commodity carry / roll yield — long backwardation, short contango: is the contango tax harvestable, or a −83%-drawdown curve-timing book?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/35-contango/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 36,
+   "name": "Greenback",
+   "claim": "Dollar-carry, and the carry⊕momentum combo: can diversification fix the steamroller a vol overlay couldn't?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/36-greenback/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 37,
+   "name": "Barometer",
+   "claim": "The trend in macro data (growth, inflation) as a cross-asset signal: right-sided, but big and fast enough to trade?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/37-barometer/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 38,
+   "name": "Chorus",
+   "claim": "The capstone — blend three weak, decorrelated signals (momentum + reversal + low-vol): do they add up to one tradable book?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/38-chorus/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 39,
+   "name": "Black-Box",
+   "claim": "A neural net fed crypto OHLCV scores a dazzling in-sample Sharpe: does it survive walk-forward, or is it memorising noise?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/39-black-box/",
+   "family": "ML & model forecasting"
+  },
+  {
+   "num": 40,
+   "name": "Paper-Tiger",
+   "claim": "A vendor's published dual-momentum backtest, mirrored back: is the timing alpha real, or does it belong to the assets it holds?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/40-paper-tiger/",
+   "family": "Momentum & trend"
+  },
+  {
+   "num": 41,
+   "name": "Hangover",
+   "claim": "The January Barometer (\"as goes January, so goes the year\"): a real omen, or a base-rate illusion?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/41-hangover/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 42,
+   "name": "Last-Call",
+   "claim": "The turn-of-the-month effect — real, large and famous: can you actually beat buy-and-hold with it?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/42-last-call/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 43,
+   "name": "Free-Lunch",
+   "claim": "Betting against beta — the \"low-risk free lunch\": is it free, or is it the leverage bill?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/43-free-lunch/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 44,
+   "name": "Growth-Spurt",
+   "claim": "The asset-growth effect — the highest headline Sharpe on the vendor list: does it survive look-ahead-free on large caps?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/44-growth-spurt/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 45,
+   "name": "Vanishing-Act",
+   "claim": "The size premium (Banz 1981), finance's original factor: is it still there on the longest free proxy?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/45-vanishing-act/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 46,
+   "name": "Bargain-Bin",
+   "claim": "The value premium (HML) on tradable value/growth ETF pairs: a dependable edge, or a regime bet?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/46-bargain-bin/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 47,
+   "name": "Paper-Moon",
+   "claim": "The Fed Model (E/P vs the 10-year yield): a real timing rule, or a money-illusion bug?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/47-paper-moon/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 48,
+   "name": "Groundhog",
+   "claim": "Return seasonality — a stock repeats its calendar-month performance (Heston-Sadka): real signal, or astrology?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/48-groundhog/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 49,
+   "name": "Black-Gold",
+   "claim": "Does the oil price predict the stock market (Driesprong 2008) — still, out of sample?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/49-black-gold/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 50,
+   "name": "High-Water",
+   "claim": "The 52-week-high effect (George-Hwang): a distinct anomaly, or just momentum wearing a hat?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/50-high-water/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 51,
+   "name": "Blue-Chip",
+   "claim": "The quality (gross-profitability) premium — the factor that survived where size and value faded (Novy-Marx): does it, on real SEC data?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/51-blue-chip/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 52,
+   "name": "Smoke-Screen",
+   "claim": "The accruals anomaly (Sloan 1996) — cash-backed earnings beat accrual-heavy ones: does it replicate on real SEC data?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/52-smoke-screen/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 53,
+   "name": "Jackpot",
+   "claim": "The lottery (MAX) effect — high single-day-gain stocks should underperform (Bali et al.): do they, on large caps?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/53-jackpot/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 54,
+   "name": "Static",
+   "claim": "The idiosyncratic-volatility puzzle (high-vol → low returns, Ang et al.): does it hold on large caps?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/54-static/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 55,
+   "name": "Summer-Lull",
+   "claim": "\"Sell in May\" — the Halloween seasonal: real enough to beat buy-and-hold?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/55-summer-lull/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 56,
+   "name": "Tide-Table",
+   "claim": "Does the Shiller CAPE forecast long-run returns — and can it time the market, or only set expectations?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/56-tide-table/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 57,
+   "name": "Yield-Trap",
+   "claim": "Do high-dividend stocks beat the market on total return?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/57-yield-trap/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 58,
+   "name": "Bunker",
+   "claim": "Does the min-vol ETF (USMV) deliver the low-vol anomaly — free Sharpe, or just less risk?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/58-bunker/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 59,
+   "name": "Downhill",
+   "claim": "Riding the yield curve for the term premium: real, but worth the duration risk?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/59-downhill/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 60,
+   "name": "Long-Shot",
+   "claim": "The skewness (lottery) effect in commodities — low-skew beats high-skew: does it point the right way, and pay?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/60-long-shot/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 61,
+   "name": "Slow-Burn",
+   "claim": "Do 3× leveraged ETFs (TQQQ) decay to zero or amplify — and is there a free lunch?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/61-slow-burn/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 62,
+   "name": "Premium-Seller",
+   "claim": "Does a covered-call \"income\" ETF (QYLD) beat the index it holds?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/62-premium-seller/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 63,
+   "name": "Free-Fall",
+   "claim": "The short-volatility carry — selling vol earns a real premium: can you keep it through the steamroller?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/63-free-fall/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 64,
+   "name": "Share-Shuffle",
+   "claim": "Do firms that issue stock underperform the ones buying it back (the net-issuance anomaly) — on large caps?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/64-share-shuffle/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 65,
+   "name": "Scorecard",
+   "claim": "Does Piotroski's 9-point F-score (the famous fundamental-health screen) sort large-cap winners?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/65-scorecard/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 66,
+   "name": "Inverted",
+   "claim": "Does an inverted yield curve forecast equity downturns — and is it a usable sell button?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/66-inverted/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 67,
+   "name": "Fed-Drift",
+   "claim": "Do stocks drift up before FOMC meetings (Lucca-Moench) — still, after everyone knows?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/67-fed-drift/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 68,
+   "name": "All-Weather",
+   "claim": "Does Dalio's risk-parity portfolio beat everything, or just diversify better?",
+   "signal": "Real",
+   "tradability": "Investable",
+   "href": "studies/68-all-weather/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 69,
+   "name": "Safe-Haven",
+   "claim": "Does gold hedge inflation and crashes — or one, or neither?",
+   "signal": "None",
+   "tradability": "Fragile",
+   "href": "studies/69-safe-haven/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 70,
+   "name": "Digital-Gold",
+   "claim": "Is bitcoin \"digital gold\" — a crash-and-inflation haven, or just a high-octane risk asset?",
+   "signal": "None",
+   "tradability": "Fragile",
+   "href": "studies/70-digital-gold/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 71,
+   "name": "Ambush",
+   "claim": "Four edges that each died to daily turnover (low IBS, turn-of-month, red close, VIX stress), gated to fire only at their rare confluence: does the overlay pay?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/71-ambush/",
+   "family": "Mean reversion & stat-arb"
+  },
+  {
+   "num": 72,
+   "name": "Loaded-Dice",
+   "claim": "The 5-minute SMA(5/10) crossover scalp — \"a coin flip with the trend on your side\": is the trend really on your side?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/72-loaded-dice/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 73,
+   "name": "First-Light",
+   "claim": "Does the 5-minute opening-range breakout earn the returns its viral 2023 backtest claims?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/73-first-light/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 74,
+   "name": "Mind-the-Gap",
+   "claim": "Does an opening gap always get filled?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/74-mind-the-gap/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 75,
+   "name": "Knee-Jerk",
+   "claim": "Does Connors' RSI(2) oversold bounce still pay — or did publishing it wear it out?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/75-knee-jerk/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 76,
+   "name": "Rice-Paper",
+   "claim": "Do Japanese candlestick reversals predict anything a coin doesn't?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/76-rice-paper/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 77,
+   "name": "Golden-Mean",
+   "claim": "Do Fibonacci levels and round numbers hold better than random price levels?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/77-golden-mean/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 78,
+   "name": "Crossed-Wires",
+   "claim": "Is the MACD crossover any more than a slower coin flip?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/78-crossed-wires/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 79,
+   "name": "Sleigh-Ride",
+   "claim": "Is the Santa Claus rally real — and does a failed one warn of trouble ahead?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/79-sleigh-ride/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 80,
+   "name": "Cold-Open",
+   "claim": "Does January's direction really call the rest of the year?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/80-cold-open/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 81,
+   "name": "Four-Year-Itch",
+   "claim": "Is year three of the presidential cycle really the market's best?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/81-four-year-itch/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 82,
+   "name": "Witching-Hour",
+   "claim": "Does triple-witching expiry move the market, or just the volume?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/82-witching-hour/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 83,
+   "name": "Half-Life",
+   "claim": "Does Bitcoin reliably pump after each four-year halving?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/83-half-life/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 84,
+   "name": "Moon-Math",
+   "claim": "Does the Stock-to-Flow model actually predict Bitcoin's price?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/84-moon-math/",
+   "family": "ML & model forecasting"
+  },
+  {
+   "num": 85,
+   "name": "Dr-Copper",
+   "claim": "Does the copper/gold ratio forecast the economy, or just echo it?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/85-dr-copper/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 86,
+   "name": "Tail-Radar",
+   "claim": "Does the CBOE SKEW index see black swans coming?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/86-tail-radar/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 87,
+   "name": "Center-Line",
+   "claim": "Does price really get pulled back to the intraday VWAP?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/87-center-line/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 88,
+   "name": "Dogs-of-the-Dow",
+   "claim": "Buy the ten highest-yielding Dow stocks each January — do you really beat the Dow?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/88-dogs-of-the-dow/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 89,
+   "name": "Turn-of-the-Month",
+   "claim": "Do almost all the market's gains really land in the ~4 days around month-end?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/89-turn-of-the-month/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 90,
+   "name": "Weekend",
+   "claim": "Are Mondays really negative, and does buying Tuesday beat the market?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/90-weekend/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 91,
+   "name": "Death-Cross",
+   "claim": "When the 50-day crosses below the 200-day, should you really sell?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/91-death-cross/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 92,
+   "name": "Easy-Money",
+   "claim": "Vol ETPs bleed lower every day — so can you just short them and collect free money?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/92-easy-money/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 93,
+   "name": "Round-Numbers",
+   "claim": "Prices pile up at whole dollars — but can you trade the magnetism?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/93-round-numbers/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 94,
+   "name": "Level-Pegging",
+   "claim": "Does equal-weighting the S&P *always* beat cap-weighting?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/94-level-pegging/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 95,
+   "name": "Holiday-Cheer",
+   "claim": "Do stocks really pop the day before every market holiday — and can you buy it?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/95-holiday-cheer/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 96,
+   "name": "New-Year-Pop",
+   "claim": "Do small-cap stocks really pop versus large caps every January?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/96-new-year-pop/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 97,
+   "name": "Balancing-Act",
+   "claim": "Is the classic 60/40 portfolio the sensible default — and do bonds really cushion every crash?",
+   "signal": "Real",
+   "tradability": "Investable",
+   "href": "studies/97-balancing-act/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 98,
+   "name": "High-Noon",
+   "claim": "Is buying at an all-time high really the riskiest moment to invest?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/98-high-noon/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 99,
+   "name": "Safety-Net",
+   "claim": "Does a trailing stop-loss really protect your capital and improve returns?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/99-safety-net/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 100,
+   "name": "Melting-Ice",
+   "claim": "Do 3x ETFs like TQQQ really \"decay to zero\", so you must never hold them overnight?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/100-melting-ice/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 101,
+   "name": "Slow-and-Steady",
+   "claim": "Dollar-cost averaging: safer *and* smarter than going all-in, or just a way to stay less invested?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/101-slow-and-steady/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 102,
+   "name": "Free-Rebalance",
+   "claim": "Is rebalancing really a free lunch that adds return on top of the risk control?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/102-free-rebalance/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 103,
+   "name": "Turtle-Trader",
+   "claim": "Did the legendary Turtle breakout actually beat entering at random?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/103-turtle-trader/",
+   "family": "Momentum & trend"
+  },
+  {
+   "num": 104,
+   "name": "Bollinger-Reversion",
+   "claim": "Does piercing the lower Bollinger band beat just buying a random day?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/104-bollinger-reversion/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 105,
+   "name": "Coppock-Curve",
+   "claim": "Can a 1962 indicator built for grief really time bear-market bottoms?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/105-coppock-curve/",
+   "family": "Momentum & trend"
+  },
+  {
+   "num": 106,
+   "name": "Supertrend",
+   "claim": "Does TradingView's most-watched ATR flip actually beat a coin?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/106-supertrend/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 107,
+   "name": "Stochastic-Oscillator",
+   "claim": "Does the stochastic oversold crossover beat a coin?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/107-stochastic-oscillator/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 108,
+   "name": "ADX-Filter",
+   "claim": "Does \"only trade when the trend is strong\" (ADX > 25) add anything?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/108-adx-filter/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 109,
+   "name": "OBV-Divergence",
+   "claim": "Does on-balance volume really precede price?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/109-obv-divergence/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 110,
+   "name": "Faber-Timing",
+   "claim": "Does the famous 200-day timing rule beat buy-and-hold, or just cut risk?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/110-faber-timing/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 111,
+   "name": "VIX-Term-Structure",
+   "claim": "Does the VIX term-structure slope time the market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/111-vix-term-structure/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 112,
+   "name": "Move-Index",
+   "claim": "Does bond-market volatility (MOVE) warn of equity drawdowns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/112-move-index/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 113,
+   "name": "Gold-Silver-Ratio",
+   "claim": "Does the gold/silver ratio reliably mean-revert into a trade?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/113-gold-silver-ratio/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 114,
+   "name": "Dollar-Smile",
+   "claim": "Does the dollar's direction forecast stocks, or just move with them?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/114-dollar-smile/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 115,
+   "name": "Credit-Spreads",
+   "claim": "Does widening high-yield credit warn equities before they fall?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/115-credit-spreads/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 116,
+   "name": "Power-Hour",
+   "claim": "Does the last \"power hour\" continue the day's move — or fade it?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/116-power-hour/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 117,
+   "name": "Pi-Cycle-Top",
+   "claim": "Does Bitcoin's Pi-Cycle Top indicator really call the top?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/117-pi-cycle-top/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 118,
+   "name": "Fed-Model",
+   "claim": "Does the earnings yield minus the 10-year bond yield tell you when to own stocks?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/118-fed-model/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 119,
+   "name": "Real-Rate-Regime",
+   "claim": "Should you step aside when real long rates are high or rising?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/119-real-rate-regime/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 120,
+   "name": "Excess-CAPE-Yield",
+   "claim": "Does Shiller's ECY forecast the next decade's equity risk premium?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/120-excess-cape-yield/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 121,
+   "name": "Magic-Formula",
+   "claim": "Does Greenblatt's quality-plus-value rank beat the S&P 500?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/121-magic-formula/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 122,
+   "name": "Gross-Profitability",
+   "claim": "Does Novy-Marx's gross profitability still earn a spread on large caps?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/122-gross-profitability/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 123,
+   "name": "Altman-Z",
+   "claim": "Do financially distressed (low Altman-Z) stocks pay a premium?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/123-altman-z/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 124,
+   "name": "Cash-Flow-Yield",
+   "claim": "Does buying high operating-cash-flow yield beat plain earnings yield?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/124-cash-flow-yield/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 125,
+   "name": "Ichimoku-Cloud",
+   "claim": "Does the Ichimoku cloud system beat a coin?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/125-ichimoku-cloud/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 126,
+   "name": "Parabolic-SAR",
+   "claim": "Does Wilder's stop-and-reverse flip beat a coin once you pay the whipsaws?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/126-parabolic-sar/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 127,
+   "name": "Williams-R",
+   "claim": "Does the Williams %R oversold signal predict a bounce?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/127-williams-r/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 128,
+   "name": "Keltner-Channel",
+   "claim": "Keltner breakout or Keltner reversion — is either one signal?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/128-keltner-channel/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 129,
+   "name": "Heikin-Ashi",
+   "claim": "Do smoothed Heikin-Ashi candles filter noise into an edge?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/129-heikin-ashi/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 130,
+   "name": "Vol-Risk-Premium",
+   "claim": "Is selling the gap between implied and realized vol a free lunch?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/130-vol-risk-premium/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 131,
+   "name": "Utilities-Canary",
+   "claim": "Do utilities leading the market warn of a coming drawdown?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/131-utilities-canary/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 132,
+   "name": "Yield-Curve-Steepener",
+   "claim": "Does the curve slope tell you when to own the long bond?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/132-yield-curve-steepener/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 133,
+   "name": "Crypto-Seasonality",
+   "claim": "Is \"Uptober\" — or any month — a real edge in Bitcoin?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/133-crypto-seasonality/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 134,
+   "name": "Bitcoin-Dominance",
+   "claim": "Does falling Bitcoin dominance call \"alt season\"?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/134-bitcoin-dominance/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 135,
+   "name": "FOMC-Cycle",
+   "claim": "Do stock returns really hide in the even weeks of the Fed cycle?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/135-fomc-cycle/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 136,
+   "name": "Mark-Twain",
+   "claim": "Is October really the most dangerous month to own stocks?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/136-mark-twain/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 137,
+   "name": "Mansfield-RS",
+   "claim": "Does Weinstein's Stage-2 relative-strength screen beat the market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/137-mansfield-rs/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 138,
+   "name": "Random-Forest",
+   "claim": "Does a walk-forward Random Forest on price features beat a shuffled-label control?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/138-random-forest/",
+   "family": "ML & model forecasting"
+  },
+  {
+   "num": 139,
+   "name": "AI-Powered-ETF",
+   "claim": "Can IBM Watson's AI ETF beat a dirt-cheap S&P 500 index fund?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/139-ai-powered-etf/",
+   "family": "ML & model forecasting"
+  },
+  {
+   "num": 140,
+   "name": "Amihud-Illiquidity",
+   "claim": "Does sorting on price-impact illiquidity earn a premium, or just survivorship?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/140-amihud-illiquidity/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 141,
+   "name": "Turnover-Anomaly",
+   "claim": "Do low-turnover stocks deliver the Datar-Naik-Radcliffe liquidity premium?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/141-turnover-anomaly/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 142,
+   "name": "Split-Drift",
+   "claim": "Do stocks drift up after a split takes effect?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/142-split-drift/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 143,
+   "name": "Dividend-Capture",
+   "claim": "Can you pocket a dividend by buying just before the ex-date?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/143-dividend-capture/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 144,
+   "name": "Permanent-Portfolio",
+   "claim": "Does Harry Browne's four-way mix really survive every regime?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/144-permanent-portfolio/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 145,
+   "name": "Home-Bias",
+   "claim": "Does diversifying abroad still improve a US investor's portfolio?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/145-home-bias/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 146,
+   "name": "Country-Momentum",
+   "claim": "Does rotating into the strongest-trending country ETFs pay?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/146-country-momentum/",
+   "family": "Momentum & trend"
+  },
+  {
+   "num": 147,
+   "name": "FX-Momentum",
+   "claim": "Does currency momentum still pay after costs?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/147-fx-momentum/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 148,
+   "name": "Lunar-Effect",
+   "claim": "Do stocks really return less around the full moon?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/148-lunar-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 149,
+   "name": "Daylight-Saving",
+   "claim": "Does the market really slump after the clocks change?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/149-daylight-saving/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 150,
+   "name": "SAD-Effect",
+   "claim": "Do shorter autumn days really depress stock returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/150-sad-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 151,
+   "name": "Stocks-For-Long-Run",
+   "claim": "Do stocks really always win over the long run?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/151-stocks-for-long-run/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 152,
+   "name": "Inflation-Hedge",
+   "claim": "Are stocks really an inflation hedge?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/152-inflation-hedge/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 153,
+   "name": "Net-Operating-Assets",
+   "claim": "Does a bloated balance sheet predict low returns?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/153-net-operating-assets/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 154,
+   "name": "Leverage-Anomaly",
+   "claim": "Do high-leverage firms earn the higher return theory promises?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/154-leverage-anomaly/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 155,
+   "name": "Asset-Turnover",
+   "claim": "Do capital-efficient (high asset-turnover) firms beat the market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/155-asset-turnover/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 156,
+   "name": "Martingale",
+   "claim": "Does averaging down (\"martingale\") beat just buying and holding?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/156-martingale/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 157,
+   "name": "Kelly-Sizing",
+   "claim": "Does Kelly-optimal position sizing beat fixed sizing in practice?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/157-kelly-sizing/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 158,
+   "name": "Super-Bowl",
+   "claim": "Can a football game predict the stock market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/158-super-bowl/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 159,
+   "name": "Presidential-Party",
+   "claim": "Do stocks really do better under Democrats — or did the crashes just land on one party's watch?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/159-presidential-party/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 160,
+   "name": "Skyscraper-Curse",
+   "claim": "Does the world's next record skyscraper signal a crash?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/160-skyscraper-curse/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 161,
+   "name": "Year-Ending-Five",
+   "claim": "Are years ending in 5 really the best for stocks?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/161-year-ending-five/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 162,
+   "name": "Rosh-Hashanah",
+   "claim": "Should you really \"sell Rosh Hashanah, buy Yom Kippur\"?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/162-rosh-hashanah/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 163,
+   "name": "Friday-13th",
+   "claim": "Is Friday the 13th unlucky for the stock market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/163-friday-13th/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 164,
+   "name": "Mercury-Retrograde",
+   "claim": "Does Mercury retrograde really wreck the market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/164-mercury-retrograde/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 165,
+   "name": "Chinese-Zodiac",
+   "claim": "Is the Year of the Dragon lucky for stocks?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/165-chinese-zodiac/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 166,
+   "name": "First-Five-Days",
+   "claim": "Do January's first five days really forecast the whole year?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/166-first-five-days/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 167,
+   "name": "Hindenburg-Omen",
+   "claim": "Does the Hindenburg Omen actually warn of crashes?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/167-hindenburg-omen/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 168,
+   "name": "Advance-Decline",
+   "claim": "Does a fading advance-decline line call the top?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/168-advance-decline/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 169,
+   "name": "Fluent-Tickers",
+   "claim": "Do stocks with pronounceable tickers outperform?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/169-fluent-tickers/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 170,
+   "name": "Alphabetical-Bias",
+   "claim": "Do early-alphabet tickers get an edge?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/170-alphabetical-bias/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 171,
+   "name": "Naive-1-Over-N",
+   "claim": "Does \"optimal\" portfolio math beat a naive equal split?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/171-naive-1-over-n/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 172,
+   "name": "Hundred-Minus-Age",
+   "claim": "Is \"100 minus your age in stocks\" smart, or just less invested?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/172-hundred-minus-age/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 173,
+   "name": "Four-Percent-Rule",
+   "claim": "Does the 4% retirement withdrawal rule actually survive history?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/173-four-percent-rule/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 174,
+   "name": "Bitcoin-Rainbow",
+   "claim": "Does Bitcoin's Rainbow Chart actually time the cycle?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/174-bitcoin-rainbow/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 175,
+   "name": "Crypto-Weekend",
+   "claim": "Is there a tradable Bitcoin weekend effect?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/175-crypto-weekend/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 176,
+   "name": "Hot-Hand",
+   "claim": "After a winning streak, is the market \"hot\" — or \"due\" for a reversal?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/176-hot-hand/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 177,
+   "name": "Megacap-Concentration",
+   "claim": "Does just buying the biggest stocks beat the index?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/177-megacap-concentration/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 178,
+   "name": "CCI",
+   "claim": "Does Lambert's CCI oscillator time daily equities?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/178-cci/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 179,
+   "name": "Aroon",
+   "claim": "Does Chande's Aroon(25) crossover point the right way?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/179-aroon/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 180,
+   "name": "TRIX",
+   "claim": "Does triple-smoothing an EMA filter false signals, or just delay the good ones?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/180-trix/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 181,
+   "name": "Ultimate-Oscillator",
+   "claim": "Does Williams' three-period oscillator beat a coin at the extremes?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/181-ultimate-oscillator/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 182,
+   "name": "Vortex-Indicator",
+   "claim": "Does the VI+/VI- crossover call the daily trend?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/182-vortex-indicator/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 183,
+   "name": "Fisher-Transform",
+   "claim": "Does Ehlers' Fisher Transform sharpen turning points into an edge?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/183-fisher-transform/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 184,
+   "name": "Williams-Fractals",
+   "claim": "Do Bill Williams' fractals mark tradable swing points?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/184-williams-fractals/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 185,
+   "name": "Chande-Momentum",
+   "claim": "Does the Chande Momentum Oscillator beat a coin?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/185-chande-momentum/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 186,
+   "name": "Morning-Star",
+   "claim": "Does the morning-star candle pattern call a reversal?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/186-morning-star/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 187,
+   "name": "Three-Soldiers",
+   "claim": "Do three white soldiers (or black crows) predict what comes next?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/187-three-soldiers/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 188,
+   "name": "Head-Shoulders",
+   "claim": "Does the head-and-shoulders pattern actually forecast the drop?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/188-head-shoulders/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 189,
+   "name": "Double-Top",
+   "claim": "Do double tops and bottoms call reversals?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/189-double-top/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 190,
+   "name": "NR7",
+   "claim": "Does the narrowest range in 7 days precede a tradable breakout?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/190-nr7/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 191,
+   "name": "Leap-Year",
+   "claim": "Are leap years good or bad for stocks?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/191-leap-year/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 192,
+   "name": "Tax-Day",
+   "claim": "Is there a tax-day effect around April 15?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/192-tax-day/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 193,
+   "name": "Window-Dressing",
+   "claim": "Do funds pump winners into quarter-end — and can you trade it?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/193-window-dressing/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 194,
+   "name": "Turkey",
+   "claim": "Do stocks really feast around Thanksgiving?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/194-turkey/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 195,
+   "name": "Monthly-OpEx",
+   "claim": "Does monthly options-expiration week move the market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/195-monthly-opex/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 196,
+   "name": "Long-Term-Reversal",
+   "claim": "Do five-year losers really beat five-year winners (De Bondt-Thaler)?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/196-long-term-reversal/",
+   "family": "Mean reversion & stat-arb"
+  },
+  {
+   "num": 197,
+   "name": "Dividend-Payout-Ratio",
+   "claim": "Does a higher payout ratio really predict higher growth (Arnott-Asness)?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/197-dividend-payout-ratio/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 198,
+   "name": "Cash-Holdings",
+   "claim": "Do cash-rich firms earn higher returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/198-cash-holdings/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 199,
+   "name": "Sales-Growth",
+   "claim": "Do fast-growing \"glamour\" stocks underperform (Lakonishok-Shleifer-Vishny)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/199-sales-growth/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 200,
+   "name": "ROE-Quality",
+   "claim": "Does buying high-ROE quality beat the market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/200-roe-quality/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 201,
+   "name": "Dividend-Growth",
+   "claim": "Do dividend growers outperform?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/201-dividend-growth/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 202,
+   "name": "Fifty-Two-Week-Low",
+   "claim": "Does buying stocks near their 52-week low pay?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/202-fifty-two-week-low/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 203,
+   "name": "Golden-Butterfly",
+   "claim": "Does the Golden Butterfly beat plain stocks — and its simpler parent?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/203-golden-butterfly/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 204,
+   "name": "Talmud-Portfolio",
+   "claim": "Does a 2,000-year-old \"thirds\" rule still hold up?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/204-talmud-portfolio/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 205,
+   "name": "Three-Fund",
+   "claim": "Is the Bogleheads three-fund portfolio actually better than 100% stocks?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/205-three-fund/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 206,
+   "name": "Dividend-Aristocrats",
+   "claim": "Do the Dividend Aristocrats beat the market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/206-dividend-aristocrats/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 207,
+   "name": "REITs-Diversifier",
+   "claim": "Are REITs a real diversifier, or just leveraged stocks?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/207-reits-diversifier/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 208,
+   "name": "Gold-Miners",
+   "claim": "Are gold miners really leveraged gold?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/208-gold-miners/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 209,
+   "name": "ETH-BTC-Ratio",
+   "claim": "Can you ride the ETH/BTC rotation?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/209-eth-btc-ratio/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 210,
+   "name": "Crypto-Trend",
+   "claim": "Does a 200-day timing rule tame Bitcoin's crashes?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/210-crypto-trend/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 211,
+   "name": "Sin-Stocks",
+   "claim": "Do vice stocks really beat the virtuous market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/211-sin-stocks/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 212,
+   "name": "Cannabis Stocks",
+   "claim": "Did the green rush ever pay, or only shred wealth?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/212-cannabis-stocks/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 213,
+   "name": "Meme Stocks",
+   "claim": "Could you ride the meme mania, or only be its exit liquidity?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/213-meme-stocks/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 214,
+   "name": "Magazine-Cover-Curse",
+   "claim": "When a magazine calls the top, is the move already over?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/214-magazine-cover-curse/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 215,
+   "name": "Big-Mac-PPP",
+   "claim": "Does the Big Mac index predict which currencies revert?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/215-big-mac-ppp/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 216,
+   "name": "Hemline-Index",
+   "claim": "Do rising skirts really ring the market bell?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/216-hemline-index/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 217,
+   "name": "Lipstick Index",
+   "claim": "Does lipstick spending warn of a coming recession?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/217-lipstick-index/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 218,
+   "name": "SPAC-Performance",
+   "claim": "Were SPACs a shortcut to public markets or a rigged loss?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/218-spac-performance/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 219,
+   "name": "IPO-Pop",
+   "claim": "Chase the IPO pop, or does the hangover always win?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/219-ipo-pop/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 220,
+   "name": "Small Dogs of the Dow",
+   "claim": "Do the five cheapest Dogs beat the full ten?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/220-small-dogs/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 221,
+   "name": "Mayer-Multiple",
+   "claim": "Does the Mayer Multiple tell you when Bitcoin is cheap?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/221-mayer-multiple/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 222,
+   "name": "Altseason-Rotation",
+   "claim": "Can BTC dominance time the rotation into altcoins?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/222-altseason-rotation/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 223,
+   "name": "Same-Month Seasonality",
+   "claim": "Does a stock keep winning in the same month it always has?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/223-same-month-seasonality/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 224,
+   "name": "Monday Effect",
+   "claim": "Is Monday still the market's worst day?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/224-monday-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 225,
+   "name": "Sector-Rotation",
+   "claim": "Can you rotate into the right sector for each cycle phase?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/225-sector-rotation/",
+   "family": "Momentum & trend"
+  },
+  {
+   "num": 226,
+   "name": "Crude-Seasonality",
+   "claim": "Does crude really rally into summer driving season?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/226-crude-seasonality/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 227,
+   "name": "Natgas-Winter",
+   "claim": "Is the winter gas spike tradable, or a widow-maker?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/227-natgas-winter/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 228,
+   "name": "Pre-Earnings Runup",
+   "claim": "Do stocks drift up in the days before earnings?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/228-pre-earnings-runup/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 229,
+   "name": "Beneish M-score",
+   "claim": "Can the Beneish M-score sniff out earnings manipulators?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/229-beneish-m-score/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 230,
+   "name": "Ohlson O-score",
+   "claim": "Does the Ohlson O-score price distress any better?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/230-ohlson-o-score/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 231,
+   "name": "Sloan Accruals",
+   "claim": "Do high-accrual firms underperform the cash earners?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/231-sloan-accruals/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 232,
+   "name": "Mohanram G-score",
+   "claim": "Can the Mohanram G-score find growth that delivers?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/232-mohanram-g-score/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 233,
+   "name": "Shareholder-Yield",
+   "claim": "Is total shareholder yield the dividend factor done right?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/233-shareholder-yield/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 234,
+   "name": "Olympic-Year",
+   "claim": "Do stocks win gold in Olympic years?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/234-olympic-year/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 235,
+   "name": "World-Cup-Effect",
+   "claim": "Does the World Cup summer really sink the market?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/235-world-cup-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 236,
+   "name": "Fifty-Two-Week-High",
+   "claim": "Is nearness to the 52-week high a better momentum signal?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/236-fifty-two-week-high/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 237,
+   "name": "Residual-Momentum",
+   "claim": "Does residual-return momentum dodge the crashes?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/237-residual-momentum/",
+   "family": "Momentum & trend"
+  },
+  {
+   "num": 238,
+   "name": "Betting-Against-Beta",
+   "claim": "Does leveraging low-beta and shorting high-beta print money?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/238-betting-against-beta/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 239,
+   "name": "Spinoffs",
+   "claim": "Do corporate spin-offs really outrun the market?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/239-spinoffs/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 240,
+   "name": "Dividend-Initiation",
+   "claim": "Do first-time dividend payers signal a re-rating?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/240-dividend-initiation/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 241,
+   "name": "Buy-the-Dip",
+   "claim": "Does buying the dip beat just staying invested?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/241-buy-the-dip/",
+   "family": "Mean reversion & stat-arb"
+  },
+  {
+   "num": 242,
+   "name": "Quality-Minus-Junk",
+   "claim": "Does Quality-minus-Junk survive outside the backtest?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/242-quality-minus-junk/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 243,
+   "name": "Graham NCAV",
+   "claim": "Do Graham net-nets still exist and still pay?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/243-graham-ncav/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 244,
+   "name": "Asset-Growth",
+   "claim": "Do fast-growing-asset firms underperform the disciplined ones?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/244-asset-growth/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 245,
+   "name": "Oil-Equity Correlation",
+   "claim": "Does the oil price lead the stock market, or just move with it?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/245-oil-equity-correlation/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 246,
+   "name": "Defensive-Sectors Leadership",
+   "claim": "Do staples and utilities leading warn of risk-off?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/246-defensive-sectors/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 247,
+   "name": "Bond-Seasonality",
+   "claim": "Do Treasuries have their own calendar?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/247-bond-seasonality/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 248,
+   "name": "Presidential-Honeymoon",
+   "claim": "Does the market enjoy a new president's first 100 days?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/248-presidential-honeymoon/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 249,
+   "name": "Index-Inclusion",
+   "claim": "Is there still a free pop when a stock joins the S&P 500?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/249-index-inclusion/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 250,
+   "name": "Reverse-Split",
+   "claim": "Is a reverse split the kiss of death it's reputed to be?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/250-reverse-split/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 251,
+   "name": "Crypto-Reversal",
+   "claim": "Is the crypto reversal premium real, or just momentum?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/251-crypto-reversal/",
+   "family": "Mean reversion & stat-arb"
+  }
+ ],
+ "special": [
+  {
+   "num": 14,
+   "name": "Gamma-Gospel",
+   "claim": "Does dealer gamma (GEX) call the day's character, or is it the VIX in a trenchcoat?",
+   "signal": "Pre-reg",
+   "tradability": "Pre-reg",
+   "href": "studies/14-gamma-gospel/",
+   "family": "Pre-registered"
+  }
+ ]
+}

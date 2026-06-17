@@ -20,6 +20,7 @@ Usage:  python tools/make_bench_figures.py
 
 from __future__ import annotations
 
+import json
 import math
 import re
 import sys
@@ -33,7 +34,9 @@ from matplotlib.patches import Circle, FancyBboxPatch
 
 ROOT = Path(__file__).resolve().parents[1]
 README = ROOT / "README.md"
+BENCH_MD = ROOT / "docs" / "bench.md"  # canonical family taxonomy ("mortality by family")
 OUT = ROOT / "docs" / "bench_map.png"
+OUT_JSON = ROOT / "docs" / "bench.json"  # feeds the interactive page (docs/index.html)
 
 # ---------------------------------------------------------------- palette ---
 GREEN = "#2ea44f"
@@ -55,7 +58,7 @@ SEVERITY = {"Real": 0, "Weak": 1, "None": 2,
 # A study row looks like:
 #   | **[16](studies/16-storm-shy/)** | **Storm-Shy** | claim... | ![Real](...) | ![Investable](...) |
 ROW_RE = re.compile(
-    r"^\|\s*\*\*\[(?P<num>\d+)\]\(studies/[^)]*\)\*\*"   # | **[NN](studies/...)**
+    r"^\|\s*\*\*\[(?P<num>\d+)\]\((?P<href>studies/[^)]*)\)\*\*"  # | **[NN](studies/...)**
     r"\s*\|\s*\*\*(?P<name>.+?)\*\*"                      # | **Name**
     r"\s*\|\s*(?P<claim>.*?)"                             # | claim
     r"\s*\|\s*(?P<signal>!\[[^\]]+\][^|]*)"               # | ![Signal badge]
@@ -86,10 +89,36 @@ def parse_readme(path: Path = README) -> list[dict]:
             "claim": m["claim"].strip(),
             "signal": signal,
             "tradability": trad,
+            "href": m["href"].strip(),
         })
     if not studies:
         sys.exit(f"No study rows matched in {path} — has the table format changed?")
     return studies
+
+
+# A family row in docs/bench.md looks like:
+#   | Calendar & seasonal — [01](../studies/01-...) [41](...) ... | 34 | 4 | 3 | 0 |
+# The first cell holds the family name, an em-dash, then the member links.
+FAMILY_ROW_RE = re.compile(r"^\|\s*(?P<fam>.+?)\s+—\s+(?P<rest>\[\d+\].+?)\s*\|\s*\d+\s*\|")
+
+
+def parse_families(path: Path = BENCH_MD) -> dict[int, str]:
+    """Map study number -> family, parsed from the bench.md taxonomy table.
+
+    bench.md is the canonical (desk-maintained) taxonomy; this never invents
+    families. Studies absent from the table fall back to 'Unclassified'.
+    """
+    fam_of: dict[int, str] = {}
+    if not path.exists():
+        return fam_of
+    for line in path.read_text(encoding="utf-8").splitlines():
+        m = FAMILY_ROW_RE.match(line)
+        if not m:
+            continue
+        fam = m["fam"].strip()
+        for num in re.findall(r"\[(\d+)\]", m["rest"]):
+            fam_of[int(num)] = fam
+    return fam_of
 
 
 def bucket(studies: list[dict]):
@@ -254,6 +283,35 @@ def main() -> None:
     OUT.parent.mkdir(parents=True, exist_ok=True)
     draw(grid, special, total)
     print(f"\nWrote {OUT.relative_to(ROOT)}")
+
+    write_json(studies, grid, special, total)
+    print(f"Wrote {OUT_JSON.relative_to(ROOT)}")
+
+
+def write_json(studies, grid, special, total: int, out: Path = OUT_JSON) -> None:
+    """Dump the parsed bench as JSON for the interactive page (docs/index.html).
+
+    Same single source of truth as the PNG: it never re-judges, it just serialises
+    what the README table already says. Cell counts are precomputed for convenience;
+    the page can also recompute them from ``studies``.
+    """
+    counts = {sig: {trad: len(grid[(sig, trad)]) for trad in TRADABILITIES}
+              for sig in SIGNALS}
+    fam_of = parse_families()
+    enriched = [{**st, "family": fam_of.get(st["num"], "Unclassified")}
+                for st in studies]
+    payload = {
+        "total": total,
+        "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
+        "signals": SIGNALS,
+        "tradabilities": TRADABILITIES,
+        "counts": counts,
+        "studies": enriched,
+        "special": [{**st, "family": fam_of.get(st["num"], "Unclassified")}
+                    for st in special],
+    }
+    out.write_text(json.dumps(payload, ensure_ascii=False, indent=1) + "\n",
+                   encoding="utf-8")
 
 
 if __name__ == "__main__":

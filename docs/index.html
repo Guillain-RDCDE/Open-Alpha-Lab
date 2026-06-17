@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Open-Alpha-Lab — the bench, live</title>
+<meta name="description" content="Famous trading ideas, one protocol. An interactive Signal × Tradability map — every study clickable, searchable, filterable." />
+<style>
+  :root{
+    --green:#2ea44f; --amber:#dab617; --red:#c0392b;
+    --grey:#8b949e; --ink:#24292f; --paper:#fcfcfa; --sub:#57606a;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+  .wrap{max-width:1180px; margin:0 auto; padding:28px 20px 80px}
+
+  header h1{font-size:clamp(26px,4vw,40px); font-weight:800; margin:0 0 6px; letter-spacing:-.5px}
+  header p.sub{color:var(--sub); margin:0 0 18px; font-size:clamp(14px,2vw,18px)}
+  .repo{font-size:14px; color:var(--sub)}
+  .repo a{color:var(--green); font-weight:600; text-decoration:none}
+  .repo a:hover{text-decoration:underline}
+
+  /* ---- controls ---- */
+  .controls{
+    display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center;
+    margin:22px 0 14px; padding:14px 16px; border:1px solid #e6e8ea;
+    border-radius:14px; background:#fff; position:sticky; top:0; z-index:20;
+    box-shadow:0 1px 0 rgba(0,0,0,.02);
+  }
+  .search{flex:1 1 260px; display:flex; align-items:center; gap:8px;
+    border:1.5px solid #e1e4e8; border-radius:10px; padding:8px 12px; background:#fbfbfa}
+  .search:focus-within{border-color:var(--green)}
+  .search input{border:0; outline:0; background:transparent; font-size:15px; width:100%}
+  .search svg{flex:none; opacity:.5}
+  .fgroup{display:flex; gap:6px; align-items:center}
+  .fgroup .lbl{font-size:12px; color:var(--sub); margin-right:2px; text-transform:uppercase; letter-spacing:.5px}
+  .pill{
+    border:1.5px solid; border-radius:999px; padding:5px 12px; font-size:13px; font-weight:700;
+    cursor:pointer; background:#fff; user-select:none; transition:.12s;
+  }
+  .pill[aria-pressed="true"]{color:#fff}
+  .pill.g{border-color:var(--green); color:var(--green)} .pill.g[aria-pressed="true"]{background:var(--green)}
+  .pill.a{border-color:var(--amber); color:#9a7f06}      .pill.a[aria-pressed="true"]{background:var(--amber)}
+  .pill.r{border-color:var(--red);   color:var(--red)}   .pill.r[aria-pressed="true"]{background:var(--red)}
+  .count{margin-left:auto; font-size:14px; color:var(--sub); white-space:nowrap}
+  .count b{color:var(--ink)}
+  .reset{border:0; background:none; color:var(--sub); cursor:pointer; font-size:13px; text-decoration:underline}
+
+  /* ---- the map ---- */
+  .axis-top{text-align:center; font-style:italic; color:var(--ink); font-size:14px; margin:6px 0 2px}
+  .mapwrap{display:flex; gap:10px; align-items:stretch}
+  .axis-left{
+    writing-mode:vertical-rl; transform:rotate(180deg); text-align:center;
+    font-style:italic; color:var(--ink); font-size:14px; padding:48px 0;
+    flex:none; width:26px;
+  }
+  .grid{
+    flex:1; display:grid; gap:8px;
+    grid-template-columns:54px repeat(3,1fr);
+    grid-auto-rows:min-content;
+  }
+  .colhead{text-align:center; font-weight:800; font-size:clamp(14px,1.8vw,19px); letter-spacing:.5px; padding-bottom:2px}
+  .rowhead{writing-mode:vertical-rl; transform:rotate(180deg); text-align:center;
+    font-weight:800; font-size:clamp(14px,1.8vw,19px); letter-spacing:.5px;
+    display:flex; align-items:center; justify-content:center}
+  .c-green{color:var(--green)} .c-amber{color:#b8950c} .c-red{color:var(--red)} .c-grey{color:var(--grey)}
+
+  .cell{
+    border:1.6px solid; border-radius:14px; padding:30px 12px 12px; position:relative;
+    min-height:96px; transition:.15s;
+  }
+  .cell.empty{border-style:dashed}
+  .cell .cnt{
+    position:absolute; top:8px; right:12px; font-size:clamp(20px,2.6vw,30px); font-weight:800;
+    cursor:pointer; line-height:1;
+  }
+  .cell .cnt:hover{filter:brightness(.85)}
+  .cell.focused{box-shadow:0 0 0 3px rgba(36,41,47,.18)}
+  .cell .dash{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--grey); font-size:22px; opacity:.5}
+  .chips{display:flex; flex-wrap:wrap; gap:6px; align-content:flex-start}
+  .chip{
+    width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    color:#fff; font-weight:700; font-size:12px; text-decoration:none; border:1.5px solid #fff;
+    box-shadow:0 1px 2px rgba(0,0,0,.18); transition:transform .1s, opacity .1s; cursor:pointer;
+  }
+  .chip:hover{transform:scale(1.28); z-index:5}
+  .chip.dim{opacity:.12; box-shadow:none}
+  .chip.hit{outline:2.5px solid var(--ink); outline-offset:1px}
+
+  /* ---- table ---- */
+  .tablehead{display:flex; align-items:center; flex-wrap:wrap; gap:10px 14px; margin:46px 0 14px}
+  .tablehead h2{font-size:22px; margin:0; font-weight:800}
+  .tablehead .hint{color:var(--sub); font-size:13px; margin-left:auto}
+  .groupby{display:flex; align-items:center; gap:0; border:1.5px solid #e1e4e8; border-radius:10px; overflow:hidden}
+  .groupby .lbl{font-size:12px; color:var(--sub); padding:0 10px; text-transform:uppercase; letter-spacing:.5px}
+  .seg{border:0; border-left:1.5px solid #e1e4e8; background:#fff; padding:7px 14px; font-size:13px; font-weight:700; color:var(--sub); cursor:pointer}
+  .seg[aria-pressed="true"]{background:var(--ink); color:#fff}
+
+  /* grouped card view */
+  .grp{margin:0 0 14px; border:1px solid #e9ebed; border-radius:14px; overflow:hidden; background:#fff}
+  .grphead{
+    width:100%; display:flex; align-items:center; gap:10px; padding:13px 16px; cursor:pointer;
+    border:0; background:#fbfbfa; text-align:left; font:inherit; border-left:5px solid var(--grey);
+  }
+  .grphead:hover{background:#f3f4f5}
+  .grphead .caret{font-size:12px; color:var(--sub); transition:transform .15s; width:12px}
+  .grp[data-open="false"] .caret{transform:rotate(-90deg)}
+  .grphead .gname{font-weight:800; font-size:16px}
+  .grphead .gcount{color:var(--sub); font-weight:600; font-size:13px}
+  .grphead .gstats{margin-left:auto; display:flex; gap:5px; flex-wrap:wrap}
+  .stat{font-size:11px; font-weight:800; padding:2px 8px; border-radius:999px; letter-spacing:.2px; white-space:nowrap}
+  .stat.s-real{background:rgba(46,164,79,.14); color:#1f7a39}
+  .stat.s-trad{background:rgba(218,182,23,.18); color:#8a6d00}
+  .stat.s-inv{background:var(--green); color:#fff}
+  .grp[data-open="false"] .cards{display:none}
+  .cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(248px,1fr)); gap:10px; padding:14px}
+  .card{
+    display:block; text-decoration:none; color:inherit; border:1px solid #eceef0; border-radius:11px;
+    border-left:5px solid var(--grey); padding:11px 13px; background:#fff; transition:.12s; min-height:84px;
+  }
+  .card:hover{border-color:#d0d4d8; box-shadow:0 3px 10px rgba(0,0,0,.07); transform:translateY(-1px)}
+  .card .top{display:flex; align-items:center; gap:8px; margin-bottom:5px}
+  .card .num{width:26px; height:26px; flex:none; border-radius:50%; color:#fff; font-weight:800; font-size:11.5px;
+    display:flex; align-items:center; justify-content:center}
+  .card .nm{font-weight:800; font-size:14.5px; line-height:1.2}
+  .card .cl{color:#48515a; font-size:12.5px; line-height:1.35; margin:0 0 9px;
+    display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden}
+  .card .stamps{display:flex; gap:5px}
+  table{width:100%; border-collapse:collapse; font-size:14.5px}
+  thead th{
+    position:sticky; top:64px; background:var(--paper); text-align:left; padding:9px 10px;
+    border-bottom:2px solid #e1e4e8; cursor:pointer; user-select:none; white-space:nowrap; font-size:13px;
+    text-transform:uppercase; letter-spacing:.4px; color:var(--sub);
+  }
+  thead th:hover{color:var(--ink)}
+  thead th .arr{opacity:.4; font-size:11px}
+  th.num,td.num{text-align:right; width:46px; font-variant-numeric:tabular-nums}
+  th.stamp,td.stamp{text-align:center; width:104px}
+  tbody tr{border-bottom:1px solid #eef0f1; cursor:pointer}
+  tbody tr:hover{background:#f3faf5}
+  tbody td{padding:9px 10px; vertical-align:top}
+  td.name{font-weight:700; white-space:nowrap}
+  td.claim{color:#3a4148}
+  .badge{display:inline-block; padding:2px 9px; border-radius:6px; font-size:11.5px; font-weight:800; color:#fff; letter-spacing:.3px}
+  .b-real,.b-investable{background:var(--green)} .b-weak,.b-mixed,.b-fragile{background:var(--amber)}
+  .b-none,.b-mirage{background:var(--red)} .b-pre-reg{background:var(--grey)}
+  .empty-row td{padding:30px; text-align:center; color:var(--sub)}
+  footer{margin-top:50px; color:var(--grey); font-size:13px; text-align:center}
+  @media(max-width:640px){
+    .axis-left{display:none}
+    .grid{grid-template-columns:38px repeat(3,1fr)}
+    .chip{width:26px;height:26px;font-size:11px}
+    td.claim{display:none} th.claim{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="title">famous trading ideas, one protocol</h1>
+    <p class="sub">Each chip is a study — its number in the README table. Same test bench, two stamps each.
+      <b>Click any chip to open the study.</b></p>
+    <p class="repo">Source of truth &amp; full write-ups: <a id="repolink" href="#">github.com/Guillain-RDCDE/Open-Alpha-Lab</a></p>
+  </header>
+
+  <div class="controls">
+    <label class="search">
+      <svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M11.7 10.3a6 6 0 1 0-1.4 1.4l3.3 3.3 1.4-1.4-3.3-3.3zM2.5 6.5a4 4 0 1 1 8 0 4 4 0 0 1-8 0z"/></svg>
+      <input id="q" type="search" placeholder="Search name or claim…  (e.g. momentum, VIX, gold)" autocomplete="off" />
+    </label>
+    <div class="fgroup" id="fsignal">
+      <span class="lbl">Signal</span>
+      <button class="pill g" data-k="signal" data-v="Real" aria-pressed="false">Real</button>
+      <button class="pill a" data-k="signal" data-v="Weak" aria-pressed="false">Weak</button>
+      <button class="pill r" data-k="signal" data-v="None" aria-pressed="false">None</button>
+    </div>
+    <div class="fgroup" id="ftrad">
+      <span class="lbl">Tradability</span>
+      <button class="pill g" data-k="tradability" data-v="Investable" aria-pressed="false">Investable</button>
+      <button class="pill a" data-k="tradability" data-v="Fragile" aria-pressed="false">Fragile</button>
+      <button class="pill r" data-k="tradability" data-v="Mirage" aria-pressed="false">Mirage</button>
+    </div>
+    <span class="count" id="count"></span>
+    <button class="reset" id="reset">reset</button>
+  </div>
+
+  <p class="axis-top" id="axistop">Tradability — does it survive costs, capacity &amp; scale?  ▸</p>
+  <div class="mapwrap">
+    <div class="axis-left">◂ Signal — is the effect statistically real?</div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div class="tablehead">
+    <h2>The studies</h2>
+    <div class="groupby">
+      <span class="lbl">Group by</span>
+      <button class="seg" data-g="family"  aria-pressed="true">Family</button>
+      <button class="seg" data-g="verdict" aria-pressed="false">Verdict</button>
+      <button class="seg" data-g="flat"    aria-pressed="false">Flat list</button>
+    </div>
+    <span class="hint" id="ledgerhint"></span>
+  </div>
+
+  <!-- grouped card view (family / verdict) -->
+  <div id="ledger"></div>
+
+  <!-- flat sortable table -->
+  <table id="flattable" hidden>
+    <thead><tr>
+      <th class="num"    data-sort="num">#<span class="arr"></span></th>
+      <th class="name"   data-sort="name">Study<span class="arr"></span></th>
+      <th class="claim"  data-sort="claim">The claim — tested to destruction<span class="arr"></span></th>
+      <th class="stamp"  data-sort="signal">Signal<span class="arr"></span></th>
+      <th class="stamp"  data-sort="tradability">Tradability<span class="arr"></span></th>
+    </tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+const PALETTE = {Real:"#2ea44f",Weak:"#dab617",Mixed:"#dab617","None":"#c0392b",
+  Investable:"#2ea44f",Fragile:"#dab617",Mirage:"#c0392b","Pre-reg":"#8b949e"};
+const SEV = {Real:0,Weak:1,Mixed:1,"None":2,Investable:0,Fragile:1,Mirage:2};
+const CLS = {Real:"c-green",Weak:"c-amber","None":"c-red",
+  Investable:"c-green",Fragile:"c-amber",Mirage:"c-red"};
+
+function hex2rgb(h){h=h.replace("#","");return[0,2,4].map(i=>parseInt(h.slice(i,i+2),16));}
+function lerp(a,b,t){const x=hex2rgb(a),y=hex2rgb(b);return x.map((v,i)=>Math.round(v+(y[i]-v)*t));}
+function cellColor(sig,trad){
+  const s=(SEV[sig==="Mixed"?"Weak":sig]+SEV[trad])/2;
+  const c=s<=1?lerp("#2ea44f","#dab617",s):lerp("#dab617","#c0392b",s-1);
+  return c; // [r,g,b]
+}
+
+const state = {q:"", signal:new Set(), tradability:new Set(), sort:"num", dir:1, group:"family"};
+let DATA=null, REPO="";
+const collapsed = new Set();  // group keys the user has folded
+
+const treeUrl = href => `${REPO}/tree/main/${href.replace(/\/$/,"")}`;
+const bucketSig = s => s==="Mixed" ? "Weak" : s;
+
+function matches(st){
+  if(state.signal.size && !state.signal.has(bucketSig(st.signal))) return false;
+  if(state.tradability.size && !state.tradability.has(st.tradability)) return false;
+  if(state.q){
+    const q=state.q.toLowerCase();
+    if(!(`${st.num}`.includes(q) || st.name.toLowerCase().includes(q) || st.claim.toLowerCase().includes(q)))
+      return false;
+  }
+  return true;
+}
+
+function buildGrid(){
+  const grid=document.getElementById("grid");
+  const SIG=DATA.signals, TRAD=DATA.tradabilities;
+  grid.innerHTML="";
+  grid.appendChild(el("div","")); // corner
+  TRAD.forEach(t=>grid.appendChild(el("div",t.toUpperCase(),"colhead "+CLS[t])));
+  SIG.forEach(sig=>{
+    grid.appendChild(el("div",sig.toUpperCase(),"rowhead "+CLS[sig]));
+    TRAD.forEach(trad=>{
+      const members=DATA.studies
+        .filter(s=>bucketSig(s.signal)===sig && s.tradability===trad)
+        .sort((a,b)=>a.num-b.num);
+      grid.appendChild(makeCell(sig,trad,members));
+    });
+  });
+}
+
+function makeCell(sig,trad,members){
+  const rgb=cellColor(sig,trad), [r,g,b]=rgb;
+  const empty=members.length===0;
+  const cell=document.createElement("div");
+  cell.className="cell"+(empty?" empty":"");
+  cell.dataset.sig=sig; cell.dataset.trad=trad;
+  cell.style.borderColor=`rgba(${r},${g},${b},${empty?.35:.85})`;
+  cell.style.background=`rgba(${r},${g},${b},${empty?.04:.10})`;
+
+  const cnt=el("div",members.length, "cnt "+(empty?"c-grey":""));
+  if(!empty) cnt.style.color=`rgb(${r},${g},${b})`;
+  cnt.title="filter the bench to this cell";
+  cnt.onclick=()=>focusCell(sig,trad);
+  cell.appendChild(cnt);
+
+  if(empty){ cell.appendChild(el("div","—","dash")); return cell; }
+
+  const chips=el("div","","chips");
+  members.forEach(st=>{
+    const a=document.createElement("a");
+    a.className="chip"; a.href=treeUrl(st.href); a.target="_blank"; a.rel="noopener";
+    a.textContent=String(st.num).padStart(2,"0");
+    a.style.background=`rgb(${r},${g},${b})`;
+    a.title=`#${st.num} · ${st.name}\n${st.claim}\nSignal: ${st.signal}  ·  Tradability: ${st.tradability}`;
+    a.dataset.num=st.num;
+    chips.appendChild(a);
+  });
+  cell.appendChild(chips);
+  return cell;
+}
+
+function focusCell(sig,trad){
+  // toggle: clicking the same cell again clears it
+  const same = state.signal.size===1 && state.signal.has(sig)
+            && state.tradability.size===1 && state.tradability.has(trad);
+  state.signal=new Set(same?[]:[sig]);
+  state.tradability=new Set(same?[]:[trad]);
+  syncPills(); apply();
+}
+
+function el(tag,txt,cls){const e=document.createElement(tag); if(cls)e.className=cls; if(txt!=="")e.textContent=txt; return e;}
+
+function badge(v){const b=document.createElement("span"); b.className="badge b-"+v.toLowerCase().replace(/[^a-z]/g,"-"); b.textContent=v; return b;}
+
+function buildTable(){
+  const tb=document.getElementById("tbody");
+  const rows=DATA.studies.filter(matches).sort(cmp);
+  tb.innerHTML="";
+  if(!rows.length){
+    const tr=el("tr","","empty-row"); const td=document.createElement("td");
+    td.colSpan=5; td.textContent="No study matches these filters."; tr.appendChild(td); tb.appendChild(tr);
+    return;
+  }
+  rows.forEach(st=>{
+    const tr=document.createElement("tr");
+    tr.onclick=()=>window.open(treeUrl(st.href),"_blank","noopener");
+    tr.appendChild(el("td",String(st.num).padStart(2,"0"),"num"));
+    tr.appendChild(el("td",st.name,"name"));
+    tr.appendChild(el("td",st.claim,"claim"));
+    const s=el("td","","stamp"); s.appendChild(badge(st.signal)); tr.appendChild(s);
+    const t=el("td","","stamp"); t.appendChild(badge(st.tradability)); tr.appendChild(t);
+    tb.appendChild(tr);
+  });
+}
+
+function cmp(a,b){
+  const k=state.sort; let av=a[k], bv=b[k];
+  if(k==="num"){return (av-bv)*state.dir;}
+  if(k==="signal"||k==="tradability"){av=SEV[av===undefined?"":av]??9; bv=SEV[b[k]]??9; return (av-bv)*state.dir || (a.num-b.num);}
+  return String(av).localeCompare(String(bv))*state.dir;
+}
+
+/* ---- grouped card view (family / verdict) ---- */
+function stats(items){
+  return {
+    real: items.filter(s=>bucketSig(s.signal)==="Real").length,
+    trad: items.filter(s=>s.tradability!=="Mirage").length,
+    inv:  items.filter(s=>s.tradability==="Investable").length,
+  };
+}
+function cellRgb(s){const [r,g,b]=cellColor(bucketSig(s.signal),s.tradability); return `rgb(${r},${g},${b})`;}
+
+function groupData(rows){
+  if(state.group==="verdict"){
+    const groups=[];
+    DATA.signals.forEach(sig=>DATA.tradabilities.forEach(trad=>{
+      const items=rows.filter(s=>bucketSig(s.signal)===sig && s.tradability===trad)
+                      .sort((a,b)=>a.num-b.num);
+      if(items.length) groups.push({key:`${sig}x${trad}`, label:`${sig} × ${trad}`, items});
+    }));
+    return groups;  // nested loops already order by severity
+  }
+  const by={};
+  rows.forEach(s=>{(by[s.family]=by[s.family]||[]).push(s);});
+  return Object.keys(by)
+    .map(f=>({key:f, label:f, items:by[f].sort((a,b)=>a.num-b.num)}))
+    .sort((a,b)=> stats(b.items).inv-stats(a.items).inv
+               || stats(b.items).real-stats(a.items).real
+               || b.items.length-a.items.length);
+}
+
+function card(st){
+  const a=document.createElement("a");
+  a.className="card"; a.href=treeUrl(st.href); a.target="_blank"; a.rel="noopener";
+  a.style.borderLeftColor=PALETTE[st.tradability]||"#8b949e";
+  a.title=`Signal: ${st.signal} · Tradability: ${st.tradability}`;
+  const top=el("div","","top");
+  const n=el("div",String(st.num).padStart(2,"0"),"num");
+  n.style.background=PALETTE[bucketSig(st.signal)]||"#8b949e";
+  top.appendChild(n); top.appendChild(el("div",st.name,"nm"));
+  a.appendChild(top);
+  a.appendChild(el("p",st.claim,"cl"));
+  const s=el("div","","stamps"); s.appendChild(badge(st.signal)); s.appendChild(badge(st.tradability));
+  a.appendChild(s);
+  return a;
+}
+
+function stat(txt,cls){return el("span",txt,"stat "+cls);}
+
+function buildLedger(){
+  const wrap=document.getElementById("ledger");
+  const rows=DATA.studies.filter(matches);
+  wrap.innerHTML="";
+  if(!rows.length){
+    wrap.innerHTML="<p style='color:var(--sub);padding:30px;text-align:center'>No study matches these filters.</p>";
+    return;
+  }
+  groupData(rows).forEach(g=>{
+    const open=!collapsed.has(g.key);
+    const sec=el("section","","grp"); sec.dataset.open=open;
+    const st=stats(g.items);
+    const head=document.createElement("button"); head.className="grphead"; head.type="button";
+    head.style.borderLeftColor = state.group==="verdict" ? cellRgb(g.items[0]) : "#c9cccf";
+    head.innerHTML=`<span class="caret">▾</span><span class="gname"></span><span class="gcount"></span>`;
+    head.querySelector(".gname").textContent=g.label;
+    head.querySelector(".gcount").textContent=`${g.items.length} ${g.items.length>1?"studies":"study"}`;
+    const gs=el("div","","gstats");
+    gs.appendChild(stat(`${st.real} real`,"s-real"));
+    gs.appendChild(stat(`${st.trad} survive costs`,"s-trad"));
+    if(st.inv) gs.appendChild(stat(`${st.inv} investable`,"s-inv"));
+    head.appendChild(gs);
+    head.onclick=()=>{ collapsed.has(g.key)?collapsed.delete(g.key):collapsed.add(g.key); buildLedger(); };
+    sec.appendChild(head);
+    const cards=el("div","","cards");
+    g.items.forEach(s=>cards.appendChild(card(s)));
+    sec.appendChild(cards);
+    wrap.appendChild(sec);
+  });
+}
+
+function apply(){
+  // dim non-matching chips in the map
+  document.querySelectorAll(".chip").forEach(c=>{
+    const st=DATA.studies.find(s=>s.num==c.dataset.num);
+    const ok=matches(st); c.classList.toggle("dim",!ok);
+    c.classList.toggle("hit", ok && state.q.length>0);
+  });
+  const flat=state.group==="flat";
+  document.getElementById("flattable").hidden=!flat;
+  document.getElementById("ledger").hidden=flat;
+  document.getElementById("ledgerhint").textContent = flat
+    ? "click a column to sort · click a row to open"
+    : "click a group header to fold/unfold · click a card to open";
+  if(flat){ buildTable(); updateSortArrows(); } else { buildLedger(); }
+  const shown=DATA.studies.filter(matches).length;
+  document.getElementById("count").innerHTML=`<b>${shown}</b> / ${DATA.studies.length} shown`;
+}
+
+function syncPills(){
+  document.querySelectorAll(".pill").forEach(p=>{
+    const set=state[p.dataset.k]; p.setAttribute("aria-pressed", set.has(p.dataset.v));
+  });
+}
+function updateSortArrows(){
+  document.querySelectorAll("thead th").forEach(th=>{
+    const a=th.querySelector(".arr");
+    a.textContent = th.dataset.sort===state.sort ? (state.dir>0?" ▲":" ▼") : "";
+  });
+}
+
+function wire(){
+  document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value.trim();apply();});
+  document.querySelectorAll(".pill").forEach(p=>p.addEventListener("click",()=>{
+    const set=state[p.dataset.k];
+    set.has(p.dataset.v)?set.delete(p.dataset.v):set.add(p.dataset.v);
+    syncPills(); apply();
+  }));
+  document.querySelectorAll("thead th").forEach(th=>th.addEventListener("click",()=>{
+    const k=th.dataset.sort;
+    if(state.sort===k) state.dir*=-1; else {state.sort=k; state.dir=1;}
+    apply();
+  }));
+  document.querySelectorAll(".seg").forEach(s=>s.addEventListener("click",()=>{
+    state.group=s.dataset.g;
+    document.querySelectorAll(".seg").forEach(b=>b.setAttribute("aria-pressed", b.dataset.g===state.group));
+    apply();
+  }));
+  document.getElementById("reset").addEventListener("click",()=>{
+    state.q=""; state.signal.clear(); state.tradability.clear();
+    state.sort="num"; state.dir=1; collapsed.clear();
+    document.getElementById("q").value="";
+    syncPills(); apply();
+  });
+}
+
+fetch("bench.json").then(r=>r.json()).then(d=>{
+  DATA=d; REPO=d.repo;
+  document.title=`Open-Alpha-Lab — ${d.total} trading ideas, one protocol`;
+  document.getElementById("title").textContent=`${d.total} famous trading ideas, one protocol`;
+  document.getElementById("repolink").href=d.repo;
+  const sp=(d.special||[]).map(s=>`${String(s.num).padStart(2,"0")} ${s.name} (${s.signal}/${s.tradability})`).join(", ");
+  document.getElementById("footer").innerHTML =
+    (sp?`Not on the grid: ${sp}. · `:"") +
+    "Study 03's “Mixed” signal counts with Weak (same amber bucket). · " +
+    "Generated from the README table by <code>tools/make_bench_figures.py</code> — always in sync.";
+  buildGrid(); wire(); apply();
+}).catch(e=>{
+  document.getElementById("grid").innerHTML =
+    "<p style='color:#c0392b'>Could not load <code>bench.json</code>. "+
+    "Run <code>python tools/make_bench_figures.py</code> and serve this folder over HTTP.</p>";
+});
+</script>
+</body>
+</html>
