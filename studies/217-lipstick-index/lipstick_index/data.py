@@ -133,7 +133,11 @@ def synthetic_monthly(
     base_m = base_return_ann / 12.0
     vol_m = vol_ann / np.sqrt(12)
 
-    months = pd.date_range("2000-01-01", periods=n_months, freq="MS")
+    # PeriodIndex (not date_range): the label is decorative, and a large n_months
+    # (e.g. the 5000-month null tape) would push a Timestamp index past pandas'
+    # ~2262 nanosecond bound and raise OutOfBoundsDatetime on CI. Periods have no
+    # such bound, and the docstring already calls this column a period.
+    months = pd.period_range("2000-01", periods=n_months, freq="M")
     in_rec = rng.random(n_months) < recession_fraction
 
     spy_rets = rng.normal(base_m, vol_m, n_months)
