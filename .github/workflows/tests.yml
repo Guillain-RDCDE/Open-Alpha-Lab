@@ -666,6 +666,129 @@ jobs:
       - name: Study 210 — Crypto-Trend test-suite
         run: pytest -q studies/210-crypto-trend/tests
 
+      - name: Study 211 — Sin-Stocks test-suite
+        run: pytest -q studies/211-sin-stocks/tests
+
+      - name: Study 212 — Cannabis Stocks test-suite
+        run: pytest -q studies/212-cannabis-stocks/tests
+
+      - name: Study 213 — Meme Stocks test-suite
+        run: pytest -q studies/213-meme-stocks/tests
+
+      - name: Study 214 — Magazine-Cover-Curse test-suite
+        run: pytest -q studies/214-magazine-cover-curse/tests
+
+      - name: Study 215 — Big-Mac-PPP test-suite
+        run: pytest -q studies/215-big-mac-ppp/tests
+
+      - name: Study 216 — Hemline-Index test-suite
+        run: pytest -q studies/216-hemline-index/tests
+
+      - name: Study 217 — Lipstick Index test-suite
+        run: pytest -q studies/217-lipstick-index/tests
+
+      - name: Study 218 — SPAC-Performance test-suite
+        run: pytest -q studies/218-spac-performance/tests
+
+      - name: Study 219 — IPO-Pop test-suite
+        run: pytest -q studies/219-ipo-pop/tests
+
+      - name: Study 220 — Small Dogs of the Dow test-suite
+        run: pytest -q studies/220-small-dogs/tests
+
+      - name: Study 221 — Mayer-Multiple test-suite
+        run: pytest -q studies/221-mayer-multiple/tests
+
+      - name: Study 222 — - Altseason-Rotation test-suite
+        run: pytest -q studies/222-altseason-rotation/tests
+
+      - name: Study 223 — - Same-Month Seasonality test-suite
+        run: pytest -q studies/223-same-month-seasonality/tests
+
+      - name: Study 224 — - Monday Effect test-suite
+        run: pytest -q studies/224-monday-effect/tests
+
+      - name: Study 225 — Sector-Rotation test-suite
+        run: pytest -q studies/225-sector-rotation/tests
+
+      - name: Study 226 — Crude-Seasonality test-suite
+        run: pytest -q studies/226-crude-seasonality/tests
+
+      - name: Study 227 — Natgas-Winter test-suite
+        run: pytest -q studies/227-natgas-winter/tests
+
+      - name: Study 228 — Pre-Earnings Runup test-suite
+        run: pytest -q studies/228-pre-earnings-runup/tests
+
+      - name: Study 229 — Beneish M-score test-suite
+        run: pytest -q studies/229-beneish-m-score/tests
+
+      - name: Study 230 — Ohlson O-score test-suite
+        run: pytest -q studies/230-ohlson-o-score/tests
+
+      - name: Study 231 — Sloan Accruals test-suite
+        run: pytest -q studies/231-sloan-accruals/tests
+
+      - name: Study 232 — - Mohanram G-score test-suite
+        run: pytest -q studies/232-mohanram-g-score/tests
+
+      - name: Study 233 — Shareholder-Yield test-suite
+        run: pytest -q studies/233-shareholder-yield/tests
+
+      - name: Study 234 — Olympic-Year test-suite
+        run: pytest -q studies/234-olympic-year/tests
+
+      - name: Study 235 — World-Cup-Effect test-suite
+        run: pytest -q studies/235-world-cup-effect/tests
+
+      - name: Study 236 — Fifty-Two-Week-High test-suite
+        run: pytest -q studies/236-fifty-two-week-high/tests
+
+      - name: Study 237 — - Residual-Momentum test-suite
+        run: pytest -q studies/237-residual-momentum/tests
+
+      - name: Study 238 — - Betting-Against-Beta test-suite
+        run: pytest -q studies/238-betting-against-beta/tests
+
+      - name: Study 239 — Spinoffs test-suite
+        run: pytest -q studies/239-spinoffs/tests
+
+      - name: Study 240 — Dividend-Initiation test-suite
+        run: pytest -q studies/240-dividend-initiation/tests
+
+      - name: Study 241 — Buy-the-Dip test-suite
+        run: pytest -q studies/241-buy-the-dip/tests
+
+      - name: Study 242 — - Quality-Minus-Junk test-suite
+        run: pytest -q studies/242-quality-minus-junk/tests
+
+      - name: Study 243 — Graham NCAV test-suite
+        run: pytest -q studies/243-graham-ncav/tests
+
+      - name: Study 244 — Asset-Growth test-suite
+        run: pytest -q studies/244-asset-growth/tests
+
+      - name: Study 245 — Oil-Equity Correlation test-suite
+        run: pytest -q studies/245-oil-equity-correlation/tests
+
+      - name: Study 246 — Defensive-Sectors Leadership test-suite
+        run: pytest -q studies/246-defensive-sectors/tests
+
+      - name: Study 247 — Bond-Seasonality test-suite
+        run: pytest -q studies/247-bond-seasonality/tests
+
+      - name: Study 248 — Presidential-Honeymoon test-suite
+        run: pytest -q studies/248-presidential-honeymoon/tests
+
+      - name: Study 249 — Index-Inclusion test-suite
+        run: pytest -q studies/249-index-inclusion/tests
+
+      - name: Study 250 — Reverse-Split test-suite
+        run: pytest -q studies/250-reverse-split/tests
+
+      - name: Study 251 — Crypto-Reversal test-suite
+        run: pytest -q studies/251-crypto-reversal/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

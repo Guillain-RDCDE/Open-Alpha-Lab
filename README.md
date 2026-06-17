@@ -42,14 +42,35 @@ style is written up in **[METHODOLOGY.md](METHODOLOGY.md)**.
 The whole bench on one grid — every study is a numbered chip, sorted by its two stamps.
 Almost everything ends up bottom-right; two chips are green — and neither one predicts returns.
 
-![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)
+[![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)](https://guillain-rdcde.github.io/Open-Alpha-Lab/)
+
+> **▶ [Explore the live map](https://guillain-rdcde.github.io/Open-Alpha-Lab/)** — the same grid, but zoomable:
+> **click any chip to open its study**, search by name or claim, and filter the whole bench by verdict.
+> (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 210 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 251 teardowns taught us](docs/bench.md)**.
 
 ---
 
 ## The studies
+
+**[▶ Browse all studies interactively](https://guillain-rdcde.github.io/Open-Alpha-Lab/)** — search by name or claim,
+filter by verdict, sort any column, click straight through to the teardown. The full table below is the
+single source of truth (it's what the map and the live page are built from) — it's long, so it's folded.
+
+**Start here — the bench's only greens** (real signal *and* tradable; tellingly, none forecasts returns):
+
+| # | Study | Why it's green |
+|:--:|---|---|
+| **[16](studies/16-storm-shy/)** | **Storm-Shy** | Scales exposure *down* in turbulence — risk management, not a return forecast. |
+| **[68](studies/68-all-weather/)** | **All-Weather** | Risk parity — diversification, not a signal. |
+| **[97](studies/97-balancing-act/)** | **Balancing-Act** | Plain 60/40 rebalancing. |
+
+<details>
+<summary><b>The full ledger — every study, two stamps each</b> &nbsp;·&nbsp; click to expand</summary>
+
+<br>
 
 | # | Study | The claim — tested to destruction | Real? | Tradable? |
 |:--:|---|---|:--:|:--:|
@@ -263,6 +284,49 @@ teaching are in **[What 210 teardowns taught us](docs/bench.md)**.
 | **[208](studies/208-gold-miners/)** | **Gold-Miners** | Are gold miners really leveraged gold? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[209](studies/209-eth-btc-ratio/)** | **ETH-BTC-Ratio** | Can you ride the ETH/BTC rotation? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
 | **[210](studies/210-crypto-trend/)** | **Crypto-Trend** | Does a 200-day timing rule tame Bitcoin's crashes? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[211](studies/211-sin-stocks/)** | **Sin-Stocks** | Do vice stocks really beat the virtuous market? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[212](studies/212-cannabis-stocks/)** | **Cannabis Stocks** | Did the green rush ever pay, or only shred wealth? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[213](studies/213-meme-stocks/)** | **Meme Stocks** | Could you ride the meme mania, or only be its exit liquidity? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[214](studies/214-magazine-cover-curse/)** | **Magazine-Cover-Curse** | When a magazine calls the top, is the move already over? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[215](studies/215-big-mac-ppp/)** | **Big-Mac-PPP** | Does the Big Mac index predict which currencies revert? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[216](studies/216-hemline-index/)** | **Hemline-Index** | Do rising skirts really ring the market bell? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[217](studies/217-lipstick-index/)** | **Lipstick Index** | Does lipstick spending warn of a coming recession? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[218](studies/218-spac-performance/)** | **SPAC-Performance** | Were SPACs a shortcut to public markets or a rigged loss? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[219](studies/219-ipo-pop/)** | **IPO-Pop** | Chase the IPO pop, or does the hangover always win? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[220](studies/220-small-dogs/)** | **Small Dogs of the Dow** | Do the five cheapest Dogs beat the full ten? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[221](studies/221-mayer-multiple/)** | **Mayer-Multiple** | Does the Mayer Multiple tell you when Bitcoin is cheap? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[222](studies/222-altseason-rotation/)** | **Altseason-Rotation** | Can BTC dominance time the rotation into altcoins? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[223](studies/223-same-month-seasonality/)** | **Same-Month Seasonality** | Does a stock keep winning in the same month it always has? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[224](studies/224-monday-effect/)** | **Monday Effect** | Is Monday still the market's worst day? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[225](studies/225-sector-rotation/)** | **Sector-Rotation** | Can you rotate into the right sector for each cycle phase? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[226](studies/226-crude-seasonality/)** | **Crude-Seasonality** | Does crude really rally into summer driving season? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[227](studies/227-natgas-winter/)** | **Natgas-Winter** | Is the winter gas spike tradable, or a widow-maker? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[228](studies/228-pre-earnings-runup/)** | **Pre-Earnings Runup** | Do stocks drift up in the days before earnings? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[229](studies/229-beneish-m-score/)** | **Beneish M-score** | Can the Beneish M-score sniff out earnings manipulators? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[230](studies/230-ohlson-o-score/)** | **Ohlson O-score** | Does the Ohlson O-score price distress any better? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[231](studies/231-sloan-accruals/)** | **Sloan Accruals** | Do high-accrual firms underperform the cash earners? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[232](studies/232-mohanram-g-score/)** | **Mohanram G-score** | Can the Mohanram G-score find growth that delivers? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[233](studies/233-shareholder-yield/)** | **Shareholder-Yield** | Is total shareholder yield the dividend factor done right? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[234](studies/234-olympic-year/)** | **Olympic-Year** | Do stocks win gold in Olympic years? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[235](studies/235-world-cup-effect/)** | **World-Cup-Effect** | Does the World Cup summer really sink the market? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[236](studies/236-fifty-two-week-high/)** | **Fifty-Two-Week-High** | Is nearness to the 52-week high a better momentum signal? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[237](studies/237-residual-momentum/)** | **Residual-Momentum** | Does residual-return momentum dodge the crashes? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[238](studies/238-betting-against-beta/)** | **Betting-Against-Beta** | Does leveraging low-beta and shorting high-beta print money? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[239](studies/239-spinoffs/)** | **Spinoffs** | Do corporate spin-offs really outrun the market? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[240](studies/240-dividend-initiation/)** | **Dividend-Initiation** | Do first-time dividend payers signal a re-rating? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[241](studies/241-buy-the-dip/)** | **Buy-the-Dip** | Does buying the dip beat just staying invested? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[242](studies/242-quality-minus-junk/)** | **Quality-Minus-Junk** | Does Quality-minus-Junk survive outside the backtest? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[243](studies/243-graham-ncav/)** | **Graham NCAV** | Do Graham net-nets still exist and still pay? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[244](studies/244-asset-growth/)** | **Asset-Growth** | Do fast-growing-asset firms underperform the disciplined ones? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[245](studies/245-oil-equity-correlation/)** | **Oil-Equity Correlation** | Does the oil price lead the stock market, or just move with it? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[246](studies/246-defensive-sectors/)** | **Defensive-Sectors Leadership** | Do staples and utilities leading warn of risk-off? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[247](studies/247-bond-seasonality/)** | **Bond-Seasonality** | Do Treasuries have their own calendar? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[248](studies/248-presidential-honeymoon/)** | **Presidential-Honeymoon** | Does the market enjoy a new president's first 100 days? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[249](studies/249-index-inclusion/)** | **Index-Inclusion** | Is there still a free pop when a stock joins the S&P 500? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[250](studies/250-reverse-split/)** | **Reverse-Split** | Is a reverse split the kiss of death it's reputed to be? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[251](studies/251-crypto-reversal/)** | **Crypto-Reversal** | Is the crypto reversal premium real, or just momentum? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+
+</details>
 
 > **Click any study** for the full teardown — two narrative notebooks (one for the curious,
 > one for the quant), reproducible code, and every number behind the two stamps.
