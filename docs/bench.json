@@ -1,5 +1,5 @@
 {
- "total": 252,
+ "total": 301,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -14,18 +14,18 @@
  "counts": {
   "Real": {
    "Investable": 3,
-   "Fragile": 21,
-   "Mirage": 10
+   "Fragile": 22,
+   "Mirage": 11
   },
   "Weak": {
    "Investable": 0,
    "Fragile": 37,
-   "Mirage": 66
+   "Mirage": 81
   },
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 111
+   "Mirage": 143
   }
  },
  "studies": [
@@ -2287,6 +2287,447 @@
    "tradability": "Mirage",
    "href": "studies/251-crypto-reversal/",
    "family": "Mean reversion & stat-arb"
+  },
+  {
+   "num": 252,
+   "name": "Search-Trends",
+   "claim": "Do spikes in Google searches for stock names front-run their returns?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/252-google-trends/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 253,
+   "name": "Wiki-Views",
+   "claim": "Do surging Wikipedia page-views on tickers predict the next move?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/253-wikipedia-views/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 254,
+   "name": "WSB-Mentions",
+   "claim": "Does the r/WallStreetBets mention count call the meme move?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/254-wsb-mentions/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 255,
+   "name": "Fear-Greed",
+   "claim": "Can CNN's Fear & Greed Index time the market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/255-fear-greed-index/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 256,
+   "name": "Twitter-Mood",
+   "claim": "Does aggregate Twitter mood predict tomorrow's market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/256-twitter-mood/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 257,
+   "name": "AAII-Sentiment",
+   "claim": "Is the AAII bull-bear survey a contrarian timing tool?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/257-aaii-sentiment/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 258,
+   "name": "Baker-Wurgler",
+   "claim": "Does the Baker-Wurgler sentiment index forecast returns?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/258-baker-wurgler/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 259,
+   "name": "News-Tone",
+   "claim": "Does aggregate news tone move the next day's tape?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/259-news-tone/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 260,
+   "name": "Margin-Debt",
+   "claim": "Is record NYSE margin debt a contrarian sell signal?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/260-margin-debt/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 261,
+   "name": "Put-Call-Ratio",
+   "claim": "Does the CBOE put/call ratio time market bottoms?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/261-put-call-ratio/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 262,
+   "name": "Short-Interest",
+   "claim": "Do heavily shorted stocks bounce or bleed?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/262-short-interest/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 263,
+   "name": "Insider-Buying",
+   "claim": "Does aggregate insider buying (Form 4) forecast returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/263-insider-buying/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 264,
+   "name": "Buffett-Indicator",
+   "claim": "Does market-cap-to-GDP tell you when to leave the party?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/264-buffett-indicator/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 265,
+   "name": "IPO-Volume",
+   "claim": "Is a flood of IPOs the bell at the top?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/265-ipo-volume/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 266,
+   "name": "Misery-Index",
+   "claim": "Does the misery index (inflation+unemployment) call equity returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/266-misery-index/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 267,
+   "name": "M2-Growth",
+   "claim": "Does money-supply (M2) growth drive the stock market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/267-m2-growth/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 268,
+   "name": "Sahm-Rule",
+   "claim": "Is the Sahm recession trigger a usable sell button?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/268-sahm-rule/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 269,
+   "name": "Baltic-Dry",
+   "claim": "Does the Baltic Dry shipping index lead the stock market?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/269-baltic-dry/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 270,
+   "name": "Underwear-Index",
+   "claim": "Does men's-underwear sales (Greenspan) signal the economy?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/270-underwear-index/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 271,
+   "name": "Cardboard-Box",
+   "claim": "Does cardboard-box / rail-freight output forecast the cycle?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/271-cardboard-box/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 272,
+   "name": "Champagne-Index",
+   "claim": "Does champagne consumption mark the top?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/272-champagne-index/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 273,
+   "name": "Lego-Returns",
+   "claim": "Do retired Lego sets beat the stock market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/273-lego-returns/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 274,
+   "name": "Fine-Wine",
+   "claim": "Does fine wine (Liv-ex 100) diversify or just lag?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/274-fine-wine/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 275,
+   "name": "Whisky-Cask",
+   "claim": "Are whisky casks the alternative asset they're sold as?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/275-whisky-cask/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 276,
+   "name": "Sneaker-Resale",
+   "claim": "Does the sneaker resale market (StockX) beat stocks?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/276-sneaker-resale/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 277,
+   "name": "Trading-Cards",
+   "claim": "Are Pokemon/sports cards an investable asset class?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/277-trading-cards/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 278,
+   "name": "Sunshine-Effect",
+   "claim": "Does NYC sunshine lift the NYSE?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/278-sunshine-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 279,
+   "name": "Geomagnetic-Storms",
+   "claim": "Do geomagnetic storms depress returns?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/279-geomagnetic-storms/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 280,
+   "name": "Solar-Eclipse",
+   "claim": "Do solar eclipses spook the market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/280-solar-eclipse/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 281,
+   "name": "El-Nino",
+   "claim": "Does El Nino / La Nina move equities or commodities?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/281-el-nino/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 282,
+   "name": "NYC-Temperature",
+   "claim": "Does the temperature on Wall Street move the tape?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/282-nyc-temperature/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 283,
+   "name": "Hurricane-Season",
+   "claim": "Does Atlantic hurricane season sink stocks?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/283-hurricane-season/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 284,
+   "name": "Equinox-Effect",
+   "claim": "Do equinoxes and solstices mark turning points?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/284-equinox-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 285,
+   "name": "St-Patricks-Day",
+   "claim": "Is there a St. Patrick's Day bump?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/285-st-patricks-day/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 286,
+   "name": "Valentines-Day",
+   "claim": "Does the market love Valentine's Day?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/286-valentines-day/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 287,
+   "name": "Easter-Effect",
+   "claim": "Is there a Good-Friday / Easter seasonal?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/287-easter-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 288,
+   "name": "Ramadan-Effect",
+   "claim": "Does Ramadan lift MENA (or global) equities?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/288-ramadan-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 289,
+   "name": "Diwali-Muhurat",
+   "claim": "Does Diwali Muhurat trading really pay in India?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/289-diwali-muhurat/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 290,
+   "name": "September-Effect",
+   "claim": "Is September really the market's worst month?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/290-september-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 291,
+   "name": "Doge-Tweets",
+   "claim": "Did Elon's tweets really move Dogecoin?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/291-doge-tweets/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 292,
+   "name": "Bitcoin-Hashrate",
+   "claim": "Does Bitcoin's hash rate predict its price?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/292-bitcoin-hashrate/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 293,
+   "name": "MVRV-Ratio",
+   "claim": "Does on-chain MVRV time Bitcoin tops and bottoms?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/293-mvrv-ratio/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 294,
+   "name": "Coinbase-Rank",
+   "claim": "Is the Coinbase App-Store rank a top signal?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/294-coinbase-rank/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 295,
+   "name": "Stablecoin-Supply",
+   "claim": "Does stablecoin supply growth fuel the next leg?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/295-stablecoin-supply/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 296,
+   "name": "Oscars-Effect",
+   "claim": "Does the market care who wins Best Picture?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/296-oscars-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 297,
+   "name": "March-Madness",
+   "claim": "Does March Madness distract the market lower?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/297-march-madness/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 298,
+   "name": "Swiftonomics",
+   "claim": "Did the Eras Tour move Live Nation (LYV) or the tape?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/298-swiftonomics/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 299,
+   "name": "Keynote-Drift",
+   "claim": "Buy the rumor, sell the Apple keynote?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/299-keynote-drift/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 300,
+   "name": "Sports-Sentiment",
+   "claim": "Does a national-team loss sink the market next day?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/300-sports-sentiment/",
+   "family": "Calendar & seasonal"
   },
   {
    "num": 301,

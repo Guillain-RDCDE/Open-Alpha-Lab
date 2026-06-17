@@ -789,6 +789,153 @@ jobs:
       - name: Study 251 — Crypto-Reversal test-suite
         run: pytest -q studies/251-crypto-reversal/tests
 
+      - name: Study 252 — Search-Trends test-suite
+        run: pytest -q studies/252-google-trends/tests
+
+      - name: Study 253 — Wiki-Views test-suite
+        run: pytest -q studies/253-wikipedia-views/tests
+
+      - name: Study 254 — WSB-Mentions test-suite
+        run: pytest -q studies/254-wsb-mentions/tests
+
+      - name: Study 255 — Fear-Greed test-suite
+        run: pytest -q studies/255-fear-greed-index/tests
+
+      - name: Study 256 — Twitter-Mood test-suite
+        run: pytest -q studies/256-twitter-mood/tests
+
+      - name: Study 257 — AAII-Sentiment test-suite
+        run: pytest -q studies/257-aaii-sentiment/tests
+
+      - name: Study 258 — Baker-Wurgler test-suite
+        run: pytest -q studies/258-baker-wurgler/tests
+
+      - name: Study 259 — News-Tone test-suite
+        run: pytest -q studies/259-news-tone/tests
+
+      - name: Study 260 — Margin-Debt test-suite
+        run: pytest -q studies/260-margin-debt/tests
+
+      - name: Study 261 — Put-Call-Ratio test-suite
+        run: pytest -q studies/261-put-call-ratio/tests
+
+      - name: Study 262 — Short-Interest test-suite
+        run: pytest -q studies/262-short-interest/tests
+
+      - name: Study 263 — Insider-Buying test-suite
+        run: pytest -q studies/263-insider-buying/tests
+
+      - name: Study 264 — Buffett-Indicator test-suite
+        run: pytest -q studies/264-buffett-indicator/tests
+
+      - name: Study 265 — IPO-Volume test-suite
+        run: pytest -q studies/265-ipo-volume/tests
+
+      - name: Study 266 — Misery-Index test-suite
+        run: pytest -q studies/266-misery-index/tests
+
+      - name: Study 267 — M2-Growth test-suite
+        run: pytest -q studies/267-m2-growth/tests
+
+      - name: Study 268 — Sahm-Rule test-suite
+        run: pytest -q studies/268-sahm-rule/tests
+
+      - name: Study 269 — Baltic-Dry test-suite
+        run: pytest -q studies/269-baltic-dry/tests
+
+      - name: Study 270 — Underwear-Index test-suite
+        run: pytest -q studies/270-underwear-index/tests
+
+      - name: Study 271 — Cardboard-Box test-suite
+        run: pytest -q studies/271-cardboard-box/tests
+
+      - name: Study 272 — Champagne-Index test-suite
+        run: pytest -q studies/272-champagne-index/tests
+
+      - name: Study 273 — Lego-Returns test-suite
+        run: pytest -q studies/273-lego-returns/tests
+
+      - name: Study 274 — Fine-Wine test-suite
+        run: pytest -q studies/274-fine-wine/tests
+
+      - name: Study 275 — Whisky-Cask test-suite
+        run: pytest -q studies/275-whisky-cask/tests
+
+      - name: Study 276 — Sneaker-Resale test-suite
+        run: pytest -q studies/276-sneaker-resale/tests
+
+      - name: Study 277 — Trading-Cards test-suite
+        run: pytest -q studies/277-trading-cards/tests
+
+      - name: Study 278 — Sunshine-Effect test-suite
+        run: pytest -q studies/278-sunshine-effect/tests
+
+      - name: Study 279 — Geomagnetic-Storms test-suite
+        run: pytest -q studies/279-geomagnetic-storms/tests
+
+      - name: Study 280 — Solar-Eclipse test-suite
+        run: pytest -q studies/280-solar-eclipse/tests
+
+      - name: Study 281 — El-Nino test-suite
+        run: pytest -q studies/281-el-nino/tests
+
+      - name: Study 282 — NYC-Temperature test-suite
+        run: pytest -q studies/282-nyc-temperature/tests
+
+      - name: Study 283 — Hurricane-Season test-suite
+        run: pytest -q studies/283-hurricane-season/tests
+
+      - name: Study 284 — Equinox-Effect test-suite
+        run: pytest -q studies/284-equinox-effect/tests
+
+      - name: Study 285 — St-Patricks-Day test-suite
+        run: pytest -q studies/285-st-patricks-day/tests
+
+      - name: Study 286 — Valentines-Day test-suite
+        run: pytest -q studies/286-valentines-day/tests
+
+      - name: Study 287 — Easter-Effect test-suite
+        run: pytest -q studies/287-easter-effect/tests
+
+      - name: Study 288 — Ramadan-Effect test-suite
+        run: pytest -q studies/288-ramadan-effect/tests
+
+      - name: Study 289 — Diwali-Muhurat test-suite
+        run: pytest -q studies/289-diwali-muhurat/tests
+
+      - name: Study 290 — September-Effect test-suite
+        run: pytest -q studies/290-september-effect/tests
+
+      - name: Study 291 — Doge-Tweets test-suite
+        run: pytest -q studies/291-doge-tweets/tests
+
+      - name: Study 292 — Bitcoin-Hashrate test-suite
+        run: pytest -q studies/292-bitcoin-hashrate/tests
+
+      - name: Study 293 — MVRV-Ratio test-suite
+        run: pytest -q studies/293-mvrv-ratio/tests
+
+      - name: Study 294 — Coinbase-Rank test-suite
+        run: pytest -q studies/294-coinbase-rank/tests
+
+      - name: Study 295 — Stablecoin-Supply test-suite
+        run: pytest -q studies/295-stablecoin-supply/tests
+
+      - name: Study 296 — Oscars-Effect test-suite
+        run: pytest -q studies/296-oscars-effect/tests
+
+      - name: Study 297 — March-Madness test-suite
+        run: pytest -q studies/297-march-madness/tests
+
+      - name: Study 298 — Swiftonomics test-suite
+        run: pytest -q studies/298-swiftonomics/tests
+
+      - name: Study 299 — Keynote-Drift test-suite
+        run: pytest -q studies/299-keynote-drift/tests
+
+      - name: Study 300 — Sports-Sentiment test-suite
+        run: pytest -q studies/300-sports-sentiment/tests
+
       - name: Study 301 — Triple-RSI test-suite
         run: pytest -q studies/301-triple-rsi/tests
 
