@@ -49,7 +49,7 @@ Almost everything ends up bottom-right; three chips are green — and none of th
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 251 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 252 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -325,6 +325,7 @@ single source of truth (it's what the map and the live page are built from) — 
 | **[249](studies/249-index-inclusion/)** | **Index-Inclusion** | Is there still a free pop when a stock joins the S&P 500? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[250](studies/250-reverse-split/)** | **Reverse-Split** | Is a reverse split the kiss of death it's reputed to be? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[251](studies/251-crypto-reversal/)** | **Crypto-Reversal** | Is the crypto reversal premium real, or just momentum? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[301](studies/301-triple-rsi/)** | **Triple-RSI** | A viral "90% win rate" RSI(5) bounce — real edge, or the oldest illusion in the book? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
 
 </details>
 

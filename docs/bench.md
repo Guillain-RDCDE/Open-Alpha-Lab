@@ -1,12 +1,12 @@
-# What 251 teardowns taught us
+# What 252 teardowns taught us
 
-*Two hundred and fifty-one famous trading ideas — anomalies, folk strategies, vendor backtests, things
+*Two hundred and fifty-two famous trading ideas — anomalies, folk strategies, vendor backtests, things
 people swear by — each put through the [same protocol](../METHODOLOGY.md) and
 stamped twice: **is the signal real?** and **does it survive real execution and
 scale?** This page is the view from above. It aggregates; it doesn't re-judge —
 every verdict below links back to the study that earned it.*
 
-![The bench map — 251 studies on a Signal × Tradability grid](bench_map.png)
+![The bench map — 252 studies on a Signal × Tradability grid](bench_map.png)
 
 *(Regenerate with `python tools/make_bench_figures.py` — it parses the
 [README table](../README.md), so it's always in sync.)*
@@ -15,24 +15,24 @@ every verdict below links back to the study that earned it.*
 
 ## The score
 
-Of the 251 studies on the bench, 250 carry final stamps (study
+Of the 252 studies on the bench, 251 carry final stamps (study
 [14](../studies/14-gamma-gospel/) is pre-registered, verdict pending):
 
 | | Investable | Fragile | Mirage | |
 |---|:--:|:--:|:--:|:--:|
-| **Real** | **3** | 20 | 10 | 33 |
+| **Real** | **3** | 21 | 10 | 34 |
 | **Weak** | 0 | 37 | 66 | 103 |
 | **None** | 0 | 3 | 111 | 114 |
-| | **3** | **60** | **187** | **250** |
+| | **3** | **61** | **187** | **251** |
 
 Read it the way the colours tell you to:
 
-- **33 / 250 signals are statistically real.** About one famous idea in five
+- **34 / 251 signals are statistically real.** About one famous idea in five
   survives autocorrelation-robust inference. The other four-fifths are weak
   (103) or plain noise (114).
-- **187 / 250 are mirages once you try to trade them.** Costs, capacity,
+- **187 / 251 are mirages once you try to trade them.** Costs, capacity,
   decay, or the discovery that the "edge" was beta all along.
-- **Exactly 3 / 250 are investable.** [Storm-Shy](../studies/16-storm-shy/),
+- **Exactly 3 / 251 are investable.** [Storm-Shy](../studies/16-storm-shy/),
   [All-Weather](../studies/68-all-weather/) and [Balancing-Act](../studies/97-balancing-act/)
   — and tellingly, none is a return predictor. One scales exposure down in
   turbulence, the other two are diversification (risk parity and the plain
@@ -60,7 +60,7 @@ totals below are honest, the taxonomy is approximate.
 |---|:--:|:--:|:--:|:--:|
 | Equity factors & fundamentals — [18](../studies/18-dull-roar/) [34](../studies/34-aftershock/) [38](../studies/38-chorus/) [43](../studies/43-free-lunch/) [44](../studies/44-growth-spurt/) [45](../studies/45-vanishing-act/) [46](../studies/46-bargain-bin/) [50](../studies/50-high-water/) [51](../studies/51-blue-chip/) [52](../studies/52-smoke-screen/) [53](../studies/53-jackpot/) [54](../studies/54-static/) [57](../studies/57-yield-trap/) [58](../studies/58-bunker/) [64](../studies/64-share-shuffle/) [65](../studies/65-scorecard/) [88](../studies/88-dogs-of-the-dow/) [94](../studies/94-level-pegging/) [121](../studies/121-magic-formula/) [122](../studies/122-gross-profitability/) [123](../studies/123-altman-z/) [124](../studies/124-cash-flow-yield/) [153](../studies/153-net-operating-assets/) [154](../studies/154-leverage-anomaly/) [155](../studies/155-asset-turnover/) [177](../studies/177-megacap-concentration/) [198](../studies/198-cash-holdings/) [199](../studies/199-sales-growth/) [200](../studies/200-roe-quality/) [201](../studies/201-dividend-growth/) [206](../studies/206-dividend-aristocrats/) [211](../studies/211-sin-stocks/) [212](../studies/212-cannabis-stocks/) [218](../studies/218-spac-performance/) [219](../studies/219-ipo-pop/) [220](../studies/220-small-dogs/) [228](../studies/228-pre-earnings-runup/) [229](../studies/229-beneish-m-score/) [230](../studies/230-ohlson-o-score/) [231](../studies/231-sloan-accruals/) [232](../studies/232-mohanram-g-score/) [233](../studies/233-shareholder-yield/) [236](../studies/236-fifty-two-week-high/) [238](../studies/238-betting-against-beta/) [239](../studies/239-spinoffs/) [240](../studies/240-dividend-initiation/) [242](../studies/242-quality-minus-junk/) [243](../studies/243-graham-ncav/) [244](../studies/244-asset-growth/) [250](../studies/250-reverse-split/) | 50 | 1 | 10 | 0 |
 | Vol, hedges & allocation — [03](../studies/03-fear-gauge/) [06](../studies/06-clockwork-vol/) [16](../studies/16-storm-shy/) [30](../studies/30-house-edge/) [61](../studies/61-slow-burn/) [62](../studies/62-premium-seller/) [63](../studies/63-free-fall/) [68](../studies/68-all-weather/) [69](../studies/69-safe-haven/) [70](../studies/70-digital-gold/) [83](../studies/83-half-life/) [86](../studies/86-tail-radar/) [92](../studies/92-easy-money/) [97](../studies/97-balancing-act/) [100](../studies/100-melting-ice/) [101](../studies/101-slow-and-steady/) [102](../studies/102-free-rebalance/) [110](../studies/110-faber-timing/) [111](../studies/111-vix-term-structure/) [112](../studies/112-move-index/) [117](../studies/117-pi-cycle-top/) [130](../studies/130-vol-risk-premium/) [131](../studies/131-utilities-canary/) [133](../studies/133-crypto-seasonality/) [134](../studies/134-bitcoin-dominance/) [144](../studies/144-permanent-portfolio/) [145](../studies/145-home-bias/) [156](../studies/156-martingale/) [157](../studies/157-kelly-sizing/) [167](../studies/167-hindenburg-omen/) [168](../studies/168-advance-decline/) [171](../studies/171-naive-1-over-n/) [172](../studies/172-hundred-minus-age/) [173](../studies/173-four-percent-rule/) [174](../studies/174-bitcoin-rainbow/) [175](../studies/175-crypto-weekend/) [203](../studies/203-golden-butterfly/) [204](../studies/204-talmud-portfolio/) [205](../studies/205-three-fund/) [207](../studies/207-reits-diversifier/) [209](../studies/209-eth-btc-ratio/) [210](../studies/210-crypto-trend/) [221](../studies/221-mayer-multiple/) [222](../studies/222-altseason-rotation/) | 44 | 14 | 18 | **3** |
-| Technical & chart patterns — [02](../studies/02-falling-knife/) [07](../studies/07-coiled-spring/) [08](../studies/08-true-strength/) [13](../studies/13-crimson-hour/) [15](../studies/15-sigma-sleight/) [17](../studies/17-glass-ceiling/) [19](../studies/19-rubber-band/) [21](../studies/21-fools-gold/) [22](../studies/22-crystal-ball/) [72](../studies/72-loaded-dice/) [73](../studies/73-first-light/) [74](../studies/74-mind-the-gap/) [75](../studies/75-knee-jerk/) [76](../studies/76-rice-paper/) [77](../studies/77-golden-mean/) [78](../studies/78-crossed-wires/) [87](../studies/87-center-line/) [91](../studies/91-death-cross/) [93](../studies/93-round-numbers/) [98](../studies/98-high-noon/) [99](../studies/99-safety-net/) [104](../studies/104-bollinger-reversion/) [106](../studies/106-supertrend/) [107](../studies/107-stochastic-oscillator/) [108](../studies/108-adx-filter/) [109](../studies/109-obv-divergence/) [116](../studies/116-power-hour/) [125](../studies/125-ichimoku-cloud/) [126](../studies/126-parabolic-sar/) [127](../studies/127-williams-r/) [128](../studies/128-keltner-channel/) [129](../studies/129-heikin-ashi/) [137](../studies/137-mansfield-rs/) [176](../studies/176-hot-hand/) [178](../studies/178-cci/) [179](../studies/179-aroon/) [180](../studies/180-trix/) [181](../studies/181-ultimate-oscillator/) [182](../studies/182-vortex-indicator/) [183](../studies/183-fisher-transform/) [184](../studies/184-williams-fractals/) [185](../studies/185-chande-momentum/) [186](../studies/186-morning-star/) [187](../studies/187-three-soldiers/) [188](../studies/188-head-shoulders/) [189](../studies/189-double-top/) [190](../studies/190-nr7/) [202](../studies/202-fifty-two-week-low/) | 48 | 3 | 10 | 0 |
+| Technical & chart patterns — [02](../studies/02-falling-knife/) [07](../studies/07-coiled-spring/) [08](../studies/08-true-strength/) [13](../studies/13-crimson-hour/) [15](../studies/15-sigma-sleight/) [17](../studies/17-glass-ceiling/) [19](../studies/19-rubber-band/) [21](../studies/21-fools-gold/) [22](../studies/22-crystal-ball/) [72](../studies/72-loaded-dice/) [73](../studies/73-first-light/) [74](../studies/74-mind-the-gap/) [75](../studies/75-knee-jerk/) [76](../studies/76-rice-paper/) [77](../studies/77-golden-mean/) [78](../studies/78-crossed-wires/) [87](../studies/87-center-line/) [91](../studies/91-death-cross/) [93](../studies/93-round-numbers/) [98](../studies/98-high-noon/) [99](../studies/99-safety-net/) [104](../studies/104-bollinger-reversion/) [106](../studies/106-supertrend/) [107](../studies/107-stochastic-oscillator/) [108](../studies/108-adx-filter/) [109](../studies/109-obv-divergence/) [116](../studies/116-power-hour/) [125](../studies/125-ichimoku-cloud/) [126](../studies/126-parabolic-sar/) [127](../studies/127-williams-r/) [128](../studies/128-keltner-channel/) [129](../studies/129-heikin-ashi/) [137](../studies/137-mansfield-rs/) [176](../studies/176-hot-hand/) [178](../studies/178-cci/) [179](../studies/179-aroon/) [180](../studies/180-trix/) [181](../studies/181-ultimate-oscillator/) [182](../studies/182-vortex-indicator/) [183](../studies/183-fisher-transform/) [184](../studies/184-williams-fractals/) [185](../studies/185-chande-momentum/) [186](../studies/186-morning-star/) [187](../studies/187-three-soldiers/) [188](../studies/188-head-shoulders/) [189](../studies/189-double-top/) [190](../studies/190-nr7/) [202](../studies/202-fifty-two-week-low/) [301](../studies/301-triple-rsi/) | 49 | 4 | 11 | 0 |
 | Momentum & trend — [20](../studies/20-freight-train/) [24](../studies/24-stampede/) [25](../studies/25-clean-slate/) [28](../studies/28-carousel/) [31](../studies/31-trade-winds/) [40](../studies/40-paper-tiger/) [103](../studies/103-turtle-trader/) [105](../studies/105-coppock-curve/) [146](../studies/146-country-momentum/) [225](../studies/225-sector-rotation/) [237](../studies/237-residual-momentum/) | 11 | 1 | 9 | 0 |
 | Carry, curves & commodities — [27](../studies/27-steamroller/) [29](../studies/29-hedgers-toll/) [35](../studies/35-contango/) [36](../studies/36-greenback/) [59](../studies/59-downhill/) [60](../studies/60-long-shot/) [113](../studies/113-gold-silver-ratio/) [132](../studies/132-yield-curve-steepener/) [147](../studies/147-fx-momentum/) [208](../studies/208-gold-miners/) | 10 | 1 | 5 | 0 |
 | Calendar & seasonal — [01](../studies/01-overnight-anomaly/) [41](../studies/41-hangover/) [42](../studies/42-last-call/) [48](../studies/48-groundhog/) [55](../studies/55-summer-lull/) [67](../studies/67-fed-drift/) [79](../studies/79-sleigh-ride/) [80](../studies/80-cold-open/) [81](../studies/81-four-year-itch/) [82](../studies/82-witching-hour/) [89](../studies/89-turn-of-the-month/) [90](../studies/90-weekend/) [95](../studies/95-holiday-cheer/) [96](../studies/96-new-year-pop/) [135](../studies/135-fomc-cycle/) [136](../studies/136-mark-twain/) [142](../studies/142-split-drift/) [143](../studies/143-dividend-capture/) [148](../studies/148-lunar-effect/) [149](../studies/149-daylight-saving/) [150](../studies/150-sad-effect/) [158](../studies/158-super-bowl/) [159](../studies/159-presidential-party/) [161](../studies/161-year-ending-five/) [162](../studies/162-rosh-hashanah/) [163](../studies/163-friday-13th/) [164](../studies/164-mercury-retrograde/) [165](../studies/165-chinese-zodiac/) [166](../studies/166-first-five-days/) [191](../studies/191-leap-year/) [192](../studies/192-tax-day/) [193](../studies/193-window-dressing/) [194](../studies/194-turkey/) [195](../studies/195-monthly-opex/) [223](../studies/223-same-month-seasonality/) [224](../studies/224-monday-effect/) [226](../studies/226-crude-seasonality/) [227](../studies/227-natgas-winter/) [234](../studies/234-olympic-year/) [235](../studies/235-world-cup-effect/) [247](../studies/247-bond-seasonality/) [248](../studies/248-presidential-honeymoon/) | 42 | 5 | 4 | 0 |
@@ -206,13 +206,14 @@ decaying, or capacity-starved. Worth knowing; not worth quitting your job for:
 | [209](../studies/209-eth-btc-ratio/) | ETH-BTC-Ratio | The 20-day ETH/BTC momentum rotation beats 50/50 (HAC t=+3.7, alpha t=+9.4) | Strapped to a single crypto cycle, -68% drawdown; one regime, not a law |
 | [210](../studies/210-crypto-trend/) | Crypto-Trend | A 200-day timing rule cuts Bitcoin's -83% crash to -70% and beats buy-and-hold on Sharpe (0.90 vs 0.63) | Whipsaws; ~7 switches/yr; ~12-year history; a drawdown shield, not alpha |
 | [223](../studies/223-same-month-seasonality/) | Same-Month Seasonality | Same-calendar-month return persists: top-bottom decile spread HAC *t* = +5.57 over 330 months, bootstrap Sharpe CI clear of zero | Survivor-inflated on ~8-stock deciles; ~78% monthly turnover; short leg hard-to-borrow; a live Russell-1000 build dilutes the gross edge |
+| [301](../studies/301-triple-rsi/) | Triple-RSI | The viral "90% win-rate" RSI(5) bounce is genuinely real: SPY +132.8 bp/trade, HAC *t* = +5.07, survives an honest next-open fill and post-2010, beats a coin by +85 bp | ~3.5 trades/yr, ~7% of the time in the market → ~+4.7%/yr vs the index's +10.8%; the 90% win-rate is the exit's shape, not the edge (a coin clears 62% at a loss) |
 
 ---
 
 ## Challenge the bench
 
-This page will be wrong eventually — that's the design. Two hundred and fifty verdicts is
-two hundred and fifty falsifiable claims, each with reproducible code, pinned data
+This page will be wrong eventually — that's the design. Two hundred and fifty-one verdicts is
+two hundred and fifty-one falsifiable claims, each with reproducible code, pinned data
 fingerprints, and the exact line where we think the dream dies.
 
 - **Think a Mirage is tradable?** Fork the study, change the cost model or

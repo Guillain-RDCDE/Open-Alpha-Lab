@@ -1,5 +1,5 @@
 {
- "total": 251,
+ "total": 252,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -14,7 +14,7 @@
  "counts": {
   "Real": {
    "Investable": 3,
-   "Fragile": 20,
+   "Fragile": 21,
    "Mirage": 10
   },
   "Weak": {
@@ -2287,6 +2287,15 @@
    "tradability": "Mirage",
    "href": "studies/251-crypto-reversal/",
    "family": "Mean reversion & stat-arb"
+  },
+  {
+   "num": 301,
+   "name": "Triple-RSI",
+   "claim": "A viral \"90% win rate\" RSI(5) bounce — real edge, or the oldest illusion in the book?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/301-triple-rsi/",
+   "family": "Technical & chart patterns"
   }
  ],
  "special": [

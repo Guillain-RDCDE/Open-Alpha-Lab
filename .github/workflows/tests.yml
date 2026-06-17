@@ -789,6 +789,9 @@ jobs:
       - name: Study 251 — Crypto-Reversal test-suite
         run: pytest -q studies/251-crypto-reversal/tests
 
+      - name: Study 301 — Triple-RSI test-suite
+        run: pytest -q studies/301-triple-rsi/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
@@ -810,3 +813,4 @@ jobs:
           python studies/37-barometer/examples/run_synthetic_demo.py
           python studies/38-chorus/examples/run_synthetic_demo.py
           python studies/39-black-box/examples/run_synthetic_demo.py
+          python studies/301-triple-rsi/examples/run_synthetic_demo.py
