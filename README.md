@@ -40,7 +40,7 @@ style is written up in **[METHODOLOGY.md](METHODOLOGY.md)**.
 ## The map
 
 The whole bench on one grid — every study is a numbered chip, sorted by its two stamps.
-Almost everything ends up bottom-right; two chips are green — and neither one predicts returns.
+Almost everything ends up bottom-right; three chips are green — and none of them predicts returns.
 
 [![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)](https://guillain-rdcde.github.io/Open-Alpha-Lab/)
 
@@ -331,8 +331,8 @@ single source of truth (it's what the map and the live page are built from) — 
 > **Click any study** for the full teardown — two narrative notebooks (one for the curious,
 > one for the quant), reproducible code, and every number behind the two stamps.
 
-*In the queue:* the weekend effect, the payday anomaly, paired switching,
-a VIX term-structure follow-up. Suggestions welcome via issues.
+*New teardowns land regularly — got an anomaly or folk strategy you swear by?
+Suggestions welcome via issues.*
 
 ---
 
