@@ -76,6 +76,10 @@ def test_curated_bdi_launch_level():
 # ---------------------------------------------------------------------------
 # Real tape (offline build from Shiller + curated BDI)
 # ---------------------------------------------------------------------------
+@pytest.mark.skipif(
+    not os.path.exists(data.SHILLER_CACHE),
+    reason="Shiller cache absent (gitignored) — offline logic is covered by the synthetic tests",
+)
 def test_fetch_real_offline_builds():
     """Cache-only fetch_real builds a (bdi, sp500) frame from Shiller + curated BDI."""
     df = data.fetch_real(fetch=False)
@@ -84,6 +88,10 @@ def test_fetch_real_offline_builds():
     assert (df > 0).all().all()
 
 
+@pytest.mark.skipif(
+    not os.path.exists(data.SHILLER_CACHE),
+    reason="Shiller cache absent (gitignored) — offline logic is covered by the synthetic tests",
+)
 def test_fetch_real_month_end_index():
     df = data.fetch_real(fetch=False)
     for ts in df.index[:5]:
