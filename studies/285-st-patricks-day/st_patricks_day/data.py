@@ -141,7 +141,12 @@ def synthetic_daily(
     is_march`` indexed by date.
     """
     rng = np.random.default_rng(seed)
-    idx = pd.bdate_range(start=start, periods=n_years * 252)
+    # End-anchor the synthetic span so a large n_years can't push the final date
+    # past pandas' ns Timestamp bound (2262-04-11) and OverflowError under CI's
+    # pandas build. The calendar structure (one St Patrick's session per year) is
+    # unaffected by which century the window sits in; `start` is kept for API compat.
+    _ = start
+    idx = pd.bdate_range(end="2260-12-31", periods=n_years * 252)
     n = len(idx)
     daily_mu = annual_drift / 252.0
     daily_sig = annual_vol / np.sqrt(252.0)

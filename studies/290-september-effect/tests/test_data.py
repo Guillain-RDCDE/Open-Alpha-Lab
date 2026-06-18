@@ -51,7 +51,7 @@ def test_synthetic_different_seeds_differ():
 # ---------------------------------------------------------------------------
 def test_null_has_no_september_drag():
     """On the null tape with large n, September mean ~ other-month mean."""
-    df, _ = data.synthetic_monthly(n_years=2000, sep_bps=0.0, seed=290)
+    df, _ = data.synthetic_monthly(n_years=500, start_year=1700, sep_bps=0.0, seed=290)
     sep = df.loc[df["month"] == 9, "ret"].mean()
     oth = df.loc[df["month"] != 9, "ret"].mean()
     assert abs(sep - oth) < 0.003  # < 30 bps with n=2000 Septembers
@@ -59,7 +59,7 @@ def test_null_has_no_september_drag():
 
 def test_planted_drag_creates_gap():
     """A negative planted drag makes September meaningfully lower."""
-    df, _ = data.synthetic_monthly(n_years=500, sep_bps=-1000.0, seed=290)
+    df, _ = data.synthetic_monthly(n_years=500, start_year=1700, sep_bps=-1000.0, seed=290)
     sep = df.loc[df["month"] == 9, "ret"].mean()
     oth = df.loc[df["month"] != 9, "ret"].mean()
     assert sep < oth - 0.05  # planted -1000 bps/mo dominates the noise
