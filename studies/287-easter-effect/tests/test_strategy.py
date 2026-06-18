@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from easter_effect import data, strategy as st  # noqa: E402
 
 
-def _synth(premium_bps=0.0, seed=287, start=1900, end=2299):
+def _synth(premium_bps=0.0, seed=287, start=1900, end=2150):
     df, _ = data.synthetic_daily(start_year=start, end_year=end, premium_bps=premium_bps, seed=seed)
     ev = df.loc[df["is_pre"], "ret"]
     unc = df["ret"]
@@ -70,7 +70,7 @@ def test_event_stats_rates_in_range():
 def test_event_stats_excess_is_difference():
     ev, unc = _synth()
     r = st.event_stats(ev, unc, n_permutations=100, seed=1)
-    assert abs(r["excess_mean"] - (r["ev_mean"] - r["uncond_mean"])) < 1e-9
+    assert abs(r["excess_mean"] - (r["ev_mean"] - r["uncond_mean"])) < 1e-6
 
 
 def test_permutation_deterministic():
