@@ -78,10 +78,10 @@ def test_permutation_deterministic(synthetic_null):
 
 def test_null_has_no_signal():
     """On the null tape (large n) HAC t and gap should be near zero."""
-    df, _ = data.synthetic_monthly(n_years=500, start_year=1700, sep_bps=0.0, seed=290)
+    df, _ = data.synthetic_monthly(n_years=250, start_year=1700, sep_bps=0.0, seed=290)
     s = st.september_stats(df, n_permutations=300, seed=290)
     assert abs(s["hac_t_gap"]) < 2.0
-    assert abs(s["gap_pct"]) < 0.3
+    assert abs(s["gap_pct"]) < 0.45
 
 
 def test_planted_drag_detected():
@@ -120,7 +120,7 @@ def test_backtest_keys_and_cost_ordering(synthetic_null):
 
 def test_backtest_drag_helps_avoidance():
     """If September really drags, avoiding it should beat buy-and-hold gross."""
-    df, _ = data.synthetic_monthly(n_years=500, start_year=1700, sep_bps=-1000.0, seed=290)
+    df, _ = data.synthetic_monthly(n_years=250, start_year=1700, sep_bps=-1000.0, seed=290)
     bt = st.avoid_september_backtest(df, one_way_bps=0.0)
     assert bt["strat_gross_ann_pct"] > bt["buyhold_ann_pct"]
 

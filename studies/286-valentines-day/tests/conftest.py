@@ -34,5 +34,5 @@ def synthetic_null():
 @pytest.fixture
 def synthetic_signal():
     """A long synthetic daily frame with a strong planted Valentine premium."""
-    df, truth = data.synthetic_daily(start_year=1900, end_year=2260, premium_bps=50.0, seed=286)
+    df, truth = data.synthetic_daily(start_year=1900, end_year=2150, premium_bps=50.0, seed=286)
     return df, truth

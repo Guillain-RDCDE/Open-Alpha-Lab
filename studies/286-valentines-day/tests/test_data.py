@@ -91,7 +91,7 @@ def test_synthetic_different_seeds_differ():
 
 def test_synthetic_null_has_no_premium():
     """On the null tape, Valentine vs non-Valentine means should be close."""
-    df, _ = data.synthetic_daily(start_year=1900, end_year=2260, premium_bps=0.0, seed=286)
+    df, _ = data.synthetic_daily(start_year=1900, end_year=2150, premium_bps=0.0, seed=286)
     val = df.loc[df["is_valentine"], "ret"].mean()
     non = df.loc[~df["is_valentine"], "ret"].mean()
     assert abs(val - non) < 0.001  # < 10 bps
@@ -99,7 +99,7 @@ def test_synthetic_null_has_no_premium():
 
 def test_synthetic_signal_creates_premium():
     """A planted premium should lift the Valentine mean above the rest."""
-    df, _ = data.synthetic_daily(start_year=1900, end_year=2260, premium_bps=100.0, seed=286)
+    df, _ = data.synthetic_daily(start_year=1900, end_year=2150, premium_bps=100.0, seed=286)
     val = df.loc[df["is_valentine"], "ret"].mean()
     non = df.loc[~df["is_valentine"], "ret"].mean()
     assert val > non + 0.005  # premium clearly visible

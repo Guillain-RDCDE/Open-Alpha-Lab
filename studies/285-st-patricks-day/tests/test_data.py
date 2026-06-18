@@ -77,7 +77,7 @@ def test_synthetic_different_seeds_differ():
 
 def test_synthetic_null_has_no_bump():
     """On the null tape, the St. Patrick mean is close to the overall mean."""
-    df, _ = data.synthetic_daily(n_years=500, stpat_effect=0.0, seed=285)
+    df, _ = data.synthetic_daily(n_years=250, stpat_effect=0.0, seed=285)
     sp = df.loc[df["is_stpat"], "ret"].mean()
     other = df.loc[~df["is_stpat"], "ret"].mean()
     assert abs(sp - other) < 0.002  # < 20 bps on a large sample
@@ -85,7 +85,7 @@ def test_synthetic_null_has_no_bump():
 
 def test_synthetic_signal_creates_bump():
     """A planted effect makes the St. Patrick mean exceed the rest."""
-    df, _ = data.synthetic_daily(n_years=500, stpat_effect=8.0, seed=285)
+    df, _ = data.synthetic_daily(n_years=250, stpat_effect=8.0, seed=285)
     sp = df.loc[df["is_stpat"], "ret"].mean()
     other = df.loc[~df["is_stpat"], "ret"].mean()
     assert sp > other

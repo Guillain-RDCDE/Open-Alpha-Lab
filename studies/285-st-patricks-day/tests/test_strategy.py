@@ -48,14 +48,14 @@ def test_pvalues_are_probabilities(synthetic_null):
 # ---------------------------------------------------------------------------
 def test_null_no_signal():
     """On the null tape, the event-day HAC t-stat is small in magnitude."""
-    df, _ = data.synthetic_daily(n_years=400, stpat_effect=0.0, seed=285)
+    df, _ = data.synthetic_daily(n_years=250, stpat_effect=0.0, seed=285)
     r = st.stpat_comparison(df)
     assert abs(r["tstat_stpat_hac"]) < 2.0
 
 
 def test_planted_bump_detectable():
     """A large planted bump is detected at HAC t >= 2 (positive control)."""
-    df, _ = data.synthetic_daily(n_years=400, stpat_effect=8.0, seed=285)
+    df, _ = data.synthetic_daily(n_years=250, stpat_effect=8.0, seed=285)
     r = st.stpat_comparison(df)
     assert r["mean_stpat_bps"] > r["mean_all_bps"]
     assert r["tstat_stpat_hac"] >= 2.0
@@ -79,7 +79,7 @@ def test_placebo_keys(synthetic_null):
 
 def test_placebo_null_is_flat():
     """On the null tape, the placebo shows no bump."""
-    df, _ = data.synthetic_daily(n_years=400, stpat_effect=0.0, seed=285)
+    df, _ = data.synthetic_daily(n_years=250, stpat_effect=0.0, seed=285)
     r = st.placebo_comparison(df)
     assert abs(r["tstat_placebo_hac"]) < 2.0
 

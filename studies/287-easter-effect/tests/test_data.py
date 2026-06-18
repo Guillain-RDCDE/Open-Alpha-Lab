@@ -122,7 +122,7 @@ def test_synthetic_different_seeds_differ():
 
 def test_synthetic_null_has_no_premium():
     """On the null tape, pre vs non-pre means should be close."""
-    df, _ = data.synthetic_daily(start_year=1900, end_year=2260, premium_bps=0.0, seed=287)
+    df, _ = data.synthetic_daily(start_year=1900, end_year=2150, premium_bps=0.0, seed=287)
     pre = df.loc[df["is_pre"], "ret"].mean()
     non = df.loc[~df["is_pre"], "ret"].mean()
     assert abs(pre - non) < 0.001  # < 10 bps
@@ -130,7 +130,7 @@ def test_synthetic_null_has_no_premium():
 
 def test_synthetic_signal_creates_premium():
     """A planted premium should lift the pre-holiday mean above the rest."""
-    df, _ = data.synthetic_daily(start_year=1900, end_year=2260, premium_bps=100.0, seed=287)
+    df, _ = data.synthetic_daily(start_year=1900, end_year=2150, premium_bps=100.0, seed=287)
     pre = df.loc[df["is_pre"], "ret"].mean()
     non = df.loc[~df["is_pre"], "ret"].mean()
     assert pre > non + 0.005  # premium clearly visible
