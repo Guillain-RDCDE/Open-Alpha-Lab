@@ -1,0 +1,5 @@
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
+pyarrow>=12.0          # parquet cache I/O
+yfinance>=0.2.40       # real-tape fetch only; the offline core + tests need no network

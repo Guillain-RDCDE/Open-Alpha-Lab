@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest>=7.4
+jupyter>=1.0
+nbconvert>=7.0

@@ -1,5 +1,5 @@
 {
- "total": 301,
+ "total": 350,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -14,18 +14,18 @@
  "counts": {
   "Real": {
    "Investable": 3,
-   "Fragile": 22,
-   "Mirage": 11
+   "Fragile": 24,
+   "Mirage": 15
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 37,
-   "Mirage": 81
+   "Fragile": 38,
+   "Mirage": 95
   },
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 143
+   "Mirage": 171
   }
  },
  "studies": [
@@ -2737,6 +2737,447 @@
    "tradability": "Fragile",
    "href": "studies/301-triple-rsi/",
    "family": "Technical & chart patterns"
+  },
+  {
+   "num": 302,
+   "name": "Lithium-Boom",
+   "claim": "Did riding the battery-metals boom (LIT) with trend-following actually pay, or just hand you a smaller scare?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/302-lithium-boom/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 303,
+   "name": "Uranium-Revival",
+   "claim": "Is the nuclear-renaissance trade (URA/URNM) a durable trend or a hype rocket?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/303-uranium-revival/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 304,
+   "name": "Carbon-Credits",
+   "claim": "Do carbon-allowance prices (KRBN) reward a buy-and-hold green bet?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/304-carbon-credits/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 305,
+   "name": "Gold-Oil-Ratio",
+   "claim": "Does the gold/oil ratio time equities the way Dr. Copper is supposed to?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/305-gold-oil-ratio/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 306,
+   "name": "Crack-Spread",
+   "claim": "Can the refiner crack spread predict refiner stocks?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/306-crack-spread/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 307,
+   "name": "Coffee-Seasonality",
+   "claim": "Does coffee have a tradable harvest-season calendar?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/307-coffee-seasonality/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 308,
+   "name": "Cocoa-Squeeze",
+   "claim": "After cocoa tripled and then crashed 78%, was there an edge — ride the squeeze or fade the blow-off — or just a freak?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/308-cocoa-squeeze/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 309,
+   "name": "OJ-Frost",
+   "claim": "Does the Trading Places trade — buying orange-juice futures around Florida freeze events — actually exist?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/309-oj-frost/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 310,
+   "name": "Platinum-Palladium",
+   "claim": "Does the platinum/palladium ratio mean-revert tradably?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/310-platinum-palladium/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 311,
+   "name": "Government-Shutdown",
+   "claim": "Should you buy the dip every time the US government shuts down?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/311-government-shutdown/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 312,
+   "name": "Debt-Ceiling",
+   "claim": "Is debt-ceiling brinkmanship a volatility trade — does the VIX ramp into the X-date and collapse when Washington blinks?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/312-debt-ceiling/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 313,
+   "name": "Geopolitical-Shock",
+   "claim": "Do markets really shrug off wars and attacks within days?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/313-geopolitical-shock/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 314,
+   "name": "Jackson-Hole",
+   "claim": "Is there a tradable drift around the Fed's late-August Jackson Hole symposium?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/314-jackson-hole/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 315,
+   "name": "Sovereign-Downgrade",
+   "claim": "What happens to stocks when the US loses a credit-rating notch?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/315-sovereign-downgrade/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 316,
+   "name": "Bank-Failure",
+   "claim": "When SVB, Lehman or Credit Suisse go down, is the market a buy signal or a warning?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/316-bank-failure/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 317,
+   "name": "Fed-Balance-Sheet",
+   "claim": "Don't fight the Fed: do stocks really track QE vs QT?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/317-fed-balance-sheet/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 318,
+   "name": "Election-Volatility",
+   "claim": "Does US election uncertainty spike vol and pay a risk premium?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/318-election-volatility/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 319,
+   "name": "Lockup-Expiry",
+   "claim": "Do newly-IPOd stocks sag when the 180-day lockup expires?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/319-lockup-expiry/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 320,
+   "name": "Russell-Reconstitution",
+   "claim": "Can you front-run the annual late-June Russell index reshuffle by buying the small-cap index before reconstitution Friday?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/320-russell-reconstitution/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 321,
+   "name": "Earnings-Season-Tide",
+   "claim": "Does the whole market drift differently during peak earnings weeks?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/321-earnings-season-tide/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 322,
+   "name": "FOMC-Blackout",
+   "claim": "Is the Fed's pre-meeting communications blackout a \"calm before the storm\" trade?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/322-fomc-blackout/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 323,
+   "name": "BTC-Halving",
+   "claim": "Does the 4-year Bitcoin halving cycle really print the top and the bottom?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/323-btc-halving/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 324,
+   "name": "Bitcoin-Treasury",
+   "claim": "Is MicroStrategy (MSTR) just leveraged Bitcoin — and does the premium pay?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/324-bitcoin-treasury/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 325,
+   "name": "Crypto-Fear-Greed",
+   "claim": "Be greedy when others are fearful — does the crypto Fear & Greed gauge time BTC?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/325-crypto-fear-greed/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 326,
+   "name": "Stablecoin-Depeg",
+   "claim": "When a stablecoin breaks the buck (UST, USDC), is it a crypto-wide sell signal?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/326-stablecoin-depeg/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 327,
+   "name": "Disposition-Effect",
+   "claim": "Investors sell winners too early — can you harvest the resulting under-reaction with a capital-gains-overhang factor?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/327-disposition-effect/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 328,
+   "name": "Benford-Law",
+   "claim": "Do stock prices obey Benford's Law — and can the deviation flag anything tradable?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/328-benford-law/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 329,
+   "name": "One-Month-Reversal",
+   "claim": "Do last month's losers beat last month's winners next month?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/329-one-month-reversal/",
+   "family": "Mean reversion & stat-arb"
+  },
+  {
+   "num": 330,
+   "name": "Low-Volatility-Anomaly",
+   "claim": "Do boring low-vol stocks really beat exciting high-vol ones risk-adjusted?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/330-low-volatility-anomaly/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 331,
+   "name": "Fifty-Two-Week-Range",
+   "claim": "Is where in its 52-week range a stock sits a better signal than the high alone?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/331-fifty-two-week-range/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 332,
+   "name": "Downside-Beta",
+   "claim": "Are stocks that crash with the market the ones that should pay more?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/332-downside-beta/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 333,
+   "name": "Recovery-Speed",
+   "claim": "After a deep drawdown, do the fastest-recovering names keep leading?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/333-recovery-speed/",
+   "family": "Mean reversion & stat-arb"
+  },
+  {
+   "num": 334,
+   "name": "ARK-Innovation",
+   "claim": "Was chasing Cathie Wood's ARKK a momentum win or a buy-the-top machine?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/334-ark-innovation/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 335,
+   "name": "Buzz-Sentiment-ETF",
+   "claim": "Does an AI social-sentiment ETF (BUZZ) actually beat the market it listens to?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/335-buzz-sentiment-etf/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 336,
+   "name": "Inverse-Cramer",
+   "claim": "Is fading the loudest pundit (the Inverse Cramer meme) actually an edge?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/336-inverse-cramer/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 337,
+   "name": "Covered-Call-ETF",
+   "claim": "Do buy-write income ETFs (JEPI/QYLD) really give you yield without giving up returns?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/337-covered-call-etf/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 338,
+   "name": "Preferred-Stocks",
+   "claim": "Preferred shares (PFF): bond-like safety, or equity-grade crash risk wearing a fat coupon?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/338-preferred-stocks/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 339,
+   "name": "Convertible-Bonds",
+   "claim": "Do convertibles (CWB) really give equity upside with bond downside?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/339-convertible-bonds/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 340,
+   "name": "Bank-Loans",
+   "claim": "Do floating-rate bank loans (BKLN) actually protect you when rates rise?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/340-bank-loans/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 341,
+   "name": "MLP-Pipelines",
+   "claim": "AMLP pays a 7-8% \"bond-like\" income — is it a fat-yield free lunch, or a leveraged oil bet handing back your own capital?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/341-mlp-pipelines/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 342,
+   "name": "BDC-Yield",
+   "claim": "Do business-development-company yields (BIZD ~10%) survive credit cycles?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/342-bdc-yield/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 343,
+   "name": "Data-Mining-Roulette",
+   "claim": "Test 1,000 random trading rules — how many beat the market by pure luck?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/343-data-mining-roulette/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 344,
+   "name": "Backtest-Overfitting",
+   "claim": "Why does every backtest look gorgeous and every live run disappoint?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/344-backtest-overfitting/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 345,
+   "name": "Survivorship-Bias",
+   "claim": "How much of a great strategy is just the dead companies you forgot to include?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/345-survivorship-bias/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 346,
+   "name": "Multiple-Testing",
+   "claim": "Test 100 calendar effects and a few clear t>2 by luck — so which p-values can you actually trust?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/346-multiple-testing/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 347,
+   "name": "Look-Ahead-Bias",
+   "claim": "How much free alpha do you earn by accidentally peeking one bar into the future?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/347-look-ahead-bias/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 348,
+   "name": "Curve-Fitting",
+   "claim": "Tune a moving-average crossover until it shines — does the winner survive out of sample?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/348-curve-fitting/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 349,
+   "name": "Regime-Dependence",
+   "claim": "A strategy that ruled the 2010s — was it skill, or just one regime?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/349-regime-dependence/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 350,
+   "name": "Dartboard-Portfolio",
+   "claim": "Can a blindfolded monkey throwing darts beat the stock-pickers?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/350-dartboard-portfolio/",
+   "family": "Research-method demos"
   }
  ],
  "special": [

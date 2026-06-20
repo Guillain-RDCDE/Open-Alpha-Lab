@@ -938,6 +938,104 @@ jobs:
 
       - name: Study 301 — Triple-RSI test-suite
         run: pytest -q studies/301-triple-rsi/tests
+      - name: Study 302 — Lithium-Boom test-suite
+        run: pytest -q studies/302-lithium-boom/tests
+      - name: Study 303 — Uranium-Revival test-suite
+        run: pytest -q studies/303-uranium-revival/tests
+      - name: Study 304 — Carbon-Credits test-suite
+        run: pytest -q studies/304-carbon-credits/tests
+      - name: Study 305 — Gold-Oil-Ratio test-suite
+        run: pytest -q studies/305-gold-oil-ratio/tests
+      - name: Study 306 — Crack-Spread test-suite
+        run: pytest -q studies/306-crack-spread/tests
+      - name: Study 307 — Coffee-Seasonality test-suite
+        run: pytest -q studies/307-coffee-seasonality/tests
+      - name: Study 308 — Cocoa-Squeeze test-suite
+        run: pytest -q studies/308-cocoa-squeeze/tests
+      - name: Study 309 — OJ-Frost test-suite
+        run: pytest -q studies/309-oj-frost/tests
+      - name: Study 310 — Platinum-Palladium test-suite
+        run: pytest -q studies/310-platinum-palladium/tests
+      - name: Study 311 — Government-Shutdown test-suite
+        run: pytest -q studies/311-government-shutdown/tests
+      - name: Study 312 — Debt-Ceiling test-suite
+        run: pytest -q studies/312-debt-ceiling/tests
+      - name: Study 313 — Geopolitical-Shock test-suite
+        run: pytest -q studies/313-geopolitical-shock/tests
+      - name: Study 314 — Jackson-Hole test-suite
+        run: pytest -q studies/314-jackson-hole/tests
+      - name: Study 315 — Sovereign-Downgrade test-suite
+        run: pytest -q studies/315-sovereign-downgrade/tests
+      - name: Study 316 — Bank-Failure test-suite
+        run: pytest -q studies/316-bank-failure/tests
+      - name: Study 317 — Fed-Balance-Sheet test-suite
+        run: pytest -q studies/317-fed-balance-sheet/tests
+      - name: Study 318 — Election-Volatility test-suite
+        run: pytest -q studies/318-election-volatility/tests
+      - name: Study 319 — Lockup-Expiry test-suite
+        run: pytest -q studies/319-lockup-expiry/tests
+      - name: Study 320 — Russell-Reconstitution test-suite
+        run: pytest -q studies/320-russell-reconstitution/tests
+      - name: Study 321 — Earnings-Season-Tide test-suite
+        run: pytest -q studies/321-earnings-season-tide/tests
+      - name: Study 322 — FOMC-Blackout test-suite
+        run: pytest -q studies/322-fomc-blackout/tests
+      - name: Study 323 — BTC-Halving test-suite
+        run: pytest -q studies/323-btc-halving/tests
+      - name: Study 324 — Bitcoin-Treasury test-suite
+        run: pytest -q studies/324-bitcoin-treasury/tests
+      - name: Study 325 — Crypto-Fear-Greed test-suite
+        run: pytest -q studies/325-crypto-fear-greed/tests
+      - name: Study 326 — Stablecoin-Depeg test-suite
+        run: pytest -q studies/326-stablecoin-depeg/tests
+      - name: Study 327 — Disposition-Effect test-suite
+        run: pytest -q studies/327-disposition-effect/tests
+      - name: Study 328 — Benford-Law test-suite
+        run: pytest -q studies/328-benford-law/tests
+      - name: Study 329 — One-Month-Reversal test-suite
+        run: pytest -q studies/329-one-month-reversal/tests
+      - name: Study 330 — Low-Volatility-Anomaly test-suite
+        run: pytest -q studies/330-low-volatility-anomaly/tests
+      - name: Study 331 — Fifty-Two-Week-Range test-suite
+        run: pytest -q studies/331-fifty-two-week-range/tests
+      - name: Study 332 — Downside-Beta test-suite
+        run: pytest -q studies/332-downside-beta/tests
+      - name: Study 333 — Recovery-Speed test-suite
+        run: pytest -q studies/333-recovery-speed/tests
+      - name: Study 334 — ARK-Innovation test-suite
+        run: pytest -q studies/334-ark-innovation/tests
+      - name: Study 335 — Buzz-Sentiment-ETF test-suite
+        run: pytest -q studies/335-buzz-sentiment-etf/tests
+      - name: Study 336 — Inverse-Cramer test-suite
+        run: pytest -q studies/336-inverse-cramer/tests
+      - name: Study 337 — Covered-Call-ETF test-suite
+        run: pytest -q studies/337-covered-call-etf/tests
+      - name: Study 338 — Preferred-Stocks test-suite
+        run: pytest -q studies/338-preferred-stocks/tests
+      - name: Study 339 — Convertible-Bonds test-suite
+        run: pytest -q studies/339-convertible-bonds/tests
+      - name: Study 340 — Bank-Loans test-suite
+        run: pytest -q studies/340-bank-loans/tests
+      - name: Study 341 — MLP-Pipelines test-suite
+        run: pytest -q studies/341-mlp-pipelines/tests
+      - name: Study 342 — BDC-Yield test-suite
+        run: pytest -q studies/342-bdc-yield/tests
+      - name: Study 343 — Data-Mining-Roulette test-suite
+        run: pytest -q studies/343-data-mining-roulette/tests
+      - name: Study 344 — Backtest-Overfitting test-suite
+        run: pytest -q studies/344-backtest-overfitting/tests
+      - name: Study 345 — Survivorship-Bias test-suite
+        run: pytest -q studies/345-survivorship-bias/tests
+      - name: Study 346 — Multiple-Testing test-suite
+        run: pytest -q studies/346-multiple-testing/tests
+      - name: Study 347 — Look-Ahead-Bias test-suite
+        run: pytest -q studies/347-look-ahead-bias/tests
+      - name: Study 348 — Curve-Fitting test-suite
+        run: pytest -q studies/348-curve-fitting/tests
+      - name: Study 349 — Regime-Dependence test-suite
+        run: pytest -q studies/349-regime-dependence/tests
+      - name: Study 350 — Dartboard-Portfolio test-suite
+        run: pytest -q studies/350-dartboard-portfolio/tests
 
       - name: Smoke-run the offline demos
         run: |

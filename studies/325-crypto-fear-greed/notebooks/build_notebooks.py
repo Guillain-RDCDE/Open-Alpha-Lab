@@ -1,0 +1,474 @@
+"""Generate the two narrative notebooks for Study 325 (Crypto-Fear-Greed).
+
+    python notebooks/build_notebooks.py
+    jupyter nbconvert --to notebook --execute --inplace 01_*.ipynb 02_*.ipynb
+
+The synthetic figures run anywhere, offline and deterministic. The real-tape
+cells use the price-derived gauge on cached BTC-USD daily closes if present, and
+otherwise quote the frozen headline numbers in ``R`` (mirroring docs/results.md),
+so the notebook re-runs for any reader. Every code cell is executed via nbconvert
+with no error outputs. Synthetic cells are clearly bannered as the SYNTHETIC tape.
+"""
+
+from __future__ import annotations
+
+import os
+
+import nbformat as nbf
+from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+
+def md(text):
+    return new_markdown_cell(text)
+
+
+def code(text):
+    return new_code_cell(text)
+
+
+# Frozen real-tape headline numbers -- mirror of docs/results.md (as-of 2026-05-31).
+R = dict(
+    n_days=4275, gauge_rows=4125, stamp="2014-09-17 -> 2026-05-31", fingerprint="26bfad39f376",
+    uncond_ann=71.91,
+    # band conditional forward returns (ann %, HAC t, n)
+    ef_ann=125.49, ef_t=2.12, ef_n=603,
+    fear_ann=35.18, fear_t=0.77, fear_n=850,
+    neu_ann=-3.01, neu_t=-0.07, neu_n=619,
+    greed_ann=53.64, greed_t=1.66, greed_n=1363,
+    eg_ann=173.76, eg_t=3.58, eg_n=689,
+    # contrarian spread
+    spread_bps=-2.93, spread_ann=-10.68, spread_t=-0.86, spread_hit=0.153, spread_sr=-0.26,
+    spread_ci_lo=-0.869, spread_ci_hi=0.357, spread_frac_neg=79,
+    fear_excess_ann=53.58, fear_excess_t=0.90,
+    slope_bps=9.44, slope_t=0.73,
+    # sub-periods
+    sub_a_ann=-11.74, sub_a_t=-0.46, sub_a_n=1461,
+    sub_b_ann=10.94, sub_b_t=0.51, sub_b_n=1096,
+    sub_c_ann=-23.94, sub_c_t=-1.50, sub_c_n=1246,
+    # null
+    null_mean_bps=-0.31, null_std_bps=2.93, real_pctile=17.9,
+    # costs / turnover
+    pct_long=14.6, pct_flat=68.7, pct_short=16.7, n_trades=362, trades_per_year=32.0,
+    net_ann=-15.56, net_t=-1.25,
+    # positive control (reversion knob)
+    ctrl_0_bps=-3.39, ctrl_0_t=-0.83,
+    ctrl_20_bps=4.14, ctrl_20_t=1.11,
+    ctrl_35_bps=10.99, ctrl_35_t=2.88,
+    ctrl_50_bps=22.31, ctrl_50_t=5.37,
+)
+
+
+BOOT = """\
+import sys, os
+sys.path.insert(0, os.path.abspath(".."))          # the study package
+sys.path.insert(0, os.path.abspath("../../.."))    # repo root (quantlab/)
+%matplotlib inline
+import numpy as np, pandas as pd
+import matplotlib.pyplot as plt
+plt.rcParams.update({"figure.figsize": (9.5, 5.0), "axes.grid": True,
+                     "grid.alpha": .3, "axes.spines.top": False, "axes.spines.right": False})
+RED, AMBER, GREEN, GREY = "#c0392b", "#dab617", "#2ea44f", "#8b949e"
+
+from crypto_fear_greed import data, strategy as st
+import pandas as pd
+
+# Real tape: cache-first, drop the partial current month so the as-of is clean.
+AS_OF = pd.Timestamp("2026-05-31")
+_close = data.load_real(fetch=False)
+if _close is not None:
+    _close = _close[_close.index <= AS_OF]
+    panel = data.panel_from_close(_close)
+    fr = st.forward_returns(panel)
+    spread = st.spread_returns(fr)
+    rm = st.regime_means(fr)
+    HAVE_REAL = True
+    print(f"REAL BTC tape: {_close.index[0].date()} -> {_close.index[-1].date()} ({len(_close)} days)")
+else:
+    panel = fr = spread = rm = None
+    HAVE_REAL = False
+    print("No BTC cache -- frozen headline numbers (R dict, mirror of docs/results.md) will be used.")
+"""
+
+R_INJECT = f"""
+# Frozen real-tape headline numbers (mirror of docs/results.md, as-of 2026-05-31).
+R = {R!r}
+"""
+
+
+# ---------------------------------------------------------------------------
+# Notebook 1 -- For the curious
+# ---------------------------------------------------------------------------
+def build_curious() -> None:
+    nb = new_notebook()
+    nb.cells = [
+        md("""\
+# Study 325 -- Crypto-Fear-Greed 😨
+### For the curious: does the crypto Fear & Greed gauge time Bitcoin?
+
+![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)
+![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-c0392b?style=flat-square)
+![Gauge: Price--derived_proxy](https://img.shields.io/badge/Gauge-Price--derived_proxy-8b949e?style=flat-square)
+
+The crypto **Fear & Greed Index** is a 0--100 mood ring for Bitcoin: 0 is
+"Extreme Fear", 100 is "Extreme Greed". The folk rule -- a retail-friendly take on
+Warren Buffett's *"be greedy when others are fearful"* -- says **buy when the
+gauge is in Extreme Fear and sell when it is in Extreme Greed**. We put that
+intuition on the clock.
+
+> 📓 **This is the plain-language layer.** The statistics, the bootstrap and the
+> capacity maths live in the companion **[02_for_the_quants.ipynb](02_for_the_quants.ipynb)** -- same story, deeper.
+>
+> ⚠️ **Not investment advice.** Educational, reproducible research; every chart is
+> generated by the code beside it. House style in [METHODOLOGY.md](../../../METHODOLOGY.md).
+"""),
+        md("## Setup"),
+        code(BOOT),
+        code(R_INJECT),
+
+        md("""\
+## The answer first 🎯
+
+| Question | Answer |
+|---|---|
+| Does "buy crypto fear" time BTC? | **No.** The contrarian spread is *negative* (-10.7%/yr, *t* = -0.86) -- the wrong sign. |
+| Which mood paid the most next day? | **Extreme Greed** (+173.8%/yr, *t* = +3.58) -- the opposite of the claim. |
+| Could you trade it? | No -- it loses before costs, and crypto short funding makes it worse. |
+
+Bitcoin *trends*: it keeps running when the gauge says greed. The contrarian rule
+is fighting the single most powerful thing about crypto -- its momentum.
+"""),
+
+        md("""\
+## 1 · The claim
+
+> *Be greedy when others are fearful.* When the [crypto Fear & Greed Index](https://alternative.me/crypto/fear-and-greed-index/)
+> drops into Extreme Fear, that's the buying opportunity; when it spikes into
+> Extreme Greed, take profits.
+
+It *feels* obviously right -- surely the best time to buy BTC was the despair of
+the 2018 / 2022 crypto winters, and the worst was the euphoric tops.
+"""),
+
+        md("""\
+## 2 · So what?
+
+If a free, public mood gauge timed a 70%/yr asset, that is a fortune in a browser
+tab. It would also say something deep: that crowd emotion is a *leading*, tradable
+signal in the most retail-driven market there is.
+"""),
+
+        md("""\
+## 3 · How would we even know?
+
+We rebuild a transparent gauge from BTC's own price (its **volatility**,
+**drawdown** and **momentum** -- the live index's heaviest weights), sort every
+day into the five published bands, and measure the **average return over the
+following day**. If the contrarian claim were true, the Extreme-Fear bar would
+tower over the Extreme-Greed bar.
+"""),
+
+        code("""\
+# The price-derived gauge over the BTC tape (SYNTHETIC fallback bannered if no cache).
+if HAVE_REAL:
+    fng_s = panel["fng"]; tape = "REAL BTC-USD"
+else:
+    _d, _ = data.synthetic_btc(reversion=0.0, seed=325)
+    _p = data.panel_from_close(_d["close"]); fng_s = _p["fng"]; tape = "SYNTHETIC (offline fallback)"
+fig, ax = plt.subplots(figsize=(12, 4.2))
+ax.plot(fng_s.index, fng_s.values, color=GREY, lw=0.9)
+ax.axhspan(0, 25, color=RED, alpha=0.10); ax.axhspan(75, 100, color=GREEN, alpha=0.10)
+ax.axhline(25, color=RED, lw=0.8, ls="--"); ax.axhline(75, color=GREEN, lw=0.8, ls="--")
+ax.text(fng_s.index[20], 12, "Extreme Fear", color=RED, fontsize=9)
+ax.text(fng_s.index[20], 88, "Extreme Greed", color=GREEN, fontsize=9)
+ax.set_ylim(0, 100); ax.set_ylabel("Fear & Greed proxy (0-100)")
+ax.set_title(f"Price-derived crypto Fear & Greed proxy ({tape})")
+plt.tight_layout(); plt.savefig("../docs/gauge_series.png", dpi=120, bbox_inches="tight"); plt.show()
+print(f"Tape shown: {tape}. The gauge is built from BTC vol + drawdown + momentum -- no social/search data.")
+"""),
+
+        md("## 4 · The teardown -- what happens the day *after* each mood?"),
+        code("""\
+bands = ["Extreme Fear", "Fear", "Neutral", "Greed", "Extreme Greed"]
+if HAVE_REAL:
+    anns = [rm.loc[b, "mean_ann"]*100 for b in bands]
+    ts   = [rm.loc[b, "tstat"] for b in bands]
+    ns   = [int(rm.loc[b, "n"]) for b in bands]
+    uncond = fr["fwd_ret"].mean()*365*100
+else:
+    anns = [R["ef_ann"], R["fear_ann"], R["neu_ann"], R["greed_ann"], R["eg_ann"]]
+    ts   = [R["ef_t"], R["fear_t"], R["neu_t"], R["greed_t"], R["eg_t"]]
+    ns   = [R["ef_n"], R["fear_n"], R["neu_n"], R["greed_n"], R["eg_n"]]
+    uncond = R["uncond_ann"]
+colors = [RED, AMBER, GREY, "#1f78b4", GREEN]
+fig, ax = plt.subplots(figsize=(10, 4.6))
+ax.bar(bands, anns, color=colors)
+ax.axhline(uncond, color="black", ls="--", lw=1.0, label=f"Unconditional drift ({uncond:+.0f}%/yr)")
+for i,(a,t,n) in enumerate(zip(anns, ts, ns)):
+    ax.text(i, a + 4, f"t={t:+.2f}\\nn={n}", ha="center", fontsize=8)
+ax.set_ylabel("Forward daily return (annualised, %)")
+ax.set_title("Next-day return by Fear & Greed band -- GREED, not fear, paid the most")
+ax.legend(fontsize=9); plt.tight_layout()
+plt.savefig("../docs/by_band.png", dpi=120, bbox_inches="tight"); plt.show()
+print("The tallest bar is EXTREME GREED, not Extreme Fear -- the opposite of the contrarian claim.")
+"""),
+
+        md("""\
+## 5 · The verdict
+
+Buying fear and shorting greed -- the literal contrarian trade -- *lost* money:
+**-10.7%/yr, *t* = -0.86**, the wrong sign. Shuffling the gauge at random does
+*better* on average (the real spread sits at the 17.9th percentile of that null).
+The gauge is a fine thermometer for crypto mood and a useless -- in fact
+backwards -- clock. **Signal: None.**
+"""),
+        code("""\
+print("=== Does the crypto Fear & Greed gauge time BTC? ===\\n")
+print(f"Contrarian long-fear/short-greed spread: {R['spread_ann']:+.2f}%/yr  HAC t = {R['spread_t']:+.2f}  (WRONG SIGN)")
+print(f"  Bootstrap Sharpe 95% CI: [{R['spread_ci_lo']:+.2f}, {R['spread_ci_hi']:+.2f}]  ({R['spread_frac_neg']}% of resamples negative)")
+print(f"  Real spread vs shuffled-gauge null: {R['real_pctile']:.1f}th percentile (worse than most random relabellings)")
+print("\\nVerdict: Signal NONE / Tradability MIRAGE -- a great thermometer, a backwards clock.")
+"""),
+
+        md("""\
+## 6 · Could you actually trade it?
+
+No. There is no gross edge to erode -- the spread loses *before* a cent of costs.
+And crypto shorts are dear: perp funding plus spot borrow run into the high
+hundreds of bps a year. Charging a realistic 1000 bps/yr on the short leg drives
+the spread to **-15.6%/yr**. You would be paying to lose.
+"""),
+
+        md("""\
+## 7 · Going further 🚪
+
+- Swap the price-derived proxy for the **real alternative.me index** once an
+  archive is reachable -- does the social/search component add anything the
+  vol/momentum legs miss?
+- Test the gauge as a **momentum confirm** (buy greed) rather than a contrarian
+  fade -- the band table hints that is the side with the *t*-stat.
+- Re-run on **ETH and an alt basket**: is the wrong-sign result a BTC-trend
+  artefact or universal?
+
+*Desk verdict: **None / Mirage** -- see [README.md](../README.md) and [docs/results.md](../docs/results.md).*
+"""),
+    ]
+    _write(nb, "01_for_the_curious.ipynb")
+
+
+# ---------------------------------------------------------------------------
+# Notebook 2 -- For the quants
+# ---------------------------------------------------------------------------
+def build_quants() -> None:
+    nb = new_notebook()
+    nb.cells = [
+        md("""\
+# Study 325 -- Crypto-Fear-Greed -- a quantitative teardown 🔬
+### Real BTC tape · price-derived gauge · HAC inference · block bootstrap · shuffled-gauge null · capacity
+
+![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)
+![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-c0392b?style=flat-square)
+![Gauge: Price--derived_proxy](https://img.shields.io/badge/Gauge-Price--derived_proxy-8b949e?style=flat-square)
+
+The deep companion to the [notebook for the curious](01_for_the_curious.ipynb) --
+*same beats, every claim now carrying its standard error.*
+
+> ⚠️ **Not investment advice.** Real tape: BTC-USD daily (yfinance, auto-adjusted),
+> 2014--2026, cache-first. Methods: HAC (Newey-West) *t*, circular block bootstrap,
+> shuffled-gauge null. Literature in [`docs/references.md`](../docs/references.md).
+>
+> 💡 **The `💡 In plain words` notes** translate each result back into intuition.
+> House style in [METHODOLOGY.md](../../../METHODOLOGY.md).
+"""),
+        md("## Setup"),
+        code(BOOT),
+        code(R_INJECT),
+
+        md("""\
+## Verdict, up front
+
+| Axis | Stamp | Why |
+|---|---|---|
+| Signal | **None** | Contrarian spread HAC *t* = -0.86 (wrong sign); bootstrap Sharpe CI 79% negative; 17.9th-percentile vs shuffled-gauge null; strongest band is Extreme Greed (*t* = +3.58). |
+| Tradability | **Mirage** | Loses gross; crypto short funding (1000 bps/yr) deepens it to -15.6%/yr. |
+| Gauge construction | **Price-derived proxy** | vol + drawdown + momentum, not the social/search index (which is network-blocked). |
+
+> 💡 **In plain words:** the contrarian trade doesn't just fail to work -- it works
+> in *reverse*, because BTC trends. The synthetic control below proves the engine
+> isn't broken: it finds the effect the instant we plant real mean reversion.
+"""),
+
+        md("""\
+## 1 · The claim, steelmanned
+
+- **H₁** -- forward BTC returns are *higher* after Extreme Fear than after Extreme
+  Greed (monotone-decreasing band means).
+- **H₂** -- the contrarian fear-minus-greed spread has a positive mean with HAC
+  *t* >= 2.
+- **H₃** -- the linear slope of forward return on the gauge is *negative* (more
+  greed -> lower next-day return).
+"""),
+
+        md("""\
+## 3 · How we'd know -- the protocol & the positive control
+
+Before trusting a null we confirm the machinery *can* see a contrarian effect.
+`data.synthetic_btc(reversion=...)` plants short-horizon mean reversion (the only
+thing a fear-buying rule can harvest); `reversion=0` is a pure random walk.
+
+> 💡 **In plain words:** the smoke test. If the synthetic control stayed dark, a
+> flat real result would just mean the code was broken.
+"""),
+        code("""\
+print("SYNTHETIC positive control -- reversion knob (n=2500 days, seed=325):")
+for rev in [0.0, 0.2, 0.35, 0.5]:
+    d, _ = data.synthetic_btc(reversion=rev, seed=325)
+    f = st.forward_returns(data.panel_from_close(d["close"]))
+    sc = st.summarize(st.spread_returns(f))
+    flag = "  <- clears t>2" if sc["tstat"] > 2 else ""
+    print(f"  reversion={rev:.2f} -> spread {sc['mean']*1e4:+7.2f} bps/d  HAC t={sc['tstat']:+.2f}{flag}")
+print("\\nFrozen: rev=0 t=%.2f (null band), rev=0.50 t=%.2f (clears the bar). The engine works." % (R['ctrl_0_t'], R['ctrl_50_t']))
+"""),
+
+        md("## 4 · The teardown -- band conditional means with HAC *t*-stats"),
+        code("""\
+bands = ["Extreme Fear", "Fear", "Neutral", "Greed", "Extreme Greed"]
+if HAVE_REAL:
+    print(f"=== Forward daily return by band (REAL BTC) ===  Unconditional: {fr['fwd_ret'].mean()*365*100:+.2f}%/yr\\n")
+    for b in bands:
+        row = rm.loc[b]
+        print(f"  {b:14s} n={int(row['n']):5d}  {row['mean_ann']*100:+9.2f}%/yr  HAC t={row['tstat']:+5.2f}  hit={row['hit']:.3f}")
+else:
+    print("Frozen band table (mirror of docs/results.md):")
+    for b,a,t,n in [("Extreme Fear",R['ef_ann'],R['ef_t'],R['ef_n']),("Fear",R['fear_ann'],R['fear_t'],R['fear_n']),
+                    ("Neutral",R['neu_ann'],R['neu_t'],R['neu_n']),("Greed",R['greed_ann'],R['greed_t'],R['greed_n']),
+                    ("Extreme Greed",R['eg_ann'],R['eg_t'],R['eg_n'])]:
+        print(f"  {b:14s} n={n:5d}  {a:+9.2f}%/yr  HAC t={t:+5.2f}")
+print("\\nH1 needs Extreme Fear >> Extreme Greed. We observe the OPPOSITE: Extreme Greed is the top band.")
+"""),
+
+        md("## The decisive series: the contrarian fear-minus-greed spread"),
+        code("""\
+if HAVE_REAL:
+    s_sp = st.summarize(spread); s_a = st.annualise(s_sp)
+    fe = st.long_only_fear_excess(fr); s_fe = st.summarize(fe)
+    sl = st.sentiment_slope(fr)
+    ci = st.block_bootstrap_sharpe_ci(spread, n_boot=2000, seed=325)
+    print("=== Primary spec: long Extreme Fear, short Extreme Greed, 1-day hold ===")
+    print(f"Spread: {s_sp['mean']*1e4:+.2f} bps/d = {s_sp['mean']*365*100:+.2f}%/yr  HAC t={s_sp['tstat']:+.2f}  hit={s_sp['hit_rate']:.3f}  SR(ann)={s_a.get('sharpe_ann', float('nan')):+.2f}")
+    print(f"Block-bootstrap Sharpe 95% CI: [{ci['ci_low']:+.3f}, {ci['ci_high']:+.3f}]  ({ci['frac_negative']*100:.0f}% negative)")
+    print(f"Long-only fear excess: {s_fe['mean']*365*100:+.2f}%/yr  HAC t={s_fe['tstat']:+.2f}  n={s_fe['n']}")
+    print(f"Linear gauge slope: {sl['slope']*1e4:+.2f} bps per 50 pts  HAC t={sl['tstat']:+.2f}  (WRONG sign for contrarian)")
+else:
+    print(f"Frozen spread: {R['spread_ann']:+.2f}%/yr  HAC t={R['spread_t']:+.2f}  hit={R['spread_hit']:.3f}")
+    print(f"Bootstrap Sharpe CI: [{R['spread_ci_lo']:+.3f}, {R['spread_ci_hi']:+.3f}]  ({R['spread_frac_neg']}% negative)")
+    print(f"Long-only fear excess: {R['fear_excess_ann']:+.2f}%/yr  HAC t={R['fear_excess_t']:+.2f}")
+    print(f"Linear gauge slope: {R['slope_bps']:+.2f} bps/50pts  HAC t={R['slope_t']:+.2f}  (WRONG sign)")
+print("\\n> The spread t is negative and far from +2. H2 and H3 both fail.")
+"""),
+
+        md("## Shuffled-gauge null: real signal vs random relabelling"),
+        code("""\
+if HAVE_REAL:
+    null = st.random_timing_null(fr, n_draws=2000, seed=325)
+    real_mean = spread.mean(); pctile = (null < real_mean).mean()*100
+else:
+    null = None; real_mean = R["spread_bps"]/1e4; pctile = R["real_pctile"]
+fig, ax = plt.subplots(figsize=(9, 4))
+if null is not None:
+    ax.hist(null.values*1e4, bins=40, color=GREY, alpha=0.8)
+else:
+    import numpy as _np
+    ax.hist(_np.random.default_rng(0).normal(R["null_mean_bps"], R["null_std_bps"], 2000), bins=40, color=GREY, alpha=0.8)
+ax.axvline(real_mean*1e4, color=RED, lw=2.0, label=f"Real spread ({real_mean*1e4:+.2f} bps/d)")
+ax.set_xlabel("Spread mean under shuffled gauge (bps/d)")
+ax.set_title(f"Real spread sits at the {pctile:.1f}th percentile of the null")
+ax.legend(fontsize=9); plt.tight_layout()
+plt.savefig("../docs/null_hist.png", dpi=120, bbox_inches="tight"); plt.show()
+print(f"Real spread at the {pctile:.1f}th percentile -- a random relabelling of the gauge does BETTER on average.")
+"""),
+
+        md("## Sub-period decay -- no era rescues it"),
+        code("""\
+periods = [("2016-2019","2016","2019"),("2020-2022","2020","2022"),("2023-2026","2023","2026")]
+if HAVE_REAL:
+    rows = []
+    for label,a,b in periods:
+        s = st.summarize(spread[a:b]); rows.append({"period":label,"ann":s["mean"]*365*100,"t":s["tstat"],"n":s["n"]})
+        print(f"  {label}: {s['mean']*365*100:+.2f}%/yr  HAC t={s['tstat']:+.2f}  n={s['n']}")
+    sts = pd.DataFrame(rows)
+else:
+    sts = pd.DataFrame([
+        {"period":"2016-2019","ann":R["sub_a_ann"],"t":R["sub_a_t"],"n":R["sub_a_n"]},
+        {"period":"2020-2022","ann":R["sub_b_ann"],"t":R["sub_b_t"],"n":R["sub_b_n"]},
+        {"period":"2023-2026","ann":R["sub_c_ann"],"t":R["sub_c_t"],"n":R["sub_c_n"]}])
+    for _,r in sts.iterrows():
+        print(f"  {r['period']}: {r['ann']:+.2f}%/yr  HAC t={r['t']:+.2f}  n={int(r['n'])}")
+fig, ax = plt.subplots(figsize=(8, 4))
+colors_sub = [GREEN if t>=2 else RED if t<0 else AMBER for t in sts["t"]]
+ax.bar(sts["period"], sts["t"], color=colors_sub)
+ax.axhline(2.0, color="black", ls="--", lw=0.9, label="t=2 bar"); ax.axhline(0, color="black", lw=0.8)
+ax.set_ylabel("HAC t-stat"); ax.set_title("Contrarian spread by sub-period -- never clears t=2")
+ax.legend(fontsize=9); plt.tight_layout(); plt.show()
+"""),
+
+        md("## 6 · Could you trade it? -- turnover and crypto-realistic funding"),
+        code("""\
+if HAVE_REAL:
+    ts = st.turnover_stats(fr)
+    net = st.net_spread_returns(fr, one_way_bps=10.0, borrow_bps_ann=1000.0); s_net = st.summarize(net)
+    print(f"States: long {ts['pct_long']:.1%}, flat {ts['pct_flat']:.1%}, short {ts['pct_short']:.1%}")
+    print(f"Trades: {ts['n_trades']} ({ts['trades_per_year']:.1f}/yr)")
+    print(f"Net spread @10bps one-way + 1000bps/yr funding: {s_net['mean']*365*100:+.2f}%/yr  HAC t={s_net['tstat']:+.2f}")
+else:
+    print(f"States: long {R['pct_long']:.1f}%, flat {R['pct_flat']:.1f}%, short {R['pct_short']:.1f}%")
+    print(f"Trades: {R['n_trades']} ({R['trades_per_year']:.1f}/yr)")
+    print(f"Net spread @10bps + 1000bps/yr funding: {R['net_ann']:+.2f}%/yr  HAC t={R['net_t']:+.2f}")
+print("\\n> No gross edge to erode -- it loses before costs, and short funding only deepens the loss.")
+"""),
+
+        md("## 5/7 · The verdict & what to fork"),
+        code("""\
+print("=== Study 325 -- Crypto-Fear-Greed ===\\n")
+print("Signal: NONE")
+print(f"  Contrarian spread HAC t = {R['spread_t']:+.2f}  (wrong sign; bar is t>=2)")
+print(f"  Bootstrap Sharpe CI [{R['spread_ci_lo']:+.2f}, {R['spread_ci_hi']:+.2f}], {R['spread_frac_neg']}% negative")
+print(f"  Real spread at {R['real_pctile']:.1f}th percentile of shuffled-gauge null")
+print(f"  Strongest band is Extreme GREED (t={R['eg_t']:+.2f}) -- a crypto-momentum artefact\\n")
+print("Tradability: MIRAGE -- loses gross; 1000 bps/yr short funding -> %.1f%%/yr net\\n" % R['net_ann'])
+print("Gauge: PRICE-DERIVED PROXY (vol+drawdown+momentum), not the social/search index.")
+print("\\nFork: the index as a momentum CONFIRM, the live API, ETH/alt basket. (docs/results.md)")
+"""),
+    ]
+    _write(nb, "02_for_the_quants.ipynb")
+
+
+def _write(nb: nbf.NotebookNode, filename: str) -> None:
+    path = os.path.join(HERE, filename)
+    with open(path, "w", encoding="utf-8") as f:
+        nbf.write(nb, f)
+    print(f"Wrote {path}")
+
+
+def _execute(filename: str) -> None:
+    import subprocess
+    import sys
+    path = os.path.join(HERE, filename)
+    result = subprocess.run(
+        [sys.executable, "-m", "nbconvert", "--to", "notebook", "--execute",
+         "--inplace", "--ExecutePreprocessor.timeout=600", path],
+        capture_output=True, text=True,
+    )
+    if result.returncode != 0:
+        print(f"ERROR executing {filename}:\n{result.stderr[-3000:]}")
+        raise RuntimeError(f"nbconvert failed for {filename}")
+    print(f"Executed {filename}")
+
+
+if __name__ == "__main__":
+    build_curious()
+    build_quants()
+    _execute("01_for_the_curious.ipynb")
+    _execute("02_for_the_quants.ipynb")
+    print("Done.")
