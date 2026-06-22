@@ -1,5 +1,5 @@
 {
- "total": 351,
+ "total": 361,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -19,13 +19,13 @@
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 38,
-   "Mirage": 95
+   "Fragile": 42,
+   "Mirage": 98
   },
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 171
+   "Mirage": 174
   }
  },
  "studies": [
@@ -3187,6 +3187,96 @@
    "tradability": "Mirage",
    "href": "studies/351-btc-5m-polymarket-momentum/",
    "family": "Microstructure & crowds"
+  },
+  {
+   "num": 352,
+   "name": "Opening-Range Breakout",
+   "claim": "Does breaking the first five minutes' range really tell you the day's direction?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/352-opening-range-breakout/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 353,
+   "name": "Smart-Money-Concepts",
+   "claim": "Do \"order blocks\" and \"fair-value gaps\" really mark where smart money left its footprints?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/353-smart-money-concepts/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 354,
+   "name": "The-Wheel",
+   "claim": "Can you really earn forever-income just by selling options on SPY?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/354-the-wheel/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 355,
+   "name": "Magnificent-Seven",
+   "claim": "Did the Magnificent Seven beat the market — or did the market just name the winners after they won?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/355-magnificent-seven/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 356,
+   "name": "Ozempic-Trade",
+   "claim": "Can you ride the Ozempic boom by just buying the weight-loss-drug makers?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/356-glp1-basket/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 357,
+   "name": "Coffee-Can",
+   "claim": "If you buy great companies and never sell, do you actually beat the market?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/357-coffee-can/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 358,
+   "name": "Watch-Index",
+   "claim": "Do luxury watches really beat the stock market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/358-watch-index/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 359,
+   "name": "Farmland",
+   "claim": "Is farmland really the calm, uncorrelated inflation hedge the billionaires swear by?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/359-farmland/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 360,
+   "name": "NAAIM-Exposure",
+   "claim": "When the pros are all-in, should you sell?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/360-naaim-exposure/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 361,
+   "name": "Breadth-Thrust",
+   "claim": "Is a buy signal that's \"never wrong\" actually clever, or just a coin that lands heads in a market that mostly rises?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/361-zweig-breadth-thrust/",
+   "family": "Vol, hedges & allocation"
   }
  ],
  "special": [

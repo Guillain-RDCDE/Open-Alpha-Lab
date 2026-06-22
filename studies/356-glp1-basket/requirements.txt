@@ -1,0 +1,4 @@
+numpy>=1.23
+pandas>=1.5
+matplotlib>=3.6
+yfinance>=0.2          # real-tape fetch only (cache-miss); offline core needs none of it

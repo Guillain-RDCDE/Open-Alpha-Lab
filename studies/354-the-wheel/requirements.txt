@@ -1,0 +1,8 @@
+numpy
+pandas
+matplotlib
+yfinance
+pyarrow
+nbformat
+nbconvert
+jupyter

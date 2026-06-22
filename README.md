@@ -49,7 +49,7 @@ Almost everything ends up bottom-right; three chips are green — and none of th
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 351 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 361 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -425,6 +425,16 @@ single source of truth (it's what the map and the live page are built from) — 
 | **[349](studies/349-regime-dependence/)** | **Regime-Dependence** | A strategy that ruled the 2010s — was it skill, or just one regime? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[350](studies/350-dartboard-portfolio/)** | **Dartboard-Portfolio** | Can a blindfolded monkey throwing darts beat the stock-pickers? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[351](studies/351-btc-5m-polymarket-momentum/)** | **BTC 5-Minute Bot** | A free bot bets Bitcoin's last two minutes — $300 into $14,000? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[352](studies/352-opening-range-breakout/)** | **Opening-Range Breakout** | Does breaking the first five minutes' range really tell you the day's direction? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[353](studies/353-smart-money-concepts/)** | **Smart-Money-Concepts** | Do "order blocks" and "fair-value gaps" really mark where smart money left its footprints? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[354](studies/354-the-wheel/)** | **The-Wheel** | Can you really earn forever-income just by selling options on SPY? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[355](studies/355-magnificent-seven/)** | **Magnificent-Seven** | Did the Magnificent Seven beat the market — or did the market just name the winners after they won? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[356](studies/356-glp1-basket/)** | **Ozempic-Trade** | Can you ride the Ozempic boom by just buying the weight-loss-drug makers? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[357](studies/357-coffee-can/)** | **Coffee-Can** | If you buy great companies and never sell, do you actually beat the market? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[358](studies/358-watch-index/)** | **Watch-Index** | Do luxury watches really beat the stock market? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[359](studies/359-farmland/)** | **Farmland** | Is farmland really the calm, uncorrelated inflation hedge the billionaires swear by? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[360](studies/360-naaim-exposure/)** | **NAAIM-Exposure** | When the pros are all-in, should you sell? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[361](studies/361-zweig-breadth-thrust/)** | **Breadth-Thrust** | Is a buy signal that's "never wrong" actually clever, or just a coin that lands heads in a market that mostly rises? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
 
 </details>
 
