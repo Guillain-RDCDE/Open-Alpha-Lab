@@ -10,8 +10,8 @@ type: software
 authors:
   - family-names: "d'Erceville"
     given-names: "Guillain"
-version: 0.2.0
-date-released: "2026-06-12"
+version: 0.3.0
+date-released: "2026-06-22"
 license: MIT
 url: "https://github.com/Guillain-RDCDE/Open-Alpha-Lab"
 repository-code: "https://github.com/Guillain-RDCDE/Open-Alpha-Lab"
