@@ -215,8 +215,8 @@ decaying, or capacity-starved. Worth knowing; not worth quitting your job for:
 
 ## Challenge the bench
 
-This page will be wrong eventually — that's the design. Two hundred and fifty-one verdicts is
-two hundred and fifty-one falsifiable claims, each with reproducible code, pinned data
+This page will be wrong eventually — that's the design. Three hundred and fifty-one verdicts is
+three hundred and fifty-one falsifiable claims, each with reproducible code, pinned data
 fingerprints, and the exact line where we think the dream dies.
 
 - **Think a Mirage is tradable?** Fork the study, change the cost model or
