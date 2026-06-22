@@ -49,7 +49,7 @@ Almost everything ends up bottom-right; three chips are green — and none of th
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 350 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 351 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -424,6 +424,7 @@ single source of truth (it's what the map and the live page are built from) — 
 | **[348](studies/348-curve-fitting/)** | **Curve-Fitting** | Tune a moving-average crossover until it shines — does the winner survive out of sample? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[349](studies/349-regime-dependence/)** | **Regime-Dependence** | A strategy that ruled the 2010s — was it skill, or just one regime? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[350](studies/350-dartboard-portfolio/)** | **Dartboard-Portfolio** | Can a blindfolded monkey throwing darts beat the stock-pickers? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[351](studies/351-btc-5m-polymarket-momentum/)** | **BTC 5-Minute Bot** | A free bot bets Bitcoin's last two minutes — $300 into $14,000? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 </details>
 

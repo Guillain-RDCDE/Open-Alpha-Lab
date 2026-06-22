@@ -1,12 +1,12 @@
-# What 350 teardowns taught us
+# What 351 teardowns taught us
 
-*Three hundred and fifty famous trading ideas — anomalies, folk strategies, vendor backtests, things
+*Three hundred and fifty-one famous trading ideas — anomalies, folk strategies, vendor backtests, things
 people swear by — each put through the [same protocol](../METHODOLOGY.md) and
 stamped twice: **is the signal real?** and **does it survive real execution and
 scale?** This page is the view from above. It aggregates; it doesn't re-judge —
 every verdict below links back to the study that earned it.*
 
-![The bench map — 350 studies on a Signal × Tradability grid](bench_map.png)
+![The bench map — 351 studies on a Signal × Tradability grid](bench_map.png)
 
 *(Regenerate with `python tools/make_bench_figures.py` — it parses the
 [README table](../README.md), so it's always in sync.)*
@@ -15,31 +15,31 @@ every verdict below links back to the study that earned it.*
 
 ## The score
 
-Of the 350 studies on the bench, 349 carry final stamps (study
+Of the 351 studies on the bench, 350 carry final stamps (study
 [14](../studies/14-gamma-gospel/) is pre-registered, verdict pending):
 
 | | Investable | Fragile | Mirage | |
 |---|:--:|:--:|:--:|:--:|
-| **Real** | **3** | 24 | 15 | 42 |
+| **Real** | **3** | 24 | 16 | 43 |
 | **Weak** | 0 | 38 | 95 | 133 |
 | **None** | 0 | 3 | 171 | 174 |
-| | **3** | **65** | **281** | **349** |
+| | **3** | **65** | **282** | **350** |
 
 Read it the way the colours tell you to:
 
-- **42 / 349 signals are statistically real.** About one famous idea in eight
+- **43 / 350 signals are statistically real.** About one famous idea in eight
   survives autocorrelation-robust inference. The other seven-eighths are weak
   (133) or plain noise (174).
-- **281 / 349 are mirages once you try to trade them.** Costs, capacity,
+- **282 / 350 are mirages once you try to trade them.** Costs, capacity,
   decay, or the discovery that the "edge" was beta all along.
-- **Exactly 3 / 349 are investable.** [Storm-Shy](../studies/16-storm-shy/),
+- **Exactly 3 / 350 are investable.** [Storm-Shy](../studies/16-storm-shy/),
   [All-Weather](../studies/68-all-weather/) and [Balancing-Act](../studies/97-balancing-act/)
   — and tellingly, none is a return predictor. One scales exposure down in
   turbulence, the other two are diversification (risk parity and the plain
   60/40). The bench's only greens don't forecast anything.
 
 The single most important cell isn't the green one — it's **Real × Mirage
-(15 studies)**. Fifteen effects that are *genuinely there in the data* and still
+(16 studies)**. Sixteen effects that are *genuinely there in the data* and still
 can't pay you. That gap between "true" and "tradable" is the bench's whole
 thesis, measured.
 
@@ -67,7 +67,7 @@ totals below are honest, the taxonomy is approximate.
 | Mean reversion & stat-arb — [05](../studies/05-twin-spread/) [23](../studies/23-broken-tether/) [26](../studies/26-sand-castle/) [32](../studies/32-rip-tide/) [33](../studies/33-slingshot/) [71](../studies/71-ambush/) [196](../studies/196-long-term-reversal/) [241](../studies/241-buy-the-dip/) [251](../studies/251-crypto-reversal/) [329](../studies/329-one-month-reversal/) [333](../studies/333-recovery-speed/) | 11 | 3 | 2 | 0 |
 | Macro & valuation timing — [37](../studies/37-barometer/) [47](../studies/47-paper-moon/) [49](../studies/49-black-gold/) [56](../studies/56-tide-table/) [66](../studies/66-inverted/) [85](../studies/85-dr-copper/) [114](../studies/114-dollar-smile/) [115](../studies/115-credit-spreads/) [118](../studies/118-fed-model/) [119](../studies/119-real-rate-regime/) [120](../studies/120-excess-cape-yield/) [151](../studies/151-stocks-for-long-run/) [152](../studies/152-inflation-hedge/) [160](../studies/160-skyscraper-curse/) [197](../studies/197-dividend-payout-ratio/) [214](../studies/214-magazine-cover-curse/) [215](../studies/215-big-mac-ppp/) [216](../studies/216-hemline-index/) [217](../studies/217-lipstick-index/) [245](../studies/245-oil-equity-correlation/) [246](../studies/246-defensive-sectors/) [255](../studies/255-fear-greed-index/) [257](../studies/257-aaii-sentiment/) [258](../studies/258-baker-wurgler/) [260](../studies/260-margin-debt/) [261](../studies/261-put-call-ratio/) [264](../studies/264-buffett-indicator/) [265](../studies/265-ipo-volume/) [266](../studies/266-misery-index/) [267](../studies/267-m2-growth/) [268](../studies/268-sahm-rule/) [269](../studies/269-baltic-dry/) [270](../studies/270-underwear-index/) [271](../studies/271-cardboard-box/) [272](../studies/272-champagne-index/) [305](../studies/305-gold-oil-ratio/) [311](../studies/311-government-shutdown/) [312](../studies/312-debt-ceiling/) [313](../studies/313-geopolitical-shock/) [315](../studies/315-sovereign-downgrade/) [316](../studies/316-bank-failure/) [317](../studies/317-fed-balance-sheet/) [318](../studies/318-election-volatility/) | 43 | 4 | 4 | 0 |
 | ML & model forecasting — [10](../studies/10-markov-mint/) [12](../studies/12-paper-prophet/) [39](../studies/39-black-box/) [84](../studies/84-moon-math/) [138](../studies/138-random-forest/) [139](../studies/139-ai-powered-etf/) | 6 | 0 | 0 | 0 |
-| Microstructure & crowds — [04](../studies/04-social-oracle/) [09](../studies/09-phantom-kernel/) [11](../studies/11-vanishing-penny/) [140](../studies/140-amihud-illiquidity/) [141](../studies/141-turnover-anomaly/) [169](../studies/169-fluent-tickers/) [170](../studies/170-alphabetical-bias/) [213](../studies/213-meme-stocks/) [249](../studies/249-index-inclusion/) [252](../studies/252-google-trends/) [253](../studies/253-wikipedia-views/) [254](../studies/254-wsb-mentions/) [256](../studies/256-twitter-mood/) [259](../studies/259-news-tone/) [328](../studies/328-benford-law/) [334](../studies/334-ark-innovation/) [335](../studies/335-buzz-sentiment-etf/) [336](../studies/336-inverse-cramer/) | 18 | 1 | 1 | 0 |
+| Microstructure & crowds — [04](../studies/04-social-oracle/) [09](../studies/09-phantom-kernel/) [11](../studies/11-vanishing-penny/) [140](../studies/140-amihud-illiquidity/) [141](../studies/141-turnover-anomaly/) [169](../studies/169-fluent-tickers/) [170](../studies/170-alphabetical-bias/) [213](../studies/213-meme-stocks/) [249](../studies/249-index-inclusion/) [252](../studies/252-google-trends/) [253](../studies/253-wikipedia-views/) [254](../studies/254-wsb-mentions/) [256](../studies/256-twitter-mood/) [259](../studies/259-news-tone/) [328](../studies/328-benford-law/) [334](../studies/334-ark-innovation/) [335](../studies/335-buzz-sentiment-etf/) [336](../studies/336-inverse-cramer/) [351](../studies/351-btc-5m-polymarket-momentum/) | 19 | 2 | 1 | 0 |
 | Research-method demos — [343](../studies/343-data-mining-roulette/) [344](../studies/344-backtest-overfitting/) [345](../studies/345-survivorship-bias/) [346](../studies/346-multiple-testing/) [347](../studies/347-look-ahead-bias/) [348](../studies/348-curve-fitting/) [349](../studies/349-regime-dependence/) [350](../studies/350-dartboard-portfolio/) | 8 | 0 | 0 | 0 |
 | Pre-registered — [14](../studies/14-gamma-gospel/) | 1 | — | — | — |
 

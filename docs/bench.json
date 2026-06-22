@@ -1,5 +1,5 @@
 {
- "total": 350,
+ "total": 351,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -15,7 +15,7 @@
   "Real": {
    "Investable": 3,
    "Fragile": 24,
-   "Mirage": 15
+   "Mirage": 16
   },
   "Weak": {
    "Investable": 0,
@@ -3178,6 +3178,15 @@
    "tradability": "Mirage",
    "href": "studies/350-dartboard-portfolio/",
    "family": "Research-method demos"
+  },
+  {
+   "num": 351,
+   "name": "BTC 5-Minute Bot",
+   "claim": "A free bot bets Bitcoin's last two minutes — $300 into $14,000?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/351-btc-5m-polymarket-momentum/",
+   "family": "Microstructure & crowds"
   }
  ],
  "special": [
