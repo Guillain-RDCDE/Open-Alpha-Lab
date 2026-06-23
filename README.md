@@ -2,12 +2,14 @@
 
 # Open-Alpha-Lab
 
-### An open quant research desk.
+### Out of 401 famous trading edges, three survive — and none of them predicts returns.
 
-I take famous trading ideas — anomalies, folk strategies, things people swear by —
-put each through the **same brutal protocol**, and publish the verdict: **edge or mirage.**
+That's not a typo. I put every market anomaly, folk strategy and named factor
+people swear by through the **same brutal protocol**, and publish the verdict: **edge or mirage.**
 
-***Most are mirages. The honest write-up of why is the point.***
+`401 tested` · `3 survive` · `318 mirages` · `0 forecast returns`
+
+***Most are mirages. The honest write-up of why is the point — and the survivors size risk, they don't see the future.***
 
 [![tests](https://github.com/Guillain-RDCDE/Open-Alpha-Lab/actions/workflows/tests.yml/badge.svg)](https://github.com/Guillain-RDCDE/Open-Alpha-Lab/actions/workflows/tests.yml)
 [![python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
@@ -22,7 +24,7 @@ put each through the **same brutal protocol**, and publish the verdict: **edge o
 > two questions most repos skip: **is the signal real?** *and* **does it survive real
 > execution and scale?**
 
-## How it works
+## The protocol
 
 Every idea goes through the *same* protocol and earns **two stamps**, so results are comparable:
 
@@ -37,7 +39,7 @@ style is written up in **[METHODOLOGY.md](METHODOLOGY.md)**.
 
 ---
 
-## The map
+## The graveyard
 
 The whole bench on one grid — every study is a numbered chip, sorted by its two stamps.
 Almost everything ends up bottom-right; three chips are green — and none of them predicts returns.
@@ -53,11 +55,11 @@ teaching are in **[What 400 teardowns taught us](docs/bench.md)**.
 
 ---
 
-## The studies
+## The body count
 
-**[▶ Browse all studies interactively](https://guillain-rdcde.github.io/Open-Alpha-Lab/)** — search by name or claim,
-filter by verdict, sort any column, click straight through to the teardown. The full table below is the
-single source of truth (it's what the map and the live page are built from) — it's long, so it's folded.
+Prefer a table to a map? The **[same live page](https://guillain-rdcde.github.io/Open-Alpha-Lab/)** also lists every
+study in a sortable grid — search by name or claim, filter by verdict, click straight through to the teardown.
+The full table below is the single source of truth (it's what the map and the live page are built from) — it's long, so it's folded.
 
 **Start here — the bench's only greens** (real signal *and* tradable; tellingly, none forecasts returns):
 
