@@ -1,12 +1,12 @@
-# What 400 teardowns taught us
+# What 401 teardowns taught us
 
-*Four hundred famous trading ideas — anomalies, folk strategies, vendor backtests, things
+*Four hundred and one famous trading ideas — anomalies, folk strategies, vendor backtests, things
 people swear by — each put through the [same protocol](../METHODOLOGY.md) and
 stamped twice: **is the signal real?** and **does it survive real execution and
 scale?** This page is the view from above. It aggregates; it doesn't re-judge —
 every verdict below links back to the study that earned it.*
 
-![The bench map — 400 studies on a Signal × Tradability grid](bench_map.png)
+![The bench map — 401 studies on a Signal × Tradability grid](bench_map.png)
 
 *(Regenerate with `python tools/make_bench_figures.py` — it parses the
 [README table](../README.md), so it's always in sync.)*
@@ -15,24 +15,24 @@ every verdict below links back to the study that earned it.*
 
 ## The score
 
-Of the 400 studies on the bench, 399 carry final stamps (study
+Of the 401 studies on the bench, 400 carry final stamps (study
 [14](../studies/14-gamma-gospel/) is pre-registered, verdict pending):
 
 | | Investable | Fragile | Mirage | |
 |---|:--:|:--:|:--:|:--:|
 | **Real** | **3** | 27 | 17 | 47 |
 | **Weak** | 0 | 49 | 117 | 166 |
-| **None** | 0 | 3 | 183 | 186 |
-| | **3** | **79** | **317** | **399** |
+| **None** | 0 | 3 | 184 | 187 |
+| | **3** | **79** | **318** | **400** |
 
 Read it the way the colours tell you to:
 
-- **47 / 399 signals are statistically real.** About one famous idea in eight
+- **47 / 400 signals are statistically real.** About one famous idea in eight
   survives autocorrelation-robust inference. The other seven-eighths are weak
-  (166) or plain noise (186).
-- **317 / 399 are mirages once you try to trade them.** Costs, capacity,
+  (166) or plain noise (187).
+- **318 / 400 are mirages once you try to trade them.** Costs, capacity,
   decay, or the discovery that the "edge" was beta all along.
-- **Exactly 3 / 399 are investable.** [Storm-Shy](../studies/16-storm-shy/),
+- **Exactly 3 / 400 are investable.** [Storm-Shy](../studies/16-storm-shy/),
   [All-Weather](../studies/68-all-weather/) and [Balancing-Act](../studies/97-balancing-act/)
   — and tellingly, none is a return predictor. One scales exposure down in
   turbulence, the other two are diversification (risk parity and the plain
@@ -52,7 +52,7 @@ Fragile stamp as plain diversifiers. The story dies; the asset survives.
 
 ## Where ideas go to die — mortality by family
 
-We sorted the 400 into rough families. The boundaries are judgement calls (is
+We sorted the 401 into rough families. The boundaries are judgement calls (is
 the 52-week high a chart pattern or a momentum factor? we said factor) — the
 totals below are honest, the taxonomy is approximate.
 
@@ -68,7 +68,7 @@ totals below are honest, the taxonomy is approximate.
 | Macro & valuation timing — [37](../studies/37-barometer/) [47](../studies/47-paper-moon/) [49](../studies/49-black-gold/) [56](../studies/56-tide-table/) [66](../studies/66-inverted/) [85](../studies/85-dr-copper/) [114](../studies/114-dollar-smile/) [115](../studies/115-credit-spreads/) [118](../studies/118-fed-model/) [119](../studies/119-real-rate-regime/) [120](../studies/120-excess-cape-yield/) [151](../studies/151-stocks-for-long-run/) [152](../studies/152-inflation-hedge/) [160](../studies/160-skyscraper-curse/) [197](../studies/197-dividend-payout-ratio/) [214](../studies/214-magazine-cover-curse/) [215](../studies/215-big-mac-ppp/) [216](../studies/216-hemline-index/) [217](../studies/217-lipstick-index/) [245](../studies/245-oil-equity-correlation/) [246](../studies/246-defensive-sectors/) [255](../studies/255-fear-greed-index/) [257](../studies/257-aaii-sentiment/) [258](../studies/258-baker-wurgler/) [260](../studies/260-margin-debt/) [261](../studies/261-put-call-ratio/) [264](../studies/264-buffett-indicator/) [265](../studies/265-ipo-volume/) [266](../studies/266-misery-index/) [267](../studies/267-m2-growth/) [268](../studies/268-sahm-rule/) [269](../studies/269-baltic-dry/) [270](../studies/270-underwear-index/) [271](../studies/271-cardboard-box/) [272](../studies/272-champagne-index/) [305](../studies/305-gold-oil-ratio/) [311](../studies/311-government-shutdown/) [312](../studies/312-debt-ceiling/) [313](../studies/313-geopolitical-shock/) [315](../studies/315-sovereign-downgrade/) [316](../studies/316-bank-failure/) [317](../studies/317-fed-balance-sheet/) [318](../studies/318-election-volatility/) [360](../studies/360-naaim-exposure/) [381](../studies/381-tips-breakeven/) [383](../studies/383-sofr-repo-stress/) [384](../studies/384-ism-pmi-regime/) [385](../studies/385-jobless-claims-momentum/) [386](../studies/386-nfci-conditions/) [387](../studies/387-economic-surprise-index/) [388](../studies/388-lumber-gold-ratio/) [394](../studies/394-defense-basket/) | 52 | 4 | 5 | 0 |
 | ML & model forecasting — [10](../studies/10-markov-mint/) [12](../studies/12-paper-prophet/) [39](../studies/39-black-box/) [84](../studies/84-moon-math/) [138](../studies/138-random-forest/) [139](../studies/139-ai-powered-etf/) | 6 | 0 | 0 | 0 |
 | Microstructure & crowds — [4](../studies/04-social-oracle/) [9](../studies/09-phantom-kernel/) [11](../studies/11-vanishing-penny/) [140](../studies/140-amihud-illiquidity/) [141](../studies/141-turnover-anomaly/) [169](../studies/169-fluent-tickers/) [170](../studies/170-alphabetical-bias/) [213](../studies/213-meme-stocks/) [249](../studies/249-index-inclusion/) [252](../studies/252-google-trends/) [253](../studies/253-wikipedia-views/) [254](../studies/254-wsb-mentions/) [256](../studies/256-twitter-mood/) [259](../studies/259-news-tone/) [328](../studies/328-benford-law/) [334](../studies/334-ark-innovation/) [335](../studies/335-buzz-sentiment-etf/) [336](../studies/336-inverse-cramer/) [351](../studies/351-btc-5m-polymarket-momentum/) [376](../studies/376-moc-imbalance/) [377](../studies/377-bid-ask-bounce/) [378](../studies/378-etf-nav-premium/) [379](../studies/379-etf-lead-lag/) [389](../studies/389-name-change-effect/) [392](../studies/392-glassdoor-sentiment/) | 25 | 2 | 2 | 0 |
-| Research-method demos — [343](../studies/343-data-mining-roulette/) [344](../studies/344-backtest-overfitting/) [345](../studies/345-survivorship-bias/) [346](../studies/346-multiple-testing/) [347](../studies/347-look-ahead-bias/) [348](../studies/348-curve-fitting/) [349](../studies/349-regime-dependence/) [350](../studies/350-dartboard-portfolio/) [355](../studies/355-magnificent-seven/) [393](../studies/393-ai-datacenter-basket/) [399](../studies/399-kalshi-efficiency/) | 11 | 0 | 0 | 0 |
+| Research-method demos — [343](../studies/343-data-mining-roulette/) [344](../studies/344-backtest-overfitting/) [345](../studies/345-survivorship-bias/) [346](../studies/346-multiple-testing/) [347](../studies/347-look-ahead-bias/) [348](../studies/348-curve-fitting/) [349](../studies/349-regime-dependence/) [350](../studies/350-dartboard-portfolio/) [355](../studies/355-magnificent-seven/) [393](../studies/393-ai-datacenter-basket/) [399](../studies/399-kalshi-efficiency/) [401](../studies/401-signal-stacking/) | 12 | 0 | 0 | 0 |
 | Pre-registered — [14](../studies/14-gamma-gospel/) | 1 | — | — | — |
 
 \* *"Survived costs" = stamped Investable or Fragile (alive on paper, even if
@@ -218,8 +218,8 @@ decaying, or capacity-starved. Worth knowing; not worth quitting your job for:
 
 ## Challenge the bench
 
-This page will be wrong eventually — that's the design. Four hundred verdicts is
-four hundred falsifiable claims, each with reproducible code, pinned data
+This page will be wrong eventually — that's the design. Four hundred and one verdicts is
+four hundred and one falsifiable claims, each with reproducible code, pinned data
 fingerprints, and the exact line where we think the dream dies.
 
 - **Think a Mirage is tradable?** Fork the study, change the cost model or

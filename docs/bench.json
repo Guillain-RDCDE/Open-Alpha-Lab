@@ -1,5 +1,5 @@
 {
- "total": 400,
+ "total": 401,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -25,7 +25,7 @@
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 183
+   "Mirage": 184
   }
  },
  "studies": [
@@ -3628,6 +3628,15 @@
    "tradability": "Mirage",
    "href": "studies/400-patent-intensity/",
    "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 401,
+   "name": "Signal-Stacking",
+   "claim": "Does stacking 50 weak signals manufacture a real edge — or just luck in Greek letters?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/401-signal-stacking/",
+   "family": "Research-method demos"
   }
  ],
  "special": [

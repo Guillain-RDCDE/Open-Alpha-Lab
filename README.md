@@ -474,6 +474,7 @@ single source of truth (it's what the map and the live page are built from) â�
 | **[398](studies/398-entropy-efficiency/)** | **Entropy-Efficiency** | Does a less-random (low-entropy) tape predict returns? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[399](studies/399-kalshi-efficiency/)** | **Kalshi-Efficiency** | Is there a real, harvestable mispricing? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[400](studies/400-patent-intensity/)** | **Patent-Intensity** | Do patent-heavy firms earn a real innovation premium? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[401](studies/401-signal-stacking/)** | **Signal-Stacking** | Does stacking 50 weak signals manufacture a real edge — or just luck in Greek letters? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 </details>
 
