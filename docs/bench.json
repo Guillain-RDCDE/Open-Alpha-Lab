@@ -1,5 +1,5 @@
 {
- "total": 361,
+ "total": 400,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -14,18 +14,18 @@
  "counts": {
   "Real": {
    "Investable": 3,
-   "Fragile": 24,
-   "Mirage": 16
+   "Fragile": 27,
+   "Mirage": 17
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 42,
-   "Mirage": 98
+   "Fragile": 49,
+   "Mirage": 117
   },
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 174
+   "Mirage": 183
   }
  },
  "studies": [
@@ -41,7 +41,7 @@
   {
    "num": 2,
    "name": "Falling-Knife",
-   "claim": "Does buying the dip (−3%) beat a random day?",
+   "claim": "Does buying the dip (âˆ’3%) beat a random day?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/02-falling-knife/",
@@ -104,7 +104,7 @@
   {
    "num": 9,
    "name": "Phantom-Kernel",
-   "claim": "Is Avellaneda-Stoikov's \"optimal spread\" built on a real order-arrival law — and does it matter to the P&L?",
+   "claim": "Is Avellaneda-Stoikov's \"optimal spread\" built on a real order-arrival law â€” and does it matter to the P&L?",
    "signal": "None",
    "tradability": "Fragile",
    "href": "studies/09-phantom-kernel/",
@@ -158,7 +158,7 @@
   {
    "num": 15,
    "name": "Sigma-Sleight",
-   "claim": "Does length-aware \"AdaptiveRSI\" beat fixed 70/30, or is the σ-transform a monotone relabel?",
+   "claim": "Does length-aware \"AdaptiveRSI\" beat fixed 70/30, or is the Ïƒ-transform a monotone relabel?",
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/15-sigma-sleight/",
@@ -167,7 +167,7 @@
   {
    "num": 16,
    "name": "Storm-Shy",
-   "claim": "Does scaling exposure down when markets get loud actually pay — or is it just selling low?",
+   "claim": "Does scaling exposure down when markets get loud actually pay â€” or is it just selling low?",
    "signal": "Real",
    "tradability": "Investable",
    "href": "studies/16-storm-shy/",
@@ -194,7 +194,7 @@
   {
    "num": 19,
    "name": "Rubber-Band",
-   "claim": "Internal Bar Strength: does a stock that closes near its low really snap back the next day — and can you still cash it?",
+   "claim": "Internal Bar Strength: does a stock that closes near its low really snap back the next day â€” and can you still cash it?",
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/19-rubber-band/",
@@ -203,7 +203,7 @@
   {
    "num": 20,
    "name": "Freight-Train",
-   "claim": "Time-series momentum: does riding the trend across many markets pay — and why would you hold a thin-Sharpe sleeve?",
+   "claim": "Time-series momentum: does riding the trend across many markets pay â€” and why would you hold a thin-Sharpe sleeve?",
    "signal": "Weak",
    "tradability": "Fragile",
    "href": "studies/20-freight-train/",
@@ -221,7 +221,7 @@
   {
    "num": 22,
    "name": "Crystal-Ball",
-   "claim": "An HP-filter detrending strategy backtests at Sharpe 2 — on a coin flip. Is it an edge, or is the filter peeking at the future?",
+   "claim": "An HP-filter detrending strategy backtests at Sharpe 2 â€” on a coin flip. Is it an edge, or is the filter peeking at the future?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/22-crystal-ball/",
@@ -230,7 +230,7 @@
   {
    "num": 23,
    "name": "Broken-Tether",
-   "claim": "Pairs trading: two assets drift apart, bet they snap back — but does the cointegration hold out of sample?",
+   "claim": "Pairs trading: two assets drift apart, bet they snap back â€” but does the cointegration hold out of sample?",
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/23-broken-tether/",
@@ -239,7 +239,7 @@
   {
    "num": 24,
    "name": "Stampede",
-   "claim": "Cross-sectional momentum: do past winners keep winning on the modern S&P 500 — and what does the crash cost?",
+   "claim": "Cross-sectional momentum: do past winners keep winning on the modern S&P 500 â€” and what does the crash cost?",
    "signal": "Weak",
    "tradability": "Fragile",
    "href": "studies/24-stampede/",
@@ -248,7 +248,7 @@
   {
    "num": 25,
    "name": "Clean-Slate",
-   "claim": "Residual momentum — is the \"cleaner cousin\" of cross-sectional momentum actually cleaner on this tape?",
+   "claim": "Residual momentum â€” is the \"cleaner cousin\" of cross-sectional momentum actually cleaner on this tape?",
    "signal": "Weak",
    "tradability": "Fragile",
    "href": "studies/25-clean-slate/",
@@ -257,7 +257,7 @@
   {
    "num": 26,
    "name": "Sand-Castle",
-   "claim": "A \"mathematically optimal\" stat-arb portfolio (w ∝ C⁻¹E) backtests beautifully — does inverting an estimated covariance help, or maximize the error?",
+   "claim": "A \"mathematically optimal\" stat-arb portfolio (w âˆ Câ»Â¹E) backtests beautifully â€” does inverting an estimated covariance help, or maximize the error?",
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/26-sand-castle/",
@@ -266,7 +266,7 @@
   {
    "num": 27,
    "name": "Steamroller",
-   "claim": "The FX carry trade — borrow cheap, lend dear: a real premium, or rent paid in front of a steamroller?",
+   "claim": "The FX carry trade â€” borrow cheap, lend dear: a real premium, or rent paid in front of a steamroller?",
    "signal": "Weak",
    "tradability": "Fragile",
    "href": "studies/27-steamroller/",
@@ -275,7 +275,7 @@
   {
    "num": 28,
    "name": "Carousel",
-   "claim": "Sector rotation: does chasing the hottest sectors beat just holding all eleven equal-weight — or is it concentration risk for nothing?",
+   "claim": "Sector rotation: does chasing the hottest sectors beat just holding all eleven equal-weight â€” or is it concentration risk for nothing?",
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/28-carousel/",
@@ -284,7 +284,7 @@
   {
    "num": 29,
    "name": "Hedgers-Toll",
-   "claim": "Are speculators really paid (via CFTC positioning) for taking the other side of producers' commodity hedges — or has the toll booth closed?",
+   "claim": "Are speculators really paid (via CFTC positioning) for taking the other side of producers' commodity hedges â€” or has the toll booth closed?",
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/29-hedgers-toll/",
@@ -293,7 +293,7 @@
   {
    "num": 30,
    "name": "House-Edge",
-   "claim": "Lever a vol-targeted dip-buyer to beat the market — does the edge survive the retail CFD markup?",
+   "claim": "Lever a vol-targeted dip-buyer to beat the market â€” does the edge survive the retail CFD markup?",
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/30-house-edge/",
@@ -302,7 +302,7 @@
   {
    "num": 31,
    "name": "Trade-Winds",
-   "claim": "Cross-asset time-series momentum — the cliché closest to surviving: does our 26-year tape certify it, or only the crisis-alpha sleeve?",
+   "claim": "Cross-asset time-series momentum â€” the clichÃ© closest to surviving: does our 26-year tape certify it, or only the crisis-alpha sleeve?",
    "signal": "Weak",
    "tradability": "Fragile",
    "href": "studies/31-trade-winds/",
@@ -311,7 +311,7 @@
   {
    "num": 32,
    "name": "Rip-Tide",
-   "claim": "Short-term contrarian on the same 18 futures as Trade-Winds — same machine, opposite sign: does fading the move pay net of turnover?",
+   "claim": "Short-term contrarian on the same 18 futures as Trade-Winds â€” same machine, opposite sign: does fading the move pay net of turnover?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/32-rip-tide/",
@@ -320,7 +320,7 @@
   {
    "num": 33,
    "name": "Slingshot",
-   "claim": "The equity mirror of Rip-Tide — fade each stock against its peers (dollar-neutral): a real reversal, or eaten by the spread?",
+   "claim": "The equity mirror of Rip-Tide â€” fade each stock against its peers (dollar-neutral): a real reversal, or eaten by the spread?",
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/33-slingshot/",
@@ -329,7 +329,7 @@
   {
    "num": 34,
    "name": "Aftershock",
-   "claim": "Post-earnings drift — the decades-old premium: does it survive on a liquid S&P 500 universe after costs?",
+   "claim": "Post-earnings drift â€” the decades-old premium: does it survive on a liquid S&P 500 universe after costs?",
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/34-aftershock/",
@@ -338,7 +338,7 @@
   {
    "num": 35,
    "name": "Contango",
-   "claim": "Commodity carry / roll yield — long backwardation, short contango: is the contango tax harvestable, or a −83%-drawdown curve-timing book?",
+   "claim": "Commodity carry / roll yield â€” long backwardation, short contango: is the contango tax harvestable, or a âˆ’83%-drawdown curve-timing book?",
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/35-contango/",
@@ -347,7 +347,7 @@
   {
    "num": 36,
    "name": "Greenback",
-   "claim": "Dollar-carry, and the carry⊕momentum combo: can diversification fix the steamroller a vol overlay couldn't?",
+   "claim": "Dollar-carry, and the carryâŠ•momentum combo: can diversification fix the steamroller a vol overlay couldn't?",
    "signal": "Weak",
    "tradability": "Fragile",
    "href": "studies/36-greenback/",
@@ -365,7 +365,7 @@
   {
    "num": 38,
    "name": "Chorus",
-   "claim": "The capstone — blend three weak, decorrelated signals (momentum + reversal + low-vol): do they add up to one tradable book?",
+   "claim": "The capstone â€” blend three weak, decorrelated signals (momentum + reversal + low-vol): do they add up to one tradable book?",
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/38-chorus/",
@@ -401,7 +401,7 @@
   {
    "num": 42,
    "name": "Last-Call",
-   "claim": "The turn-of-the-month effect — real, large and famous: can you actually beat buy-and-hold with it?",
+   "claim": "The turn-of-the-month effect â€” real, large and famous: can you actually beat buy-and-hold with it?",
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/42-last-call/",
@@ -410,7 +410,7 @@
   {
    "num": 43,
    "name": "Free-Lunch",
-   "claim": "Betting against beta — the \"low-risk free lunch\": is it free, or is it the leverage bill?",
+   "claim": "Betting against beta â€” the \"low-risk free lunch\": is it free, or is it the leverage bill?",
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/43-free-lunch/",
@@ -419,7 +419,7 @@
   {
    "num": 44,
    "name": "Growth-Spurt",
-   "claim": "The asset-growth effect — the highest headline Sharpe on the vendor list: does it survive look-ahead-free on large caps?",
+   "claim": "The asset-growth effect â€” the highest headline Sharpe on the vendor list: does it survive look-ahead-free on large caps?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/44-growth-spurt/",
@@ -455,7 +455,7 @@
   {
    "num": 48,
    "name": "Groundhog",
-   "claim": "Return seasonality — a stock repeats its calendar-month performance (Heston-Sadka): real signal, or astrology?",
+   "claim": "Return seasonality â€” a stock repeats its calendar-month performance (Heston-Sadka): real signal, or astrology?",
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/48-groundhog/",
@@ -464,7 +464,7 @@
   {
    "num": 49,
    "name": "Black-Gold",
-   "claim": "Does the oil price predict the stock market (Driesprong 2008) — still, out of sample?",
+   "claim": "Does the oil price predict the stock market (Driesprong 2008) â€” still, out of sample?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/49-black-gold/",
@@ -482,7 +482,7 @@
   {
    "num": 51,
    "name": "Blue-Chip",
-   "claim": "The quality (gross-profitability) premium — the factor that survived where size and value faded (Novy-Marx): does it, on real SEC data?",
+   "claim": "The quality (gross-profitability) premium â€” the factor that survived where size and value faded (Novy-Marx): does it, on real SEC data?",
    "signal": "Weak",
    "tradability": "Fragile",
    "href": "studies/51-blue-chip/",
@@ -491,7 +491,7 @@
   {
    "num": 52,
    "name": "Smoke-Screen",
-   "claim": "The accruals anomaly (Sloan 1996) — cash-backed earnings beat accrual-heavy ones: does it replicate on real SEC data?",
+   "claim": "The accruals anomaly (Sloan 1996) â€” cash-backed earnings beat accrual-heavy ones: does it replicate on real SEC data?",
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/52-smoke-screen/",
@@ -500,7 +500,7 @@
   {
    "num": 53,
    "name": "Jackpot",
-   "claim": "The lottery (MAX) effect — high single-day-gain stocks should underperform (Bali et al.): do they, on large caps?",
+   "claim": "The lottery (MAX) effect â€” high single-day-gain stocks should underperform (Bali et al.): do they, on large caps?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/53-jackpot/",
@@ -509,7 +509,7 @@
   {
    "num": 54,
    "name": "Static",
-   "claim": "The idiosyncratic-volatility puzzle (high-vol → low returns, Ang et al.): does it hold on large caps?",
+   "claim": "The idiosyncratic-volatility puzzle (high-vol â†’ low returns, Ang et al.): does it hold on large caps?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/54-static/",
@@ -518,7 +518,7 @@
   {
    "num": 55,
    "name": "Summer-Lull",
-   "claim": "\"Sell in May\" — the Halloween seasonal: real enough to beat buy-and-hold?",
+   "claim": "\"Sell in May\" â€” the Halloween seasonal: real enough to beat buy-and-hold?",
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/55-summer-lull/",
@@ -527,7 +527,7 @@
   {
    "num": 56,
    "name": "Tide-Table",
-   "claim": "Does the Shiller CAPE forecast long-run returns — and can it time the market, or only set expectations?",
+   "claim": "Does the Shiller CAPE forecast long-run returns â€” and can it time the market, or only set expectations?",
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/56-tide-table/",
@@ -545,7 +545,7 @@
   {
    "num": 58,
    "name": "Bunker",
-   "claim": "Does the min-vol ETF (USMV) deliver the low-vol anomaly — free Sharpe, or just less risk?",
+   "claim": "Does the min-vol ETF (USMV) deliver the low-vol anomaly â€” free Sharpe, or just less risk?",
    "signal": "Weak",
    "tradability": "Fragile",
    "href": "studies/58-bunker/",
@@ -563,7 +563,7 @@
   {
    "num": 60,
    "name": "Long-Shot",
-   "claim": "The skewness (lottery) effect in commodities — low-skew beats high-skew: does it point the right way, and pay?",
+   "claim": "The skewness (lottery) effect in commodities â€” low-skew beats high-skew: does it point the right way, and pay?",
    "signal": "Weak",
    "tradability": "Fragile",
    "href": "studies/60-long-shot/",
@@ -572,7 +572,7 @@
   {
    "num": 61,
    "name": "Slow-Burn",
-   "claim": "Do 3× leveraged ETFs (TQQQ) decay to zero or amplify — and is there a free lunch?",
+   "claim": "Do 3Ã— leveraged ETFs (TQQQ) decay to zero or amplify â€” and is there a free lunch?",
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/61-slow-burn/",
@@ -590,7 +590,7 @@
   {
    "num": 63,
    "name": "Free-Fall",
-   "claim": "The short-volatility carry — selling vol earns a real premium: can you keep it through the steamroller?",
+   "claim": "The short-volatility carry â€” selling vol earns a real premium: can you keep it through the steamroller?",
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/63-free-fall/",
@@ -599,7 +599,7 @@
   {
    "num": 64,
    "name": "Share-Shuffle",
-   "claim": "Do firms that issue stock underperform the ones buying it back (the net-issuance anomaly) — on large caps?",
+   "claim": "Do firms that issue stock underperform the ones buying it back (the net-issuance anomaly) â€” on large caps?",
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/64-share-shuffle/",
@@ -617,7 +617,7 @@
   {
    "num": 66,
    "name": "Inverted",
-   "claim": "Does an inverted yield curve forecast equity downturns — and is it a usable sell button?",
+   "claim": "Does an inverted yield curve forecast equity downturns â€” and is it a usable sell button?",
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/66-inverted/",
@@ -626,7 +626,7 @@
   {
    "num": 67,
    "name": "Fed-Drift",
-   "claim": "Do stocks drift up before FOMC meetings (Lucca-Moench) — still, after everyone knows?",
+   "claim": "Do stocks drift up before FOMC meetings (Lucca-Moench) â€” still, after everyone knows?",
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/67-fed-drift/",
@@ -644,7 +644,7 @@
   {
    "num": 69,
    "name": "Safe-Haven",
-   "claim": "Does gold hedge inflation and crashes — or one, or neither?",
+   "claim": "Does gold hedge inflation and crashes â€” or one, or neither?",
    "signal": "None",
    "tradability": "Fragile",
    "href": "studies/69-safe-haven/",
@@ -653,7 +653,7 @@
   {
    "num": 70,
    "name": "Digital-Gold",
-   "claim": "Is bitcoin \"digital gold\" — a crash-and-inflation haven, or just a high-octane risk asset?",
+   "claim": "Is bitcoin \"digital gold\" â€” a crash-and-inflation haven, or just a high-octane risk asset?",
    "signal": "None",
    "tradability": "Fragile",
    "href": "studies/70-digital-gold/",
@@ -671,7 +671,7 @@
   {
    "num": 72,
    "name": "Loaded-Dice",
-   "claim": "The 5-minute SMA(5/10) crossover scalp — \"a coin flip with the trend on your side\": is the trend really on your side?",
+   "claim": "The 5-minute SMA(5/10) crossover scalp â€” \"a coin flip with the trend on your side\": is the trend really on your side?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/72-loaded-dice/",
@@ -698,7 +698,7 @@
   {
    "num": 75,
    "name": "Knee-Jerk",
-   "claim": "Does Connors' RSI(2) oversold bounce still pay — or did publishing it wear it out?",
+   "claim": "Does Connors' RSI(2) oversold bounce still pay â€” or did publishing it wear it out?",
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/75-knee-jerk/",
@@ -734,7 +734,7 @@
   {
    "num": 79,
    "name": "Sleigh-Ride",
-   "claim": "Is the Santa Claus rally real — and does a failed one warn of trouble ahead?",
+   "claim": "Is the Santa Claus rally real â€” and does a failed one warn of trouble ahead?",
    "signal": "Weak",
    "tradability": "Fragile",
    "href": "studies/79-sleigh-ride/",
@@ -815,7 +815,7 @@
   {
    "num": 88,
    "name": "Dogs-of-the-Dow",
-   "claim": "Buy the ten highest-yielding Dow stocks each January — do you really beat the Dow?",
+   "claim": "Buy the ten highest-yielding Dow stocks each January â€” do you really beat the Dow?",
    "signal": "Weak",
    "tradability": "Fragile",
    "href": "studies/88-dogs-of-the-dow/",
@@ -851,7 +851,7 @@
   {
    "num": 92,
    "name": "Easy-Money",
-   "claim": "Vol ETPs bleed lower every day — so can you just short them and collect free money?",
+   "claim": "Vol ETPs bleed lower every day â€” so can you just short them and collect free money?",
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/92-easy-money/",
@@ -860,7 +860,7 @@
   {
    "num": 93,
    "name": "Round-Numbers",
-   "claim": "Prices pile up at whole dollars — but can you trade the magnetism?",
+   "claim": "Prices pile up at whole dollars â€” but can you trade the magnetism?",
    "signal": "Mixed",
    "tradability": "Mirage",
    "href": "studies/93-round-numbers/",
@@ -878,7 +878,7 @@
   {
    "num": 95,
    "name": "Holiday-Cheer",
-   "claim": "Do stocks really pop the day before every market holiday — and can you buy it?",
+   "claim": "Do stocks really pop the day before every market holiday â€” and can you buy it?",
    "signal": "Mixed",
    "tradability": "Mirage",
    "href": "studies/95-holiday-cheer/",
@@ -896,7 +896,7 @@
   {
    "num": 97,
    "name": "Balancing-Act",
-   "claim": "Is the classic 60/40 portfolio the sensible default — and do bonds really cushion every crash?",
+   "claim": "Is the classic 60/40 portfolio the sensible default â€” and do bonds really cushion every crash?",
    "signal": "Real",
    "tradability": "Investable",
    "href": "studies/97-balancing-act/",
@@ -1067,7 +1067,7 @@
   {
    "num": 116,
    "name": "Power-Hour",
-   "claim": "Does the last \"power hour\" continue the day's move — or fade it?",
+   "claim": "Does the last \"power hour\" continue the day's move â€” or fade it?",
    "signal": "Mixed",
    "tradability": "Fragile",
    "href": "studies/116-power-hour/",
@@ -1175,7 +1175,7 @@
   {
    "num": 128,
    "name": "Keltner-Channel",
-   "claim": "Keltner breakout or Keltner reversion — is either one signal?",
+   "claim": "Keltner breakout or Keltner reversion â€” is either one signal?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/128-keltner-channel/",
@@ -1220,7 +1220,7 @@
   {
    "num": 133,
    "name": "Crypto-Seasonality",
-   "claim": "Is \"Uptober\" — or any month — a real edge in Bitcoin?",
+   "claim": "Is \"Uptober\" â€” or any month â€” a real edge in Bitcoin?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/133-crypto-seasonality/",
@@ -1454,7 +1454,7 @@
   {
    "num": 159,
    "name": "Presidential-Party",
-   "claim": "Do stocks really do better under Democrats — or did the crashes just land on one party's watch?",
+   "claim": "Do stocks really do better under Democrats â€” or did the crashes just land on one party's watch?",
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/159-presidential-party/",
@@ -1607,7 +1607,7 @@
   {
    "num": 176,
    "name": "Hot-Hand",
-   "claim": "After a winning streak, is the market \"hot\" — or \"due\" for a reversal?",
+   "claim": "After a winning streak, is the market \"hot\" â€” or \"due\" for a reversal?",
    "signal": "Mixed",
    "tradability": "Fragile",
    "href": "studies/176-hot-hand/",
@@ -1760,7 +1760,7 @@
   {
    "num": 193,
    "name": "Window-Dressing",
-   "claim": "Do funds pump winners into quarter-end — and can you trade it?",
+   "claim": "Do funds pump winners into quarter-end â€” and can you trade it?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/193-window-dressing/",
@@ -1850,7 +1850,7 @@
   {
    "num": 203,
    "name": "Golden-Butterfly",
-   "claim": "Does the Golden Butterfly beat plain stocks — and its simpler parent?",
+   "claim": "Does the Golden Butterfly beat plain stocks â€” and its simpler parent?",
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/203-golden-butterfly/",
@@ -2732,7 +2732,7 @@
   {
    "num": 301,
    "name": "Triple-RSI",
-   "claim": "A viral \"90% win rate\" RSI(5) bounce — real edge, or the oldest illusion in the book?",
+   "claim": "A viral \"90% win rate\" RSI(5) bounce â€” real edge, or the oldest illusion in the book?",
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/301-triple-rsi/",
@@ -2795,7 +2795,7 @@
   {
    "num": 308,
    "name": "Cocoa-Squeeze",
-   "claim": "After cocoa tripled and then crashed 78%, was there an edge — ride the squeeze or fade the blow-off — or just a freak?",
+   "claim": "After cocoa tripled and then crashed 78%, was there an edge â€” ride the squeeze or fade the blow-off â€” or just a freak?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/308-cocoa-squeeze/",
@@ -2804,7 +2804,7 @@
   {
    "num": 309,
    "name": "OJ-Frost",
-   "claim": "Does the Trading Places trade — buying orange-juice futures around Florida freeze events — actually exist?",
+   "claim": "Does the Trading Places trade â€” buying orange-juice futures around Florida freeze events â€” actually exist?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/309-oj-frost/",
@@ -2831,7 +2831,7 @@
   {
    "num": 312,
    "name": "Debt-Ceiling",
-   "claim": "Is debt-ceiling brinkmanship a volatility trade — does the VIX ramp into the X-date and collapse when Washington blinks?",
+   "claim": "Is debt-ceiling brinkmanship a volatility trade â€” does the VIX ramp into the X-date and collapse when Washington blinks?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/312-debt-ceiling/",
@@ -2939,7 +2939,7 @@
   {
    "num": 324,
    "name": "Bitcoin-Treasury",
-   "claim": "Is MicroStrategy (MSTR) just leveraged Bitcoin — and does the premium pay?",
+   "claim": "Is MicroStrategy (MSTR) just leveraged Bitcoin â€” and does the premium pay?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/324-bitcoin-treasury/",
@@ -2948,7 +2948,7 @@
   {
    "num": 325,
    "name": "Crypto-Fear-Greed",
-   "claim": "Be greedy when others are fearful — does the crypto Fear & Greed gauge time BTC?",
+   "claim": "Be greedy when others are fearful â€” does the crypto Fear & Greed gauge time BTC?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/325-crypto-fear-greed/",
@@ -2966,7 +2966,7 @@
   {
    "num": 327,
    "name": "Disposition-Effect",
-   "claim": "Investors sell winners too early — can you harvest the resulting under-reaction with a capital-gains-overhang factor?",
+   "claim": "Investors sell winners too early â€” can you harvest the resulting under-reaction with a capital-gains-overhang factor?",
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/327-disposition-effect/",
@@ -2975,7 +2975,7 @@
   {
    "num": 328,
    "name": "Benford-Law",
-   "claim": "Do stock prices obey Benford's Law — and can the deviation flag anything tradable?",
+   "claim": "Do stock prices obey Benford's Law â€” and can the deviation flag anything tradable?",
    "signal": "Mixed",
    "tradability": "Mirage",
    "href": "studies/328-benford-law/",
@@ -3092,7 +3092,7 @@
   {
    "num": 341,
    "name": "MLP-Pipelines",
-   "claim": "AMLP pays a 7-8% \"bond-like\" income — is it a fat-yield free lunch, or a leveraged oil bet handing back your own capital?",
+   "claim": "AMLP pays a 7-8% \"bond-like\" income â€” is it a fat-yield free lunch, or a leveraged oil bet handing back your own capital?",
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/341-mlp-pipelines/",
@@ -3110,7 +3110,7 @@
   {
    "num": 343,
    "name": "Data-Mining-Roulette",
-   "claim": "Test 1,000 random trading rules — how many beat the market by pure luck?",
+   "claim": "Test 1,000 random trading rules â€” how many beat the market by pure luck?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/343-data-mining-roulette/",
@@ -3137,7 +3137,7 @@
   {
    "num": 346,
    "name": "Multiple-Testing",
-   "claim": "Test 100 calendar effects and a few clear t>2 by luck — so which p-values can you actually trust?",
+   "claim": "Test 100 calendar effects and a few clear t>2 by luck â€” so which p-values can you actually trust?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/346-multiple-testing/",
@@ -3155,7 +3155,7 @@
   {
    "num": 348,
    "name": "Curve-Fitting",
-   "claim": "Tune a moving-average crossover until it shines — does the winner survive out of sample?",
+   "claim": "Tune a moving-average crossover until it shines â€” does the winner survive out of sample?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/348-curve-fitting/",
@@ -3164,7 +3164,7 @@
   {
    "num": 349,
    "name": "Regime-Dependence",
-   "claim": "A strategy that ruled the 2010s — was it skill, or just one regime?",
+   "claim": "A strategy that ruled the 2010s â€” was it skill, or just one regime?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/349-regime-dependence/",
@@ -3182,7 +3182,7 @@
   {
    "num": 351,
    "name": "BTC 5-Minute Bot",
-   "claim": "A free bot bets Bitcoin's last two minutes — $300 into $14,000?",
+   "claim": "A free bot bets Bitcoin's last two minutes â€” $300 into $14,000?",
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/351-btc-5m-polymarket-momentum/",
@@ -3218,7 +3218,7 @@
   {
    "num": 355,
    "name": "Magnificent-Seven",
-   "claim": "Did the Magnificent Seven beat the market — or did the market just name the winners after they won?",
+   "claim": "Did the Magnificent Seven beat the market â€” or did the market just name the winners after they won?",
    "signal": "Mixed",
    "tradability": "Mirage",
    "href": "studies/355-magnificent-seven/",
@@ -3277,6 +3277,357 @@
    "tradability": "Fragile",
    "href": "studies/361-zweig-breadth-thrust/",
    "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 362,
+   "name": "Piotroski-F-Score",
+   "claim": "Does the 9-point score separate winners from losers?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/362-piotroski-f-score/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 363,
+   "name": "PEAD-Drift",
+   "claim": "Do stocks keep drifting in the direction of an earnings surprise?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/363-pead-drift/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 364,
+   "name": "FX-Carry-Trade",
+   "claim": "Does borrowing cheap-yield currencies to lend dear ones really pay?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/364-fx-carry-trade/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 365,
+   "name": "Lottery-MAX-Effect",
+   "claim": "Does the flashy tail underperform?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/365-lottery-max-effect/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 366,
+   "name": "Merger-Arbitrage",
+   "claim": "Does the spread beat fair compensation for the break risk?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/366-merger-arbitrage/",
+   "family": "Mean reversion & stat-arb"
+  },
+  {
+   "num": 367,
+   "name": "CEF-Discount",
+   "claim": "Do deep-discount closed-end funds out-earn the market?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/367-closed-end-fund-discount/",
+   "family": "Mean reversion & stat-arb"
+  },
+  {
+   "num": 368,
+   "name": "Buyback-Drift",
+   "claim": "Does a stock drift up for months after a big buyback authorization?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/368-buyback-drift/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 369,
+   "name": "Earnings-Revision-Momentum",
+   "claim": "Do up-revised stocks keep beating the market?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/369-earnings-revision-momentum/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 370,
+   "name": "Zero-DTE-Options",
+   "claim": "Did the 0DTE boom make the tape more mean-reverting?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/370-zero-dte-options/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 371,
+   "name": "SKEW-Index",
+   "claim": "Does SKEW predict beyond VIX?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/371-skew-index/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 372,
+   "name": "Max-Pain-Pinning",
+   "claim": "Does price pin to max-pain?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/372-max-pain-pinning/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 373,
+   "name": "Dispersion-Trade",
+   "claim": "Is index vol reliably \"cheap\" vs its names?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/373-dispersion-trade/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 374,
+   "name": "Vol-of-Vol",
+   "claim": "Does the vol-of-vol (VVIX) time equity risk better than VIX?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/374-vol-of-vol/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 375,
+   "name": "VXX-Roll-Decay",
+   "claim": "Is shorting VXX’s roll-decay a real, harvestable carry?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/375-vxx-roll-decay/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 376,
+   "name": "MOC-Imbalance",
+   "claim": "Does the closing push reverse overnight?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/376-moc-imbalance/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 377,
+   "name": "Bid-Ask-Bounce",
+   "claim": "Is the one-day snap-back real, or just the bid-ask spread talking?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/377-bid-ask-bounce/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 378,
+   "name": "ETF-NAV-Premium",
+   "claim": "Does a below-NAV discount come back?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/378-etf-nav-premium/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 379,
+   "name": "ETF-Lead-Lag",
+   "claim": "Does the leader predict the next member move?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/379-etf-lead-lag/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 380,
+   "name": "Curve-Roll-Down",
+   "claim": "Does riding the curve beat cash?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/380-curve-roll-down/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 381,
+   "name": "TIPS-Breakeven",
+   "claim": "Does breakeven inflation predict forward returns?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/381-tips-breakeven/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 382,
+   "name": "Treasury-Basis-Trade",
+   "claim": "Is the Treasury cash-futures basis a free carry — or a hidden risk?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/382-treasury-basis-trade/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 383,
+   "name": "SOFR-Repo-Stress",
+   "claim": "Does a repo spike warn risk assets?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/383-sofr-repo-stress/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 384,
+   "name": "ISM-PMI-Regime",
+   "claim": "Does the PMI>50 regime predict higher stock returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/384-ism-pmi-regime/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 385,
+   "name": "Jobless-Claims-Momentum",
+   "claim": "Do rising claims precede weaker returns?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/385-jobless-claims-momentum/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 386,
+   "name": "NFCI-Conditions",
+   "claim": "Do tight financial conditions actually predict weaker stocks?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/386-nfci-conditions/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 387,
+   "name": "Economic-Surprise-Index",
+   "claim": "Does \"data beating\" predict higher stocks?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/387-economic-surprise-index/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 388,
+   "name": "Lumber-Gold-Ratio",
+   "claim": "Does the lumber/gold ratio time stocks vs bonds?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/388-lumber-gold-ratio/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 389,
+   "name": "Name-Change-Effect",
+   "claim": "Does a theme-chasing rename pop, then fade?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/389-name-change-effect/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 390,
+   "name": "Activist-13D",
+   "claim": "Does a stock drift up after a 13D?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/390-activist-13d/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 391,
+   "name": "CEO-Turnover",
+   "claim": "Does firing the CEO move the stock predictably?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/391-ceo-turnover/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 392,
+   "name": "Glassdoor-Sentiment",
+   "claim": "Do the happiest workforces out-earn?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/392-glassdoor-sentiment/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 393,
+   "name": "AI-Datacenter-Basket",
+   "claim": "Does the datacenter/power basket genuinely out-earn the market?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/393-ai-datacenter-basket/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 394,
+   "name": "Defense-Basket",
+   "claim": "Do defense stocks beat the market after a shock?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/394-defense-basket/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 395,
+   "name": "Quantum-Computing-Basket",
+   "claim": "Does the quantum basket genuinely out-earn, risk-adjusted?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/395-quantum-computing-basket/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 396,
+   "name": "Reshoring-Basket",
+   "claim": "Does the reshoring tilt out-earn beyond its beta?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/396-reshoring-basket/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 397,
+   "name": "Hurst-Regime",
+   "claim": "Does the Hurst exponent forecast which style pays?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/397-hurst-regime/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 398,
+   "name": "Entropy-Efficiency",
+   "claim": "Does a less-random (low-entropy) tape predict returns?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/398-entropy-efficiency/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 399,
+   "name": "Kalshi-Efficiency",
+   "claim": "Is there a real, harvestable mispricing?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/399-kalshi-efficiency/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 400,
+   "name": "Patent-Intensity",
+   "claim": "Do patent-heavy firms earn a real innovation premium?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/400-patent-intensity/",
+   "family": "Equity factors & fundamentals"
   }
  ],
  "special": [
