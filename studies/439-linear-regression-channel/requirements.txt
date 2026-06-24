@@ -1,0 +1,8 @@
+# Extra deps for Study 439 (Linear Regression Channel) beyond the repo core.
+numpy
+pandas
+matplotlib
+pyarrow        # parquet cache I/O
+yfinance       # real daily tape (cache-first; network only on explicit fetch)
+nbformat       # notebook generation
+jupyter        # nbconvert execution of the two notebooks

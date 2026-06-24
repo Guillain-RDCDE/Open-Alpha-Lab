@@ -1,0 +1,5 @@
+# Study 416 — Rounding Bottom: extra deps beyond the repo core (numpy/pandas/matplotlib)
+yfinance>=0.2.40
+pyarrow>=14.0          # parquet cache for the OHLC panel
+nbformat>=5.9          # build_notebooks.py
+jupyter>=1.0           # nbconvert --execute

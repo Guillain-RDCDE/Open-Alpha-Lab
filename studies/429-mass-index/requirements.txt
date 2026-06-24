@@ -1,0 +1,7 @@
+# Study 429 — Mass Index: extra deps beyond the repo core (numpy/pandas/matplotlib).
+yfinance>=0.2.40
+pyarrow>=14.0
+statsmodels>=0.14
+nbformat>=5.9
+nbconvert>=7.0
+jupyter>=1.0

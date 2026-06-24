@@ -1,0 +1,7 @@
+# Extra deps for Study 414 — Falling Wedge (on top of the repo's base env).
+yfinance>=0.2.40      # real daily OHLC tape (cache-first; network only on a cache miss)
+pandas>=2.0
+numpy>=1.24
+pyarrow>=14.0         # parquet cache for the OHLC panel
+matplotlib>=3.7       # notebook figures
+nbformat>=5.9         # build_notebooks.py

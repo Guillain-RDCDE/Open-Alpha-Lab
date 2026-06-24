@@ -1,0 +1,5 @@
+# Extra deps this study imports beyond the repo base (numpy/pandas/matplotlib).
+yfinance>=0.2.40
+pyarrow>=14.0        # parquet cache for the daily tape
+nbformat>=5.9        # build_notebooks.py
+jupyter>=1.0         # nbconvert --execute for the two notebooks

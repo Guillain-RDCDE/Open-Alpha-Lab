@@ -1,0 +1,7 @@
+yfinance>=0.2
+pandas>=2.0
+numpy>=1.24
+matplotlib>=3.7
+pyarrow>=12.0
+nbformat>=5.0
+jupyter>=1.0

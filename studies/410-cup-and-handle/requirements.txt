@@ -1,0 +1,3 @@
+# Extra deps this study imports beyond the repo base (numpy/pandas/matplotlib/nbformat).
+yfinance>=0.2.40
+pyarrow>=12.0          # parquet cache for the OHLC panel

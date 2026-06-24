@@ -1,0 +1,4 @@
+# Extra deps for Study 408 (Three Black Crows) beyond the repo core (numpy, pandas,
+# matplotlib, nbformat, jupyter are provided by the root environment).
+yfinance>=0.2.40
+pyarrow>=12.0          # parquet cache for the basket OHLCV

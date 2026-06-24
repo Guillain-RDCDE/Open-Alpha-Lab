@@ -1,0 +1,6 @@
+# Extra dependencies for Study 445 (Elliott Wave).
+# Core scientific stack (numpy, pandas, matplotlib) is assumed present at the repo level.
+yfinance>=0.2.40      # real daily OHLC for SPY + the index/ETF basket (cache-first; net on miss)
+pyarrow>=12.0         # parquet cache for the daily tapes
+nbformat>=5.9         # building the two narrative notebooks
+jupyter>=1.0          # nbconvert --execute for the executed notebooks

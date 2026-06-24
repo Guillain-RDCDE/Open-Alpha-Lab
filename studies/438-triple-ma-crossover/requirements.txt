@@ -1,0 +1,5 @@
+# Extra deps this study imports (beyond numpy/pandas/matplotlib already in the repo base).
+yfinance>=0.2.40        # real ^GSPC daily tape (cache-first; network only on a cache miss)
+pyarrow>=14.0           # parquet cache I/O
+nbformat>=5.9           # notebook generation in notebooks/build_notebooks.py
+# statsmodels is not required: the HAC (Newey-West) t-stat is implemented inline in strategy.py.

@@ -1,0 +1,8 @@
+# Study 425 — Detrended Price Oscillator: extra deps beyond the repo core.
+yfinance>=0.2.40      # real daily adjusted bars (cache-first; network only on --fetch)
+pyarrow>=14.0         # parquet cache for the real tapes
+nbformat>=5.9         # building the two narrative notebooks
+nbconvert>=7.0        # executing them in-place
+matplotlib>=3.7       # the figures in both notebooks
+pandas>=2.0
+numpy>=1.24

@@ -1,0 +1,5 @@
+# Extra deps for Study 419 (Chaikin Money Flow) beyond the repo core.
+yfinance>=0.2.40      # real daily OHLCV (cache-first; network only on a cache miss)
+pyarrow>=14.0         # parquet cache I/O
+nbformat>=5.9         # notebook generation (build_notebooks.py)
+# numpy / pandas / matplotlib / jupyter come from the repo root requirements.

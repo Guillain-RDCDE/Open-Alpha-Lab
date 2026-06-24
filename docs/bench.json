@@ -1,5 +1,5 @@
 {
- "total": 401,
+ "total": 450,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -15,17 +15,17 @@
   "Real": {
    "Investable": 3,
    "Fragile": 27,
-   "Mirage": 17
+   "Mirage": 19
   },
   "Weak": {
    "Investable": 0,
    "Fragile": 49,
-   "Mirage": 117
+   "Mirage": 125
   },
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 184
+   "Mirage": 223
   }
  },
  "studies": [
@@ -3637,6 +3637,447 @@
    "tradability": "Mirage",
    "href": "studies/401-signal-stacking/",
    "family": "Research-method demos"
+  },
+  {
+   "num": 402,
+   "name": "Engulfing-Pattern",
+   "claim": "Does the most-taught reversal — the engulfing candle — actually predict the next day?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/402-engulfing-pattern/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 403,
+   "name": "Hammer-Hanging-Man",
+   "claim": "Does a long lower wick really mark a floor?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/403-hammer-hanging-man/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 404,
+   "name": "Shooting-Star",
+   "claim": "Does the shooting star call the top?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/404-shooting-star/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 405,
+   "name": "Doji-Reversal",
+   "claim": "Does the doji's indecision precede a reversal?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/405-doji-reversal/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 406,
+   "name": "Harami-Pattern",
+   "claim": "Does the harami inside-bar flip the trend?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/406-harami-pattern/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 407,
+   "name": "Dark-Cloud-Piercing",
+   "claim": "Do the dark-cloud / piercing-line twins deliver?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/407-dark-cloud-piercing/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 408,
+   "name": "Three-Black-Crows",
+   "claim": "Three black crows = a crash incoming?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/408-three-black-crows/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 409,
+   "name": "Tweezer-Tops-Bottoms",
+   "claim": "Do two aligned wicks mark the turn?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/409-tweezer-tops-bottoms/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 410,
+   "name": "Cup-and-Handle",
+   "claim": "Does O'Neil's cup-with-handle beat buy-and-hold?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/410-cup-and-handle/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 411,
+   "name": "Ascending-Triangle",
+   "claim": "Does the ascending triangle really break upward?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/411-ascending-triangle/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 412,
+   "name": "Symmetrical-Triangle",
+   "claim": "A symmetrical triangle — a real figure or a 50/50 coin flip?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/412-symmetrical-triangle/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 413,
+   "name": "Bull-Flag",
+   "claim": "Is the bull flag a reliable continuation pattern?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/413-bull-flag/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 414,
+   "name": "Falling-Wedge",
+   "claim": "Is the falling wedge actually bullish?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/414-falling-wedge/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 415,
+   "name": "Triple-Top-Bottom",
+   "claim": "Do three failures at one level make a signal?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/415-triple-top-bottom/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 416,
+   "name": "Rounding-Bottom",
+   "claim": "Does the saucer base signal accumulation?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/416-rounding-bottom/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 417,
+   "name": "Island-Reversal",
+   "claim": "Does the gap-island reversal exist statistically?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/417-island-reversal/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 418,
+   "name": "Money-Flow-Index",
+   "claim": "Does the volume-weighted RSI beat the plain RSI?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/418-money-flow-index/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 419,
+   "name": "Chaikin-Money-Flow",
+   "claim": "Does accumulation/distribution lead price?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/419-chaikin-money-flow/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 420,
+   "name": "Awesome-Oscillator",
+   "claim": "Does Bill Williams' AO beat a plain MACD?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/420-awesome-oscillator/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 421,
+   "name": "Williams-Alligator",
+   "claim": "Does the waking alligator catch trends?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/421-williams-alligator/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 422,
+   "name": "Elder-Ray",
+   "claim": "Does Dr Elder's Bull/Bear Power have an edge?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/422-elder-ray/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 423,
+   "name": "Force-Index",
+   "claim": "Does Elder's Force Index flag reversals?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/423-force-index/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 424,
+   "name": "Ease-of-Movement",
+   "claim": "Are \"effortless\" price moves tradable?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/424-ease-of-movement/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 425,
+   "name": "Detrended-Price-Oscillator",
+   "claim": "Does the DPO isolate tradable cycles?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/425-detrended-price-oscillator/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 426,
+   "name": "Know-Sure-Thing",
+   "claim": "Is Pring's \"Know Sure Thing\" a sure thing?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/426-know-sure-thing/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 427,
+   "name": "Rate-of-Change",
+   "claim": "Does the oldest momentum tool (ROC) survive costs?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/427-rate-of-change/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 428,
+   "name": "Stochastic-RSI",
+   "claim": "Does stacking stochastics on RSI add signal or just noise?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/428-stochastic-rsi/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 429,
+   "name": "Mass-Index",
+   "claim": "Does the Mass Index \"range bulge\" call a reversal?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/429-mass-index/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 430,
+   "name": "Klinger-Oscillator",
+   "claim": "Does Klinger's long-term volume lead price?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/430-klinger-oscillator/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 431,
+   "name": "Schaff-Trend-Cycle",
+   "claim": "Does a \"faster MACD\" keep its promise?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/431-schaff-trend-cycle/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 432,
+   "name": "Hull-Moving-Average",
+   "claim": "Does the lag-free HMA cut false signals?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/432-hull-moving-average/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 433,
+   "name": "Kaufman-Adaptive-MA",
+   "claim": "Does adapting to volatility beat a fixed SMA?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/433-kama-adaptive/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 434,
+   "name": "DEMA-TEMA",
+   "claim": "Are double/triple-smoothed moving averages worth it?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/434-dema-tema/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 435,
+   "name": "Guppy-MMA",
+   "claim": "Does Guppy's ribbon reveal conviction?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/435-guppy-mma/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 436,
+   "name": "MA-Envelopes",
+   "claim": "Do percent envelopes beat Bollinger Bands?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/436-ma-envelopes/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 437,
+   "name": "Donchian-Breakout",
+   "claim": "Does the 20-day channel hold up on its own (sans Turtle)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/437-donchian-breakout/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 438,
+   "name": "Triple-MA-Crossover",
+   "claim": "Do three moving averages beat two?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/438-triple-ma-crossover/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 439,
+   "name": "Linear-Regression-Channel",
+   "claim": "Does the regression slope beat a moving average?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/439-linear-regression-channel/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 440,
+   "name": "Floor-Trader-Pivots",
+   "claim": "Do floor-trader pivot points hold as support/resistance?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/440-pivot-points/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 441,
+   "name": "Camarilla-Pivots",
+   "claim": "Does the Camarilla variant have a measurable edge?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/441-camarilla-pivots/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 442,
+   "name": "Anchored-VWAP",
+   "claim": "Does anchoring VWAP to an event create a price magnet?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/442-anchored-vwap/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 443,
+   "name": "Volume-Profile-POC",
+   "claim": "Does price return to the volume-profile point of control?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/443-volume-profile-poc/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 444,
+   "name": "Dow-Theory",
+   "claim": "Does the Industrials/Transports confirmation actually work?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/444-dow-theory/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 445,
+   "name": "Elliott-Wave",
+   "claim": "Do Elliott's five waves predict anything out-of-sample?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/445-elliott-wave/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 446,
+   "name": "Wyckoff-Method",
+   "claim": "Are Wyckoff accumulation/distribution phases detectable?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/446-wyckoff-method/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 447,
+   "name": "Gann-Angles",
+   "claim": "Do Gann 1×1 angles have any predictive power?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/447-gann-angles/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 448,
+   "name": "Point-and-Figure",
+   "claim": "Do P&F column-count price targets get hit?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/448-point-and-figure/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 449,
+   "name": "Renko-Charts",
+   "claim": "Does Renko-brick filtering improve a moving-average crossover?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/449-renko-charts/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 450,
+   "name": "Andrews-Pitchfork",
+   "claim": "Does Andrews' pitchfork channel price?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/450-andrews-pitchfork/",
+   "family": "Technical & chart patterns"
   }
  ],
  "special": [

@@ -2,12 +2,12 @@
 
 # Open-Alpha-Lab
 
-### Out of 401 famous trading edges, three survive — and none of them predicts returns.
+### Out of 450 famous trading edges, three survive — and none of them predicts returns.
 
 That's not a typo. I put every market anomaly, folk strategy and named factor
 people swear by through the **same brutal protocol**, and publish the verdict: **edge or mirage.**
 
-`401 tested` · `3 survive` · `318 mirages` · `0 forecast returns`
+`450 tested` · `3 survive` · `367 mirages` · `0 forecast returns`
 
 ***Most are mirages. The honest write-up of why is the point — and the survivors size risk, they don't see the future.***
 
@@ -51,7 +51,7 @@ Almost everything ends up bottom-right; three chips are green — and none of th
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 400 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 450 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -477,6 +477,55 @@ The full table below is the single source of truth (it's what the map and the li
 | **[399](studies/399-kalshi-efficiency/)** | **Kalshi-Efficiency** | Is there a real, harvestable mispricing? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[400](studies/400-patent-intensity/)** | **Patent-Intensity** | Do patent-heavy firms earn a real innovation premium? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[401](studies/401-signal-stacking/)** | **Signal-Stacking** | Does stacking 50 weak signals manufacture a real edge — or just luck in Greek letters? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[402](studies/402-engulfing-pattern/)** | **Engulfing-Pattern** | Does the most-taught reversal — the engulfing candle — actually predict the next day? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[403](studies/403-hammer-hanging-man/)** | **Hammer-Hanging-Man** | Does a long lower wick really mark a floor? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[404](studies/404-shooting-star/)** | **Shooting-Star** | Does the shooting star call the top? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[405](studies/405-doji-reversal/)** | **Doji-Reversal** | Does the doji's indecision precede a reversal? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[406](studies/406-harami-pattern/)** | **Harami-Pattern** | Does the harami inside-bar flip the trend? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[407](studies/407-dark-cloud-piercing/)** | **Dark-Cloud-Piercing** | Do the dark-cloud / piercing-line twins deliver? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[408](studies/408-three-black-crows/)** | **Three-Black-Crows** | Three black crows = a crash incoming? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[409](studies/409-tweezer-tops-bottoms/)** | **Tweezer-Tops-Bottoms** | Do two aligned wicks mark the turn? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[410](studies/410-cup-and-handle/)** | **Cup-and-Handle** | Does O'Neil's cup-with-handle beat buy-and-hold? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[411](studies/411-ascending-triangle/)** | **Ascending-Triangle** | Does the ascending triangle really break upward? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[412](studies/412-symmetrical-triangle/)** | **Symmetrical-Triangle** | A symmetrical triangle — a real figure or a 50/50 coin flip? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[413](studies/413-bull-flag/)** | **Bull-Flag** | Is the bull flag a reliable continuation pattern? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[414](studies/414-falling-wedge/)** | **Falling-Wedge** | Is the falling wedge actually bullish? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[415](studies/415-triple-top-bottom/)** | **Triple-Top-Bottom** | Do three failures at one level make a signal? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[416](studies/416-rounding-bottom/)** | **Rounding-Bottom** | Does the saucer base signal accumulation? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[417](studies/417-island-reversal/)** | **Island-Reversal** | Does the gap-island reversal exist statistically? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[418](studies/418-money-flow-index/)** | **Money-Flow-Index** | Does the volume-weighted RSI beat the plain RSI? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[419](studies/419-chaikin-money-flow/)** | **Chaikin-Money-Flow** | Does accumulation/distribution lead price? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[420](studies/420-awesome-oscillator/)** | **Awesome-Oscillator** | Does Bill Williams' AO beat a plain MACD? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[421](studies/421-williams-alligator/)** | **Williams-Alligator** | Does the waking alligator catch trends? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[422](studies/422-elder-ray/)** | **Elder-Ray** | Does Dr Elder's Bull/Bear Power have an edge? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[423](studies/423-force-index/)** | **Force-Index** | Does Elder's Force Index flag reversals? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[424](studies/424-ease-of-movement/)** | **Ease-of-Movement** | Are "effortless" price moves tradable? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[425](studies/425-detrended-price-oscillator/)** | **Detrended-Price-Oscillator** | Does the DPO isolate tradable cycles? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[426](studies/426-know-sure-thing/)** | **Know-Sure-Thing** | Is Pring's "Know Sure Thing" a sure thing? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[427](studies/427-rate-of-change/)** | **Rate-of-Change** | Does the oldest momentum tool (ROC) survive costs? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[428](studies/428-stochastic-rsi/)** | **Stochastic-RSI** | Does stacking stochastics on RSI add signal or just noise? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[429](studies/429-mass-index/)** | **Mass-Index** | Does the Mass Index "range bulge" call a reversal? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[430](studies/430-klinger-oscillator/)** | **Klinger-Oscillator** | Does Klinger's long-term volume lead price? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[431](studies/431-schaff-trend-cycle/)** | **Schaff-Trend-Cycle** | Does a "faster MACD" keep its promise? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[432](studies/432-hull-moving-average/)** | **Hull-Moving-Average** | Does the lag-free HMA cut false signals? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[433](studies/433-kama-adaptive/)** | **Kaufman-Adaptive-MA** | Does adapting to volatility beat a fixed SMA? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[434](studies/434-dema-tema/)** | **DEMA-TEMA** | Are double/triple-smoothed moving averages worth it? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[435](studies/435-guppy-mma/)** | **Guppy-MMA** | Does Guppy's ribbon reveal conviction? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[436](studies/436-ma-envelopes/)** | **MA-Envelopes** | Do percent envelopes beat Bollinger Bands? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[437](studies/437-donchian-breakout/)** | **Donchian-Breakout** | Does the 20-day channel hold up on its own (sans Turtle)? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[438](studies/438-triple-ma-crossover/)** | **Triple-MA-Crossover** | Do three moving averages beat two? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[439](studies/439-linear-regression-channel/)** | **Linear-Regression-Channel** | Does the regression slope beat a moving average? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[440](studies/440-pivot-points/)** | **Floor-Trader-Pivots** | Do floor-trader pivot points hold as support/resistance? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[441](studies/441-camarilla-pivots/)** | **Camarilla-Pivots** | Does the Camarilla variant have a measurable edge? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[442](studies/442-anchored-vwap/)** | **Anchored-VWAP** | Does anchoring VWAP to an event create a price magnet? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[443](studies/443-volume-profile-poc/)** | **Volume-Profile-POC** | Does price return to the volume-profile point of control? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[444](studies/444-dow-theory/)** | **Dow-Theory** | Does the Industrials/Transports confirmation actually work? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[445](studies/445-elliott-wave/)** | **Elliott-Wave** | Do Elliott's five waves predict anything out-of-sample? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[446](studies/446-wyckoff-method/)** | **Wyckoff-Method** | Are Wyckoff accumulation/distribution phases detectable? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[447](studies/447-gann-angles/)** | **Gann-Angles** | Do Gann 1×1 angles have any predictive power? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[448](studies/448-point-and-figure/)** | **Point-and-Figure** | Do P&F column-count price targets get hit? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[449](studies/449-renko-charts/)** | **Renko-Charts** | Does Renko-brick filtering improve a moving-average crossover? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[450](studies/450-andrews-pitchfork/)** | **Andrews-Pitchfork** | Does Andrews' pitchfork channel price? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 </details>
 

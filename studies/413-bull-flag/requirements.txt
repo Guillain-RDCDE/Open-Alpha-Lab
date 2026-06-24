@@ -1,0 +1,4 @@
+# Extra deps this study imports beyond the repo base (numpy, pandas, matplotlib).
+yfinance>=0.2          # real daily OHLC tape (cache-first; network only on a cache miss)
+pyarrow>=12            # parquet cache I/O for the OHLC panel
+nbformat>=5            # build the two narrative notebooks

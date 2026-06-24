@@ -1,0 +1,4 @@
+# Extra deps this study imports (beyond numpy/pandas/matplotlib in the repo base).
+yfinance>=0.2.40
+scipy>=1.10
+nbformat>=5.0
