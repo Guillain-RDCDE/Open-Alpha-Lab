@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — out of 450 famous trading edges, three survive">
+
 # Open-Alpha-Lab
 
 ### Out of 450 famous trading edges, three survive — and none of them predicts returns.
