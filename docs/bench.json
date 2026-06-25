@@ -1,5 +1,5 @@
 {
- "total": 450,
+ "total": 500,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -14,18 +14,18 @@
  "counts": {
   "Real": {
    "Investable": 3,
-   "Fragile": 27,
+   "Fragile": 28,
    "Mirage": 19
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 49,
-   "Mirage": 125
+   "Fragile": 58,
+   "Mirage": 126
   },
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 223
+   "Mirage": 262
   }
  },
  "studies": [
@@ -4077,6 +4077,456 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/450-andrews-pitchfork/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 451,
+   "name": "Marubozu",
+   "claim": "Does a full-bodied marubozu candle (no wicks) predict continuation?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/451-marubozu/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 452,
+   "name": "Spinning-Top",
+   "claim": "Does a spinning-top's indecision resolve into a tradable move?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/452-spinning-top/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 453,
+   "name": "Three-Inside",
+   "claim": "Does the three-inside-up reversal's confirmation candle add edge?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/453-three-inside/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 454,
+   "name": "Three-Outside",
+   "claim": "Does the three-outside-up (engulf + confirm) forecast continuation?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/454-three-outside/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 455,
+   "name": "Three-Methods",
+   "claim": "Do rising/falling three-methods candles signal continuation?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/455-three-methods/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 456,
+   "name": "Belt-Hold",
+   "claim": "Does a belt-hold (opening marubozu) reverse the move?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/456-belt-hold/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 457,
+   "name": "Kicker-Pattern",
+   "claim": "Does the kicker (gap-and-reverse) mark a violent turn?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/457-kicker-pattern/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 458,
+   "name": "Abandoned-Baby",
+   "claim": "Does the abandoned-baby island doji call reversals?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/458-abandoned-baby/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 459,
+   "name": "Hikkake",
+   "claim": "Does the hikkake false-breakout trap pay?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/459-hikkake-pattern/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 460,
+   "name": "Counterattack-Lines",
+   "claim": "Do counterattack / meeting lines reverse a trend?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/460-counterattack-lines/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 461,
+   "name": "Descending-Triangle",
+   "claim": "Does a descending triangle break down as drawn?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/461-descending-triangle/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 462,
+   "name": "Rising-Wedge",
+   "claim": "Does a rising wedge resolve to the downside?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/462-rising-wedge/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 463,
+   "name": "Bear-Flag",
+   "claim": "Does a bear flag continue the drop after the pole?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/463-bear-flag/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 464,
+   "name": "Pennant",
+   "claim": "Does a pennant continue the prior thrust?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/464-pennant/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 465,
+   "name": "Broadening-Formation",
+   "claim": "Does a broadening / megaphone top mark a reversal?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/465-broadening-formation/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 466,
+   "name": "Diamond-Top",
+   "claim": "Does a diamond top call the turn?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/466-diamond-top/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 467,
+   "name": "Bump-and-Run",
+   "claim": "Does the bump-and-run reversal pattern pay?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/467-bump-and-run/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 468,
+   "name": "Gartley-Harmonic",
+   "claim": "Do Gartley / AB=CD harmonic Fibonacci ratios mark reversals?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/468-gartley-harmonic/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 469,
+   "name": "Relative-Vigor-Index",
+   "claim": "Does the Relative Vigor Index crossover beat random?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/469-relative-vigor-index/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 470,
+   "name": "Stochastic-Momentum-Index",
+   "claim": "Does the Stochastic Momentum Index time turns?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/470-stochastic-momentum-index/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 471,
+   "name": "QQE",
+   "claim": "Does the QQE (smoothed-RSI) band signal pay?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/471-qqe/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 472,
+   "name": "WaveTrend",
+   "claim": "Does the WaveTrend oscillator cross add edge?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/472-wavetrend/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 473,
+   "name": "Balance-of-Power",
+   "claim": "Does Balance of Power lead price?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/473-balance-of-power/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 474,
+   "name": "Accelerator-Oscillator",
+   "claim": "Does Bill Williams' Accelerator Oscillator forecast?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/474-accelerator-oscillator/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 475,
+   "name": "DeMarker",
+   "claim": "Does the DeMarker exhaustion oscillator pay?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/475-demarker/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 476,
+   "name": "TD-Sequential",
+   "claim": "Does DeMark TD Sequential 9-13 call exhaustion?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/476-td-sequential/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 477,
+   "name": "Choppiness-Index",
+   "claim": "Does the Choppiness Index time trend vs chop?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/477-choppiness-index/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 478,
+   "name": "PPO",
+   "claim": "Does normalizing MACD into the PPO add edge?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/478-ppo/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 479,
+   "name": "Chandelier-Exit",
+   "claim": "Does an ATR chandelier trailing stop beat buy-and-hold?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/479-chandelier-exit/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 480,
+   "name": "Darvas-Box",
+   "claim": "Does the Darvas box breakout still work?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/480-darvas-box/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 481,
+   "name": "ZigZag-Indicator",
+   "claim": "Is the Zig-Zag swing filter tradable once you remove repaint?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/481-zigzag-indicator/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 482,
+   "name": "VWMA-Crossover",
+   "claim": "Does volume-weighting a moving-average cross add edge?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/482-vwma-crossover/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 483,
+   "name": "ZLEMA",
+   "claim": "Does the zero-lag EMA's reduced lag buy anything?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/483-zlema/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 484,
+   "name": "Vertical-Horizontal-Filter",
+   "claim": "Does the VHF trend/range filter help?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/484-vertical-horizontal-filter/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 485,
+   "name": "STARC-Bands",
+   "claim": "Does price mean-revert from STARC (ATR) bands?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/485-starc-bands/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 486,
+   "name": "Gann-HiLo-Activator",
+   "claim": "Does the Gann Hi-Lo Activator flip forecast trend?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/486-gann-hilo-activator/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 487,
+   "name": "Elder-Triple-Screen",
+   "claim": "Does Elder's triple-screen system beat random?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/487-elder-triple-screen/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 488,
+   "name": "FRAMA",
+   "claim": "Does the Fractal Adaptive MA buy any edge?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/488-frama/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 489,
+   "name": "Chaikin-Oscillator",
+   "claim": "Does the Chaikin Oscillator (A/D momentum) lead price?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/489-chaikin-oscillator/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 490,
+   "name": "Arms-Index-TRIN",
+   "claim": "Does the Arms Index (TRIN) time the market?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/490-arms-index-trin/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 491,
+   "name": "McClellan-Oscillator",
+   "claim": "Does the McClellan breadth oscillator forecast?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/491-mcclellan-oscillator/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 492,
+   "name": "Up-Down-Volume",
+   "claim": "Does the up/down volume ratio predict returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/492-up-down-volume/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 493,
+   "name": "New-Highs-New-Lows",
+   "claim": "Does the new-highs minus new-lows line lead?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/493-new-highs-new-lows/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 494,
+   "name": "Bullish-Percent-Index",
+   "claim": "Does the Bullish Percent Index call tops and bottoms?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/494-bullish-percent-index/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 495,
+   "name": "Kagi-Charts",
+   "claim": "Do Kagi-chart reversals beat buy-and-hold?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/495-kagi-charts/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 496,
+   "name": "Three-Line-Break",
+   "claim": "Do three-line-break reversals time the market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/496-three-line-break/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 497,
+   "name": "Woodie-Pivots",
+   "claim": "Do Woodie's pivot levels hold better than random?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/497-woodie-pivots/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 498,
+   "name": "Dual-Thrust",
+   "claim": "Does the Dual Thrust opening-range breakout pay?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/498-dual-thrust/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 499,
+   "name": "Trendline-Break",
+   "claim": "Does an automated trendline-break beat random?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/499-trendline-break/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 500,
+   "name": "Polarity-Flip",
+   "claim": "Does broken resistance really become support?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/500-polarity-flip/",
    "family": "Technical & chart patterns"
   }
  ],

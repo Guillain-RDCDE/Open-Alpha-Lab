@@ -1,0 +1,197 @@
+"""Data layer for Study 470 (Stochastic Momentum Index).
+
+Two tapes, one shape (a tz-naive daily OHLC frame, calendar-date indexed):
+
+- ``synthetic_panel`` — a *deterministic, offline* generator with a **planted-edge knob**.
+  The SMI measures where the close sits inside its N-day high/low range (double-smoothed,
+  ±100). The believers' claim is that *when the SMI turns up out of oversold, a real bounce
+  follows*. We plant exactly that: with ``edge > 0`` the path receives a small upward push on
+  the days **after** the close prints near the bottom of its recent range, so a "SMI rising
+  out of oversold" entry harvests a genuine bounce; with ``edge = 0`` the log-return series is
+  a pure random walk and the entry is a fair coin. This is the positive control — a harness
+  that cannot bank the planted bounce proves nothing by finding nothing on the real tape.
+
+- ``load_real`` — the real Yahoo! daily tape (``yfinance``), **cache-first**: it reads a
+  cached parquet if present and only touches the network on an explicit cache miss (with a
+  short back-off + retry), then caches the parquet so re-runs are offline. Daily history is
+  long (20+ years) and free of the 60-day cap that affects sub-hourly bars.
+
+No look-ahead is baked in here — that discipline lives in ``strategy.py``: the SMI at bar ``t``
+uses only closes/highs/lows through ``t``, the "rising out of oversold" cross is read on the
+close of *t*, and the trade is entered at *t+1*'s close.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import os
+import time
+
+import numpy as np
+import pandas as pd
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_CACHE = os.path.abspath(os.path.join(HERE, "..", "_cache"))
+
+# Indices / ETFs an SMI proponent would scan: the broad tape, big-cap tech, small caps, and a
+# couple of cross-asset charts. Daily, liquid, long history. Reused so the study runs offline.
+DEFAULT_TICKERS = ["SPY", "QQQ", "IWM", "DIA", "GLD"]
+
+
+# --------------------------------------------------------------------------- #
+# Synthetic tape — the deterministic offline core (positive control)
+# --------------------------------------------------------------------------- #
+def synthetic_panel(
+    n_days: int = 1500,
+    edge: float = 0.0,
+    annual_vol: float = 0.16,
+    range_n: int = 13,
+    start: str = "2010-01-04",
+    seed: int = 470,
+) -> tuple[pd.DataFrame, dict]:
+    """A reproducible daily OHLC tape with a *known* amount of SMI-oversold mean reversion.
+
+    The price path is a random walk in log-returns with daily sigma ``annual_vol/sqrt(252)``.
+    On top of that we plant a bounce *aligned with the detector itself*: at each step we compute the
+    same causal SMI the strategy reads, and whenever that smoothed SMI sits below the oversold
+    threshold we add a small upward drift proportional to ``edge`` on the following days (a symmetric
+    downward fade when richly overbought). Because the planted force is keyed off the *same
+    double-smoothed SMI* the rule triggers on, an "SMI rising out of oversold" entry sits right at
+    the start of a real recovery. At ``edge = 0`` the tape is a pure random walk and the entry is a
+    fair coin; at ``edge > 0`` an oversold turn is followed by a genuine bounce the detector banks.
+
+    Returns ``(bars, truth)``; ``truth`` records the planted parameters.
+    """
+    rng = np.random.default_rng(seed)
+    daily_vol = annual_vol / np.sqrt(252)
+    sessions = pd.bdate_range(start=start, periods=n_days)
+
+    close = np.empty(n_days)
+    log_p = np.log(100.0)
+
+    # running causal SMI state on the close-only band (mirrors strategy.smi closely enough to
+    # key the plant on the *same* oversold reads the detector sees), plus EMA accumulators.
+    band = []            # recent closes for the range
+    alpha1 = 2.0 / (25 + 1)
+    alpha2 = 2.0 / (2 + 1)
+    e1d = e2d = 0.0      # EMA-of-EMA of (close - midpoint)
+    e1r = e2r = 0.0      # EMA-of-EMA of (range / 2)
+    init = False
+
+    for i in range(n_days):
+        # planted drift from the *current* smoothed SMI state (known at start of day i)
+        pull = 0.0
+        if edge > 0.0 and init and e2r > 1e-12:
+            cur_smi = 100.0 * e2d / e2r
+            cur_smi = max(-100.0, min(100.0, cur_smi))
+            if cur_smi < -40.0:
+                pull = edge * daily_vol * min(1.0, (-40.0 - cur_smi) / 40.0)
+            elif cur_smi > 40.0:
+                pull = -edge * daily_vol * min(1.0, (cur_smi - 40.0) / 40.0)
+
+        eps = rng.normal(0.0, daily_vol)
+        log_p += eps + pull
+        price = np.exp(log_p)
+        close[i] = price
+
+        # advance the causal SMI state with the just-observed close
+        band.append(price)
+        if len(band) > range_n:
+            band.pop(0)
+        if len(band) >= range_n:
+            hh = max(band); ll = min(band)
+            dist = price - (hh + ll) / 2.0
+            half = (hh - ll) / 2.0
+            if not init:
+                e1d, e2d, e1r, e2r = dist, dist, half, half
+                init = True
+            else:
+                e1d += alpha1 * (dist - e1d); e2d += alpha2 * (e1d - e2d)
+                e1r += alpha1 * (half - e1r); e2r += alpha2 * (e1r - e2r)
+
+    open_ = np.empty_like(close)
+    open_[0] = 100.0
+    open_[1:] = close[:-1]
+    wick = np.abs(rng.normal(0.0, daily_vol * 0.5, close.size)) * close
+    hi = np.maximum(open_, close) + wick
+    lo = np.minimum(open_, close) - wick
+
+    bars = pd.DataFrame(
+        {"open": open_, "high": hi, "low": lo, "close": close},
+        index=pd.DatetimeIndex(sessions, name="date"),
+    )
+    truth = {"edge": edge, "annual_vol": annual_vol, "range_n": range_n,
+             "n_days": n_days, "seed": seed}
+    return bars, truth
+
+
+# --------------------------------------------------------------------------- #
+# Real tape — Yahoo daily, cache-first
+# --------------------------------------------------------------------------- #
+def _cache_path(ticker: str, cache_dir: str) -> str:
+    safe = ticker.replace("=", "").replace("^", "").replace("/", "")
+    return os.path.join(cache_dir, f"bars_{safe}_1d.parquet")
+
+
+def load_real(
+    ticker: str = "SPY",
+    start: str = "2005-01-01",
+    end: str | None = None,
+    cache_dir: str = DEFAULT_CACHE,
+    allow_fetch: bool = True,
+) -> pd.DataFrame:
+    """Real daily OHLC for ``ticker``; **cache-first** (network only on a cache miss).
+
+    Reads a cached parquet if present. Otherwise — and only if ``allow_fetch`` — downloads
+    from yfinance (with a couple of retries + back-off on rate limits) and caches the parquet,
+    so every subsequent call is fully offline.
+    """
+    path = _cache_path(ticker, cache_dir)
+    if os.path.exists(path):
+        bars = pd.read_parquet(path)
+    elif allow_fetch:
+        bars = _download(ticker, start, end)
+        os.makedirs(cache_dir, exist_ok=True)
+        bars.to_parquet(path)
+    else:
+        raise FileNotFoundError(
+            f"No cached daily tape for {ticker} at {path}. "
+            f"Call load_real({ticker!r}) once (network) to populate the cache."
+        )
+
+    if bars.index.tz is not None:
+        bars.index = bars.index.tz_localize(None)
+    bars.index.name = "date"
+    return bars[["open", "high", "low", "close"]]
+
+
+def _download(ticker: str, start: str, end: str | None) -> pd.DataFrame:
+    import yfinance as yf  # lazy: only on a real cache miss
+
+    last_err = None
+    for attempt in range(3):
+        try:
+            raw = yf.download(ticker, start=start, end=end, interval="1d",
+                              auto_adjust=True, progress=False)
+            if not raw.empty:
+                if isinstance(raw.columns, pd.MultiIndex):
+                    raw.columns = raw.columns.get_level_values(0)
+                bars = raw.rename(columns=str.lower)[["open", "high", "low", "close"]]
+                bars.index.name = "date"
+                return bars
+        except Exception as exc:  # noqa: BLE001
+            last_err = exc
+        time.sleep(2.0 * (attempt + 1))
+    raise RuntimeError(f"yfinance returned no daily bars for {ticker}: {last_err}")
+
+
+def have_real(tickers: list[str] | None = None, cache_dir: str = DEFAULT_CACHE) -> bool:
+    """True iff every cached parquet for ``tickers`` is present (offline-safe check)."""
+    tickers = tickers or DEFAULT_TICKERS
+    return all(os.path.exists(_cache_path(t, cache_dir)) for t in tickers)
+
+
+def fingerprint(bars: pd.DataFrame) -> str:
+    """A short content fingerprint of a tape (close column), for the as-of stamp."""
+    h = hashlib.sha1(np.ascontiguousarray(bars["close"].to_numpy()).tobytes())
+    return h.hexdigest()[:12]
