@@ -1,0 +1,8 @@
+# Study 530 (Book-To-Market-Value) -- study-local runtime deps.
+# These are already provided repo-wide; pinned loosely here for standalone runs.
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+yfinance>=0.2
+pyarrow>=12.0
+matplotlib>=3.7

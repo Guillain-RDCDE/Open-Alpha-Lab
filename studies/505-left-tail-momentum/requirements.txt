@@ -1,0 +1,9 @@
+# Study 505 -- Left-Tail-Momentum (study-local pins; repo-wide deps unchanged)
+numpy
+pandas
+pyarrow
+yfinance
+matplotlib
+scipy
+nbformat
+jupyter

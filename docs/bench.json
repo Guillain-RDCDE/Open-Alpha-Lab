@@ -1,5 +1,5 @@
 {
- "total": 500,
+ "total": 540,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -14,18 +14,18 @@
  "counts": {
   "Real": {
    "Investable": 3,
-   "Fragile": 28,
+   "Fragile": 30,
    "Mirage": 19
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 58,
-   "Mirage": 126
+   "Fragile": 61,
+   "Mirage": 132
   },
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 262
+   "Mirage": 291
   }
  },
  "studies": [
@@ -4528,6 +4528,366 @@
    "tradability": "Fragile",
    "href": "studies/500-polarity-flip/",
    "family": "Technical & chart patterns"
+  },
+  {
+   "num": 501,
+   "name": "Idiosyncratic-Volatility",
+   "claim": "Do stocks with high residual (market-beta-removed) volatility really earn lower returns -- the famous IVOL puzzle?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/501-idiosyncratic-volatility/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 502,
+   "name": "Betting-Against-Correlation",
+   "claim": "Is the famous \"bet against beta\" premium really a bet against correlation, not volatility?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/502-betting-against-correlation/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 503,
+   "name": "Expected-Idiosyncratic-Skewness",
+   "claim": "Do stocks with a fat idiosyncratic right tail (lottery-like upside) really earn lower returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/503-expected-idiosyncratic-skewness/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 504,
+   "name": "Coskewness",
+   "claim": "Do stocks that crash hardest with the market pay you a premium for being bad hedges?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/504-coskewness/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 505,
+   "name": "Left-Tail-Momentum",
+   "claim": "The stocks with the worst recent crash keep underperforming -- does the left tail have momentum?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/505-left-tail-momentum/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 506,
+   "name": "Industry-Momentum",
+   "claim": "Is the famous stock-momentum effect really just winner industries beating loser industries?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/506-industry-momentum/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 507,
+   "name": "Cross-Sectional-Momentum",
+   "claim": "Do past winners keep winning on a small modern large-cap survivor basket?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/507-cross-sectional-momentum/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 508,
+   "name": "Momentum-Crashes",
+   "claim": "Momentum prints money until it detonates — does the crash show up on a modern basket, and does vol-scaling repair it?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/508-momentum-crashes/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 509,
+   "name": "Intermediate-Momentum",
+   "claim": "Does momentum really live in the intermediate past (t-12..t-7), not the recent past (t-6..t-1)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/509-intermediate-momentum/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 510,
+   "name": "Frog-In-The-Pan",
+   "claim": "Is momentum stronger when the past return arrived gradually (in many small steps) than in a few jumps?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/510-frog-in-the-pan/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 511,
+   "name": "Volume-Momentum",
+   "claim": "Does trading volume tell you which momentum will keep running and which will reverse first?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/511-volume-momentum/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 512,
+   "name": "High-Volume-Return-Premium",
+   "claim": "Do stocks that just traded on unusually high volume keep climbing -- and quiet ones lag?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/512-high-volume-return-premium/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 513,
+   "name": "Size-Effect",
+   "claim": "Do small-cap stocks really out-earn large-caps -- the original Banz (1981) anomaly?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/513-size-effect/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 514,
+   "name": "Pastor-Stambaugh-Liquidity",
+   "claim": "Do stocks whose returns swing harder with aggregate liquidity shocks really pay you more for the privilege?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/514-pastor-stambaugh-liquidity/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 515,
+   "name": "Earnings-Announcement-Premium",
+   "claim": "Do stocks earn a disproportionate share of their return in the few days around their scheduled earnings announcement?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/515-earnings-announcement-premium/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 516,
+   "name": "Dividend-Month-Premium",
+   "claim": "Do stocks really earn more in the months they're predicted to pay a dividend?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/516-dividend-month-premium/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 517,
+   "name": "Pre-FOMC-Drift",
+   "claim": "Do stocks really drift up in the 24 hours before a scheduled Fed announcement — and does the edge survive being famous?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/517-pre-fomc-drift/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 518,
+   "name": "Time-Series-Momentum",
+   "claim": "Does an asset's own 12-month trend predict its next month, across equities, bonds, commodities, FX and gold alike?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/518-time-series-momentum/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 519,
+   "name": "Net-Share-Issuance",
+   "claim": "Do firms that buy back shares beat firms that dilute — on a basket you'd actually hold?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/519-net-share-issuance/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 520,
+   "name": "External-Financing-Anomaly",
+   "claim": "Should you avoid companies that raise lots of debt and equity?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/520-external-financing-anomaly/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 521,
+   "name": "Cash-Based-Operating-Profitability",
+   "claim": "Does stripping accruals out of profitability (cash-based operating profit) beat the accrual-laden gross-profitability factor?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/521-cash-based-operating-profitability/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 522,
+   "name": "Percent-Operating-Accruals",
+   "claim": "Does scaling operating accruals by earnings (HLVW 2011) sort returns more sharply than scaling by assets (Sloan)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/522-percent-operating-accruals/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 523,
+   "name": "Investment-To-Assets",
+   "claim": "Do the heaviest capital-spenders underperform the disciplined ones?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/523-investment-to-assets/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 524,
+   "name": "Operating-Leverage",
+   "claim": "Do firms with a high fixed-cost (operating-leverage) structure earn a premium?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/524-operating-leverage/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 525,
+   "name": "R-And-D-Intensity",
+   "claim": "Do firms whose R&D budget is large relative to their market value quietly out-earn the rest?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/525-r-and-d-intensity/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 526,
+   "name": "Intangible-Value",
+   "claim": "Plain book-to-market understates value for intangible-heavy firms — does capitalising R&D + SG&A into an adjusted book sharpen the value sort enough to matter?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/526-intangible-value/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 527,
+   "name": "Organizational-Capital",
+   "claim": "Do firms with more accumulated organizational capital (from years of SG&A) earn the higher returns the risk story predicts?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/527-organizational-capital/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 528,
+   "name": "Labor-Hiring-Rate",
+   "claim": "Do the firms that hire fastest go on to underperform the disciplined ones?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/528-labor-hiring-rate/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 529,
+   "name": "Inventory-Growth",
+   "claim": "Do firms that pile up inventory go on to underperform the lean ones?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/529-inventory-growth/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 530,
+   "name": "Book-To-Market-Value",
+   "claim": "Do cheap (high book-to-market) stocks really beat expensive (low book-to-market) ones — the canonical Fama-French value premium?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/530-book-to-market-value/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 531,
+   "name": "Enterprise-Multiple",
+   "claim": "Is EV/EBITDA -- the practitioner's favourite value multiple -- a real edge: do cheap-multiple firms beat expensive ones?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/531-enterprise-multiple/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 532,
+   "name": "Firm-Age-Anomaly",
+   "claim": "Do mature, long-established firms quietly out-earn young, recently-listed ones -- the new-list effect?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/532-firm-age-anomaly/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 533,
+   "name": "Analyst-Dispersion",
+   "claim": "Do stocks that analysts disagree about most go on to earn lower returns?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/533-analyst-dispersion/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 534,
+   "name": "Revenue-Surprise-Drift",
+   "claim": "If earnings surprises drift, does the revenue (sales) surprise drift on its own too?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/534-revenue-surprise-drift/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 535,
+   "name": "Mispricing-Score",
+   "claim": "Does averaging eleven anomalies into one composite mispricing score — and shorting the most overpriced names — beat any single anomaly?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/535-mispricing-score/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 536,
+   "name": "Anomaly-Decay-Post-Publication",
+   "claim": "Once an anomaly is published, does its edge quietly halve?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/536-anomaly-decay-post-publication/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 537,
+   "name": "Factor-Momentum",
+   "claim": "Do the factors themselves trend — can you time momentum/low-vol/size on their own past returns and pocket a meta-premium?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/537-factor-momentum/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 538,
+   "name": "Industry-Relative-Reversal",
+   "claim": "Does subtracting a stock's own sector return give a cleaner one-month reversal than the raw Jegadeesh sort?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/538-industry-relative-reversal/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 539,
+   "name": "Cash-Flow-Volatility",
+   "claim": "Do firms with steadier cash flows quietly out-earn the cash-flow lottery tickets?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/539-cash-flow-volatility/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 540,
+   "name": "Distress-Risk-Anomaly",
+   "claim": "Do the firms a bankruptcy model flags as most distressed really earn the lowest returns — or did they just double everyone else?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/540-distress-risk-anomaly/",
+   "family": "Academic factors — pointed replications"
   }
  ],
  "special": [

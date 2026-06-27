@@ -1,0 +1,8 @@
+# Study 517 — Pre-FOMC-Drift (study-local pins; repo-wide deps already provide these)
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+yfinance>=0.2.40
+matplotlib>=3.7
+nbformat>=5.9
+jupyter>=1.0
