@@ -1043,6 +1043,9 @@ jobs:
       - name: Study 558 — Failures-To-Deliver test-suite
         run: pytest -q studies/558-failures-to-deliver/tests
 
+      - name: Study 570 — Goodwill-Impairment test-suite
+        run: pytest -q studies/570-goodwill-impairment/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

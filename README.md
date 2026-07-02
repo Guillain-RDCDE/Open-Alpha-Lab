@@ -53,7 +53,7 @@ Almost everything ends up bottom-right; three chips are green — and none of th
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 564 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 574 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -642,6 +642,16 @@ The full table below is the single source of truth (it's what the map and the li
 | **[562](studies/562-block-trade-signal/)** | **Block-Trade-Signal** | When a giant block crosses the tape, is it institutions who know something — and can you ride their coattails? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[563](studies/563-secondary-offering-drift/)** | **Secondary-Offering-Drift** | After a company sells a fresh slug of shares in a secondary offering, does the stock keep sliding? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[564](studies/564-short-report-event/)** | **Short-Report-Event** | When an activist short-seller publishes a hit piece, does the stock actually fall and stay down? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[565](studies/565-filing-readability/)** | **Filing-Readability** | Do companies with harder-to-read, longer 10-K filings go on to earn worse returns — is obfuscation a red flag? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[566](studies/566-earnings-call-tone/)** | **Earnings-Call-Tone** | Does the emotional tone of a company's earnings call — upbeat vs guarded — predict its stock afterwards? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[567](studies/567-uncertainty-word-count/)** | **Uncertainty-Word-Count** | When executives pile on 'uncertain', 'maybe', 'could' in filings and calls, does volatility spike next? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[568](studies/568-effective-tax-rate/)** | **Effective-Tax-Rate** | Do companies that pay a suspiciously low effective tax rate earn different returns — quality signal or fragile loophole? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[569](studies/569-sbc-dilution/)** | **SBC-Dilution** | Do the companies handing out the most stock-based comp quietly dilute shareholders into worse returns? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[570](studies/570-goodwill-impairment/)** | **Goodwill-Impairment** | Can a bloated goodwill balance predict the write-down — and the stock drop — before it happens? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[571](studies/571-pension-underfunding/)** | **Pension-Underfunding** | Do firms carrying big underfunded pension holes earn lower returns — a hidden leverage the market ignores? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[572](studies/572-capex-cycle/)** | **Capex-Cycle** | Do companies in a capex-spending binge underperform the ones harvesting cash — the investment cousin of asset growth? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[573](studies/573-customer-concentration/)** | **Customer-Concentration** | Does depending on a handful of big customers make a stock riskier — and does the market pay you for that risk? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[574](studies/574-penny-beat/)** | **Penny-Beat** | Firms that beat the consensus by exactly a penny look managed — do their stocks pay the price later? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 </details>
 

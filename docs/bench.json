@@ -1,5 +1,5 @@
 {
- "total": 564,
+ "total": 574,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -19,13 +19,13 @@
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 63,
-   "Mirage": 138
+   "Fragile": 66,
+   "Mirage": 141
   },
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 307
+   "Mirage": 311
   }
  },
  "studies": [
@@ -5104,6 +5104,96 @@
    "tradability": "Fragile",
    "href": "studies/564-short-report-event/",
    "family": "Microstructure & crowds"
+  },
+  {
+   "num": 565,
+   "name": "Filing-Readability",
+   "claim": "Do companies with harder-to-read, longer 10-K filings go on to earn worse returns — is obfuscation a red flag?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/565-filing-readability/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 566,
+   "name": "Earnings-Call-Tone",
+   "claim": "Does the emotional tone of a company's earnings call — upbeat vs guarded — predict its stock afterwards?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/566-earnings-call-tone/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 567,
+   "name": "Uncertainty-Word-Count",
+   "claim": "When executives pile on 'uncertain', 'maybe', 'could' in filings and calls, does volatility spike next?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/567-uncertainty-word-count/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 568,
+   "name": "Effective-Tax-Rate",
+   "claim": "Do companies that pay a suspiciously low effective tax rate earn different returns — quality signal or fragile loophole?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/568-effective-tax-rate/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 569,
+   "name": "SBC-Dilution",
+   "claim": "Do the companies handing out the most stock-based comp quietly dilute shareholders into worse returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/569-sbc-dilution/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 570,
+   "name": "Goodwill-Impairment",
+   "claim": "Can a bloated goodwill balance predict the write-down — and the stock drop — before it happens?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/570-goodwill-impairment/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 571,
+   "name": "Pension-Underfunding",
+   "claim": "Do firms carrying big underfunded pension holes earn lower returns — a hidden leverage the market ignores?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/571-pension-underfunding/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 572,
+   "name": "Capex-Cycle",
+   "claim": "Do companies in a capex-spending binge underperform the ones harvesting cash — the investment cousin of asset growth?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/572-capex-cycle/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 573,
+   "name": "Customer-Concentration",
+   "claim": "Does depending on a handful of big customers make a stock riskier — and does the market pay you for that risk?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/573-customer-concentration/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 574,
+   "name": "Penny-Beat",
+   "claim": "Firms that beat the consensus by exactly a penny look managed — do their stocks pay the price later?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/574-penny-beat/",
+   "family": "Equity factors & fundamentals"
   }
  ],
  "special": [
