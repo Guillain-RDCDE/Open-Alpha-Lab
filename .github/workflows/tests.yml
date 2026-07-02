@@ -1046,6 +1046,9 @@ jobs:
       - name: Study 570 — Goodwill-Impairment test-suite
         run: pytest -q studies/570-goodwill-impairment/tests
 
+      - name: Study 576 — Muni-Treasury-Ratio test-suite
+        run: pytest -q studies/576-muni-treasury-ratio/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

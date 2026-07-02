@@ -1,5 +1,5 @@
 {
- "total": 574,
+ "total": 581,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -19,13 +19,13 @@
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 66,
-   "Mirage": 141
+   "Fragile": 67,
+   "Mirage": 146
   },
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 311
+   "Mirage": 312
   }
  },
  "studies": [
@@ -5194,6 +5194,69 @@
    "tradability": "Mirage",
    "href": "studies/574-penny-beat/",
    "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 575,
+   "name": "CDS-Equity-Basis",
+   "claim": "When a company's credit-default swap and its stock disagree about risk, which one is right — and can you trade the gap?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/575-cds-equity-basis/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 576,
+   "name": "Muni-Treasury-Ratio",
+   "claim": "Does the muni-to-Treasury yield ratio time the bond market — or is it just a tax-driven artifact?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/576-muni-treasury-ratio/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 577,
+   "name": "MBS-OAS-Signal",
+   "claim": "Does the extra yield on mortgage bonds (their option-adjusted spread) warn of trouble in credit and equities?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/577-mbs-oas-signal/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 578,
+   "name": "Cross-Asset-Correlation-Regime",
+   "claim": "When everything starts moving together, is the market about to break — does rising cross-asset correlation flag stress?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/578-cross-asset-correlation-regime/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 579,
+   "name": "Equity-Bond-Corr-Flip",
+   "claim": "The stock-bond correlation flipped positive in 2022 — does its sign tell you when the 60/40 hedge stops working?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/579-equity-bond-corr-flip/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 580,
+   "name": "Gold-Lease-Rate",
+   "claim": "Does the obscure gold lease rate — the cost to borrow bullion — foreshadow gold-price moves?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/580-gold-lease-rate/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 581,
+   "name": "Term-Premium",
+   "claim": "Does the estimated bond 'term premium' — the extra yield for holding long bonds — time duration well?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/581-term-premium/",
+   "family": "Carry, curves & commodities"
   }
  ],
  "special": [
