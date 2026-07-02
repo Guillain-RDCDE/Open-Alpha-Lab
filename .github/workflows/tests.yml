@@ -1049,6 +1049,15 @@ jobs:
       - name: Study 576 — Muni-Treasury-Ratio test-suite
         run: pytest -q studies/576-muni-treasury-ratio/tests
 
+      - name: Study 587 — NFT-Floor-Beta test-suite
+        run: pytest -q studies/587-nft-floor-beta/tests
+
+      - name: Study 589 — Genetic-Algo-Overfit test-suite
+        run: pytest -q studies/589-genetic-algo-overfit/tests
+
+      - name: Study 590 — Sharpe-Hacking test-suite
+        run: pytest -q studies/590-sharpe-hacking/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

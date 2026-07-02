@@ -1,5 +1,5 @@
 {
- "total": 581,
+ "total": 590,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -20,12 +20,12 @@
   "Weak": {
    "Investable": 0,
    "Fragile": 67,
-   "Mirage": 146
+   "Mirage": 148
   },
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 312
+   "Mirage": 319
   }
  },
  "studies": [
@@ -5257,6 +5257,87 @@
    "tradability": "Mirage",
    "href": "studies/581-term-premium/",
    "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 582,
+   "name": "ETH-Gas-Fees",
+   "claim": "Do soaring Ethereum gas fees — the price of using the chain — signal a crypto top or genuine demand?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/582-eth-gas-fees/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 583,
+   "name": "DeFi-TVL-Momentum",
+   "claim": "When money floods into DeFi protocols (rising total value locked), do their tokens keep pumping?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/583-defi-tvl-momentum/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 584,
+   "name": "Exchange-Netflows",
+   "claim": "When coins pour onto exchanges, holders are getting ready to sell — does BTC drop when netflows turn positive?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/584-exchange-netflows/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 585,
+   "name": "Perp-Funding-Rate",
+   "claim": "When perpetual-futures funding rates run hot, are longs over-leveraged and due for a flush?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/585-perp-funding-rate/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 586,
+   "name": "Liquidation-Cascade",
+   "claim": "After a big wave of forced liquidations, does crypto bounce hard — or keep bleeding?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/586-liquidation-cascade/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 587,
+   "name": "NFT-Floor-Beta",
+   "claim": "Do blue-chip NFT floor prices lead crypto risk appetite — or just follow ETH with extra noise?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/587-nft-floor-beta/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 588,
+   "name": "LLM-Headline-Sentiment",
+   "claim": "If you let a language model read the day's headlines and score the mood, can it predict tomorrow's market?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/588-llm-headline-sentiment/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 589,
+   "name": "Genetic-Algo-Overfit",
+   "claim": "Evolve a trading rule with a genetic algorithm until it looks brilliant in-sample — how badly does it die out-of-sample?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/589-genetic-algo-overfit/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 590,
+   "name": "Sharpe-Hacking",
+   "claim": "Can you juice a strategy's Sharpe ratio with pure financial engineering — vol-targeting, leverage, smoothing — without adding any real edge?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/590-sharpe-hacking/",
+   "family": "Research-method demos"
   }
  ],
  "special": [

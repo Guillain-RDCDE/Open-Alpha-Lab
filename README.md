@@ -53,7 +53,7 @@ Almost everything ends up bottom-right; three chips are green — and none of th
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 581 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 590 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -659,6 +659,15 @@ The full table below is the single source of truth (it's what the map and the li
 | **[579](studies/579-equity-bond-corr-flip/)** | **Equity-Bond-Corr-Flip** | The stock-bond correlation flipped positive in 2022 — does its sign tell you when the 60/40 hedge stops working? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
 | **[580](studies/580-gold-lease-rate/)** | **Gold-Lease-Rate** | Does the obscure gold lease rate — the cost to borrow bullion — foreshadow gold-price moves? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[581](studies/581-term-premium/)** | **Term-Premium** | Does the estimated bond 'term premium' — the extra yield for holding long bonds — time duration well? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[582](studies/582-eth-gas-fees/)** | **ETH-Gas-Fees** | Do soaring Ethereum gas fees — the price of using the chain — signal a crypto top or genuine demand? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[583](studies/583-defi-tvl-momentum/)** | **DeFi-TVL-Momentum** | When money floods into DeFi protocols (rising total value locked), do their tokens keep pumping? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[584](studies/584-exchange-netflows/)** | **Exchange-Netflows** | When coins pour onto exchanges, holders are getting ready to sell — does BTC drop when netflows turn positive? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[585](studies/585-perp-funding-rate/)** | **Perp-Funding-Rate** | When perpetual-futures funding rates run hot, are longs over-leveraged and due for a flush? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[586](studies/586-liquidation-cascade/)** | **Liquidation-Cascade** | After a big wave of forced liquidations, does crypto bounce hard — or keep bleeding? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[587](studies/587-nft-floor-beta/)** | **NFT-Floor-Beta** | Do blue-chip NFT floor prices lead crypto risk appetite — or just follow ETH with extra noise? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[588](studies/588-llm-headline-sentiment/)** | **LLM-Headline-Sentiment** | If you let a language model read the day's headlines and score the mood, can it predict tomorrow's market? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[589](studies/589-genetic-algo-overfit/)** | **Genetic-Algo-Overfit** | Evolve a trading rule with a genetic algorithm until it looks brilliant in-sample — how badly does it die out-of-sample? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[590](studies/590-sharpe-hacking/)** | **Sharpe-Hacking** | Can you juice a strategy's Sharpe ratio with pure financial engineering — vol-targeting, leverage, smoothing — without adding any real edge? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 </details>
 
