@@ -53,7 +53,7 @@ Almost everything ends up bottom-right; three chips are green — and none of th
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 548 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 556 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -626,6 +626,14 @@ The full table below is the single source of truth (it's what the map and the li
 | **[546](studies/546-nobel-announcement-drift/)** | **Nobel-Announcement-Drift** | When the Nobel Prizes are announced each October, do related sectors (pharma after Medicine, tech after Physics) drift? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[547](studies/547-blue-monday/)** | **Blue-Monday** | 'Blue Monday' — the third Monday of January, supposedly the most depressing day — does market mood actually sag then? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[548](studies/548-happiness-index-country/)** | **Happiness-Index-Country** | Do the stock markets of the 'happiest' countries (World Happiness Report) beat the gloomiest ones? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[549](studies/549-spotify-mood/)** | **Spotify-Mood** | Does the mood of the songs people stream — happier vs sadder charts — lead the stock market's next move? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[550](studies/550-box-office-momentum/)** | **Box-Office-Momentum** | Do strong box-office weekends foreshadow gains for media/studio stocks — or for the whole consumer tape? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[551](studies/551-netflix-top10/)** | **Netflix-Top10** | Does streaming engagement — how many hours the world watches Netflix's top 10 — say anything about NFLX or consumer stocks? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[552](studies/552-app-store-rankings/)** | **App-Store-Rankings** | When a public company's app climbs the App Store charts, does the stock climb with it? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[553](studies/553-github-activity/)** | **GitHub-Activity** | Do surges in a tech company's open-source commit activity foreshadow its stock — engineering as an alt-data signal? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[554](studies/554-airline-bookings/)** | **Airline-Bookings** | Do rising flight bookings lead airline stocks — or is the signal already in the price by the time you see it? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[555](studies/555-opentable-reservations/)** | **OpenTable-Reservations** | Do restaurant-reservation trends nowcast restaurant and consumer-discretionary stocks? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[556](studies/556-electricity-demand/)** | **Electricity-Demand** | Does the electricity the economy actually burns each week lead the market — a hard-data pulse of activity? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 </details>
 

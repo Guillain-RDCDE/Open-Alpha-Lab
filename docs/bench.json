@@ -1,5 +1,5 @@
 {
- "total": 548,
+ "total": 556,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -20,12 +20,12 @@
   "Weak": {
    "Investable": 0,
    "Fragile": 61,
-   "Mirage": 132
+   "Mirage": 136
   },
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 299
+   "Mirage": 303
   }
  },
  "studies": [
@@ -4959,6 +4959,78 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/548-happiness-index-country/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 549,
+   "name": "Spotify-Mood",
+   "claim": "Does the mood of the songs people stream — happier vs sadder charts — lead the stock market's next move?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/549-spotify-mood/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 550,
+   "name": "Box-Office-Momentum",
+   "claim": "Do strong box-office weekends foreshadow gains for media/studio stocks — or for the whole consumer tape?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/550-box-office-momentum/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 551,
+   "name": "Netflix-Top10",
+   "claim": "Does streaming engagement — how many hours the world watches Netflix's top 10 — say anything about NFLX or consumer stocks?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/551-netflix-top10/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 552,
+   "name": "App-Store-Rankings",
+   "claim": "When a public company's app climbs the App Store charts, does the stock climb with it?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/552-app-store-rankings/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 553,
+   "name": "GitHub-Activity",
+   "claim": "Do surges in a tech company's open-source commit activity foreshadow its stock — engineering as an alt-data signal?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/553-github-activity/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 554,
+   "name": "Airline-Bookings",
+   "claim": "Do rising flight bookings lead airline stocks — or is the signal already in the price by the time you see it?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/554-airline-bookings/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 555,
+   "name": "OpenTable-Reservations",
+   "claim": "Do restaurant-reservation trends nowcast restaurant and consumer-discretionary stocks?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/555-opentable-reservations/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 556,
+   "name": "Electricity-Demand",
+   "claim": "Does the electricity the economy actually burns each week lead the market — a hard-data pulse of activity?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/556-electricity-demand/",
    "family": "Macro & valuation timing"
   }
  ],

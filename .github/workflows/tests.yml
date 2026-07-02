@@ -1037,6 +1037,9 @@ jobs:
       - name: Study 350 — Dartboard-Portfolio test-suite
         run: pytest -q studies/350-dartboard-portfolio/tests
 
+      - name: Study 549 — Spotify-Mood test-suite
+        run: pytest -q studies/549-spotify-mood/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
