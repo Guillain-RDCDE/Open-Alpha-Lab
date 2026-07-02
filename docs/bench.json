@@ -1,5 +1,5 @@
 {
- "total": 540,
+ "total": 548,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -25,7 +25,7 @@
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 291
+   "Mirage": 299
   }
  },
  "studies": [
@@ -4888,6 +4888,78 @@
    "tradability": "Mirage",
    "href": "studies/540-distress-risk-anomaly/",
    "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 541,
+   "name": "Fibonacci-Retracement",
+   "claim": "Do the 38.2%/61.8% Fibonacci retracement levels really mark where a pullback stops — or is any round-ish level just as good?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/541-fibonacci-retracement/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 542,
+   "name": "Pi-Day-Effect",
+   "claim": "Does the market behave differently on Pi Day (March 14) and other 'mathematical constant' dates than on ordinary days?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/542-pi-day-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 543,
+   "name": "Western-Zodiac-CEO",
+   "claim": "Do companies run by a CEO of a given star sign outperform — the western-astrology cousin of the Chinese-zodiac study?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/543-western-zodiac-ceo/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 544,
+   "name": "Oyster-R-Months",
+   "claim": "The old rule says only eat oysters in months with an 'R' — do consumer/seafood stocks or the market follow the same seasonal 'R-month' pattern?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/544-oyster-r-months/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 545,
+   "name": "IPO-Birthday",
+   "claim": "Do stocks pop on the anniversary of their IPO — a 'birthday effect' for listed companies?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/545-ipo-birthday/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 546,
+   "name": "Nobel-Announcement-Drift",
+   "claim": "When the Nobel Prizes are announced each October, do related sectors (pharma after Medicine, tech after Physics) drift?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/546-nobel-announcement-drift/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 547,
+   "name": "Blue-Monday",
+   "claim": "'Blue Monday' — the third Monday of January, supposedly the most depressing day — does market mood actually sag then?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/547-blue-monday/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 548,
+   "name": "Happiness-Index-Country",
+   "claim": "Do the stock markets of the 'happiest' countries (World Happiness Report) beat the gloomiest ones?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/548-happiness-index-country/",
+   "family": "Macro & valuation timing"
   }
  ],
  "special": [

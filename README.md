@@ -53,7 +53,7 @@ Almost everything ends up bottom-right; three chips are green — and none of th
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 540 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 548 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -618,6 +618,14 @@ The full table below is the single source of truth (it's what the map and the li
 | **[538](studies/538-industry-relative-reversal/)** | **Industry-Relative-Reversal** | Does subtracting a stock's own sector return give a cleaner one-month reversal than the raw Jegadeesh sort? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[539](studies/539-cash-flow-volatility/)** | **Cash-Flow-Volatility** | Do firms with steadier cash flows quietly out-earn the cash-flow lottery tickets? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[540](studies/540-distress-risk-anomaly/)** | **Distress-Risk-Anomaly** | Do the firms a bankruptcy model flags as most distressed really earn the lowest returns — or did they just double everyone else? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[541](studies/541-fibonacci-retracement/)** | **Fibonacci-Retracement** | Do the 38.2%/61.8% Fibonacci retracement levels really mark where a pullback stops — or is any round-ish level just as good? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[542](studies/542-pi-day-effect/)** | **Pi-Day-Effect** | Does the market behave differently on Pi Day (March 14) and other 'mathematical constant' dates than on ordinary days? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[543](studies/543-western-zodiac-ceo/)** | **Western-Zodiac-CEO** | Do companies run by a CEO of a given star sign outperform — the western-astrology cousin of the Chinese-zodiac study? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[544](studies/544-oyster-r-months/)** | **Oyster-R-Months** | The old rule says only eat oysters in months with an 'R' — do consumer/seafood stocks or the market follow the same seasonal 'R-month' pattern? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[545](studies/545-ipo-birthday/)** | **IPO-Birthday** | Do stocks pop on the anniversary of their IPO — a 'birthday effect' for listed companies? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[546](studies/546-nobel-announcement-drift/)** | **Nobel-Announcement-Drift** | When the Nobel Prizes are announced each October, do related sectors (pharma after Medicine, tech after Physics) drift? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[547](studies/547-blue-monday/)** | **Blue-Monday** | 'Blue Monday' — the third Monday of January, supposedly the most depressing day — does market mood actually sag then? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[548](studies/548-happiness-index-country/)** | **Happiness-Index-Country** | Do the stock markets of the 'happiest' countries (World Happiness Report) beat the gloomiest ones? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 </details>
 
