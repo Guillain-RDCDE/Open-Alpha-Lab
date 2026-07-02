@@ -53,7 +53,7 @@ Almost everything ends up bottom-right; three chips are green — and none of th
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 556 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 564 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -634,6 +634,14 @@ The full table below is the single source of truth (it's what the map and the li
 | **[554](studies/554-airline-bookings/)** | **Airline-Bookings** | Do rising flight bookings lead airline stocks — or is the signal already in the price by the time you see it? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[555](studies/555-opentable-reservations/)** | **OpenTable-Reservations** | Do restaurant-reservation trends nowcast restaurant and consumer-discretionary stocks? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[556](studies/556-electricity-demand/)** | **Electricity-Demand** | Does the electricity the economy actually burns each week lead the market — a hard-data pulse of activity? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[557](studies/557-borrow-fee-signal/)** | **Borrow-Fee-Signal** | Does how expensive a stock is to borrow — the securities-lending fee — predict where it goes next? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[558](studies/558-failures-to-deliver/)** | **Failures-To-Deliver** | Do spikes in failures-to-deliver (settlement fails) foreshadow a short squeeze — or nothing at all? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[559](studies/559-dark-pool-ratio/)** | **Dark-Pool-Ratio** | When more of a stock's volume prints in dark pools, is that smart money accumulating — and does the stock follow? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[560](studies/560-odd-lot-ratio/)** | **Odd-Lot-Ratio** | The odd-lot ratio was once a 'dumb-money' fade signal — do small retail trades still mark the wrong side? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[561](studies/561-etf-flow-momentum/)** | **ETF-Flow-Momentum** | Do sector ETFs that are pulling in the most new money keep winning — or is chasing flows a trap? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[562](studies/562-block-trade-signal/)** | **Block-Trade-Signal** | When a giant block crosses the tape, is it institutions who know something — and can you ride their coattails? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[563](studies/563-secondary-offering-drift/)** | **Secondary-Offering-Drift** | After a company sells a fresh slug of shares in a secondary offering, does the stock keep sliding? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[564](studies/564-short-report-event/)** | **Short-Report-Event** | When an activist short-seller publishes a hit piece, does the stock actually fall and stay down? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
 
 </details>
 

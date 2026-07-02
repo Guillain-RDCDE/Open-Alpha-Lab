@@ -1040,6 +1040,9 @@ jobs:
       - name: Study 549 — Spotify-Mood test-suite
         run: pytest -q studies/549-spotify-mood/tests
 
+      - name: Study 558 — Failures-To-Deliver test-suite
+        run: pytest -q studies/558-failures-to-deliver/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

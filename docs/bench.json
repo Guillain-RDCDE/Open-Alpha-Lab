@@ -1,5 +1,5 @@
 {
- "total": 556,
+ "total": 564,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -19,13 +19,13 @@
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 61,
-   "Mirage": 136
+   "Fragile": 63,
+   "Mirage": 138
   },
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 303
+   "Mirage": 307
   }
  },
  "studies": [
@@ -5032,6 +5032,78 @@
    "tradability": "Mirage",
    "href": "studies/556-electricity-demand/",
    "family": "Macro & valuation timing"
+  },
+  {
+   "num": 557,
+   "name": "Borrow-Fee-Signal",
+   "claim": "Does how expensive a stock is to borrow — the securities-lending fee — predict where it goes next?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/557-borrow-fee-signal/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 558,
+   "name": "Failures-To-Deliver",
+   "claim": "Do spikes in failures-to-deliver (settlement fails) foreshadow a short squeeze — or nothing at all?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/558-failures-to-deliver/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 559,
+   "name": "Dark-Pool-Ratio",
+   "claim": "When more of a stock's volume prints in dark pools, is that smart money accumulating — and does the stock follow?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/559-dark-pool-ratio/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 560,
+   "name": "Odd-Lot-Ratio",
+   "claim": "The odd-lot ratio was once a 'dumb-money' fade signal — do small retail trades still mark the wrong side?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/560-odd-lot-ratio/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 561,
+   "name": "ETF-Flow-Momentum",
+   "claim": "Do sector ETFs that are pulling in the most new money keep winning — or is chasing flows a trap?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/561-etf-flow-momentum/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 562,
+   "name": "Block-Trade-Signal",
+   "claim": "When a giant block crosses the tape, is it institutions who know something — and can you ride their coattails?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/562-block-trade-signal/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 563,
+   "name": "Secondary-Offering-Drift",
+   "claim": "After a company sells a fresh slug of shares in a secondary offering, does the stock keep sliding?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/563-secondary-offering-drift/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 564,
+   "name": "Short-Report-Event",
+   "claim": "When an activist short-seller publishes a hit piece, does the stock actually fall and stay down?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/564-short-report-event/",
+   "family": "Microstructure & crowds"
   }
  ],
  "special": [
