@@ -83,8 +83,13 @@ def _quarter_labels(idx: pd.DatetimeIndex, window: int = DEFAULT_WINDOW) -> pd.D
     # Forward ordinal within the quarter = distance from the quarter start.
     df["seq_fwd"] = df.groupby(["year", "qem"]).cumcount(ascending=True) + 1
 
-    is_pump = df["seq_rev"] <= window
+    # Pump = last `window` days of a quarter; reversal = first `window` days.
+    # Disjoint by construction: in an incomplete boundary quarter (fewer than
+    # 2*window trading days, e.g. the current partial quarter on a live tape) a
+    # day can fall inside both windows — resolve it to reversal, since such days
+    # sit at a quarter start with no completed quarter-end pump to run into.
     is_reversal = df["seq_fwd"] <= window
+    is_pump = (df["seq_rev"] <= window) & ~is_reversal
 
     return pd.DataFrame(
         {
