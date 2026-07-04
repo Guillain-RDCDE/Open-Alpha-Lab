@@ -1,17 +1,17 @@
 <div align="center">
 
-<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — out of 450 famous trading edges, three survive">
+<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — out of 640 famous trading edges, six survive">
 
 # Open-Alpha-Lab
 
-### Out of 450 famous trading edges, three survive — and none of them predicts returns.
+### Out of 640 famous trading edges, six survive — and not one of them is a crystal ball.
 
 That's not a typo. I put every market anomaly, folk strategy and named factor
 people swear by through the **same brutal protocol**, and publish the verdict: **edge or mirage.**
 
-`500 tested` · `3 survive` · `407 mirages` · `0 forecast returns`
+`640 tested` · `6 survive` · `77 real signals` · `514 mirages`
 
-***Most are mirages. The honest write-up of why is the point — and the survivors size risk, they don't see the future.***
+***Most are mirages. The honest write-up of why is the point. The six survivors don't forecast anything — three manage risk, and three harvest a premium or a mechanical identity you can actually bank.***
 
 [![tests](https://github.com/Guillain-RDCDE/Open-Alpha-Lab/actions/workflows/tests.yml/badge.svg)](https://github.com/Guillain-RDCDE/Open-Alpha-Lab/actions/workflows/tests.yml)
 [![python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
@@ -44,7 +44,7 @@ style is written up in **[METHODOLOGY.md](METHODOLOGY.md)**.
 ## The graveyard
 
 The whole bench on one grid — every study is a numbered chip, sorted by its two stamps.
-Almost everything ends up bottom-right; three chips are green — and none of them predicts returns.
+Almost everything ends up bottom-right; six chips are green — and not one of them is a forecaster.
 
 [![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)](https://guillain-rdcde.github.io/Open-Alpha-Lab/)
 
@@ -53,7 +53,7 @@ Almost everything ends up bottom-right; three chips are green — and none of th
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 590 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 640 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -63,13 +63,16 @@ Prefer a table to a map? The **[same live page](https://guillain-rdcde.github.io
 study in a sortable grid — search by name or claim, filter by verdict, click straight through to the teardown.
 The full table below is the single source of truth (it's what the map and the live page are built from) — it's long, so it's folded.
 
-**Start here — the bench's only greens** (real signal *and* tradable; tellingly, none forecasts returns):
+**Start here — the bench's only greens** (real signal *and* tradable; tellingly, not one forecasts returns — three manage risk, three bank a premium or a mechanical identity):
 
 | # | Study | Why it's green |
 |:--:|---|---|
 | **[16](studies/16-storm-shy/)** | **Storm-Shy** | Scales exposure *down* in turbulence — risk management, not a return forecast. |
 | **[68](studies/68-all-weather/)** | **All-Weather** | Risk parity — diversification, not a signal. |
 | **[97](studies/97-balancing-act/)** | **Balancing-Act** | Plain 60/40 rebalancing. |
+| **[610](studies/610-fallen-angels-premium/)** | **Fallen-Angels** | A forced-seller *risk premium*: get paid to catch bonds dumped on downgrade (not duration). |
+| **[613](studies/613-currency-hedged-etf-carry/)** | **Currency-Hedged-Carry** | A covered-interest-parity *identity*: the hedge hands you the US–Japan rate gap, mechanically. |
+| **[625](studies/625-starting-yield-bond-decade/)** | **Starting-Yield** | *Duration arithmetic*: the yield on your buy ticket ≈ your next decade of bond returns. |
 
 <details>
 <summary><b>The full ledger — every study, two stamps each</b> &nbsp;·&nbsp; click to expand</summary>
@@ -668,6 +671,56 @@ The full table below is the single source of truth (it's what the map and the li
 | **[588](studies/588-llm-headline-sentiment/)** | **LLM-Headline-Sentiment** | If you let a language model read the day's headlines and score the mood, can it predict tomorrow's market? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[589](studies/589-genetic-algo-overfit/)** | **Genetic-Algo-Overfit** | Evolve a trading rule with a genetic algorithm until it looks brilliant in-sample — how badly does it die out-of-sample? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[590](studies/590-sharpe-hacking/)** | **Sharpe-Hacking** | Can you juice a strategy's Sharpe ratio with pure financial engineering — vol-targeting, leverage, smoothing — without adding any real edge? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[591](studies/591-vol-managed-portfolio/)** | **Vol-Managed Portfolio** | Can a thermostat on your stock exposure — turn it down after loud months, up after quiet ones — really beat just holding on? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[592](studies/592-dual-momentum-gem/)** | **Dual Momentum (GEM)** | Dual Momentum promised to beat the market with half the drawdown — which half of the promise survived the live tape? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[593](studies/593-hfea-leveraged-6040/)** | **HFEA (UPRO/TMF 55/45)** | What happens to a 3x-stocks / 3x-bonds "excellent adventure" when the insurance leg crashes with the plane? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[594](studies/594-leverage-rotation-200sma/)** | **Leverage-Rotation-200SMA** | Reddit swears the 200-day line gives you TQQQ's 3x upside without the 3x crashes — so what happened to whoever started in March 2000? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[595](studies/595-managed-futures-allocation/)** | **Managed-Futures Sleeve** | Every post-2022 advisor says carve 15% of your 60/40 into trend — is the "uncorrelated crisis insurance" real, and can the tape prove it actually raises your Sharpe? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[596](studies/596-bond-tent-glidepath/)** | **Bond Tent (Rising Equity Glidepath)** | Retire holding mostly bonds, then buy your stocks back — does the famous "bond tent" really tame sequence-of-returns risk? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[597](studies/597-guyton-guardrails/)** | **Guyton-Klinger Guardrails** | Guardrails promise retirees a "safe" 5% withdrawal where 4% was the ceiling — so who pays for the rescue when the market crashes? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[598](studies/598-cederburg-100-equities/)** | **Cederburg "100% Equities for Life"** | The famous paper says hold 100% stocks until the day you die — so why did every all-equity retiree who quit in September 1929 run out of money while the boring 60/40 sailed through? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[599](studies/599-tax-loss-harvesting/)** | **Tax-Loss-Harvesting** | Your robo's "1% tax alpha" is real arithmetic — so why does a quarter of investors collect nothing, and the 0% bracket less than nothing? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[600](studies/600-asset-location/)** | **Asset-Location** | Same funds, same 60/40 — can merely choosing *which account* holds the bonds really buy you extra retirement wealth for free? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[601](studies/601-factor-etf-live-test/)** | **Factor-ETF-Live-Test** | BlackRock bottled the academic factor zoo in 0.15%/yr wrappers — a decade-plus of live tape later, did any of them deliver? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[602](studies/602-macro-announcement-premium/)** | **Macro-Announcement-Day Premium** | A third of the stock market's return lands on the handful of days CPI, jobs numbers and the Fed hit the tape — is macro-news day where the equity premium is really earned? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[603](studies/603-treasury-auction-concession/)** | **Treasury Auction Concession** | Does the bond market really "make room" before every big Treasury auction — and snap back once the paper is placed? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[604](studies/604-month-end-rebalancing-flows/)** | **Month-End Rebalancing Flows** | When stocks trounce bonds all month, do pension rebalancers really sell the winner into the close — and is the bounce afterwards their money coming back? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[605](studies/605-vix-settlement-day/)** | **VIX Settlement Day** | One Wednesday a month a billion-dollar auction fixes the VIX — and it's the one morning the gap refuses to fade. Fingerprint of a pushed print? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[606](studies/606-opec-announcement-effect/)** | **OPEC Announcement Effect** | When the oil ministers finally walk out of Vienna, does the tape really roar twice as loud — and can you ride whatever they just decided? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[607](studies/607-quarterly-refunding-shock/)** | **Quarterly Refunding Shock** | Since 2023 macro desks circle the Treasury's refunding announcement like an FOMC day — but does the 10-Year even notice the news? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[608](studies/608-friday-news-dump/)** | **Friday-News-Dump** | Companies file their ugliest 8-Ks Friday after the close, when nobody's watching — so why doesn't the stock keep sliding on Monday? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[609](studies/609-vix-weekend-arithmetic/)** | **VIX-Weekend-Arithmetic** | The fear gauge's own formula guarantees it a pop every Monday — so why can't anyone cash a single one? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[610](studies/610-fallen-angels-premium/)** | **Fallen-Angels-Premium** | When a bond gets thrown out of the investment-grade club, someone is forced to sell it at any price — who gets paid to catch it? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Investable](https://img.shields.io/badge/Investable-2ea44f?style=flat-square) |
+| **[611](studies/611-mreit-carry/)** | **mREIT-Carry** | Mortgage REITs really do pay 10-14% — so how did nineteen years of those coupons turn $100 into $80? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[612](studies/612-em-debt-carry/)** | **EM-Debt-Carry** | EM sovereigns pay a fat coupon over Treasuries, every single year — so why can't 18 years of collecting it be told from zero? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[613](studies/613-currency-hedged-etf-carry/)** | **Currency-Hedged-ETF-Carry** | Two funds hold the exact same Japanese stocks — so how did one quietly out-pay the other by the whole Fed-vs-BOJ rate gap? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Investable](https://img.shields.io/badge/Investable-2ea44f?style=flat-square) |
+| **[614](studies/614-clo-equity-yield/)** | **CLO-Equity-Yield** | The highest-yielding funds in America pay 15%+ month after month — but whose money is actually in the envelope? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[615](studies/615-yen-safe-haven/)** | **Yen Safe Haven** | When stocks crash, does the borrowed yen really come rushing home — and what does the "free" hedge charge while you wait? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[616](studies/616-muni-cef-tax-loss/)** | **Muni-CEF-Tax-Loss** | Retail investors dump their little muni funds every December for a tax break — can you catch the January snap-back they leave behind? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[617](studies/617-crash-insurance-cost/)** | **Crash-Insurance-Cost** | The 2020 crash was crash insurance's perfect payoff — so how did every buyer who caught it still end up under water? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[618](studies/618-gbtc-premium-cycle/)** | **GBTC Premium Cycle** | How did the same pile of bitcoin trade 40% rich, then 45% cheap, then exactly at par — all inside one ticker? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[619](studies/619-bito-roll-drag/)** | **BITO-Roll-Drag** | An ETF that legally can't hold bitcoin buys next month's bitcoin at a premium, watches it melt, and repeats — so who's paying for the show? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[620](studies/620-a-h-premium/)** | **A-H Share Premium** | The same company, two tickers, one price a third higher in Shanghai than in Hong Kong — why has no one arbitraged it away in thirty years? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[621](studies/621-share-class-spreads/)** | **Share-Class Spreads** | Why can one Berkshire share never cost more than 1,500 of the other — and if the market really polices that line every day, why can't you get paid for watching it? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[622](studies/622-thematic-etf-curse/)** | **Thematic-ETF-Curse** | When Wall Street finally wraps your favorite craze in an ETF, is the fund's birthday itself the sell signal? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[623](studies/623-ipo-long-run-underperformance/)** | **IPO Long-Run Underperformance** | IPOs are said to sink for three to five years after the party — is the curse the listing itself, or just the expensive small-growth clothes every new listing wears? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[624](studies/624-buffer-etf-cost/)** | **Buffer-ETF-Cost** | Buffer ETFs kept every single promise on the tape — so why do they trail the market by miles, and could you really have built the insurance cheaper yourself? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[625](studies/625-starting-yield-bond-decade/)** | **Starting-Yield-Bond-Decade** | Could the yield printed on your buy ticket already be your entire next decade of bond returns — no forecasting required? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Investable](https://img.shields.io/badge/Investable-2ea44f?style=flat-square) |
+| **[626](studies/626-unemployment-trend-timing/)** | **Unemployment-Trend-Timing** | What if you only obeyed the 200-day moving average when unemployment was rising too — does the recession veto really halve the whipsaws? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[627](studies/627-thirteen-f-cloning/)** | **13F Cloning** | Everyone can photocopy Buffett's homework 45 days after he files it — so why hasn't the free ride made anyone rich? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[628](studies/628-buffetts-alpha/)** | **Buffett's Alpha** | The most famous alpha in the world turned $1 into $2,880 — is there any of it left for whoever buys Berkshire today? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[629](studies/629-congress-trading/)** | **Congress Trading** | A famous study said senators trade like corporate insiders — so what do you actually earn copying their trades on the only date you're allowed to see them? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[630](studies/630-late-filers/)** | **Late Filers (Form NT)** | When a company publicly confesses it can't finish its own annual report on time, should you sell before the auditors do? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[631](studies/631-restatement-shock/)** | **Restatement Shock (Item 4.02)** | When a company files an 8-K confessing "do not rely on our financials," is the months-long slide that follows the market underreacting — or was that stock dying anyway? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[632](studies/632-crypto-xs-momentum/)** | **Crypto Cross-Sectional Momentum** | Academia crowned momentum the one factor crypto actually has — so why did it pay exactly nothing through the LUNA and FTX year? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[633](studies/633-btc-vol-targeting/)** | **BTC Vol Targeting** | Can a 30% vol thermostat really give you the Bitcoin ride with half the heart attacks? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[634](studies/634-us-leads-the-world/)** | **US-Leads-the-World** | By the time Tokyo rings its opening bell, Wall Street's whole day is old news — so why can't anyone get paid for knowing it? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[635](studies/635-coinbase-premium/)** | **Coinbase-Premium** | When Coinbase pays more for Bitcoin than Binance, are US institutions tipping you tomorrow's move? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[636](studies/636-exchange-listing-pop/)** | **Exchange-Listing-Pop** | Coinbase lists a coin and it rockets double digits — so why does everyone who buys it that day lose money? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[637](studies/637-fomc-vol-crush/)** | **FOMC Vol Crush** | The fear gauge deflates like clockwork the afternoon the Fed speaks — so why can't anyone cash that check? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[638](studies/638-value-momentum-everywhere/)** | **Value-Momentum-Everywhere** | Value and momentum supposedly pay in every asset class and hedge each other — so does the famous 50/50 "free lunch" combo survive on free data? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[639](studies/639-gasoline-rvp-seasonality/)** | **Gasoline-RVP-Seasonality** | Summer gasoline gets expensive every spring by federal law, on dates you can circle in January — so why can't anyone actually buy the rally? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[640](studies/640-gold-overnight/)** | **Gold-Overnight** | Gold spent twenty years earning its entire return while Wall Street slept — so why can't you just set an alarm, and why didn't cleaning up the London fix wake it? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 </details>
 

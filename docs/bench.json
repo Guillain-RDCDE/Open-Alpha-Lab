@@ -1,5 +1,5 @@
 {
- "total": 590,
+ "total": 640,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -13,19 +13,19 @@
  ],
  "counts": {
   "Real": {
-   "Investable": 3,
-   "Fragile": 30,
-   "Mirage": 19
+   "Investable": 6,
+   "Fragile": 41,
+   "Mirage": 30
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 67,
-   "Mirage": 148
+   "Fragile": 75,
+   "Mirage": 160
   },
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 319
+   "Mirage": 324
   }
  },
  "studies": [
@@ -5338,6 +5338,456 @@
    "tradability": "Mirage",
    "href": "studies/590-sharpe-hacking/",
    "family": "Research-method demos"
+  },
+  {
+   "num": 591,
+   "name": "Vol-Managed Portfolio",
+   "claim": "Can a thermostat on your stock exposure — turn it down after loud months, up after quiet ones — really beat just holding on?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/591-vol-managed-portfolio/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 592,
+   "name": "Dual Momentum (GEM)",
+   "claim": "Dual Momentum promised to beat the market with half the drawdown — which half of the promise survived the live tape?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/592-dual-momentum-gem/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 593,
+   "name": "HFEA (UPRO/TMF 55/45)",
+   "claim": "What happens to a 3x-stocks / 3x-bonds \"excellent adventure\" when the insurance leg crashes with the plane?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/593-hfea-leveraged-6040/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 594,
+   "name": "Leverage-Rotation-200SMA",
+   "claim": "Reddit swears the 200-day line gives you TQQQ's 3x upside without the 3x crashes — so what happened to whoever started in March 2000?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/594-leverage-rotation-200sma/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 595,
+   "name": "Managed-Futures Sleeve",
+   "claim": "Every post-2022 advisor says carve 15% of your 60/40 into trend — is the \"uncorrelated crisis insurance\" real, and can the tape prove it actually raises your Sharpe?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/595-managed-futures-allocation/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 596,
+   "name": "Bond Tent (Rising Equity Glidepath)",
+   "claim": "Retire holding mostly bonds, then buy your stocks back — does the famous \"bond tent\" really tame sequence-of-returns risk?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/596-bond-tent-glidepath/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 597,
+   "name": "Guyton-Klinger Guardrails",
+   "claim": "Guardrails promise retirees a \"safe\" 5% withdrawal where 4% was the ceiling — so who pays for the rescue when the market crashes?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/597-guyton-guardrails/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 598,
+   "name": "Cederburg \"100% Equities for Life\"",
+   "claim": "The famous paper says hold 100% stocks until the day you die — so why did every all-equity retiree who quit in September 1929 run out of money while the boring 60/40 sailed through?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/598-cederburg-100-equities/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 599,
+   "name": "Tax-Loss-Harvesting",
+   "claim": "Your robo's \"1% tax alpha\" is real arithmetic — so why does a quarter of investors collect nothing, and the 0% bracket less than nothing?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/599-tax-loss-harvesting/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 600,
+   "name": "Asset-Location",
+   "claim": "Same funds, same 60/40 — can merely choosing *which account* holds the bonds really buy you extra retirement wealth for free?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/600-asset-location/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 601,
+   "name": "Factor-ETF-Live-Test",
+   "claim": "BlackRock bottled the academic factor zoo in 0.15%/yr wrappers — a decade-plus of live tape later, did any of them deliver?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/601-factor-etf-live-test/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 602,
+   "name": "Macro-Announcement-Day Premium",
+   "claim": "A third of the stock market's return lands on the handful of days CPI, jobs numbers and the Fed hit the tape — is macro-news day where the equity premium is really earned?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/602-macro-announcement-premium/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 603,
+   "name": "Treasury Auction Concession",
+   "claim": "Does the bond market really \"make room\" before every big Treasury auction — and snap back once the paper is placed?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/603-treasury-auction-concession/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 604,
+   "name": "Month-End Rebalancing Flows",
+   "claim": "When stocks trounce bonds all month, do pension rebalancers really sell the winner into the close — and is the bounce afterwards their money coming back?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/604-month-end-rebalancing-flows/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 605,
+   "name": "VIX Settlement Day",
+   "claim": "One Wednesday a month a billion-dollar auction fixes the VIX — and it's the one morning the gap refuses to fade. Fingerprint of a pushed print?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/605-vix-settlement-day/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 606,
+   "name": "OPEC Announcement Effect",
+   "claim": "When the oil ministers finally walk out of Vienna, does the tape really roar twice as loud — and can you ride whatever they just decided?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/606-opec-announcement-effect/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 607,
+   "name": "Quarterly Refunding Shock",
+   "claim": "Since 2023 macro desks circle the Treasury's refunding announcement like an FOMC day — but does the 10-Year even notice the news?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/607-quarterly-refunding-shock/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 608,
+   "name": "Friday-News-Dump",
+   "claim": "Companies file their ugliest 8-Ks Friday after the close, when nobody's watching — so why doesn't the stock keep sliding on Monday?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/608-friday-news-dump/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 609,
+   "name": "VIX-Weekend-Arithmetic",
+   "claim": "The fear gauge's own formula guarantees it a pop every Monday — so why can't anyone cash a single one?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/609-vix-weekend-arithmetic/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 610,
+   "name": "Fallen-Angels-Premium",
+   "claim": "When a bond gets thrown out of the investment-grade club, someone is forced to sell it at any price — who gets paid to catch it?",
+   "signal": "Real",
+   "tradability": "Investable",
+   "href": "studies/610-fallen-angels-premium/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 611,
+   "name": "mREIT-Carry",
+   "claim": "Mortgage REITs really do pay 10-14% — so how did nineteen years of those coupons turn $100 into $80?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/611-mreit-carry/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 612,
+   "name": "EM-Debt-Carry",
+   "claim": "EM sovereigns pay a fat coupon over Treasuries, every single year — so why can't 18 years of collecting it be told from zero?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/612-em-debt-carry/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 613,
+   "name": "Currency-Hedged-ETF-Carry",
+   "claim": "Two funds hold the exact same Japanese stocks — so how did one quietly out-pay the other by the whole Fed-vs-BOJ rate gap?",
+   "signal": "Real",
+   "tradability": "Investable",
+   "href": "studies/613-currency-hedged-etf-carry/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 614,
+   "name": "CLO-Equity-Yield",
+   "claim": "The highest-yielding funds in America pay 15%+ month after month — but whose money is actually in the envelope?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/614-clo-equity-yield/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 615,
+   "name": "Yen Safe Haven",
+   "claim": "When stocks crash, does the borrowed yen really come rushing home — and what does the \"free\" hedge charge while you wait?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/615-yen-safe-haven/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 616,
+   "name": "Muni-CEF-Tax-Loss",
+   "claim": "Retail investors dump their little muni funds every December for a tax break — can you catch the January snap-back they leave behind?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/616-muni-cef-tax-loss/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 617,
+   "name": "Crash-Insurance-Cost",
+   "claim": "The 2020 crash was crash insurance's perfect payoff — so how did every buyer who caught it still end up under water?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/617-crash-insurance-cost/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 618,
+   "name": "GBTC Premium Cycle",
+   "claim": "How did the same pile of bitcoin trade 40% rich, then 45% cheap, then exactly at par — all inside one ticker?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/618-gbtc-premium-cycle/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 619,
+   "name": "BITO-Roll-Drag",
+   "claim": "An ETF that legally can't hold bitcoin buys next month's bitcoin at a premium, watches it melt, and repeats — so who's paying for the show?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/619-bito-roll-drag/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 620,
+   "name": "A-H Share Premium",
+   "claim": "The same company, two tickers, one price a third higher in Shanghai than in Hong Kong — why has no one arbitraged it away in thirty years?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/620-a-h-premium/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 621,
+   "name": "Share-Class Spreads",
+   "claim": "Why can one Berkshire share never cost more than 1,500 of the other — and if the market really polices that line every day, why can't you get paid for watching it?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/621-share-class-spreads/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 622,
+   "name": "Thematic-ETF-Curse",
+   "claim": "When Wall Street finally wraps your favorite craze in an ETF, is the fund's birthday itself the sell signal?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/622-thematic-etf-curse/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 623,
+   "name": "IPO Long-Run Underperformance",
+   "claim": "IPOs are said to sink for three to five years after the party — is the curse the listing itself, or just the expensive small-growth clothes every new listing wears?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/623-ipo-long-run-underperformance/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 624,
+   "name": "Buffer-ETF-Cost",
+   "claim": "Buffer ETFs kept every single promise on the tape — so why do they trail the market by miles, and could you really have built the insurance cheaper yourself?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/624-buffer-etf-cost/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 625,
+   "name": "Starting-Yield-Bond-Decade",
+   "claim": "Could the yield printed on your buy ticket already be your entire next decade of bond returns — no forecasting required?",
+   "signal": "Real",
+   "tradability": "Investable",
+   "href": "studies/625-starting-yield-bond-decade/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 626,
+   "name": "Unemployment-Trend-Timing",
+   "claim": "What if you only obeyed the 200-day moving average when unemployment was rising too — does the recession veto really halve the whipsaws?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/626-unemployment-trend-timing/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 627,
+   "name": "13F Cloning",
+   "claim": "Everyone can photocopy Buffett's homework 45 days after he files it — so why hasn't the free ride made anyone rich?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/627-thirteen-f-cloning/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 628,
+   "name": "Buffett's Alpha",
+   "claim": "The most famous alpha in the world turned $1 into $2,880 — is there any of it left for whoever buys Berkshire today?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/628-buffetts-alpha/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 629,
+   "name": "Congress Trading",
+   "claim": "A famous study said senators trade like corporate insiders — so what do you actually earn copying their trades on the only date you're allowed to see them?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/629-congress-trading/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 630,
+   "name": "Late Filers (Form NT)",
+   "claim": "When a company publicly confesses it can't finish its own annual report on time, should you sell before the auditors do?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/630-late-filers/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 631,
+   "name": "Restatement Shock (Item 4.02)",
+   "claim": "When a company files an 8-K confessing \"do not rely on our financials,\" is the months-long slide that follows the market underreacting — or was that stock dying anyway?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/631-restatement-shock/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 632,
+   "name": "Crypto Cross-Sectional Momentum",
+   "claim": "Academia crowned momentum the one factor crypto actually has — so why did it pay exactly nothing through the LUNA and FTX year?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/632-crypto-xs-momentum/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 633,
+   "name": "BTC Vol Targeting",
+   "claim": "Can a 30% vol thermostat really give you the Bitcoin ride with half the heart attacks?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/633-btc-vol-targeting/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 634,
+   "name": "US-Leads-the-World",
+   "claim": "By the time Tokyo rings its opening bell, Wall Street's whole day is old news — so why can't anyone get paid for knowing it?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/634-us-leads-the-world/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 635,
+   "name": "Coinbase-Premium",
+   "claim": "When Coinbase pays more for Bitcoin than Binance, are US institutions tipping you tomorrow's move?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/635-coinbase-premium/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 636,
+   "name": "Exchange-Listing-Pop",
+   "claim": "Coinbase lists a coin and it rockets double digits — so why does everyone who buys it that day lose money?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/636-exchange-listing-pop/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 637,
+   "name": "FOMC Vol Crush",
+   "claim": "The fear gauge deflates like clockwork the afternoon the Fed speaks — so why can't anyone cash that check?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/637-fomc-vol-crush/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 638,
+   "name": "Value-Momentum-Everywhere",
+   "claim": "Value and momentum supposedly pay in every asset class and hedge each other — so does the famous 50/50 \"free lunch\" combo survive on free data?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/638-value-momentum-everywhere/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 639,
+   "name": "Gasoline-RVP-Seasonality",
+   "claim": "Summer gasoline gets expensive every spring by federal law, on dates you can circle in January — so why can't anyone actually buy the rally?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/639-gasoline-rvp-seasonality/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 640,
+   "name": "Gold-Overnight",
+   "claim": "Gold spent twenty years earning its entire return while Wall Street slept — so why can't you just set an alarm, and why didn't cleaning up the London fix wake it?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/640-gold-overnight/",
+   "family": "Unclassified"
   }
  ],
  "special": [
