@@ -1,0 +1,9 @@
+# Extra deps for Study 687 (Ladder Bottom) beyond the repo core.
+numpy
+pandas
+scipy
+matplotlib
+pyarrow
+yfinance
+nbformat
+jupyter

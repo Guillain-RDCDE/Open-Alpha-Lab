@@ -1,5 +1,5 @@
 {
- "total": 640,
+ "total": 710,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -14,18 +14,18 @@
  "counts": {
   "Real": {
    "Investable": 6,
-   "Fragile": 41,
+   "Fragile": 42,
    "Mirage": 30
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 75,
-   "Mirage": 160
+   "Fragile": 80,
+   "Mirage": 171
   },
   "None": {
    "Investable": 0,
    "Fragile": 3,
-   "Mirage": 324
+   "Mirage": 377
   }
  },
  "studies": [
@@ -5346,7 +5346,7 @@
    "signal": "Mixed",
    "tradability": "Fragile",
    "href": "studies/591-vol-managed-portfolio/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 592,
@@ -5355,7 +5355,7 @@
    "signal": "Mixed",
    "tradability": "Mirage",
    "href": "studies/592-dual-momentum-gem/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 593,
@@ -5364,7 +5364,7 @@
    "signal": "Mixed",
    "tradability": "Fragile",
    "href": "studies/593-hfea-leveraged-6040/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 594,
@@ -5373,7 +5373,7 @@
    "signal": "Mixed",
    "tradability": "Mirage",
    "href": "studies/594-leverage-rotation-200sma/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 595,
@@ -5382,7 +5382,7 @@
    "signal": "Mixed",
    "tradability": "Fragile",
    "href": "studies/595-managed-futures-allocation/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 596,
@@ -5391,7 +5391,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/596-bond-tent-glidepath/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 597,
@@ -5400,7 +5400,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/597-guyton-guardrails/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 598,
@@ -5409,7 +5409,7 @@
    "signal": "Mixed",
    "tradability": "Fragile",
    "href": "studies/598-cederburg-100-equities/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 599,
@@ -5418,7 +5418,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/599-tax-loss-harvesting/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 600,
@@ -5427,7 +5427,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/600-asset-location/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 601,
@@ -5436,7 +5436,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/601-factor-etf-live-test/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 602,
@@ -5445,7 +5445,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/602-macro-announcement-premium/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 603,
@@ -5454,7 +5454,7 @@
    "signal": "Mixed",
    "tradability": "Fragile",
    "href": "studies/603-treasury-auction-concession/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 604,
@@ -5463,7 +5463,7 @@
    "signal": "Mixed",
    "tradability": "Fragile",
    "href": "studies/604-month-end-rebalancing-flows/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 605,
@@ -5472,7 +5472,7 @@
    "signal": "Mixed",
    "tradability": "Mirage",
    "href": "studies/605-vix-settlement-day/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 606,
@@ -5481,7 +5481,7 @@
    "signal": "Mixed",
    "tradability": "Mirage",
    "href": "studies/606-opec-announcement-effect/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 607,
@@ -5490,7 +5490,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/607-quarterly-refunding-shock/",
-   "family": "Unclassified"
+   "family": "Macro & valuation timing"
   },
   {
    "num": 608,
@@ -5499,7 +5499,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/608-friday-news-dump/",
-   "family": "Unclassified"
+   "family": "Microstructure & crowds"
   },
   {
    "num": 609,
@@ -5508,7 +5508,7 @@
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/609-vix-weekend-arithmetic/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 610,
@@ -5517,7 +5517,7 @@
    "signal": "Real",
    "tradability": "Investable",
    "href": "studies/610-fallen-angels-premium/",
-   "family": "Unclassified"
+   "family": "Carry, curves & commodities"
   },
   {
    "num": 611,
@@ -5526,7 +5526,7 @@
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/611-mreit-carry/",
-   "family": "Unclassified"
+   "family": "Carry, curves & commodities"
   },
   {
    "num": 612,
@@ -5535,7 +5535,7 @@
    "signal": "Mixed",
    "tradability": "Mirage",
    "href": "studies/612-em-debt-carry/",
-   "family": "Unclassified"
+   "family": "Carry, curves & commodities"
   },
   {
    "num": 613,
@@ -5544,7 +5544,7 @@
    "signal": "Real",
    "tradability": "Investable",
    "href": "studies/613-currency-hedged-etf-carry/",
-   "family": "Unclassified"
+   "family": "Carry, curves & commodities"
   },
   {
    "num": 614,
@@ -5553,7 +5553,7 @@
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/614-clo-equity-yield/",
-   "family": "Unclassified"
+   "family": "Carry, curves & commodities"
   },
   {
    "num": 615,
@@ -5562,7 +5562,7 @@
    "signal": "Mixed",
    "tradability": "Mirage",
    "href": "studies/615-yen-safe-haven/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 616,
@@ -5571,7 +5571,7 @@
    "signal": "Mixed",
    "tradability": "Fragile",
    "href": "studies/616-muni-cef-tax-loss/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 617,
@@ -5580,7 +5580,7 @@
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/617-crash-insurance-cost/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 618,
@@ -5589,7 +5589,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/618-gbtc-premium-cycle/",
-   "family": "Unclassified"
+   "family": "Mean reversion & stat-arb"
   },
   {
    "num": 619,
@@ -5598,7 +5598,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/619-bito-roll-drag/",
-   "family": "Unclassified"
+   "family": "Carry, curves & commodities"
   },
   {
    "num": 620,
@@ -5607,7 +5607,7 @@
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/620-a-h-premium/",
-   "family": "Unclassified"
+   "family": "Mean reversion & stat-arb"
   },
   {
    "num": 621,
@@ -5616,7 +5616,7 @@
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/621-share-class-spreads/",
-   "family": "Unclassified"
+   "family": "Mean reversion & stat-arb"
   },
   {
    "num": 622,
@@ -5625,7 +5625,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/622-thematic-etf-curse/",
-   "family": "Unclassified"
+   "family": "Microstructure & crowds"
   },
   {
    "num": 623,
@@ -5634,7 +5634,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/623-ipo-long-run-underperformance/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 624,
@@ -5643,7 +5643,7 @@
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/624-buffer-etf-cost/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 625,
@@ -5652,7 +5652,7 @@
    "signal": "Real",
    "tradability": "Investable",
    "href": "studies/625-starting-yield-bond-decade/",
-   "family": "Unclassified"
+   "family": "Macro & valuation timing"
   },
   {
    "num": 626,
@@ -5661,7 +5661,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/626-unemployment-trend-timing/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 627,
@@ -5670,7 +5670,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/627-thirteen-f-cloning/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 628,
@@ -5679,7 +5679,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/628-buffetts-alpha/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 629,
@@ -5688,7 +5688,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/629-congress-trading/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 630,
@@ -5697,7 +5697,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/630-late-filers/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 631,
@@ -5706,7 +5706,7 @@
    "signal": "Mixed",
    "tradability": "Mirage",
    "href": "studies/631-restatement-shock/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 632,
@@ -5715,7 +5715,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/632-crypto-xs-momentum/",
-   "family": "Unclassified"
+   "family": "Momentum & trend"
   },
   {
    "num": 633,
@@ -5724,7 +5724,7 @@
    "signal": "Mixed",
    "tradability": "Fragile",
    "href": "studies/633-btc-vol-targeting/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 634,
@@ -5733,7 +5733,7 @@
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/634-us-leads-the-world/",
-   "family": "Unclassified"
+   "family": "Microstructure & crowds"
   },
   {
    "num": 635,
@@ -5742,7 +5742,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/635-coinbase-premium/",
-   "family": "Unclassified"
+   "family": "Microstructure & crowds"
   },
   {
    "num": 636,
@@ -5751,7 +5751,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "studies/636-exchange-listing-pop/",
-   "family": "Unclassified"
+   "family": "Microstructure & crowds"
   },
   {
    "num": 637,
@@ -5760,7 +5760,7 @@
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/637-fomc-vol-crush/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 638,
@@ -5769,7 +5769,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/638-value-momentum-everywhere/",
-   "family": "Unclassified"
+   "family": "Momentum & trend"
   },
   {
    "num": 639,
@@ -5778,7 +5778,7 @@
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/639-gasoline-rvp-seasonality/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 640,
@@ -5787,7 +5787,637 @@
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/640-gold-overnight/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 641,
+   "name": "Sell-In-May",
+   "claim": "If summer already pays you ~3.8% every single year, why does folklore insist you should be in cash for it?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/641-sell-in-may/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 642,
+   "name": "Turnaround-Tuesday",
+   "claim": "Every one of the other four weekday down-day-then-bounce pairs pooled together is statistically nothing (t=0.66) — so why does the exact same trade work only when the down day happens to be a Monday?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/642-turnaround-tuesday/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 643,
+   "name": "Payrolls-Day-Effect",
+   "claim": "Payrolls Friday is famous for moving the market — but does anyone actually know which way?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/643-payrolls-day-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 644,
+   "name": "CPI-Day-Drift",
+   "claim": "Every month, the whole market knows exactly when the CPI print lands — so why can't a scheduled, zero-look-ahead event be turned into a trade?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/644-cpi-day-drift/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 645,
+   "name": "ECB-Announcement-Effect",
+   "claim": "If the ECB genuinely moves the market every six weeks, why does the coin flip on decision day pay exactly 50/50?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/645-ecb-announcement-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 646,
+   "name": "BoJ-Announcement-Effect",
+   "claim": "Can a day move twice as loud as any other day on the calendar and still leave you with nothing you could have bet on in advance?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/646-boj-announcement-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 647,
+   "name": "PBoC-RRR-Effect",
+   "claim": "If a PBoC rate cut and a PBoC rate hike push Chinese equities up by almost exactly the same amount, is the market reacting to the policy at all — or just to the PBoC showing up?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/647-pboc-rrr-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 648,
+   "name": "Grain-Seasonality",
+   "claim": "If \"sell the harvest, buy the scare\" is a century-old grain-trading maxim, why is October — smack inside the harvest window — the single best month of the year for corn, wheat, and soy alike?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/648-grain-seasonality/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 649,
+   "name": "Gold-Seasonality",
+   "claim": "If September were gold's lucky month, why does the actual winner turn out to be January — a completely different story nobody was pitching?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/649-gold-seasonality/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 650,
+   "name": "Heating-Oil-Seasonality",
+   "claim": "If cold weather really pulls heating-oil futures up, why does the \"autumn build\" month-window — the market pricing winter demand ahead of time — average a worse return than the six off-season months it's supposed to beat?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/650-heating-oil-seasonality/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 651,
+   "name": "Sugar-Seasonality",
+   "claim": "Sugar traders have sworn by \"buy the winter tight, sell the Brazilian harvest\" for generations — so why does the one ETF you can actually buy (CANE, 2011-2026) show zero of twelve calendar months, and not even the best or worst one, clearing even the weakest significance bar?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/651-sugar-seasonality/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 652,
+   "name": "Index-Deletion-Bounce",
+   "claim": "Index funds are legally forced to dump a stock on one specific, publicly known day — so why can't buying right after ever turn a profit?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/652-index-deletion-bounce/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 653,
+   "name": "Dividend-Cut-Drift",
+   "claim": "If a board's dividend cut is the clearest bad-news signal it can send, why does the stock stop falling the moment it's announced?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/653-dividend-cut-drift/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 654,
+   "name": "Quiet-Period-Expiry",
+   "claim": "When the bank that spent months hyping your IPO is finally allowed to say \"Buy,\" does anyone still care?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/654-quiet-period-expiry/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 655,
+   "name": "Ivy-Portfolio",
+   "claim": "If your endowment mimic can't beat a lazy 60/40, what exactly are you paying five ETFs' worth of complexity for?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/655-ivy-portfolio/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 656,
+   "name": "Dragon-Portfolio",
+   "claim": "The Dragon's long-vol sleeve delivered a genuine +33pp crash payoff in 2020 -- so why did the fully-loaded portfolio still lose money over its own only testable window?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/656-dragon-portfolio/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 657,
+   "name": "Larry-Portfolio",
+   "claim": "If small-cap value is supposed to punch above its weight, why does holding only 30% of it still leave you 2.66 points a year behind a boring 60/40?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/657-larry-portfolio/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 658,
+   "name": "Put-Write-Premium",
+   "claim": "If put-writing is supposed to cushion a crash, why does its beta almost double — from 0.55 to 0.93 — on the 33 worst days of the sample?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/658-put-write-premium/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 659,
+   "name": "Costless-Collar",
+   "claim": "Is a \"costless\" collar's protection ever truly free, or is it just a bet that a crash lands before the cap quietly collects what you owe?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/659-costless-collar/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 660,
+   "name": "Carry-Everywhere",
+   "claim": "Four carry trades, four different crisis outcomes, zero synchronized crash — so where did \"carry pays everywhere\" actually go?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/660-carry-everywhere/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 661,
+   "name": "USO-Roll-Decay",
+   "claim": "On the one day oil made history and settled below zero, USO barely flinched -- so whose \"oil price\" has your ETF actually been paying for the last twenty years?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/661-uso-roll-decay/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 662,
+   "name": "EM-Local-Bonds",
+   "claim": "The \"fat yield\" on local-currency EM bonds was real — so why did investors end up with less money than if they'd just held the plain-vanilla USD version?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/662-em-local-bonds/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 663,
+   "name": "Hash-Ribbons",
+   "claim": "Four buy signals in twelve years, four rallies that followed -- is that a miner-capitulation edge, or just how a chart that mostly goes up looks after any four dates you pick?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/663-hash-ribbons/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 664,
+   "name": "ESG-Premium",
+   "claim": "If the ESG label doesn't cost you and doesn't pay you, what exactly are you buying — ethics, or just a quality-factor tilt with a green sticker on it?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/664-esg-premium/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 665,
+   "name": "Titanic-Syndrome",
+   "claim": "Thirteen times in eighteen years the market's own breadth screamed \"sinking ship\" — so why can't the tape tell those days apart from any other Tuesday?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/665-titanic-syndrome/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 666,
+   "name": "McClellan-Summation",
+   "claim": "If you keep a running total of market breadth for 21 years, does it ever find its way back to zero?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/666-mcclellan-summation/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 667,
+   "name": "Negative-Volume-Index",
+   "claim": "If \"smart money\" really accumulates quietly on low-volume days, why does a timer built on that exact signal lose to just buying and holding?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/667-negative-volume-index/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 668,
+   "name": "Williams-VIX-Fix",
+   "claim": "If a fear gauge built from nothing but price spikes exactly when a stock craters, why does buying the spike lose money almost as often as it wins?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/668-williams-vix-fix/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 669,
+   "name": "RSI-Divergence",
+   "claim": "If a fading RSI really means the sellers are exhausted, why does picking random dates on the same tickers beat the real pattern most of the time?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/669-rsi-divergence/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 670,
+   "name": "Bollinger-Squeeze",
+   "claim": "Everyone agrees the bands go dead quiet right before a big move — so why can't the squeeze tell you which way the move is going to break?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/670-bollinger-squeeze/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 671,
+   "name": "Special-K",
+   "claim": "If Special K really flags \"major cyclic turns,\" why does the only statistically significant crossover in 33 years point the wrong way?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/671-special-k/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 672,
+   "name": "McGinley-Dynamic",
+   "claim": "If a line trades less but isn't smarter, is \"fewer signals\" actually a virtue, or just a slower way to lose?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/672-mcginley-dynamic/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 673,
+   "name": "T3-Tillson",
+   "claim": "Six stacked EMAs are supposed to erase lag -- so why is Tillson's own T3 the slowest of three moving averages to notice a 20% price jump?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/673-t3-tillson/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 674,
+   "name": "VIDYA",
+   "claim": "Chande named his indicator's speed knob after volatility — what if it's actually measuring something else entirely, and nobody checked for 33 years?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/674-vidya/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 675,
+   "name": "Qstick",
+   "claim": "If a \"buying pressure\" gauge is 78% correlated with a momentum proxy that never even looks at the open, what exactly is it measuring?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/675-qstick/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 676,
+   "name": "Gator-Oscillator",
+   "claim": "If the gator's mouth is the same three lines you already had, does watching it \"wake up\" tell you anything the fan wasn't already telling you?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/676-gator-oscillator/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 677,
+   "name": "Market-Facilitation-Index",
+   "claim": "If a \"coiled\" Squat bar really precedes a violent move, why does riding it forward look exactly like a coin flip on six different tickers?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/677-market-facilitation-index/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 678,
+   "name": "Random-Walk-Index",
+   "claim": "If an indicator built to flag \"statistically non-random\" trends can't even out-perform picking days at random, was it ever measuring trend at all?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/678-random-walk-index/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 679,
+   "name": "Psychological-Line",
+   "claim": "If \"everyone who wants to buy already has\" is true on an overbought PSY reading, why do those exact days keep drifting up, not down?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/679-psychological-line/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 680,
+   "name": "Disparity-Index",
+   "claim": "If both extremes of your \"oversold/overbought\" oscillator predict the exact same direction, is it measuring reversion — or just labeling which stocks were already winning?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/680-disparity-index/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 681,
+   "name": "Relative-Rotation-Graph",
+   "claim": "The quadrant chart's clockwise loop is textbook-real (62% vs a 33% coin flip) — so why does buying \"Leading\" lose to picking sectors at random?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/681-relative-rotation-graph/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 682,
+   "name": "Inverse-Fisher-RSI",
+   "claim": "If a \"crisper-looking\" oscillator can't beat the mushy indicator it was built to replace, what exactly did the transform buy you?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/682-inverse-fisher-rsi/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 683,
+   "name": "Evening-Star",
+   "claim": "placeholder",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/683-evening-star/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 684,
+   "name": "Inverted-Hammer",
+   "claim": "If sellers are really \"exhausted\" after a slide, why does the identical long-wick candle after a rally look just as bullish?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/684-inverted-hammer/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 685,
+   "name": "Tri-Star-Doji",
+   "claim": "The rarest reversal pattern in the candlestick canon finally showed up twice in 25 years — did it call the turn either time?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/685-tri-star-doji/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 686,
+   "name": "Stick-Sandwich",
+   "claim": "Does a failed rally that snaps back to the exact same closing price, twice, actually mark a bottom — or is it just an ordinary dip with a coincidence attached?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/686-stick-sandwich/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 687,
+   "name": "Ladder-Bottom",
+   "claim": "If the \"textbook\" ladder bottom only shows up once every 19 ticker-years, and its best number still misses the bar by 0.20 of a t-stat, was the literature ever describing a tradable pattern — or just naming a handful of famous market bottoms after the fact?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/687-ladder-bottom/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 688,
+   "name": "Concealing-Baby-Swallow",
+   "claim": "Somewhere in the candlestick canon sits a four-candle \"capitulation\" signal — across 111 stocks and 64.5 years, how many times has it actually happened?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/688-concealing-baby-swallow/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 689,
+   "name": "Upside-Gap-Two-Crows",
+   "claim": "Two black crows gap up, dig into the gap, and still can't close it — textbook top-of-the-rally exhaustion — so why does shorting it lose money at every single horizon, even on a survivor basket rigged to help the bears?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/689-upside-gap-two-crows/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 690,
+   "name": "Three-Stars-In-The-South",
+   "claim": "Bulkowski couldn't find enough real three-stars-in-the-south to even rank the pattern — after scanning 61 stocks over 25 years, did we find enough either?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/690-three-stars-in-the-south/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 691,
+   "name": "Homing-Pigeon",
+   "claim": "When the second red candle shrinks inside the first, is that really sellers giving up — or just what any ordinary down-day in a downtrend already looks like?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/691-homing-pigeon/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 692,
+   "name": "Breakaway-Candles",
+   "claim": "Day one goes against the trade, the shape fires once per 35 ticker-years, and its best wins cluster on 2002/2010/2025 market-wide bottoms — so is the candle talking, or is the calendar?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/692-breakaway-candles/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 693,
+   "name": "Tasuki-Gap",
+   "claim": "A gap the market refuses to close — is that proof the trend still has fuel, or the exact moment it runs out?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/693-tasuki-gap/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 694,
+   "name": "Matching-Low",
+   "claim": "Two down candles tie their closes and chartists call it a defended floor — does the tape agree once you stop comparing the return to zero and start comparing it to what the same basket earns on an ordinary day?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/694-matching-low/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 695,
+   "name": "Inverse-Head-Shoulders",
+   "claim": "The inverse head-and-shoulders hands you an exact price target from pure geometry — so does it beat a coin flip aimed at the same distance?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/695-inverse-head-shoulders/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 696,
+   "name": "Double-Bottom",
+   "claim": "If a random date on the same stock does just as well as the \"confirmed\" breakout, what exactly did the pattern confirm?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/696-double-bottom/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 697,
+   "name": "Wolfe-Waves",
+   "claim": "If the market obeyed a chartist's converging wedge, hitting the \"estimated price at arrival\" should beat a coin flip -- so why does it land at 34.8% versus 34.6% for a target planted on a random day?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/697-wolfe-waves/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 698,
+   "name": "ABCD-Harmonic",
+   "claim": "If the 0.618 ratio really governs where price turns, why does a coin-flip retrace/extension beat it on 4 of the 6 tickers?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/698-abcd-harmonic/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 699,
+   "name": "Butterfly-Harmonic",
+   "claim": "If random, off-Butterfly extension ratios return almost as much as Carney's exact 0.786/1.27-1.618 grid, what are those two decimals actually buying a trader?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/699-butterfly-harmonic/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 700,
+   "name": "Bat-Harmonic",
+   "claim": "Carney calls 0.886 harmonic trading's \"most reliable\" ratio — so why does fading it lose to an arbitrary deep-retracement zone drawn from the exact same five pivots?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/700-bat-harmonic/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 701,
+   "name": "Crab-Harmonic",
+   "claim": "Carney calls the Crab's 1.618 extension the \"sharpest, most exact\" reversal point in harmonic trading — so why does fading it lose money at every horizon, and lose no less money than fading a randomly chosen extension ratio instead?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/701-crab-harmonic/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 702,
+   "name": "Shark-Harmonic",
+   "claim": "The Shark is the only harmonic pattern with no retracement leg and a real price ZONE instead of a point target — does breaking every other pattern's rulebook finally buy it a genuine edge, or just a fancier way to describe noise?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/702-shark-harmonic/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 703,
+   "name": "Cypher-Harmonic",
+   "claim": "If a pattern's signature ratio can't even beat a randomized retracement drawn off the exact same pivots, was the ratio ever doing any work?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/703-cypher-harmonic/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 704,
+   "name": "Three-Drives",
+   "claim": "If three Fibonacci-perfect drives really exhaust a trend, why does a random ratio grid do just as well as the sacred 0.382/0.886/1.13/2.618 numbers?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/704-three-drives/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 705,
+   "name": "Rounding-Top",
+   "claim": "If shorting a random Tuesday in the same 30 stocks beats shorting the \"confirmed\" rounding-top breakdown 68-89% of the time, what is the dome actually telling you?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/705-rounding-top/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 706,
+   "name": "Diamond-Bottom",
+   "claim": "A diamond bottom is sold as one of the rarest, most reliable reversal patterns in the book — so does buying its breakout beat just buying a random day on the same rising index?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/706-diamond-bottom/",
+   "family": "Technical & chart patterns"
+  },
+  {
+   "num": 707,
+   "name": "Plane-Crash-Effect",
+   "claim": "Does Wall Street even blink when a plane goes down?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/707-plane-crash-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 708,
+   "name": "Eurovision-Effect",
+   "claim": "Does winning Eurovision move a country's stock market more than just hosting the party?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/708-eurovision-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 709,
+   "name": "World-Series-Effect",
+   "claim": "Every October someone revives the baseball omen for the market — does the pennant winner's league actually call next year's S&P, or is it just riding a market that goes up 73% of the time anyway?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/709-world-series-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 710,
+   "name": "Olympic-Host-Effect",
+   "claim": "National pride, an infrastructure boom, a tourism wave — so why did five of the last six Olympic hosts underperform the world market around their own Games?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/710-olympic-host-effect/",
+   "family": "Calendar & seasonal"
   }
  ],
  "special": [
