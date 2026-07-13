@@ -1058,6 +1058,186 @@ jobs:
       - name: Study 590 — Sharpe-Hacking test-suite
         run: pytest -q studies/590-sharpe-hacking/tests
 
+      - name: Study 711 — Birkin-Index test-suite
+        run: pytest -q studies/711-birkin-index/tests
+
+      - name: Study 712 — Comic-Book-Index test-suite
+        run: pytest -q studies/712-comic-book-index/tests
+
+      - name: Study 713 — Classic-Car-Index test-suite
+        run: pytest -q studies/713-classic-car-index/tests
+
+      - name: Study 714 — Art-Auction-Index test-suite
+        run: pytest -q studies/714-art-auction-index/tests
+
+      - name: Study 715 — Vinyl-Revival test-suite
+        run: pytest -q studies/715-vinyl-revival/tests
+
+      - name: Study 716 — Diamond-Price-Index test-suite
+        run: pytest -q studies/716-diamond-price-index/tests
+
+      - name: Study 717 — Person-Of-The-Year test-suite
+        run: pytest -q studies/717-person-of-the-year/tests
+
+      - name: Study 718 — Forbes-Billionaire-Drift test-suite
+        run: pytest -q studies/718-forbes-billionaire-drift/tests
+
+      - name: Study 719 — Met-Gala-Luxury test-suite
+        run: pytest -q studies/719-met-gala-luxury/tests
+
+      - name: Study 720 — Super-Bowl-Advertiser test-suite
+        run: pytest -q studies/720-super-bowl-advertiser/tests
+
+      - name: Study 721 — Most-Admired test-suite
+        run: pytest -q studies/721-most-admired/tests
+
+      - name: Study 722 — Logo-Rebrand test-suite
+        run: pytest -q studies/722-logo-rebrand/tests
+
+      - name: Study 723 — Guacamole-Bowl test-suite
+        run: pytest -q studies/723-guacamole-bowl/tests
+
+      - name: Study 724 — Pumpkin-Spice-Season test-suite
+        run: pytest -q studies/724-pumpkin-spice-season/tests
+
+      - name: Study 725 — Eggflation test-suite
+        run: pytest -q studies/725-eggflation/tests
+
+      - name: Study 726 — Chicken-Wing-Index test-suite
+        run: pytest -q studies/726-chicken-wing-index/tests
+
+      - name: Study 727 — Maple-Syrup-Reserve test-suite
+        run: pytest -q studies/727-maple-syrup-reserve/tests
+
+      - name: Study 728 — Beer-Recession test-suite
+        run: pytest -q studies/728-beer-recession/tests
+
+      - name: Study 729 — Ramen-Recession test-suite
+        run: pytest -q studies/729-ramen-recession/tests
+
+      - name: Study 730 — Ferrari-F1 test-suite
+        run: pytest -q studies/730-ferrari-f1/tests
+
+      - name: Study 731 — Wimbledon-Effect test-suite
+        run: pytest -q studies/731-wimbledon-effect/tests
+
+      - name: Study 732 — Tour-De-France-Effect test-suite
+        run: pytest -q studies/732-tour-de-france-effect/tests
+
+      - name: Study 733 — Kentucky-Derby-Effect test-suite
+        run: pytest -q studies/733-kentucky-derby-effect/tests
+
+      - name: Study 734 — Nba-Finals-Effect test-suite
+        run: pytest -q studies/734-nba-finals-effect/tests
+
+      - name: Study 735 — Ryder-Cup-Effect test-suite
+        run: pytest -q studies/735-ryder-cup-effect/tests
+
+      - name: Study 736 — Sportsbook-Playoffs test-suite
+        run: pytest -q studies/736-sportsbook-playoffs/tests
+
+      - name: Study 737 — Sunspot-Cycle test-suite
+        run: pytest -q studies/737-sunspot-cycle/tests
+
+      - name: Study 738 — Pollen-Season test-suite
+        run: pytest -q studies/738-pollen-season/tests
+
+      - name: Study 739 — Wildfire-Season test-suite
+        run: pytest -q studies/739-wildfire-season/tests
+
+      - name: Study 740 — Drought-Monitor test-suite
+        run: pytest -q studies/740-drought-monitor/tests
+
+      - name: Study 741 — Cicada-Brood test-suite
+        run: pytest -q studies/741-cicada-brood/tests
+
+      - name: Study 742 — Friday-17th test-suite
+        run: pytest -q studies/742-friday-17th/tests
+
+      - name: Study 743 — Lucky-Number-8 test-suite
+        run: pytest -q studies/743-lucky-number-8/tests
+
+      - name: Study 744 — Tetraphobia test-suite
+        run: pytest -q studies/744-tetraphobia/tests
+
+      - name: Study 745 — Corporate-Jet-Index test-suite
+        run: pytest -q studies/745-corporate-jet-index/tests
+
+      - name: Study 746 — Hq-Relocation test-suite
+        run: pytest -q studies/746-hq-relocation/tests
+
+      - name: Study 747 — Founder-Led-Premium test-suite
+        run: pytest -q studies/747-founder-led-premium/tests
+
+      - name: Study 748 — Ceo-Age-Effect test-suite
+        run: pytest -q studies/748-ceo-age-effect/tests
+
+      - name: Study 749 — Layoff-Drift test-suite
+        run: pytest -q studies/749-layoff-drift/tests
+
+      - name: Study 750 — Return-To-Office test-suite
+        run: pytest -q studies/750-return-to-office/tests
+
+      - name: Study 751 — Fortune-500-Inclusion test-suite
+        run: pytest -q studies/751-fortune-500-inclusion/tests
+
+      - name: Study 752 — Tga-Drawdown test-suite
+        run: pytest -q studies/752-tga-drawdown/tests
+
+      - name: Study 753 — Reverse-Repo-Drain test-suite
+        run: pytest -q studies/753-reverse-repo-drain/tests
+
+      - name: Study 754 — Beige-Book-Tone test-suite
+        run: pytest -q studies/754-beige-book-tone/tests
+
+      - name: Study 755 — Jolts-Quits test-suite
+        run: pytest -q studies/755-jolts-quits/tests
+
+      - name: Study 756 — Challenger-Layoffs test-suite
+        run: pytest -q studies/756-challenger-layoffs/tests
+
+      - name: Study 757 — Cass-Freight test-suite
+        run: pytest -q studies/757-cass-freight/tests
+
+      - name: Study 758 — Tsa-Throughput test-suite
+        run: pytest -q studies/758-tsa-throughput/tests
+
+      - name: Study 759 — Redbook-Retail test-suite
+        run: pytest -q studies/759-redbook-retail/tests
+
+      - name: Study 760 — Michigan-Sentiment-Day test-suite
+        run: pytest -q studies/760-michigan-sentiment-day/tests
+
+      - name: Study 761 — Hotel-Revpar test-suite
+        run: pytest -q studies/761-hotel-revpar/tests
+
+      - name: Study 762 — Vegas-Gaming-Win test-suite
+        run: pytest -q studies/762-vegas-gaming-win/tests
+
+      - name: Study 763 — Puell-Multiple test-suite
+        run: pytest -q studies/763-puell-multiple/tests
+
+      - name: Study 764 — Sopr test-suite
+        run: pytest -q studies/764-sopr/tests
+
+      - name: Study 765 — Stock-To-Flow test-suite
+        run: pytest -q studies/765-stock-to-flow/tests
+
+      - name: Study 766 — Memecoin-Season test-suite
+        run: pytest -q studies/766-memecoin-season/tests
+
+      - name: Study 767 — Vix9d-Term test-suite
+        run: pytest -q studies/767-vix9d-term/tests
+
+      - name: Study 768 — Charm-Decay test-suite
+        run: pytest -q studies/768-charm-decay/tests
+
+      - name: Study 769 — Disney-Parks test-suite
+        run: pytest -q studies/769-disney-parks/tests
+
+      - name: Study 770 — Concert-Economy test-suite
+        run: pytest -q studies/770-concert-economy/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

@@ -1,5 +1,5 @@
 {
- "total": 710,
+ "total": 770,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -20,12 +20,12 @@
   "Weak": {
    "Investable": 0,
    "Fragile": 80,
-   "Mirage": 171
+   "Mirage": 179
   },
   "None": {
    "Investable": 0,
-   "Fragile": 3,
-   "Mirage": 377
+   "Fragile": 4,
+   "Mirage": 428
   }
  },
  "studies": [
@@ -6418,6 +6418,546 @@
    "tradability": "Mirage",
    "href": "studies/710-olympic-host-effect/",
    "family": "Calendar & seasonal"
+  },
+  {
+   "num": 711,
+   "name": "Birkin-Index",
+   "claim": "Does an Hermès Birkin really out-return the S&P 500 and even gold?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/711-birkin-index/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 712,
+   "name": "Comic-Book-Index",
+   "claim": "Are CGC-graded key comics an asset class that beats the S&P?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/712-comic-book-index/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 713,
+   "name": "Classic-Car-Index",
+   "claim": "Do collector cars really beat the S&P?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/713-classic-car-index/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 714,
+   "name": "Art-Auction-Index",
+   "claim": "Does contemporary art beat the S&P?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/714-art-auction-index/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 715,
+   "name": "Vinyl-Revival",
+   "claim": "Vinyl is back — a trend to trade?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/715-vinyl-revival/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 716,
+   "name": "Diamond-Price-Index",
+   "claim": "Lab-grown is crushing natural diamonds and the price index is in free-fall — so can you actually short the diamond?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/716-diamond-price-index/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 717,
+   "name": "Person-Of-The-Year",
+   "claim": "Does TIME's Person-of-the-Year cover jinx the honoree's stock?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/717-person-of-the-year/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 718,
+   "name": "Forbes-Billionaire-Drift",
+   "claim": "Buy the newly-minted Forbes billionaire's company for a post-list drift?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/718-forbes-billionaire-drift/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 719,
+   "name": "Met-Gala-Luxury",
+   "claim": "Does the Met Gala's global spotlight give Europe's luxury houses a bump?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/719-met-gala-luxury/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 720,
+   "name": "Super-Bowl-Advertiser",
+   "claim": "Do companies that buy a Super Bowl commercial drift up in the days after the game?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/720-super-bowl-advertiser/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 721,
+   "name": "Most-Admired",
+   "claim": "Does owning Fortune's Most Admired Companies beat the market?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/721-most-admired/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 722,
+   "name": "Logo-Rebrand",
+   "claim": "Is a corporate rebrand a renewal catalyst, a floundering-firm tell, or just a coin flip in a new logo?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/722-logo-rebrand/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 723,
+   "name": "Guacamole-Bowl",
+   "claim": "Does the Super-Bowl guacamole binge print a tradable Jan–Feb seasonal?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/723-guacamole-bowl/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 724,
+   "name": "Pumpkin-Spice-Season",
+   "claim": "Does Starbucks beat the market in pumpkin-spice season?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/724-pumpkin-spice-season/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 725,
+   "name": "Eggflation",
+   "claim": "Bird flu spikes eggs — can you front-run it by buying Cal-Maine (CALM)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/725-eggflation/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 726,
+   "name": "Chicken-Wing-Index",
+   "claim": "Does the Super-Bowl window beat the rest of the year for Wingstop?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/726-chicken-wing-index/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 727,
+   "name": "Maple-Syrup-Reserve",
+   "claim": "Can you trade maple syrup?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/727-maple-syrup-reserve/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 728,
+   "name": "Beer-Recession",
+   "claim": "Is beer recession-proof?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/728-beer-recession/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 729,
+   "name": "Ramen-Recession",
+   "claim": "Does instant-noodle demand lead the recession?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/729-ramen-recession/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 730,
+   "name": "Ferrari-F1",
+   "claim": "Does RACE pop the Monday after a Ferrari F1 win?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/730-ferrari-f1/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 731,
+   "name": "Wimbledon-Effect",
+   "claim": "Does the UK market really go quiet for the Wimbledon fortnight?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/731-wimbledon-effect/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 732,
+   "name": "Tour-De-France-Effect",
+   "claim": "Do French stocks get a feel-good bump during the Tour de France?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/732-tour-de-france-effect/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 733,
+   "name": "Kentucky-Derby-Effect",
+   "claim": "Does the stock that literally runs the Kentucky Derby pop around its own race?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/733-kentucky-derby-effect/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 734,
+   "name": "Nba-Finals-Effect",
+   "claim": "Does the losing Finals city's market dip while the champion's pops?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/734-nba-finals-effect/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 735,
+   "name": "Ryder-Cup-Effect",
+   "claim": "Does the losing continent's stock market lag the winner's the Monday after the Ryder Cup?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/735-ryder-cup-effect/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 736,
+   "name": "Sportsbook-Playoffs",
+   "claim": "Do betting stocks rally into the season?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/736-sportsbook-playoffs/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 737,
+   "name": "Sunspot-Cycle",
+   "claim": "Does the stock market run on an 11-year solar clock?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/737-sunspot-cycle/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 738,
+   "name": "Pollen-Season",
+   "claim": "Do allergy-brand owners beat the market through spring pollen season?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/738-pollen-season/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 739,
+   "name": "Wildfire-Season",
+   "claim": "Does a major California wildfire reliably crater the exposed utility + insurer basket you can short on the ignition headline?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/739-wildfire-season/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 740,
+   "name": "Drought-Monitor",
+   "claim": "Does a worse weekly Drought Monitor print move the US ag complex?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/740-drought-monitor/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 741,
+   "name": "Cicada-Brood",
+   "claim": "Are periodical-cicada emergence springs special for the S&P 500?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/741-cicada-brood/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 742,
+   "name": "Friday-17th",
+   "claim": "Does Italy's FTSE MIB trade weak on Venerdì 17, the Italian Friday-the-17th curse?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/742-friday-17th/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 743,
+   "name": "Lucky-Number-8",
+   "claim": "Does the Chinese \"lucky 8\" leave a tradable mark on the US tape — in the last price digit and around 8/8?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/743-lucky-number-8/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 744,
+   "name": "Tetraphobia",
+   "claim": "Does the East-Asian fear of the number 4 leave a tradable footprint in Greater-China markets?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/744-tetraphobia/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 745,
+   "name": "Corporate-Jet-Index",
+   "claim": "Does a jet-loving CEO forecast his firm's underperformance?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/745-corporate-jet-index/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 746,
+   "name": "Hq-Relocation",
+   "claim": "Does an HQ-relocation announcement move the stock — signal or distraction?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/746-hq-relocation/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 747,
+   "name": "Founder-Led-Premium",
+   "claim": "Do founder-led firms earn a real abnormal return, or just tech-sector beta?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/747-founder-led-premium/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 748,
+   "name": "Ceo-Age-Effect",
+   "claim": "Does the CEO's age predict stock returns — do young bosses beat old ones?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/748-ceo-age-effect/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 749,
+   "name": "Layoff-Drift",
+   "claim": "Does a mass-layoff announcement pop on the \"cost discipline\" news, then drift up?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/749-layoff-drift/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 750,
+   "name": "Return-To-Office",
+   "claim": "Do beaten-down office REITs actually pop when a big employer mandates a return to the office?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/750-return-to-office/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 751,
+   "name": "Fortune-500-Inclusion",
+   "claim": "Does making (or falling off) the Fortune 500 move the stock, the way an S&P-500 index addition does?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/751-fortune-500-inclusion/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 752,
+   "name": "Tga-Drawdown",
+   "claim": "Does a falling Treasury General Account inject hidden liquidity that lifts SPY over the following weeks?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/752-tga-drawdown/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 753,
+   "name": "Reverse-Repo-Drain",
+   "claim": "Does a draining Fed ON RRP facility predict higher stocks?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/753-reverse-repo-drain/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 754,
+   "name": "Beige-Book-Tone",
+   "claim": "Does a positive-tone Beige Book precede an equity drift up?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/754-beige-book-tone/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 755,
+   "name": "Jolts-Quits",
+   "claim": "Do falling quits precede weaker equity returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/755-jolts-quits/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 756,
+   "name": "Challenger-Layoffs",
+   "claim": "Does a spike in Challenger's announced job cuts warn you the equity market is about to weaken?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/756-challenger-layoffs/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 757,
+   "name": "Cass-Freight",
+   "claim": "Does the freight cycle lead the stock market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/757-cass-freight/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 758,
+   "name": "Tsa-Throughput",
+   "claim": "Does accelerating TSA checkpoint throughput predict the travel trade?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/758-tsa-throughput/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 759,
+   "name": "Redbook-Retail",
+   "claim": "Do accelerating same-store sales precede stronger retail returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/759-redbook-retail/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 760,
+   "name": "Michigan-Sentiment-Day",
+   "claim": "Does the University of Michigan sentiment print move the market on release day — and does \"buy when sentiment is low and turning up\" actually time bottoms?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/760-michigan-sentiment-day/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 761,
+   "name": "Hotel-Revpar",
+   "claim": "Does RevPAR momentum lead hotel REITs?",
+   "signal": "None",
+   "tradability": "Fragile",
+   "href": "studies/761-hotel-revpar/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 762,
+   "name": "Vegas-Gaming-Win",
+   "claim": "Does Las Vegas Strip gaming revenue tell you where the casino stocks go next?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/762-vegas-gaming-win/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 763,
+   "name": "Puell-Multiple",
+   "claim": "Does the Puell Multiple forecast BTC tops & bottoms?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/763-puell-multiple/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 764,
+   "name": "Sopr",
+   "claim": "Does Bitcoin's on-chain profit ratio (SOPR) time greed and capitulation, or just relabel last month's price move?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/764-sopr/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 765,
+   "name": "Stock-To-Flow",
+   "claim": "Does the Stock-to-Flow valuation gap predict BTC returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/765-stock-to-flow/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 766,
+   "name": "Memecoin-Season",
+   "claim": "Does a weekly momentum rotation harvest the memecoin blow-off past Bitcoin?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/766-memecoin-season/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 767,
+   "name": "Vix9d-Term",
+   "claim": "When the 9-day VIX inverts above the 30-day VIX, is that front-end 'red light' really a signal to get out of stocks?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/767-vix9d-term/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 768,
+   "name": "Charm-Decay",
+   "claim": "Do dealers hedging decaying charm really rally SPY into monthly OpEx and fade it after?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/768-charm-decay/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 769,
+   "name": "Disney-Parks",
+   "claim": "Does the Disney-parks crowd tell you when to buy DIS?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/769-disney-parks/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 770,
+   "name": "Concert-Economy",
+   "claim": "Does Live Nation rally into festival season?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/770-concert-economy/",
+   "family": "Unclassified"
   }
  ],
  "special": [
