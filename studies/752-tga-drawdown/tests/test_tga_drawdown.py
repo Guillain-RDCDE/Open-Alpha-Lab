@@ -10,6 +10,7 @@ import os
 import sys
 
 import numpy as np
+import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -62,6 +63,7 @@ def test_synthetic_control_null_is_flat_and_planted_lights_up():
     assert s1["p_placebo"] < 0.05
 
 
+@pytest.mark.skipif(not data.have_real(), reason="real-tape cache absent (offline CI)")
 def test_real_tape_signal_is_noise():
     """The headline real-tape null: no horizon clears |t|=2 on the TGA proxy."""
     f = data.load_real()
