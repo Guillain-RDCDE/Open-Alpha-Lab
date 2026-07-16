@@ -1,5 +1,5 @@
 {
- "total": 770,
+ "total": 787,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -19,13 +19,13 @@
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 80,
-   "Mirage": 179
+   "Fragile": 81,
+   "Mirage": 186
   },
   "None": {
    "Investable": 0,
    "Fragile": 4,
-   "Mirage": 428
+   "Mirage": 437
   }
  },
  "studies": [
@@ -6426,7 +6426,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/711-birkin-index/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 712,
@@ -6435,7 +6435,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/712-comic-book-index/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 713,
@@ -6444,7 +6444,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/713-classic-car-index/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 714,
@@ -6453,7 +6453,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/714-art-auction-index/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 715,
@@ -6462,7 +6462,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/715-vinyl-revival/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 716,
@@ -6471,7 +6471,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/716-diamond-price-index/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 717,
@@ -6480,7 +6480,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/717-person-of-the-year/",
-   "family": "Unclassified"
+   "family": "Macro & valuation timing"
   },
   {
    "num": 718,
@@ -6489,7 +6489,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/718-forbes-billionaire-drift/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 719,
@@ -6498,7 +6498,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/719-met-gala-luxury/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 720,
@@ -6507,7 +6507,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/720-super-bowl-advertiser/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 721,
@@ -6516,7 +6516,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/721-most-admired/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 722,
@@ -6525,7 +6525,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/722-logo-rebrand/",
-   "family": "Unclassified"
+   "family": "Microstructure & crowds"
   },
   {
    "num": 723,
@@ -6534,7 +6534,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/723-guacamole-bowl/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 724,
@@ -6543,7 +6543,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/724-pumpkin-spice-season/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 725,
@@ -6552,7 +6552,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/725-eggflation/",
-   "family": "Unclassified"
+   "family": "Carry, curves & commodities"
   },
   {
    "num": 726,
@@ -6561,7 +6561,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/726-chicken-wing-index/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 727,
@@ -6570,7 +6570,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/727-maple-syrup-reserve/",
-   "family": "Unclassified"
+   "family": "Carry, curves & commodities"
   },
   {
    "num": 728,
@@ -6579,7 +6579,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/728-beer-recession/",
-   "family": "Unclassified"
+   "family": "Macro & valuation timing"
   },
   {
    "num": 729,
@@ -6588,7 +6588,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/729-ramen-recession/",
-   "family": "Unclassified"
+   "family": "Macro & valuation timing"
   },
   {
    "num": 730,
@@ -6597,7 +6597,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/730-ferrari-f1/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 731,
@@ -6606,7 +6606,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/731-wimbledon-effect/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 732,
@@ -6615,7 +6615,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/732-tour-de-france-effect/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 733,
@@ -6624,7 +6624,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/733-kentucky-derby-effect/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 734,
@@ -6633,7 +6633,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/734-nba-finals-effect/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 735,
@@ -6642,7 +6642,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/735-ryder-cup-effect/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 736,
@@ -6651,7 +6651,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/736-sportsbook-playoffs/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 737,
@@ -6660,7 +6660,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/737-sunspot-cycle/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 738,
@@ -6669,7 +6669,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/738-pollen-season/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 739,
@@ -6678,7 +6678,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/739-wildfire-season/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 740,
@@ -6687,7 +6687,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/740-drought-monitor/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 741,
@@ -6696,7 +6696,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/741-cicada-brood/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 742,
@@ -6705,7 +6705,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/742-friday-17th/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 743,
@@ -6714,7 +6714,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/743-lucky-number-8/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 744,
@@ -6723,7 +6723,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/744-tetraphobia/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
   },
   {
    "num": 745,
@@ -6732,7 +6732,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/745-corporate-jet-index/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 746,
@@ -6741,7 +6741,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/746-hq-relocation/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 747,
@@ -6750,7 +6750,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/747-founder-led-premium/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 748,
@@ -6759,7 +6759,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/748-ceo-age-effect/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 749,
@@ -6768,7 +6768,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/749-layoff-drift/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 750,
@@ -6777,7 +6777,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/750-return-to-office/",
-   "family": "Unclassified"
+   "family": "Microstructure & crowds"
   },
   {
    "num": 751,
@@ -6786,7 +6786,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/751-fortune-500-inclusion/",
-   "family": "Unclassified"
+   "family": "Microstructure & crowds"
   },
   {
    "num": 752,
@@ -6795,7 +6795,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/752-tga-drawdown/",
-   "family": "Unclassified"
+   "family": "Macro & valuation timing"
   },
   {
    "num": 753,
@@ -6804,7 +6804,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/753-reverse-repo-drain/",
-   "family": "Unclassified"
+   "family": "Macro & valuation timing"
   },
   {
    "num": 754,
@@ -6813,7 +6813,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/754-beige-book-tone/",
-   "family": "Unclassified"
+   "family": "Macro & valuation timing"
   },
   {
    "num": 755,
@@ -6822,7 +6822,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/755-jolts-quits/",
-   "family": "Unclassified"
+   "family": "Macro & valuation timing"
   },
   {
    "num": 756,
@@ -6831,7 +6831,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/756-challenger-layoffs/",
-   "family": "Unclassified"
+   "family": "Macro & valuation timing"
   },
   {
    "num": 757,
@@ -6840,7 +6840,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/757-cass-freight/",
-   "family": "Unclassified"
+   "family": "Macro & valuation timing"
   },
   {
    "num": 758,
@@ -6849,7 +6849,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/758-tsa-throughput/",
-   "family": "Unclassified"
+   "family": "Microstructure & crowds"
   },
   {
    "num": 759,
@@ -6858,7 +6858,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/759-redbook-retail/",
-   "family": "Unclassified"
+   "family": "Microstructure & crowds"
   },
   {
    "num": 760,
@@ -6867,7 +6867,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/760-michigan-sentiment-day/",
-   "family": "Unclassified"
+   "family": "Macro & valuation timing"
   },
   {
    "num": 761,
@@ -6876,7 +6876,7 @@
    "signal": "None",
    "tradability": "Fragile",
    "href": "studies/761-hotel-revpar/",
-   "family": "Unclassified"
+   "family": "Microstructure & crowds"
   },
   {
    "num": 762,
@@ -6885,7 +6885,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/762-vegas-gaming-win/",
-   "family": "Unclassified"
+   "family": "Macro & valuation timing"
   },
   {
    "num": 763,
@@ -6894,7 +6894,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/763-puell-multiple/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 764,
@@ -6903,7 +6903,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/764-sopr/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 765,
@@ -6912,7 +6912,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/765-stock-to-flow/",
-   "family": "Unclassified"
+   "family": "ML & model forecasting"
   },
   {
    "num": 766,
@@ -6921,7 +6921,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/766-memecoin-season/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 767,
@@ -6930,7 +6930,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/767-vix9d-term/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 768,
@@ -6939,7 +6939,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/768-charm-decay/",
-   "family": "Unclassified"
+   "family": "Vol, hedges & allocation"
   },
   {
    "num": 769,
@@ -6948,7 +6948,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/769-disney-parks/",
-   "family": "Unclassified"
+   "family": "Microstructure & crowds"
   },
   {
    "num": 770,
@@ -6957,7 +6957,160 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/770-concert-economy/",
-   "family": "Unclassified"
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 771,
+   "name": "Box-Office-Bomb",
+   "claim": "Should you sell the studio after a notorious box-office flop?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/771-box-office-bomb/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 772,
+   "name": "Album-Drop",
+   "claim": "Does a blockbuster album release move Spotify's stock?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/772-album-drop/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 773,
+   "name": "Spotify-Wrapped",
+   "claim": "Does Spotify rally into its December 'Wrapped' launch?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/773-spotify-wrapped/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 774,
+   "name": "Nintendo-Direct",
+   "claim": "Do you buy Nintendo into a Nintendo Direct showcase?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/774-nintendo-direct/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 775,
+   "name": "Halloween-Candy",
+   "claim": "Is there a Hershey Halloween seasonal run-up?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/775-halloween-candy/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 776,
+   "name": "Valentine-Sparkle",
+   "claim": "Does Signet (jewellers) rally into Valentine's Day?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/776-valentine-sparkle/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 777,
+   "name": "Black-Friday-Retail",
+   "claim": "Does retail (XRT) drift up into Black-Friday week?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/777-black-friday-retail/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 778,
+   "name": "Chipotle-Scare",
+   "claim": "Is a Chipotle food-safety scare a buy-the-dip?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/778-chipotle-scare/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 779,
+   "name": "Devil-Price",
+   "claim": "Do stocks that touch a '666' price handle then underperform?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/779-devil-price/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 780,
+   "name": "Long-Weekend-Drift",
+   "claim": "Is the pre-holiday session really a free lunch?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/780-long-weekend-drift/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 781,
+   "name": "Quad-Witching-Hangover",
+   "claim": "Does the week after quad-witching sag?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/781-quad-witching-hangover/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 782,
+   "name": "CEO-Name-Length",
+   "claim": "Does the length of the CEO's surname predict returns?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/782-ceo-name-length/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 783,
+   "name": "IPO-Deal-Of-Year",
+   "claim": "Does the banks' 'IPO of the year' then underperform?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/783-ipo-deal-of-year/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 784,
+   "name": "Analyst-Cluster",
+   "claim": "Should you fade a cluster of same-week analyst upgrades?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/784-analyst-cluster/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 785,
+   "name": "Parking-Lot",
+   "claim": "Do satellite parking-lot counts beat the earnings print?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/785-parking-lot/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 786,
+   "name": "Flu-Season",
+   "claim": "Does the pharmacy tape (CVS) rally into flu season?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/786-flu-season/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 787,
+   "name": "Heatwave-Utilities",
+   "claim": "Do utilities rally through peak-summer heat?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/787-heatwave-utilities/",
+   "family": "Calendar & seasonal"
   }
  ],
  "special": [

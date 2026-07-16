@@ -1238,6 +1238,57 @@ jobs:
       - name: Study 770 — Concert-Economy test-suite
         run: pytest -q studies/770-concert-economy/tests
 
+      - name: Study 771 — Box-Office-Bomb test-suite
+        run: pytest -q studies/771-box-office-bomb/tests
+
+      - name: Study 772 — Album-Drop test-suite
+        run: pytest -q studies/772-album-drop/tests
+
+      - name: Study 773 — Spotify-Wrapped test-suite
+        run: pytest -q studies/773-spotify-wrapped/tests
+
+      - name: Study 774 — Nintendo-Direct test-suite
+        run: pytest -q studies/774-nintendo-direct/tests
+
+      - name: Study 775 — Halloween-Candy test-suite
+        run: pytest -q studies/775-halloween-candy/tests
+
+      - name: Study 776 — Valentine-Sparkle test-suite
+        run: pytest -q studies/776-valentine-sparkle/tests
+
+      - name: Study 777 — Black-Friday-Retail test-suite
+        run: pytest -q studies/777-black-friday-retail/tests
+
+      - name: Study 778 — Chipotle-Scare test-suite
+        run: pytest -q studies/778-chipotle-scare/tests
+
+      - name: Study 779 — Devil-Price test-suite
+        run: pytest -q studies/779-devil-price/tests
+
+      - name: Study 780 — Long-Weekend-Drift test-suite
+        run: pytest -q studies/780-long-weekend-drift/tests
+
+      - name: Study 781 — Quad-Witching-Hangover test-suite
+        run: pytest -q studies/781-quad-witching-hangover/tests
+
+      - name: Study 782 — CEO-Name-Length test-suite
+        run: pytest -q studies/782-ceo-name-length/tests
+
+      - name: Study 783 — IPO-Deal-Of-Year test-suite
+        run: pytest -q studies/783-ipo-deal-of-year/tests
+
+      - name: Study 784 — Analyst-Cluster test-suite
+        run: pytest -q studies/784-analyst-cluster/tests
+
+      - name: Study 785 — Parking-Lot test-suite
+        run: pytest -q studies/785-parking-lot/tests
+
+      - name: Study 786 — Flu-Season test-suite
+        run: pytest -q studies/786-flu-season/tests
+
+      - name: Study 787 — Heatwave-Utilities test-suite
+        run: pytest -q studies/787-heatwave-utilities/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

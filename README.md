@@ -1,15 +1,15 @@
 <div align="center">
 
-<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — out of 770 famous trading edges, six survive">
+<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — out of 787 famous trading edges, six survive">
 
 # Open-Alpha-Lab
 
-### Out of 770 famous trading edges, six survive — and not one of them is a crystal ball.
+### Out of 787 famous trading edges, six survive — and not one of them is a crystal ball.
 
 That's not a typo. I put every market anomaly, folk strategy and named factor
 people swear by through the **same brutal protocol**, and publish the verdict: **edge or mirage.**
 
-`770 tested` · `6 survive` · `78 real signals` · `637 mirages`
+`787 tested` · `6 survive` · `78 real signals` · `653 mirages`
 
 ***Most are mirages. The honest write-up of why is the point. The six survivors don't forecast anything — three manage risk, and three harvest a premium or a mechanical identity you can actually bank.***
 
@@ -53,7 +53,7 @@ Almost everything ends up bottom-right; six chips are green — and not one of t
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 770 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 787 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -851,6 +851,23 @@ The full table below is the single source of truth (it's what the map and the li
 | **[768](studies/768-charm-decay/)** | **Charm-Decay** | Do dealers hedging decaying charm really rally SPY into monthly OpEx and fade it after? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[769](studies/769-disney-parks/)** | **Disney-Parks** | Does the Disney-parks crowd tell you when to buy DIS? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[770](studies/770-concert-economy/)** | **Concert-Economy** | Does Live Nation rally into festival season? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[771](studies/771-box-office-bomb/)** | **Box-Office-Bomb** | Should you sell the studio after a notorious box-office flop? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[772](studies/772-album-drop/)** | **Album-Drop** | Does a blockbuster album release move Spotify's stock? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[773](studies/773-spotify-wrapped/)** | **Spotify-Wrapped** | Does Spotify rally into its December 'Wrapped' launch? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[774](studies/774-nintendo-direct/)** | **Nintendo-Direct** | Do you buy Nintendo into a Nintendo Direct showcase? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[775](studies/775-halloween-candy/)** | **Halloween-Candy** | Is there a Hershey Halloween seasonal run-up? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[776](studies/776-valentine-sparkle/)** | **Valentine-Sparkle** | Does Signet (jewellers) rally into Valentine's Day? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[777](studies/777-black-friday-retail/)** | **Black-Friday-Retail** | Does retail (XRT) drift up into Black-Friday week? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[778](studies/778-chipotle-scare/)** | **Chipotle-Scare** | Is a Chipotle food-safety scare a buy-the-dip? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[779](studies/779-devil-price/)** | **Devil-Price** | Do stocks that touch a '666' price handle then underperform? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[780](studies/780-long-weekend-drift/)** | **Long-Weekend-Drift** | Is the pre-holiday session really a free lunch? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[781](studies/781-quad-witching-hangover/)** | **Quad-Witching-Hangover** | Does the week after quad-witching sag? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[782](studies/782-ceo-name-length/)** | **CEO-Name-Length** | Does the length of the CEO's surname predict returns? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[783](studies/783-ipo-deal-of-year/)** | **IPO-Deal-Of-Year** | Does the banks' 'IPO of the year' then underperform? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[784](studies/784-analyst-cluster/)** | **Analyst-Cluster** | Should you fade a cluster of same-week analyst upgrades? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[785](studies/785-parking-lot/)** | **Parking-Lot** | Do satellite parking-lot counts beat the earnings print? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[786](studies/786-flu-season/)** | **Flu-Season** | Does the pharmacy tape (CVS) rally into flu season? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[787](studies/787-heatwave-utilities/)** | **Heatwave-Utilities** | Do utilities rally through peak-summer heat? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 </details>
 
