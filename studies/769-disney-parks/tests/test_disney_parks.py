@@ -63,9 +63,15 @@ def test_synthetic_control_null_and_planted():
 
 def test_annual_excess_t_finite_and_signed():
     idx = pd.to_datetime([f"{y}-12-31" for y in range(2015, 2022)])
-    # a compounds faster than b -> positive mean excess, positive t.
-    a = pd.Series(100.0 * 1.20 ** np.arange(7), index=idx)
-    b = pd.Series(100.0 * 1.05 ** np.arange(7), index=idx)
+    # a beats b every year but by a VARYING margin, so the paired excess has genuine
+    # dispersion. (A constant-margin pair -- e.g. pure 20%/yr vs 5%/yr geometric growth --
+    # gives a zero-variance excess whose t is 0/0 = NaN; whether the floating-point noise
+    # happens to make the variance a hair above or exactly zero is numpy-version-dependent,
+    # so that degenerate input made this test flaky across Python builds.)
+    a_ret = np.array([0.22, 0.14, 0.26, 0.17, 0.23, 0.12])
+    b_ret = np.array([0.05, 0.06, 0.04, 0.07, 0.03, 0.05])
+    a = pd.Series(100.0 * np.concatenate([[1.0], np.cumprod(1 + a_ret)]), index=idx)
+    b = pd.Series(100.0 * np.concatenate([[1.0], np.cumprod(1 + b_ret)]), index=idx)
     out = st.annual_excess_t(a, b)
     assert out["n"] == 6 and np.isfinite(out["t"]) and out["mean_excess"] > 0 and out["t"] > 0
 
