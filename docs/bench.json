@@ -1,5 +1,5 @@
 {
- "total": 787,
+ "total": 802,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -15,17 +15,17 @@
   "Real": {
    "Investable": 6,
    "Fragile": 42,
-   "Mirage": 30
+   "Mirage": 31
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 81,
-   "Mirage": 186
+   "Fragile": 82,
+   "Mirage": 192
   },
   "None": {
    "Investable": 0,
    "Fragile": 4,
-   "Mirage": 437
+   "Mirage": 444
   }
  },
  "studies": [
@@ -7111,6 +7111,141 @@
    "tradability": "Mirage",
    "href": "studies/787-heatwave-utilities/",
    "family": "Calendar & seasonal"
+  },
+  {
+   "num": 788,
+   "name": "Overnight-Intraday-Tug-Of-War",
+   "claim": "Do stocks with high past overnight returns keep winning overnight while quietly reversing during the trading day?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/788-overnight-intraday-tug-of-war/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 789,
+   "name": "SUE-Earnings-Surprise-Drift",
+   "claim": "Do the biggest earnings beats keep drifting up for weeks — enough to buy the top SUE tercile and short the bottom?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/789-sue-earnings-surprise-drift/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 790,
+   "name": "Composite-Equity-Issuance",
+   "claim": "Do companies that quietly print new stock really underperform the ones buying it back?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/790-composite-equity-issuance/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 791,
+   "name": "Advertising-Brand-Capital",
+   "claim": "Do the companies that spend the most on advertising earn a hidden \"brand-capital\" premium the balance sheet ignores?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/791-advertising-brand-capital/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 792,
+   "name": "Commodity-Momentum",
+   "claim": "Do last year's strongest commodities keep winning while the laggards keep lagging?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/792-commodity-momentum/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 793,
+   "name": "Commodity-Value",
+   "claim": "Do the commodities that have crashed most over the past five years bounce back and beat the ones that soared?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/793-commodity-value/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 794,
+   "name": "Commodity-Carry",
+   "claim": "Do backwardated commodities out-earn contangoed ones — or can two energy curves even prove it?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/794-commodity-carry/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 795,
+   "name": "Corporate-Bond-Momentum",
+   "claim": "Do past-winner bond ETFs keep beating past losers the next month?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/795-corporate-bond-momentum/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 796,
+   "name": "Corporate-Bond-Low-Risk",
+   "claim": "In stocks the boring low-risk assets quietly win — does the same betting-against-beta edge survive on a basket of bond ETFs?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/796-corporate-bond-low-risk/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 797,
+   "name": "FX-Value-PPP",
+   "claim": "Do currencies that look cheap versus purchasing-power parity actually appreciate back to fair value?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/797-fx-value-ppp/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 798,
+   "name": "Deferred-Revenue-Signal",
+   "claim": "Deferred revenue is next quarter's sales sitting on the balance sheet in plain sight — so can you trade the stocks on it?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/798-deferred-revenue-signal/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 799,
+   "name": "Order-Backlog-Drift",
+   "claim": "Does a swelling order backlog tell you where a software stock is headed, or just where it's been?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/799-order-backlog-drift/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 800,
+   "name": "High-Frequency-Reversal",
+   "claim": "Do last week's biggest losers really beat last week's biggest winners next week?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/800-high-frequency-reversal/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 801,
+   "name": "Employee-Satisfaction",
+   "claim": "Do the \"best companies to work for\" quietly beat the market — or is that just beta and hindsight?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/801-employee-satisfaction/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 802,
+   "name": "Stock-Split-Modern",
+   "claim": "Tesla and Nvidia soared after their splits — but does the classic post-split drift survive once you subtract the bull market?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/802-stock-split-modern/",
+   "family": "Unclassified"
   }
  ],
  "special": [

@@ -1,15 +1,15 @@
 <div align="center">
 
-<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — out of 787 famous trading edges, six survive">
+<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — out of 802 famous trading edges, six survive">
 
 # Open-Alpha-Lab
 
-### Out of 787 famous trading edges, six survive — and not one of them is a crystal ball.
+### Out of 802 famous trading edges, six survive — and not one of them is a crystal ball.
 
 That's not a typo. I put every market anomaly, folk strategy and named factor
 people swear by through the **same brutal protocol**, and publish the verdict: **edge or mirage.**
 
-`787 tested` · `6 survive` · `78 real signals` · `653 mirages`
+`802 tested` · `6 survive` · `79 real signals` · `667 mirages`
 
 ***Most are mirages. The honest write-up of why is the point. The six survivors don't forecast anything — three manage risk, and three harvest a premium or a mechanical identity you can actually bank.***
 
@@ -53,7 +53,7 @@ Almost everything ends up bottom-right; six chips are green — and not one of t
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 787 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 802 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -868,6 +868,21 @@ The full table below is the single source of truth (it's what the map and the li
 | **[785](studies/785-parking-lot/)** | **Parking-Lot** | Do satellite parking-lot counts beat the earnings print? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[786](studies/786-flu-season/)** | **Flu-Season** | Does the pharmacy tape (CVS) rally into flu season? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[787](studies/787-heatwave-utilities/)** | **Heatwave-Utilities** | Do utilities rally through peak-summer heat? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[788](studies/788-overnight-intraday-tug-of-war/)** | **Overnight-Intraday-Tug-Of-War** | Do stocks with high past overnight returns keep winning overnight while quietly reversing during the trading day? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[789](studies/789-sue-earnings-surprise-drift/)** | **SUE-Earnings-Surprise-Drift** | Do the biggest earnings beats keep drifting up for weeks — enough to buy the top SUE tercile and short the bottom? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[790](studies/790-composite-equity-issuance/)** | **Composite-Equity-Issuance** | Do companies that quietly print new stock really underperform the ones buying it back? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[791](studies/791-advertising-brand-capital/)** | **Advertising-Brand-Capital** | Do the companies that spend the most on advertising earn a hidden "brand-capital" premium the balance sheet ignores? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[792](studies/792-commodity-momentum/)** | **Commodity-Momentum** | Do last year's strongest commodities keep winning while the laggards keep lagging? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[793](studies/793-commodity-value/)** | **Commodity-Value** | Do the commodities that have crashed most over the past five years bounce back and beat the ones that soared? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[794](studies/794-commodity-carry/)** | **Commodity-Carry** | Do backwardated commodities out-earn contangoed ones — or can two energy curves even prove it? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[795](studies/795-corporate-bond-momentum/)** | **Corporate-Bond-Momentum** | Do past-winner bond ETFs keep beating past losers the next month? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[796](studies/796-corporate-bond-low-risk/)** | **Corporate-Bond-Low-Risk** | In stocks the boring low-risk assets quietly win — does the same betting-against-beta edge survive on a basket of bond ETFs? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[797](studies/797-fx-value-ppp/)** | **FX-Value-PPP** | Do currencies that look cheap versus purchasing-power parity actually appreciate back to fair value? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[798](studies/798-deferred-revenue-signal/)** | **Deferred-Revenue-Signal** | Deferred revenue is next quarter's sales sitting on the balance sheet in plain sight — so can you trade the stocks on it? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[799](studies/799-order-backlog-drift/)** | **Order-Backlog-Drift** | Does a swelling order backlog tell you where a software stock is headed, or just where it's been? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[800](studies/800-high-frequency-reversal/)** | **High-Frequency-Reversal** | Do last week's biggest losers really beat last week's biggest winners next week? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[801](studies/801-employee-satisfaction/)** | **Employee-Satisfaction** | Do the "best companies to work for" quietly beat the market — or is that just beta and hindsight? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[802](studies/802-stock-split-modern/)** | **Stock-Split-Modern** | Tesla and Nvidia soared after their splits — but does the classic post-split drift survive once you subtract the bull market? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 </details>
 

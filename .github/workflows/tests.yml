@@ -1289,6 +1289,51 @@ jobs:
       - name: Study 787 — Heatwave-Utilities test-suite
         run: pytest -q studies/787-heatwave-utilities/tests
 
+      - name: Study 788 — Overnight-Intraday-Tug-Of-War test-suite
+        run: pytest -q studies/788-overnight-intraday-tug-of-war/tests
+
+      - name: Study 789 — SUE-Earnings-Surprise-Drift test-suite
+        run: pytest -q studies/789-sue-earnings-surprise-drift/tests
+
+      - name: Study 790 — Composite-Equity-Issuance test-suite
+        run: pytest -q studies/790-composite-equity-issuance/tests
+
+      - name: Study 791 — Advertising-Brand-Capital test-suite
+        run: pytest -q studies/791-advertising-brand-capital/tests
+
+      - name: Study 792 — Commodity-Momentum test-suite
+        run: pytest -q studies/792-commodity-momentum/tests
+
+      - name: Study 793 — Commodity-Value test-suite
+        run: pytest -q studies/793-commodity-value/tests
+
+      - name: Study 794 — Commodity-Carry test-suite
+        run: pytest -q studies/794-commodity-carry/tests
+
+      - name: Study 795 — Corporate-Bond-Momentum test-suite
+        run: pytest -q studies/795-corporate-bond-momentum/tests
+
+      - name: Study 796 — Corporate-Bond-Low-Risk test-suite
+        run: pytest -q studies/796-corporate-bond-low-risk/tests
+
+      - name: Study 797 — FX-Value-PPP test-suite
+        run: pytest -q studies/797-fx-value-ppp/tests
+
+      - name: Study 798 — Deferred-Revenue-Signal test-suite
+        run: pytest -q studies/798-deferred-revenue-signal/tests
+
+      - name: Study 799 — Order-Backlog-Drift test-suite
+        run: pytest -q studies/799-order-backlog-drift/tests
+
+      - name: Study 800 — High-Frequency-Reversal test-suite
+        run: pytest -q studies/800-high-frequency-reversal/tests
+
+      - name: Study 801 — Employee-Satisfaction test-suite
+        run: pytest -q studies/801-employee-satisfaction/tests
+
+      - name: Study 802 — Stock-Split-Modern test-suite
+        run: pytest -q studies/802-stock-split-modern/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

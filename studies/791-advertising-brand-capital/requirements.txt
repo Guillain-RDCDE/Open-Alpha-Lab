@@ -1,0 +1,8 @@
+numpy
+pandas
+pyarrow
+matplotlib
+yfinance
+nbformat
+jupyter
+pytest
