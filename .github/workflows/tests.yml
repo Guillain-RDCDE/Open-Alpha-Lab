@@ -1334,6 +1334,87 @@ jobs:
       - name: Study 802 — Stock-Split-Modern test-suite
         run: pytest -q studies/802-stock-split-modern/tests
 
+      - name: Study 803 — Realized-Skewness Reversal test-suite
+        run: pytest -q studies/803-realized-skewness-reversal/tests
+      - name: Study 804 — Realized-Kurtosis Premium test-suite
+        run: pytest -q studies/804-realized-kurtosis-premium/tests
+      - name: Study 805 — Cokurtosis Premium test-suite
+        run: pytest -q studies/805-cokurtosis-premium/tests
+      - name: Study 806 — Prospect-Theory Value test-suite
+        run: pytest -q studies/806-prospect-theory-value/tests
+      - name: Study 807 — Salience-Theory Returns test-suite
+        run: pytest -q studies/807-salience-theory-returns/tests
+      - name: Study 808 — Continuing Overreaction test-suite
+        run: pytest -q studies/808-continuing-overreaction/tests
+      - name: Study 809 — Signed Jump Variation test-suite
+        run: pytest -q studies/809-signed-jump-variation/tests
+      - name: Study 810 — Price Delay test-suite
+        run: pytest -q studies/810-price-delay/tests
+      - name: Study 811 — Zero-Return Illiquidity test-suite
+        run: pytest -q studies/811-zero-return-illiquidity/tests
+      - name: Study 812 — Corwin-Schultz Spread test-suite
+        run: pytest -q studies/812-corwin-schultz-spread/tests
+      - name: Study 813 — Maximum-Drawdown Anomaly test-suite
+        run: pytest -q studies/813-maximum-drawdown-anomaly/tests
+      - name: Study 814 — Trailing-Sharpe Anomaly test-suite
+        run: pytest -q studies/814-trailing-sharpe-anomaly/tests
+      - name: Study 815 — Variance-Ratio Reversal test-suite
+        run: pytest -q studies/815-variance-ratio-reversal/tests
+      - name: Study 816 — Drawdown Duration test-suite
+        run: pytest -q studies/816-drawdown-duration/tests
+      - name: Study 817 — Realized-Volatility Trend test-suite
+        run: pytest -q studies/817-realized-volatility-trend/tests
+      - name: Study 818 — Trend Factor test-suite
+        run: pytest -q studies/818-trend-factor/tests
+      - name: Study 819 — Abnormal-Volume Shock test-suite
+        run: pytest -q studies/819-abnormal-volume-shock/tests
+      - name: Study 820 — Expected-Shortfall Premium test-suite
+        run: pytest -q studies/820-expected-shortfall-premium/tests
+      - name: Study 821 — Turnover Volatility test-suite
+        run: pytest -q studies/821-turnover-volatility/tests
+      - name: Study 822 — Omega-Ratio Sort test-suite
+        run: pytest -q studies/822-omega-ratio-sort/tests
+      - name: Study 823 — Variance-Risk-Premium Return Predictor test-suite
+        run: pytest -q studies/823-vrp-return-predictor/tests
+      - name: Study 824 — Cochrane-Piazzesi Factor test-suite
+        run: pytest -q studies/824-cochrane-piazzesi-factor/tests
+      - name: Study 825 — Oil Predicts Equities test-suite
+        run: pytest -q studies/825-oil-predicts-equities/tests
+      - name: Study 826 — Treasury Duration BAB test-suite
+        run: pytest -q studies/826-treasury-duration-bab/tests
+      - name: Study 827 — Cross-Asset Skewness Premium test-suite
+        run: pytest -q studies/827-cross-asset-skewness-premium/tests
+      - name: Study 828 — FX Dollar Factor test-suite
+        run: pytest -q studies/828-fx-dollar-factor/tests
+      - name: Study 829 — Global Sovereign-Bond Momentum test-suite
+        run: pytest -q studies/829-global-sovereign-bond-momentum/tests
+      - name: Study 830 — BAB Across Asset Classes test-suite
+        run: pytest -q studies/830-bab-across-asset-classes/tests
+      - name: Study 831 — Gold Real-Yield Timing test-suite
+        run: pytest -q studies/831-gold-real-yield-timing/tests
+      - name: Study 832 — High-Yield Credit Momentum test-suite
+        run: pytest -q studies/832-high-yield-credit-momentum/tests
+      - name: Study 833 — Deflated Sharpe Ratio test-suite
+        run: pytest -q studies/833-deflated-sharpe-ratio/tests
+      - name: Study 834 — Minimum Backtest Length test-suite
+        run: pytest -q studies/834-minimum-backtest-length/tests
+      - name: Study 835 — Spurious Regression test-suite
+        run: pytest -q studies/835-spurious-regression/tests
+      - name: Study 836 — Rebalance Timing Luck test-suite
+        run: pytest -q studies/836-timing-luck/tests
+      - name: Study 837 — Look-Ahead Standardization test-suite
+        run: pytest -q studies/837-lookahead-standardization/tests
+      - name: Study 838 — HAC Necessity test-suite
+        run: pytest -q studies/838-hac-necessity/tests
+      - name: Study 839 — The t > 3 Threshold test-suite
+        run: pytest -q studies/839-tstat-three-threshold/tests
+      - name: Study 840 — Clustered Standard Errors test-suite
+        run: pytest -q studies/840-clustered-standard-errors/tests
+      - name: Study 841 — Overlapping-Returns Inflation test-suite
+        run: pytest -q studies/841-overlapping-returns/tests
+      - name: Study 842 — Implementation Shortfall test-suite
+        run: pytest -q studies/842-implementation-shortfall/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

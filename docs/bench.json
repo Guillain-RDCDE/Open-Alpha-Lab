@@ -1,5 +1,5 @@
 {
- "total": 802,
+ "total": 842,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -14,18 +14,18 @@
  "counts": {
   "Real": {
    "Investable": 6,
-   "Fragile": 42,
+   "Fragile": 44,
    "Mirage": 31
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 82,
-   "Mirage": 192
+   "Fragile": 83,
+   "Mirage": 196
   },
   "None": {
    "Investable": 0,
    "Fragile": 4,
-   "Mirage": 444
+   "Mirage": 477
   }
  },
  "studies": [
@@ -7119,7 +7119,7 @@
    "signal": "Real",
    "tradability": "Mirage",
    "href": "studies/788-overnight-intraday-tug-of-war/",
-   "family": "Unclassified"
+   "family": "Microstructure & crowds"
   },
   {
    "num": 789,
@@ -7128,7 +7128,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/789-sue-earnings-surprise-drift/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 790,
@@ -7137,7 +7137,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/790-composite-equity-issuance/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 791,
@@ -7146,7 +7146,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/791-advertising-brand-capital/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 792,
@@ -7155,7 +7155,7 @@
    "signal": "Weak",
    "tradability": "Fragile",
    "href": "studies/792-commodity-momentum/",
-   "family": "Unclassified"
+   "family": "Carry, curves & commodities"
   },
   {
    "num": 793,
@@ -7164,7 +7164,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/793-commodity-value/",
-   "family": "Unclassified"
+   "family": "Carry, curves & commodities"
   },
   {
    "num": 794,
@@ -7173,7 +7173,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/794-commodity-carry/",
-   "family": "Unclassified"
+   "family": "Carry, curves & commodities"
   },
   {
    "num": 795,
@@ -7182,7 +7182,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/795-corporate-bond-momentum/",
-   "family": "Unclassified"
+   "family": "Carry, curves & commodities"
   },
   {
    "num": 796,
@@ -7191,7 +7191,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/796-corporate-bond-low-risk/",
-   "family": "Unclassified"
+   "family": "Carry, curves & commodities"
   },
   {
    "num": 797,
@@ -7200,7 +7200,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/797-fx-value-ppp/",
-   "family": "Unclassified"
+   "family": "Carry, curves & commodities"
   },
   {
    "num": 798,
@@ -7209,7 +7209,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/798-deferred-revenue-signal/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 799,
@@ -7218,7 +7218,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/799-order-backlog-drift/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 800,
@@ -7227,7 +7227,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/800-high-frequency-reversal/",
-   "family": "Unclassified"
+   "family": "Mean reversion & stat-arb"
   },
   {
    "num": 801,
@@ -7236,7 +7236,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "studies/801-employee-satisfaction/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
   },
   {
    "num": 802,
@@ -7245,7 +7245,367 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/802-stock-split-modern/",
-   "family": "Unclassified"
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 803,
+   "name": "Realized-Skewness Reversal",
+   "claim": "Do high-realized-skew names go on to earn *less* (Amaya et al)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/803-realized-skewness-reversal/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 804,
+   "name": "Realized-Kurtosis Premium",
+   "claim": "Do fat-tailed (high-realized-kurtosis) names earn a premium (Amaya et al)?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/804-realized-kurtosis-premium/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 805,
+   "name": "Cokurtosis Premium",
+   "claim": "Do high-market-cokurtosis names earn a positive premium (Fang-Lai)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/805-cokurtosis-premium/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 806,
+   "name": "Prospect-Theory Value",
+   "claim": "Does a high prospect-theory (TK) value predict *lower* future returns (Barberis-Mukherjee-Wang)?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/806-prospect-theory-value/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 807,
+   "name": "Salience-Theory Returns",
+   "claim": "Do salient-*upside* names go on to earn *less* (Cosemans & Frehen)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/807-salience-theory-returns/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 808,
+   "name": "Continuing Overreaction",
+   "claim": "Does a weighted signed-momentum score predict returns (Byun-Lim-Yun)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/808-continuing-overreaction/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 809,
+   "name": "Signed Jump Variation",
+   "claim": "Do downside-dominated names (negative signed jump) carry a premium (Bollerslev-Li-Zhao)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/809-signed-jump-variation/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 810,
+   "name": "Price Delay",
+   "claim": "Do slow-to-price (high-delay) names earn a premium (Hou-Moskowitz)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/810-price-delay/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 811,
+   "name": "Zero-Return Illiquidity",
+   "claim": "Do names that print *exactly-zero* returns earn an illiquidity premium (Lesmond-Ogden-Trzcinka)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/811-zero-return-illiquidity/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 812,
+   "name": "Corwin-Schultz Spread",
+   "claim": "Do high-estimated-spread (illiquid) names earn a premium (Corwin-Schultz + Amihud-Mendelson)?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/812-corwin-schultz-spread/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 813,
+   "name": "Maximum-Drawdown Anomaly",
+   "claim": "Do deep-drawdown names under-earn (distress) or rebound?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/813-maximum-drawdown-anomaly/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 814,
+   "name": "Trailing-Sharpe Anomaly",
+   "claim": "Does long-high-Sharpe / short-low-Sharpe pay, and does risk-adjusting *beat* plain momentum?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/814-trailing-sharpe-anomaly/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 815,
+   "name": "Variance-Ratio Reversal",
+   "claim": "Do low-VR (mean-reverting) names offer a tradable reversal (Lo & MacKinlay)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/815-variance-ratio-reversal/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 816,
+   "name": "Drawdown Duration",
+   "claim": "Does the *fraction of the year a name spent underwater* predict its forward return?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/816-drawdown-duration/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 817,
+   "name": "Realized-Volatility Trend",
+   "claim": "Does rising vol de-rate and falling vol re-rate (a *trend*, not the low-vol *level*)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/817-realized-volatility-trend/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 818,
+   "name": "Trend Factor",
+   "claim": "Does a data-weighted blend of 7 moving-average horizons forecast the cross-section (Han-Zhou-Zhu)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/818-trend-factor/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 819,
+   "name": "Abnormal-Volume Shock",
+   "claim": "Do abnormally heavy names go on to *drift up* (Garfinkel-Sokobin)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/819-abnormal-volume-shock/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 820,
+   "name": "Expected-Shortfall Premium",
+   "claim": "Do fat-left-tail (high-ES) names go on to earn *more* (priced tail risk)?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/820-expected-shortfall-premium/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 821,
+   "name": "Turnover Volatility",
+   "claim": "Do erratic-turnover names go on to earn *less* (Chordia-Subrahmanyam-Anshuman)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/821-turnover-volatility/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 822,
+   "name": "Omega-Ratio Sort",
+   "claim": "Does a full gain/loss ratio (Omega) beat plain trailing Sharpe?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/822-omega-ratio-sort/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 823,
+   "name": "Variance-Risk-Premium Return Predictor",
+   "claim": "Does the VRP (implied − realized variance) predict the market's forward return (Bollerslev-Tauchen-Zhou)?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/823-vrp-return-predictor/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 824,
+   "name": "Cochrane-Piazzesi Factor",
+   "claim": "Does one tent of forwards forecast bond excess returns (Cochrane-Piazzesi)?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/824-cochrane-piazzesi-factor/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 825,
+   "name": "Oil Predicts Equities",
+   "claim": "Does this month's oil change forecast next month's stocks, *negatively* (Driesprong et al)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/825-oil-predicts-equities/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 826,
+   "name": "Treasury Duration BAB",
+   "claim": "Does betting-against-beta earn a low-risk alpha inside the Treasury curve (Frazzini-Pedersen)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/826-treasury-duration-bab/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 827,
+   "name": "Cross-Asset Skewness Premium",
+   "claim": "Do low-skew *asset classes* out-earn high-skew ones (the asset-class analogue of Study 803)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/827-cross-asset-skewness-premium/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 828,
+   "name": "FX Dollar Factor",
+   "claim": "Does the dollar factor DOL earn a premium, and does the avg. forward discount time it (Lustig-Roussanov-Verdelhan)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/828-fx-dollar-factor/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 829,
+   "name": "Global Sovereign-Bond Momentum",
+   "claim": "Does a bond market's own 12-1 trend predict its next month (Moskowitz-Ooi-Pedersen)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/829-global-sovereign-bond-momentum/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 830,
+   "name": "BAB Across Asset Classes",
+   "claim": "Does betting-against-beta earn an alpha *across asset classes* (Frazzini-Pedersen \"everywhere\")?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/830-bab-across-asset-classes/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 831,
+   "name": "Gold Real-Yield Timing",
+   "claim": "Does the real-yield *trend* time gold?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/831-gold-real-yield-timing/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 832,
+   "name": "High-Yield Credit Momentum",
+   "claim": "Does the credit **trend** (HYG excess over IEF) time equity risk-on/off?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/832-high-yield-credit-momentum/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 833,
+   "name": "Deflated Sharpe Ratio",
+   "claim": "Run enough backtests and the luckiest dazzles — does the Deflated Sharpe Ratio catch the fluke?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/833-deflated-sharpe-ratio/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 834,
+   "name": "Minimum Backtest Length",
+   "claim": "How many years of track record does it take to tell skill from luck?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/834-minimum-backtest-length/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 835,
+   "name": "Spurious Regression",
+   "claim": "Two independent random walks — can OLS still find a wildly significant relation between them?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/835-spurious-regression/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 836,
+   "name": "Rebalance Timing Luck",
+   "claim": "Rebalance the very same strategy on a different day — how much of its Sharpe is pure luck?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/836-timing-luck/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 837,
+   "name": "Look-Ahead Standardization",
+   "claim": "Does z-scoring a signal with the full-sample mean leak the future into your backtest?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/837-lookahead-standardization/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 838,
+   "name": "HAC Necessity",
+   "claim": "Does ignoring autocorrelation fake statistical significance?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/838-hac-necessity/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 839,
+   "name": "The t > 3 Threshold",
+   "claim": "Is a t-stat of 2 enough — or does the factor zoo demand t > 3?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/839-tstat-three-threshold/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 840,
+   "name": "Clustered Standard Errors",
+   "claim": "Do plain standard errors overstate significance when the panel shares a common shock?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/840-clustered-standard-errors/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 841,
+   "name": "Overlapping-Returns Inflation",
+   "claim": "Do overlapping long-horizon returns manufacture a fake predictive t-stat?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/841-overlapping-returns/",
+   "family": "Research-method demos"
+  },
+  {
+   "num": 842,
+   "name": "Implementation Shortfall",
+   "claim": "Does the paper alpha survive once you charge realistic trading costs?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/842-implementation-shortfall/",
+   "family": "Research-method demos"
   }
  ],
  "special": [

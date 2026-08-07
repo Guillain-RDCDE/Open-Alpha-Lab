@@ -1,0 +1,7 @@
+numpy>=1.23
+pandas>=1.5
+scipy>=1.9
+matplotlib>=3.5
+nbformat>=5.0
+jupyter
+pytest>=7.0
