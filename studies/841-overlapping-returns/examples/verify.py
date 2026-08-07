@@ -29,7 +29,7 @@ print(f"# synthetic, offline, deterministic | {N_SIMS} sims/horizon | rho=0.95, 
       "600 monthly rows | as-of 2026-06-30")
 
 df, truth = data.simulate_world(n_months=600, beta=0.0, rho=0.95, seed=841)
-print(f"[data] null world: {len(df)} months {df.index[0].date()} -> {df.index[-1].date()}  "
+print(f"[data] null world: {len(df)} months {df.index[0]} -> {df.index[-1]}  "
       f"beta={truth.beta} rho={truth.rho}  fingerprint={data.fingerprint(df)}")
 print("  SYNTHETIC-ONLY: real free data can never certify 'zero predictability' -> capped NONE on "
       "the Signal axis.")

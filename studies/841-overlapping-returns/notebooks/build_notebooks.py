@@ -74,7 +74,7 @@ from overlapping_returns import data, strategy as st
 # so any long-horizon t-stat / R² above the nominal 5% level is a pure overlap artefact.
 DF, TRUTH = data.simulate_world(n_months=600, beta=0.0, rho=0.95, seed=841)
 X, Rr = DF["x"].to_numpy(), DF["r"].to_numpy()
-print("null world:", len(DF), "months,", DF.index[0].date(), "->", DF.index[-1].date(),
+print("null world:", len(DF), "months,", DF.index[0], "->", DF.index[-1],
       "| beta %.0f (NO edge), rho %.2f (fp %s)" % (TRUTH.beta, TRUTH.rho, data.fingerprint(DF)))
 """
 

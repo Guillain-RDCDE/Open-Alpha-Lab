@@ -103,7 +103,10 @@ def simulate_world(
     r[0] = ret_mean + eps[0]
     r[1:] = ret_mean + beta * x[:-1] + eps[1:]
 
-    idx = pd.date_range("1970-01-31", periods=n, freq="ME")
+    # PeriodIndex (not date_range) so a large ``n`` of monthly points cannot overflow
+    # the pandas nanosecond-Timestamp horizon (~year 2262) on the CI's pandas build —
+    # the index is a decorative month label, never used for calendar arithmetic.
+    idx = pd.period_range("1970-01", periods=n, freq="M")
     df = pd.DataFrame({"x": x, "r": r}, index=idx)
     return df, WorldTruth(beta=float(beta), rho=float(rho))
 
