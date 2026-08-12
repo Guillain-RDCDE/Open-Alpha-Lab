@@ -1496,6 +1496,67 @@ jobs:
       - name: Study 882 — Gas-Price → Discretionary test-suite
         run: pytest -q studies/882-gasoline-discretionary/tests
 
+      - name: Study 883 — Mid-Cap Sweet Spot test-suite
+        run: pytest -q studies/883-mid-cap-sweet-spot/tests
+      - name: Study 884 — Convexity Barbell test-suite
+        run: pytest -q studies/884-convexity-barbell/tests
+      - name: Study 885 — Ultra-Short Credit Pickup test-suite
+        run: pytest -q studies/885-ultra-short-credit-pickup/tests
+      - name: Study 886 — Agency-MBS-Carry test-suite
+        run: pytest -q studies/886-agency-mbs-carry/tests
+      - name: Study 887 — High-Yield Muni Premium test-suite
+        run: pytest -q studies/887-high-yield-muni-premium/tests
+      - name: Study 888 — CLO AAA Carry test-suite
+        run: pytest -q studies/888-clo-aaa-carry/tests
+      - name: Study 889 — Broad Dollar-Hedge Overlay test-suite
+        run: pytest -q studies/889-dollar-hedge-overlay/tests
+      - name: Study 890 — Sector Risk-Parity test-suite
+        run: pytest -q studies/890-sector-risk-parity/tests
+      - name: Study 891 — Insurance-Float-Engine test-suite
+        run: pytest -q studies/891-insurance-float-engine/tests
+      - name: Study 892 — Corporate-Bond Ladder test-suite
+        run: pytest -q studies/892-corporate-bond-ladder/tests
+      - name: Study 893 — Vol-Target 60/40 test-suite
+        run: pytest -q studies/893-voltarget-6040/tests
+      - name: Study 894 — Trend Overlay on 60/40 test-suite
+        run: pytest -q studies/894-trend-6040/tests
+      - name: Study 895 — Defensive Momentum test-suite
+        run: pytest -q studies/895-defensive-momentum/tests
+      - name: Study 896 — Risk-Parity + Trend test-suite
+        run: pytest -q studies/896-risk-parity-trend/tests
+      - name: Study 897 — CPPI Floor test-suite
+        run: pytest -q studies/897-cppi-floor/tests
+      - name: Study 898 — Managed-Vol Equity test-suite
+        run: pytest -q studies/898-managed-vol-equity/tests
+      - name: Study 899 — Cash + Call "90/10" test-suite
+        run: pytest -q studies/899-cash-plus-call/tests
+      - name: Study 900 — Quality-Income test-suite
+        run: pytest -q studies/900-quality-income/tests
+      - name: Study 901 — Profitable Small-Caps test-suite
+        run: pytest -q studies/901-profitable-small-caps/tests
+      - name: Study 902 — Multi-Factor Composite test-suite
+        run: pytest -q studies/902-multi-factor-composite/tests
+      - name: Study 903 — Sector-Neutral Low-Vol test-suite
+        run: pytest -q studies/903-sector-neutral-lowvol/tests
+      - name: Study 904 — Shareholder-Yield + Quality test-suite
+        run: pytest -q studies/904-shareholder-yield-quality/tests
+      - name: Study 905 — Residual Reversal test-suite
+        run: pytest -q studies/905-residual-reversal/tests
+      - name: Study 906 — EM Local Bonds FX-Hedged test-suite
+        run: pytest -q studies/906-em-local-hedged/tests
+      - name: Study 907 — Senior Loans vs High-Yield test-suite
+        run: pytest -q studies/907-senior-loans-vs-hy/tests
+      - name: Study 908 — Optimized-Roll Commodities test-suite
+        run: pytest -q studies/908-optimized-roll-commodities/tests
+      - name: Study 909 — Preferred Reset Premium test-suite
+        run: pytest -q studies/909-preferred-reset-premium/tests
+      - name: Study 910 — Managed-Distribution CEF test-suite
+        run: pytest -q studies/910-managed-distribution-cef/tests
+      - name: Study 911 — REIT Quality Screen test-suite
+        run: pytest -q studies/911-reit-quality-screen/tests
+      - name: Study 912 — Gold + Trend test-suite
+        run: pytest -q studies/912-gold-trend-managed/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

@@ -1,5 +1,5 @@
 {
- "total": 882,
+ "total": 912,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -14,18 +14,18 @@
  "counts": {
   "Real": {
    "Investable": 6,
-   "Fragile": 45,
+   "Fragile": 47,
    "Mirage": 31
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 87,
-   "Mirage": 203
+   "Fragile": 98,
+   "Mirage": 213
   },
   "None": {
    "Investable": 0,
    "Fragile": 4,
-   "Mirage": 505
+   "Mirage": 512
   }
  },
  "studies": [
@@ -7966,6 +7966,276 @@
    "tradability": "Mirage",
    "href": "studies/882-gasoline-discretionary/",
    "family": "Macro & valuation timing"
+  },
+  {
+   "num": 883,
+   "name": "Mid-Cap Sweet Spot",
+   "claim": "Is mid-cap a risk-adjusted sweet spot, better than BOTH large & small?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/883-mid-cap-sweet-spot/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 884,
+   "name": "Convexity Barbell",
+   "claim": "Does a duration-matched SHY+TLT barbell out-earn the IEF bullet on its extra convexity?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/884-convexity-barbell/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 885,
+   "name": "Ultra-Short Credit Pickup",
+   "claim": "Do JPST/ICSH/MINT pay a real excess-of-bills pickup?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/885-ultra-short-credit-pickup/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 886,
+   "name": "Agency-MBS-Carry",
+   "claim": "Is the MBS-over-Treasury carry a real, positive premium?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/886-agency-mbs-carry/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 887,
+   "name": "High-Yield Muni Premium",
+   "claim": "Does HY-muni really out-earn IG-muni on a credit premium?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/887-high-yield-muni-premium/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 888,
+   "name": "CLO AAA Carry",
+   "claim": "Is the AAA-CLO pickup a *real* risk-adjusted edge?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/888-clo-aaa-carry/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 889,
+   "name": "Broad Dollar-Hedge Overlay",
+   "claim": "Is `hedged − unhedged` the rate differential, broadly?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/889-dollar-hedge-overlay/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 890,
+   "name": "Sector Risk-Parity",
+   "claim": "Does equal-*risk*-weighting the GICS sectors improve the excess-of-cash Sharpe (and drawdown) vs cap-weight SPY?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/890-sector-risk-parity/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 891,
+   "name": "Insurance-Float-Engine",
+   "claim": "Does a P&C-insurer basket beat the market on the float?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/891-insurance-float-engine/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 892,
+   "name": "Corporate-Bond Ladder",
+   "claim": "Does a held-to-maturity ladder beat a constant-maturity fund?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/892-corporate-bond-ladder/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 893,
+   "name": "Vol-Target 60/40",
+   "claim": "Does the thermostat improve the balanced book?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/893-voltarget-6040/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 894,
+   "name": "Trend Overlay on 60/40",
+   "claim": "Does a 200-day trend filter on 60/40 cut drawdown *and* keep the return?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/894-trend-6040/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 895,
+   "name": "Defensive Momentum",
+   "claim": "A higher Sharpe *and* shallower momentum-crash drawdowns than MTUM alone?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/895-defensive-momentum/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 896,
+   "name": "Risk-Parity + Trend",
+   "claim": "Does a 200d trend gate improve risk-parity's Sharpe *and* drawdown?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/896-risk-parity-trend/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 897,
+   "name": "CPPI Floor",
+   "claim": "Does the mechanical floor protect *and* improve the outcome?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/897-cppi-floor/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 898,
+   "name": "Managed-Vol Equity",
+   "claim": "Does a constant-vol thermostat on SPY raise the Sharpe (Moreira-Muir)?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/898-managed-vol-equity/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 899,
+   "name": "Cash + Call \"90/10\"",
+   "claim": "Does \"protect capital, rent upside\" beat stocks risk-adjusted?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/899-cash-plus-call/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 900,
+   "name": "Quality-Income",
+   "claim": "Does quality beat yield on risk-adjusted return?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/900-quality-income/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 901,
+   "name": "Profitable Small-Caps",
+   "claim": "Do profitable small caps beat plain small caps on risk-adjusted return?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/901-profitable-small-caps/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 902,
+   "name": "Multi-Factor Composite",
+   "claim": "Is the blend's edge real?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/902-multi-factor-composite/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 903,
+   "name": "Sector-Neutral Low-Vol",
+   "claim": "Does the low-vol edge survive once its defensive-**sector** bet is stripped?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/903-sector-neutral-lowvol/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 904,
+   "name": "Shareholder-Yield + Quality",
+   "claim": "Does quality-screened shareholder yield beat the market?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/904-shareholder-yield-quality/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 905,
+   "name": "Residual Reversal",
+   "claim": "Does factor-cleaning rescue weekly reversal on mega-caps?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/905-residual-reversal/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 906,
+   "name": "EM Local Bonds FX-Hedged",
+   "claim": "Does stripping the FX leave a real local-rate carry?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/906-em-local-hedged/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 907,
+   "name": "Senior Loans vs High-Yield",
+   "claim": "Is the seniority premium a real risk-adjusted edge?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/907-senior-loans-vs-hy/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 908,
+   "name": "Optimized-Roll Commodities",
+   "claim": "Does the optimized-roll wrapper beat front-month on excess-of-cash Sharpe?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/908-optimized-roll-commodities/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 909,
+   "name": "Preferred Reset Premium",
+   "claim": "Do variable-rate preferreds out-carry fixed on a rate-adjusted basis in the high-rate regime?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/909-preferred-reset-premium/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 910,
+   "name": "Managed-Distribution CEF",
+   "claim": "Does the discount + payout beat the asset class?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/910-managed-distribution-cef/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 911,
+   "name": "REIT Quality Screen",
+   "claim": "Does a durable-income equity-REIT screen beat the broad REIT index, and is the mortgage-REIT carry a trap?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/911-reit-quality-screen/",
+   "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 912,
+   "name": "Gold + Trend",
+   "claim": "Is the edge real?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/912-gold-trend-managed/",
+   "family": "Vol, hedges & allocation"
   }
  ],
  "special": [

@@ -1,15 +1,15 @@
 <div align="center">
 
-<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — out of 882 famous trading edges, six survive">
+<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — out of 912 famous trading edges, six survive">
 
 # Open-Alpha-Lab
 
-### Out of 882 famous trading edges, six survive — and not one of them is a crystal ball.
+### Out of 912 famous trading edges, six survive — and not one of them is a crystal ball.
 
 That's not a typo. I put every market anomaly, folk strategy and named factor
 people swear by through the **same brutal protocol**, and publish the verdict: **edge or mirage.**
 
-`882 tested` · `6 survive` · `82 real signals` · `739 mirages`
+`912 tested` · `6 survive` · `84 real signals` · `756 mirages`
 
 ***Most are mirages. The honest write-up of why is the point. The six survivors don't forecast anything — three manage risk, and three harvest a premium or a mechanical identity you can actually bank.***
 
@@ -53,7 +53,7 @@ Almost everything ends up bottom-right; six chips are green — and not one of t
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 882 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 912 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -963,6 +963,36 @@ The full table below is the single source of truth (it's what the map and the li
 | **[880](studies/880-aggregate-short-interest/)** | **Aggregate Short Interest** | Is market-wide short interest "the strongest known predictor" of the market (Rapach-Ringgenberg-Zhou)? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[881](studies/881-jobless-claims-nowcast/)** | **Jobless-Claims Sector Rotation** | Does a 4-week claims uptick tilt the market to defensives over cyclicals? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[882](studies/882-gasoline-discretionary/)** | **Gas-Price → Discretionary** | Does a rising gas price forecast consumer-discretionary (XLY) lagging staples (XLP) next month — the "pump tax" rotation? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[883](studies/883-mid-cap-sweet-spot/)** | **Mid-Cap Sweet Spot** | Is mid-cap a risk-adjusted sweet spot, better than BOTH large & small? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[884](studies/884-convexity-barbell/)** | **Convexity Barbell** | Does a duration-matched SHY+TLT barbell out-earn the IEF bullet on its extra convexity? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[885](studies/885-ultra-short-credit-pickup/)** | **Ultra-Short Credit Pickup** | Do JPST/ICSH/MINT pay a real excess-of-bills pickup? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[886](studies/886-agency-mbs-carry/)** | **Agency-MBS-Carry** | Is the MBS-over-Treasury carry a real, positive premium? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[887](studies/887-high-yield-muni-premium/)** | **High-Yield Muni Premium** | Does HY-muni really out-earn IG-muni on a credit premium? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[888](studies/888-clo-aaa-carry/)** | **CLO AAA Carry** | Is the AAA-CLO pickup a *real* risk-adjusted edge? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[889](studies/889-dollar-hedge-overlay/)** | **Broad Dollar-Hedge Overlay** | Is `hedged − unhedged` the rate differential, broadly? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[890](studies/890-sector-risk-parity/)** | **Sector Risk-Parity** | Does equal-*risk*-weighting the GICS sectors improve the excess-of-cash Sharpe (and drawdown) vs cap-weight SPY? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[891](studies/891-insurance-float-engine/)** | **Insurance-Float-Engine** | Does a P&C-insurer basket beat the market on the float? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[892](studies/892-corporate-bond-ladder/)** | **Corporate-Bond Ladder** | Does a held-to-maturity ladder beat a constant-maturity fund? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[893](studies/893-voltarget-6040/)** | **Vol-Target 60/40** | Does the thermostat improve the balanced book? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[894](studies/894-trend-6040/)** | **Trend Overlay on 60/40** | Does a 200-day trend filter on 60/40 cut drawdown *and* keep the return? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[895](studies/895-defensive-momentum/)** | **Defensive Momentum** | A higher Sharpe *and* shallower momentum-crash drawdowns than MTUM alone? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[896](studies/896-risk-parity-trend/)** | **Risk-Parity + Trend** | Does a 200d trend gate improve risk-parity's Sharpe *and* drawdown? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[897](studies/897-cppi-floor/)** | **CPPI Floor** | Does the mechanical floor protect *and* improve the outcome? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[898](studies/898-managed-vol-equity/)** | **Managed-Vol Equity** | Does a constant-vol thermostat on SPY raise the Sharpe (Moreira-Muir)? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[899](studies/899-cash-plus-call/)** | **Cash + Call "90/10"** | Does "protect capital, rent upside" beat stocks risk-adjusted? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[900](studies/900-quality-income/)** | **Quality-Income** | Does quality beat yield on risk-adjusted return? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[901](studies/901-profitable-small-caps/)** | **Profitable Small-Caps** | Do profitable small caps beat plain small caps on risk-adjusted return? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[902](studies/902-multi-factor-composite/)** | **Multi-Factor Composite** | Is the blend's edge real? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[903](studies/903-sector-neutral-lowvol/)** | **Sector-Neutral Low-Vol** | Does the low-vol edge survive once its defensive-**sector** bet is stripped? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[904](studies/904-shareholder-yield-quality/)** | **Shareholder-Yield + Quality** | Does quality-screened shareholder yield beat the market? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[905](studies/905-residual-reversal/)** | **Residual Reversal** | Does factor-cleaning rescue weekly reversal on mega-caps? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[906](studies/906-em-local-hedged/)** | **EM Local Bonds FX-Hedged** | Does stripping the FX leave a real local-rate carry? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[907](studies/907-senior-loans-vs-hy/)** | **Senior Loans vs High-Yield** | Is the seniority premium a real risk-adjusted edge? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[908](studies/908-optimized-roll-commodities/)** | **Optimized-Roll Commodities** | Does the optimized-roll wrapper beat front-month on excess-of-cash Sharpe? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[909](studies/909-preferred-reset-premium/)** | **Preferred Reset Premium** | Do variable-rate preferreds out-carry fixed on a rate-adjusted basis in the high-rate regime? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[910](studies/910-managed-distribution-cef/)** | **Managed-Distribution CEF** | Does the discount + payout beat the asset class? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[911](studies/911-reit-quality-screen/)** | **REIT Quality Screen** | Does a durable-income equity-REIT screen beat the broad REIT index, and is the mortgage-REIT carry a trap? | ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[912](studies/912-gold-trend-managed/)** | **Gold + Trend** | Is the edge real? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 </details>
 
