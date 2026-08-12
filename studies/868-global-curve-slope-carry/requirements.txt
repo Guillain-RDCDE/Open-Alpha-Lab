@@ -1,0 +1,10 @@
+numpy>=1.23
+pandas>=1.5
+scipy>=1.9
+statsmodels>=0.13
+# build-only (fetching the real tape + rendering the notebooks); the offline core & tests
+# need none of these:
+yfinance>=0.2.40
+pyarrow>=12.0
+nbformat>=5.7
+jupyter>=1.0

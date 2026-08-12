@@ -1,0 +1,10 @@
+numpy
+pandas
+scipy
+statsmodels
+openpyxl
+yfinance
+matplotlib
+nbformat
+jupyter
+pytest

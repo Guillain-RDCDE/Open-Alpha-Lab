@@ -1,0 +1,8 @@
+numpy>=1.23
+pandas>=1.5
+scipy>=1.9
+statsmodels>=0.13
+# dev / notebooks
+pytest>=7.0
+nbformat>=5.0
+jupyter>=1.0

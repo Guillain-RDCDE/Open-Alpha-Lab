@@ -1415,6 +1415,87 @@ jobs:
       - name: Study 842 — Implementation Shortfall test-suite
         run: pytest -q studies/842-implementation-shortfall/tests
 
+      - name: Study 843 — Waffle House Index test-suite
+        run: pytest -q studies/843-waffle-house-index/tests
+      - name: Study 844 — Madden-Cover-Curse test-suite
+        run: pytest -q studies/844-madden-cover-curse/tests
+      - name: Study 845 — Stadium Naming-Rights Curse test-suite
+        run: pytest -q studies/845-stadium-naming-curse/tests
+      - name: Study 846 — Blockbuster Game-Launch Drift test-suite
+        run: pytest -q studies/846-game-launch-drift/tests
+      - name: Study 847 — Rotten-Tomatoes -> Studio test-suite
+        run: pytest -q studies/847-rotten-tomatoes-studio/tests
+      - name: Study 848 — Costco Hot-Dog Index test-suite
+        run: pytest -q studies/848-costco-hotdog-index/tests
+      - name: Study 849 — Dry January / Veganuary test-suite
+        run: pytest -q studies/849-dry-january-effect/tests
+      - name: Study 850 — Airline Operational Meltdown test-suite
+        run: pytest -q studies/850-airline-meltdown/tests
+      - name: Study 851 — Netflix Password Crackdown test-suite
+        run: pytest -q studies/851-netflix-password-crackdown/tests
+      - name: Study 852 — Movie-Sequel Fatigue test-suite
+        run: pytest -q studies/852-movie-sequel-fatigue/tests
+      - name: Study 853 — Days-Sales-Outstanding Buildup test-suite
+        run: pytest -q studies/853-days-sales-outstanding/tests
+      - name: Study 854 — Cash Conversion Cycle test-suite
+        run: pytest -q studies/854-cash-conversion-cycle/tests
+      - name: Study 855 — Accrual Quality (Dechow-Dichev) test-suite
+        run: pytest -q studies/855-accrual-quality/tests
+      - name: Study 856 — Book-Tax Differences test-suite
+        run: pytest -q studies/856-book-tax-differences/tests
+      - name: Study 857 — SG&A Cost Stickiness test-suite
+        run: pytest -q studies/857-sga-cost-stickiness/tests
+      - name: Study 858 — Margin ÷ Inventory Divergence test-suite
+        run: pytest -q studies/858-margin-inventory-divergence/tests
+      - name: Study 859 — Return-on-Invested-Capital Premium test-suite
+        run: pytest -q studies/859-roic-premium/tests
+      - name: Study 860 — Accounting Conservatism (C-Score) test-suite
+        run: pytest -q studies/860-conservatism-cscore/tests
+      - name: Study 861 — Debt-Maturity Rollover Risk test-suite
+        run: pytest -q studies/861-debt-maturity-rollover/tests
+      - name: Study 862 — Real Earnings Management test-suite
+        run: pytest -q studies/862-real-earnings-management/tests
+      - name: Study 863 — Treasury Noise Liquidity test-suite
+        run: pytest -q studies/863-treasury-noise-liquidity/tests
+      - name: Study 864 — Yield-Curve Twist (Butterfly) test-suite
+        run: pytest -q studies/864-yield-curve-twist/tests
+      - name: Study 865 — Credit → Equity Lead-Lag test-suite
+        run: pytest -q studies/865-credit-equity-lead-lag/tests
+      - name: Study 866 — Flight-to-Quality Beta test-suite
+        run: pytest -q studies/866-flight-to-quality-beta/tests
+      - name: Study 867 — Currency Crash Risk test-suite
+        run: pytest -q studies/867-currency-crash-risk/tests
+      - name: Study 868 — Global Curve-Slope Carry test-suite
+        run: pytest -q studies/868-global-curve-slope-carry/tests
+      - name: Study 869 — 52-Week-High Breakout Drift test-suite
+        run: pytest -q studies/869-breakout-52wk-high/tests
+      - name: Study 870 — Industry-Leader Lead-Lag test-suite
+        run: pytest -q studies/870-industry-leader-lead-lag/tests
+      - name: Study 871 — The Rank Effect test-suite
+        run: pytest -q studies/871-rank-effect/tests
+      - name: Study 872 — Nominal-Price Illusion test-suite
+        run: pytest -q studies/872-nominal-price-illusion/tests
+      - name: Study 873 — Sentiment Beta test-suite
+        run: pytest -q studies/873-sentiment-beta/tests
+      - name: Study 874 — IPO-Price Anchoring test-suite
+        run: pytest -q studies/874-ipo-anchoring/tests
+      - name: Study 875 — Idiosyncratic-Vol Change test-suite
+        run: pytest -q studies/875-ivol-change/tests
+      - name: Study 876 — Industry-Relative MAX test-suite
+        run: pytest -q studies/876-max-in-industry/tests
+      - name: Study 877 — GDPNow Revisions test-suite
+        run: pytest -q studies/877-gdpnow-revisions/tests
+      - name: Study 878 — Economic Policy Uncertainty test-suite
+        run: pytest -q studies/878-policy-uncertainty-epu/tests
+      - name: Study 879 — Weekly Economic Index test-suite
+        run: pytest -q studies/879-weekly-economic-index/tests
+      - name: Study 880 — Aggregate Short Interest test-suite
+        run: pytest -q studies/880-aggregate-short-interest/tests
+      - name: Study 881 — Jobless-Claims Sector Rotation test-suite
+        run: pytest -q studies/881-jobless-claims-nowcast/tests
+      - name: Study 882 — Gas-Price → Discretionary test-suite
+        run: pytest -q studies/882-gasoline-discretionary/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

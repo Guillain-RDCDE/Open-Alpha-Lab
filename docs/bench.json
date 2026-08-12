@@ -1,5 +1,5 @@
 {
- "total": 842,
+ "total": 882,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -14,18 +14,18 @@
  "counts": {
   "Real": {
    "Investable": 6,
-   "Fragile": 44,
+   "Fragile": 45,
    "Mirage": 31
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 83,
-   "Mirage": 196
+   "Fragile": 87,
+   "Mirage": 203
   },
   "None": {
    "Investable": 0,
    "Fragile": 4,
-   "Mirage": 477
+   "Mirage": 505
   }
  },
  "studies": [
@@ -7606,6 +7606,366 @@
    "tradability": "Mirage",
    "href": "studies/842-implementation-shortfall/",
    "family": "Research-method demos"
+  },
+  {
+   "num": 843,
+   "name": "Waffle House Index",
+   "claim": "Do insurers dip and rebuilders rally after a major storm?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/843-waffle-house-index/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 844,
+   "name": "Madden-Cover-Curse",
+   "claim": "Does the publisher (EA/TTWO) move around a Madden/NBA 2K launch?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/844-madden-cover-curse/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 845,
+   "name": "Stadium Naming-Rights Curse",
+   "claim": "Do sponsors underperform after buying a stadium's name?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/845-stadium-naming-curse/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 846,
+   "name": "Blockbuster Game-Launch Drift",
+   "claim": "Does the publisher (TTWO/EA/NTDOY/UBSFY) move around a blockbuster launch?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/846-game-launch-drift/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 847,
+   "name": "Rotten-Tomatoes -> Studio",
+   "claim": "Does a film's critic tier (fresh/rotten) move the distributing studio?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/847-rotten-tomatoes-studio/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 848,
+   "name": "Costco Hot-Dog Index",
+   "claim": "Is COST a distinctive inflation hedge?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/848-costco-hotdog-index/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 849,
+   "name": "Dry January / Veganuary",
+   "claim": "Do the January \"Dry January\" / \"Veganuary\" waves move the stocks?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/849-dry-january-effect/",
+   "family": "Calendar & seasonal"
+  },
+  {
+   "num": 850,
+   "name": "Airline Operational Meltdown",
+   "claim": "Does a public operational meltdown dent the implicated carrier's stock?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/850-airline-meltdown/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 851,
+   "name": "Netflix Password Crackdown",
+   "claim": "Did NFLX deliver a tradable abnormal return around the crackdown dates?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/851-netflix-password-crackdown/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 852,
+   "name": "Movie-Sequel Fatigue",
+   "claim": "Is franchise fatigue real in studio reactions?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/852-movie-sequel-fatigue/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 853,
+   "name": "Days-Sales-Outstanding Buildup",
+   "claim": "Does a rising DSO predict lower forward returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/853-days-sales-outstanding/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 854,
+   "name": "Cash Conversion Cycle",
+   "claim": "Does a shortening CCC predict higher forward returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/854-cash-conversion-cycle/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 855,
+   "name": "Accrual Quality (Dechow-Dichev)",
+   "claim": "Does accrual quality predict forward returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/855-accrual-quality/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 856,
+   "name": "Book-Tax Differences",
+   "claim": "Does a large book-tax gap predict lower future returns?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/856-book-tax-differences/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 857,
+   "name": "SG&A Cost Stickiness",
+   "claim": "Do sticky-cost firms under-earn?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/857-sga-cost-stickiness/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 858,
+   "name": "Margin ÷ Inventory Divergence",
+   "claim": "Does the margin/inventory contradiction sort returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/858-margin-inventory-divergence/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 859,
+   "name": "Return-on-Invested-Capital Premium",
+   "claim": "Does ROIC sort future returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/859-roic-premium/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 860,
+   "name": "Accounting Conservatism (C-Score)",
+   "claim": "Does a high C-score predict forward returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/860-conservatism-cscore/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 861,
+   "name": "Debt-Maturity Rollover Risk",
+   "claim": "Do high-short-term-debt firms under-earn?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/861-debt-maturity-rollover/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 862,
+   "name": "Real Earnings Management",
+   "claim": "Does a Roychowdhury REM proxy predict forward returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/862-real-earnings-management/",
+   "family": "Equity factors & fundamentals"
+  },
+  {
+   "num": 863,
+   "name": "Treasury Noise Liquidity",
+   "claim": "Does Treasury-curve **roughness** precede lower equity / wider credit (Hu-Pan-Wang noise)?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/863-treasury-noise-liquidity/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 864,
+   "name": "Yield-Curve Twist (Butterfly)",
+   "claim": "Does the butterfly (curve *curvature*) predict forward returns?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/864-yield-curve-twist/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 865,
+   "name": "Credit → Equity Lead-Lag",
+   "claim": "Does the trailing HY-excess return **lead** next-week SPY?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/865-credit-equity-lead-lag/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 866,
+   "name": "Flight-to-Quality Beta",
+   "claim": "Do the true defensives (high flight-to-quality beta) under-earn, as you'd pay for a hedge?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/866-flight-to-quality-beta/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 867,
+   "name": "Currency Crash Risk",
+   "claim": "Are high-carry currencies more negatively skewed (Brunnermeier-Nagel-Pedersen crash risk)?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/867-currency-crash-risk/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 868,
+   "name": "Global Curve-Slope Carry",
+   "claim": "Does a high-carry / steep-curve cross-sectional sort pay a duration holder (Koijen-Moskowitz-Pedersen-Vrugt carry)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/868-global-curve-slope-carry/",
+   "family": "Carry, curves & commodities"
+  },
+  {
+   "num": 869,
+   "name": "52-Week-High Breakout Drift",
+   "claim": "After a fresh 52-week-high *breakout*, does the name drift up or fade?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/869-breakout-52wk-high/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 870,
+   "name": "Industry-Leader Lead-Lag",
+   "claim": "Does the biggest name in a sector lead the rest (Hou 2007)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/870-industry-leader-lead-lag/",
+   "family": "Microstructure & crowds"
+  },
+  {
+   "num": 871,
+   "name": "The Rank Effect",
+   "claim": "Do the best- and worst-ranked names under-earn the middle (Hartzmark)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/871-rank-effect/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 872,
+   "name": "Nominal-Price Illusion",
+   "claim": "Do low nominal-price names carry the lottery look & under-earn (Kumar; Birru-Wang)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/872-nominal-price-illusion/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 873,
+   "name": "Sentiment Beta",
+   "claim": "Do high-sentiment-beta names go on to earn *less* (Baker-Wurgler)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/873-sentiment-beta/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 874,
+   "name": "IPO-Price Anchoring",
+   "claim": "Does the gap from the IPO offer price predict drift (and is below-offer a drag)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/874-ipo-anchoring/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 875,
+   "name": "Idiosyncratic-Vol Change",
+   "claim": "Does *rising* idiosyncratic vol precede lower returns (a *change*, not the idio-vol *level*)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/875-ivol-change/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 876,
+   "name": "Industry-Relative MAX",
+   "claim": "Does industry-adjusting MAX sharpen the negative MAX→return relation?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/876-max-in-industry/",
+   "family": "Academic factors — pointed replications"
+  },
+  {
+   "num": 877,
+   "name": "GDPNow Revisions",
+   "claim": "Does the daily GDPNow revision predict forward SPY?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/877-gdpnow-revisions/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 878,
+   "name": "Economic Policy Uncertainty",
+   "claim": "Does high policy uncertainty predict higher forward vol *and* higher forward returns?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/878-policy-uncertainty-epu/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 879,
+   "name": "Weekly Economic Index",
+   "claim": "Does the WEI level / weekly change time forward SPY & the XLY−XLP rotation?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/879-weekly-economic-index/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 880,
+   "name": "Aggregate Short Interest",
+   "claim": "Is market-wide short interest \"the strongest known predictor\" of the market (Rapach-Ringgenberg-Zhou)?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/880-aggregate-short-interest/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 881,
+   "name": "Jobless-Claims Sector Rotation",
+   "claim": "Does a 4-week claims uptick tilt the market to defensives over cyclicals?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/881-jobless-claims-nowcast/",
+   "family": "Macro & valuation timing"
+  },
+  {
+   "num": 882,
+   "name": "Gas-Price → Discretionary",
+   "claim": "Does a rising gas price forecast consumer-discretionary (XLY) lagging staples (XLP) next month — the \"pump tax\" rotation?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/882-gasoline-discretionary/",
+   "family": "Macro & valuation timing"
   }
  ],
  "special": [

@@ -1,0 +1,13 @@
+# Study 858 — Margin ÷ Inventory Divergence
+# Engine + offline tests: numpy / pandas / scipy / statsmodels ONLY (no scikit-learn, no arch).
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+statsmodels>=0.14
+# Cache builder only (network; not needed for the offline test suite or notebooks):
+yfinance>=0.2.40
+# Notebooks:
+nbformat>=5.9
+nbconvert>=7.0
+jupyter>=1.0
+matplotlib>=3.7

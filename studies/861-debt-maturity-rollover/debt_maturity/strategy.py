@@ -1,0 +1,327 @@
+"""Strategy + inference for Study 861 — Debt-Maturity Rollover Risk.
+
+The claim: **firms with a high share of short-term debt under-earn** (rollover risk / a
+distress-style discount), **especially when rates rise / credit tightens** (post-2022).
+
+We test it on the point-in-time signal ``st_share`` (short-term-debt share of total debt, known
+at the 10-Q/10-K filing date, zero look-ahead):
+
+1. **Forward returns — the calendar-time long-short (PRIMARY).** Each month-end, rank the names
+   that carry a fresh ``st_share`` into terciles. The claim portfolio is **long the LOW-share
+   (safe) tercile, short the HIGH-share (rollover-risk) tercile** (``long_high=False``): if the
+   rollover story is right, that portfolio earns a *positive* spread (the risky names
+   underperform). Held with one execution lag. The decisive number is the **Newey-West (HAC) t**
+   of that monthly long-short return series.
+
+2. **Forward returns — the pooled event drift (CROSS-CHECK).** Bucket all (ticker, filing) events
+   by ``st_share``; measure the low-minus-high forward drift over a horizon, one-sample t + a
+   label-shuffle placebo, and the tercile monotonicity picture.
+
+3. **Era cut at 2022 (3rd axis).** The claim says rollover risk bites hardest in the rising-rate
+   sub-period. Split the calendar long-short at 2022-01-01 (the Fed hiking cycle) and compare.
+
+Honesty rails: one documented execution lag (signal at month/filing t, return of t+1);
+costs = one-way × NAV × turnover, shorts pay borrow; survivorship named on the Signal axis
+(current-survivors basket, which drops the exact rollover blow-ups the story is about). Given the
+thin, uneven panel and the well-known *distress-anomaly* debate (high-distress firms have both
+under- and over-performed across samples), expect the honest answer to be modest.
+
+A positive, significant NW t on the low-minus-high portfolio = the claim holds (risky firms
+under-earn). A *negative* significant one = the WRONG sign (risky firms out-earn, a risk premium)
+= a NONE by the desk's rules.
+"""
+
+from __future__ import annotations
+
+import numpy as np
+import pandas as pd
+
+HORIZONS = (21, 63, 126)             # trading-day forward-return horizons (≈1m, 1q, 2q)
+
+
+# --------------------------------------------------------------------------- #
+# Inference primitives
+# --------------------------------------------------------------------------- #
+def one_sample_t(x: np.ndarray) -> float:
+    """One-sample t of mean(x) vs 0."""
+    x = np.asarray(x, dtype=float)
+    x = x[~np.isnan(x)]
+    if len(x) < 2:
+        return float("nan")
+    se = x.std(ddof=1) / np.sqrt(len(x))
+    return float(x.mean() / se) if se > 0 else float("nan")
+
+
+def welch_t(a: np.ndarray, b: np.ndarray) -> float:
+    """Welch t of mean(a) - mean(b) (unequal variance). NaN if either < 2 obs."""
+    a = np.asarray(a, dtype=float); b = np.asarray(b, dtype=float)
+    a, b = a[~np.isnan(a)], b[~np.isnan(b)]
+    if len(a) < 2 or len(b) < 2:
+        return float("nan")
+    se = np.sqrt(a.var(ddof=1) / len(a) + b.var(ddof=1) / len(b))
+    return float((a.mean() - b.mean()) / se) if se > 0 else float("nan")
+
+
+def newey_west_t(x: np.ndarray, lags: int = 6) -> float:
+    """HAC (Newey-West, Bartlett kernel) t of the mean of a return series vs 0.
+
+    Regressing ``x`` on a constant, the HAC standard error of the mean uses the Bartlett-weighted
+    autocovariances out to ``lags`` — the serial-correlation-robust statistic the desk's REAL bar
+    is measured against (overlapping/persistent portfolio returns violate iid).
+    """
+    x = np.asarray(x, dtype=float)
+    x = x[~np.isnan(x)]
+    n = len(x)
+    if n < 3:
+        return float("nan")
+    u = x - x.mean()
+    gamma0 = float(u @ u) / n
+    s = gamma0
+    for l in range(1, min(lags, n - 1) + 1):
+        w = 1.0 - l / (lags + 1.0)
+        cov = float(u[l:] @ u[:-l]) / n
+        s += 2.0 * w * cov
+    if s <= 0:
+        return float("nan")
+    se = np.sqrt(s / n)
+    return float(x.mean() / se) if se > 0 else float("nan")
+
+
+def wilson_interval(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    """Wilson score interval for a binomial share k/n."""
+    if n == 0:
+        return (float("nan"), float("nan"))
+    p = k / n
+    z2 = z * z
+    mid = (p + z2 / (2 * n)) / (1 + z2 / n)
+    half = z * np.sqrt(p * (1 - p) / n + z2 / (4 * n * n)) / (1 + z2 / n)
+    return (mid - half, mid + half)
+
+
+def _bucketize(x: np.ndarray, n_buckets: int) -> np.ndarray:
+    """Rank ``x`` into ``n_buckets`` equal-frequency bins (0 = lowest)."""
+    order = np.argsort(np.argsort(x))
+    return np.minimum((order * n_buckets // len(x)), n_buckets - 1)
+
+
+# --------------------------------------------------------------------------- #
+# Calendar-time long-short (PRIMARY)
+# --------------------------------------------------------------------------- #
+def monthly_returns(prices: pd.DataFrame) -> pd.DataFrame:
+    """Month-end adjusted-close → simple monthly returns (index = month-end)."""
+    me = prices.resample("ME").last()
+    return me.pct_change()
+
+
+def _signal_asof(events: pd.DataFrame, tickers, month_end: pd.Timestamp,
+                 signal_col: str, staleness_days: int) -> dict:
+    """The freshest signal per ticker known at ``month_end`` (filed ≤ month_end, not stale)."""
+    out = {}
+    cut = month_end
+    for tk in tickers:
+        g = events[(events["ticker"] == tk) & (events["filed"] <= cut)]
+        if g.empty:
+            continue
+        r = g.iloc[-1]
+        if (cut - r["filed"]).days > staleness_days:
+            continue
+        v = r[signal_col]
+        if pd.notna(v):
+            out[tk] = float(v)
+    return out
+
+
+def calendar_ls(prices: pd.DataFrame, events: pd.DataFrame, signal_col: str = "st_share",
+                n_buckets: int = 3, min_names: int = 6, staleness_days: int = 400,
+                long_high: bool = False) -> pd.DataFrame:
+    """Monthly rebalanced long-short return series (one execution lag).
+
+    At each month-end M: rank names carrying a fresh signal into ``n_buckets`` terciles. With
+    ``long_high=False`` (this study's claim portfolio) go **long the BOTTOM tercile** (low
+    short-term share = safe) and **short the TOP tercile** (high share = rollover risk); with
+    ``long_high=True`` it is the usual long-top/short-bottom. The position is held over month M+1
+    (return realised then) — one documented execution lag, signal known at M's close. Requires ≥
+    ``min_names`` in the cross-section. Returns a frame indexed by the RETURN month with columns:
+    ls (long-short), long, short, n (cross-section size), turnover (one-way, fraction replaced).
+    """
+    mret = monthly_returns(prices)
+    months = mret.index
+    prev_long: set = set()
+    prev_short: set = set()
+    recs = []
+    for i in range(len(months) - 1):
+        m, m1 = months[i], months[i + 1]
+        sig = _signal_asof(events, prices.columns, m, signal_col, staleness_days)
+        # names with a realised return next month
+        sig = {tk: v for tk, v in sig.items() if pd.notna(mret.loc[m1, tk])}
+        if len(sig) < min_names:
+            prev_long, prev_short = set(), set()
+            continue
+        tks = np.array(list(sig.keys()))
+        vals = np.array([sig[t] for t in tks])
+        b = _bucketize(vals, n_buckets)
+        top_tk = set(tks[b == n_buckets - 1])
+        bot_tk = set(tks[b == 0])
+        long_tk, short_tk = (top_tk, bot_tk) if long_high else (bot_tk, top_tk)
+        r_long = float(np.mean([mret.loc[m1, t] for t in long_tk]))
+        r_short = float(np.mean([mret.loc[m1, t] for t in short_tk]))
+        # one-way turnover: share of each leg replaced vs last month
+        def _turn(new, old):
+            if not old:
+                return 1.0
+            return len(new - old) / max(len(new), 1)
+        turn = 0.5 * (_turn(long_tk, prev_long) + _turn(short_tk, prev_short))
+        recs.append({"month": m1, "ls": r_long - r_short, "long": r_long,
+                     "short": r_short, "n": len(sig), "turnover": turn})
+        prev_long, prev_short = long_tk, short_tk
+    return pd.DataFrame(recs).set_index("month")
+
+
+def calendar_ls_stats(ls: pd.DataFrame, nw_lags: int = 6) -> dict:
+    """Headline stats of a calendar long-short series: mean, one-sample t, NW t, ann, Sharpe."""
+    r = ls["ls"].to_numpy()
+    n = len(r)
+    mean = float(np.mean(r)) if n else float("nan")
+    sd = float(np.std(r, ddof=1)) if n > 1 else float("nan")
+    sharpe = mean / sd * np.sqrt(12) if sd > 0 else float("nan")
+    return {
+        "n_months": n, "mean_bps": mean * 1e4, "t_iid": one_sample_t(r),
+        "t_nw": newey_west_t(r, lags=nw_lags), "ann_pct": mean * 12 * 100,
+        "sharpe": sharpe, "hit": float((r > 0).mean()) if n else float("nan"),
+        "avg_n": float(ls["n"].mean()) if n else float("nan"),
+        "avg_turnover": float(ls["turnover"].mean()) if n else float("nan"),
+        "long_bps": float(ls["long"].mean() * 1e4) if n else float("nan"),
+        "short_bps": float(ls["short"].mean() * 1e4) if n else float("nan"),
+    }
+
+
+def calendar_ls_net(ls: pd.DataFrame, cost_bps: float = 20.0, borrow_bps_ann: float = 100.0,
+                    nw_lags: int = 6) -> dict:
+    """Long-short net of one-way costs × turnover (both legs) + borrow on the short leg.
+
+    Each month the book turns over ``turnover`` (one-way, fraction replaced); paying ``cost_bps``
+    one-way on both legs costs ``2 × cost_bps × turnover`` per month, and the short leg pays
+    ``borrow_bps_ann`` annualised (÷12 monthly). Net series → NW t / Sharpe.
+    """
+    c = cost_bps / 1e4
+    borrow_m = (borrow_bps_ann / 1e4) / 12.0
+    net = ls["ls"].to_numpy() - 2.0 * c * ls["turnover"].to_numpy() - borrow_m
+    mean = float(np.mean(net)); sd = float(np.std(net, ddof=1))
+    return {"cost_bps": cost_bps, "borrow_bps_ann": borrow_bps_ann,
+            "net_mean_bps": mean * 1e4, "net_ann_pct": mean * 12 * 100,
+            "net_t_nw": newey_west_t(net, lags=nw_lags),
+            "net_sharpe": mean / sd * np.sqrt(12) if sd > 0 else float("nan")}
+
+
+def era_split(ls: pd.DataFrame, split: str = "2022-01-01", nw_lags: int = 6) -> dict:
+    """Split a calendar long-short at ``split`` (default the 2022 hiking cycle) and stat each half.
+
+    The claim is that rollover risk bites hardest in the rising-rate sub-period, so we expect the
+    post-``split`` half to be *more* positive if the story holds. Returns per-era n / mean / NW t.
+    """
+    idx = pd.to_datetime(ls.index)
+    early = ls.loc[idx < pd.Timestamp(split), "ls"].to_numpy()
+    late = ls.loc[idx >= pd.Timestamp(split), "ls"].to_numpy()
+    return {
+        "split": split,
+        "early_n": int(len(early)), "early_bps": float(early.mean() * 1e4) if len(early) else float("nan"),
+        "early_t": newey_west_t(early, lags=nw_lags),
+        "late_n": int(len(late)), "late_bps": float(late.mean() * 1e4) if len(late) else float("nan"),
+        "late_t": newey_west_t(late, lags=nw_lags),
+    }
+
+
+# --------------------------------------------------------------------------- #
+# Pooled event-drift sort (CROSS-CHECK)
+# --------------------------------------------------------------------------- #
+def event_drift_frame(prices: pd.DataFrame, events: pd.DataFrame,
+                      horizon: int, lag: int = 1, signal_col: str = "st_share") -> pd.DataFrame:
+    """Attach a forward ``drift`` (return over ``horizon`` days, entered ``lag`` days after the
+    first session on/after the filing) to each event. Rows whose window overruns are dropped."""
+    out = []
+    for _, r in events.iterrows():
+        tk = r["ticker"]
+        if tk not in prices.columns:
+            continue
+        px = prices[tk].dropna()
+        idx = px.index
+        f = pd.Timestamp(r["filed"]).normalize()
+        pos = idx.searchsorted(f, side="left")
+        entry = pos + lag
+        exit_ = entry + horizon
+        if pos <= 0 or exit_ >= len(idx):
+            continue
+        if pd.isna(r[signal_col]):
+            continue
+        out.append({"ticker": tk, "filed": idx[pos], "signal": float(r[signal_col]),
+                    "drift": float(px.iloc[exit_] / px.iloc[entry] - 1.0)})
+    return pd.DataFrame(out).reset_index(drop=True)
+
+
+def long_short_drift(frame: pd.DataFrame, n_buckets: int = 3, long_high: bool = False) -> dict:
+    """Claim-portfolio drift on a frame carrying ``signal`` and ``drift``.
+
+    With ``long_high=False`` (default here) the claim portfolio is LOW-minus-HIGH share drift —
+    positive means the high-rollover-risk names under-earned, as claimed.
+    """
+    s = frame["signal"].to_numpy(); d = frame["drift"].to_numpy()
+    b = _bucketize(s, n_buckets)
+    top, bot = d[b == n_buckets - 1], d[b == 0]
+    long_leg, short_leg = (top, bot) if long_high else (bot, top)
+    ls_sample = np.concatenate([long_leg, -short_leg])
+    return {"n_top": int(len(top)), "n_bot": int(len(bot)),
+            "top_mean": float(top.mean()), "bot_mean": float(bot.mean()),
+            "ls_mean": float(long_leg.mean() - short_leg.mean()), "ls_sample": ls_sample,
+            "ls_win": float((ls_sample > 0).mean())}
+
+
+def bucket_means(frame: pd.DataFrame, n_buckets: int = 3) -> np.ndarray:
+    """Mean forward drift in each signal bucket (low → high share) — the monotonicity picture.
+
+    The claim predicts a DECREASING ladder (high-share names earn least)."""
+    s = frame["signal"].to_numpy(); d = frame["drift"].to_numpy()
+    b = _bucketize(s, n_buckets)
+    return np.array([d[b == k].mean() if (b == k).any() else np.nan for k in range(n_buckets)])
+
+
+def placebo_pvalue(frame: pd.DataFrame, n_draws: int = 10_000, n_buckets: int = 3,
+                   seed: int = 861, long_high: bool = False) -> dict:
+    """Label-shuffle placebo: permute signals, re-form random terciles, recompute the LS drift.
+    ``p`` = P[shuffled long-short ≥ observed]."""
+    s = frame["signal"].to_numpy(); d = frame["drift"].to_numpy()
+    obs = float(long_short_drift(frame, n_buckets, long_high=long_high)["ls_mean"])
+    rng = np.random.default_rng(seed)
+    top_k = n_buckets - 1
+    long_k, short_k = (top_k, 0) if long_high else (0, top_k)
+    means = np.empty(n_draws)
+    for i in range(n_draws):
+        b = _bucketize(rng.permutation(s), n_buckets)
+        means[i] = d[b == long_k].mean() - d[b == short_k].mean()
+    return {"obs": obs, "placebo_mean": float(means.mean()),
+            "p_value": float((means >= obs).mean()), "draws": means}
+
+
+def event_summary(prices: pd.DataFrame, events: pd.DataFrame, horizon: int,
+                  n_buckets: int = 3, lag: int = 1, placebo: bool = True,
+                  n_draws: int = 10_000, long_high: bool = False) -> dict:
+    """Pooled event-drift headline for one horizon: LS mean/t/win + placebo p."""
+    fr = event_drift_frame(prices, events, horizon, lag=lag)
+    ls = long_short_drift(fr, n_buckets, long_high=long_high)
+    t = one_sample_t(ls["ls_sample"])
+    p = (placebo_pvalue(fr, n_draws=n_draws, n_buckets=n_buckets, long_high=long_high)["p_value"]
+         if placebo else float("nan"))
+    return {"horizon": horizon, "n_events": int(len(fr)), "n_top": ls["n_top"],
+            "n_bot": ls["n_bot"], "top_mean": ls["top_mean"], "bot_mean": ls["bot_mean"],
+            "ls_mean": ls["ls_mean"], "ls_win": ls["ls_win"], "t": t, "p_placebo": p}
+
+
+# --------------------------------------------------------------------------- #
+# Synthetic-control detector (machinery proof)
+# --------------------------------------------------------------------------- #
+def synthetic_detect(prices: pd.DataFrame, events: pd.DataFrame) -> dict:
+    """Run the primary claim long-short (long low-share / short high-share) + its NW t on a
+    synthetic world."""
+    ls = calendar_ls(prices, events, signal_col="st_share", n_buckets=3, min_names=6,
+                     staleness_days=120, long_high=False)
+    st = calendar_ls_stats(ls)
+    return {"n_months": st["n_months"], "mean_bps": st["mean_bps"], "t_nw": st["t_nw"]}

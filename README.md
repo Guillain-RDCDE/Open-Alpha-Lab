@@ -1,15 +1,15 @@
 <div align="center">
 
-<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — out of 842 famous trading edges, six survive">
+<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — out of 882 famous trading edges, six survive">
 
 # Open-Alpha-Lab
 
-### Out of 842 famous trading edges, six survive — and not one of them is a crystal ball.
+### Out of 882 famous trading edges, six survive — and not one of them is a crystal ball.
 
 That's not a typo. I put every market anomaly, folk strategy and named factor
 people swear by through the **same brutal protocol**, and publish the verdict: **edge or mirage.**
 
-`842 tested` · `6 survive` · `81 real signals` · `704 mirages`
+`882 tested` · `6 survive` · `82 real signals` · `739 mirages`
 
 ***Most are mirages. The honest write-up of why is the point. The six survivors don't forecast anything — three manage risk, and three harvest a premium or a mechanical identity you can actually bank.***
 
@@ -53,7 +53,7 @@ Almost everything ends up bottom-right; six chips are green — and not one of t
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
 The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 842 teardowns taught us](docs/bench.md)**.
+teaching are in **[What 882 teardowns taught us](docs/bench.md)**.
 
 ---
 
@@ -923,6 +923,46 @@ The full table below is the single source of truth (it's what the map and the li
 | **[840](studies/840-clustered-standard-errors/)** | **Clustered Standard Errors** | Do plain standard errors overstate significance when the panel shares a common shock? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[841](studies/841-overlapping-returns/)** | **Overlapping-Returns Inflation** | Do overlapping long-horizon returns manufacture a fake predictive t-stat? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 | **[842](studies/842-implementation-shortfall/)** | **Implementation Shortfall** | Does the paper alpha survive once you charge realistic trading costs? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[843](studies/843-waffle-house-index/)** | **Waffle House Index** | Do insurers dip and rebuilders rally after a major storm? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[844](studies/844-madden-cover-curse/)** | **Madden-Cover-Curse** | Does the publisher (EA/TTWO) move around a Madden/NBA 2K launch? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[845](studies/845-stadium-naming-curse/)** | **Stadium Naming-Rights Curse** | Do sponsors underperform after buying a stadium's name? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[846](studies/846-game-launch-drift/)** | **Blockbuster Game-Launch Drift** | Does the publisher (TTWO/EA/NTDOY/UBSFY) move around a blockbuster launch? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[847](studies/847-rotten-tomatoes-studio/)** | **Rotten-Tomatoes -> Studio** | Does a film's critic tier (fresh/rotten) move the distributing studio? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[848](studies/848-costco-hotdog-index/)** | **Costco Hot-Dog Index** | Is COST a distinctive inflation hedge? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[849](studies/849-dry-january-effect/)** | **Dry January / Veganuary** | Do the January "Dry January" / "Veganuary" waves move the stocks? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[850](studies/850-airline-meltdown/)** | **Airline Operational Meltdown** | Does a public operational meltdown dent the implicated carrier's stock? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[851](studies/851-netflix-password-crackdown/)** | **Netflix Password Crackdown** | Did NFLX deliver a tradable abnormal return around the crackdown dates? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[852](studies/852-movie-sequel-fatigue/)** | **Movie-Sequel Fatigue** | Is franchise fatigue real in studio reactions? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[853](studies/853-days-sales-outstanding/)** | **Days-Sales-Outstanding Buildup** | Does a rising DSO predict lower forward returns? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[854](studies/854-cash-conversion-cycle/)** | **Cash Conversion Cycle** | Does a shortening CCC predict higher forward returns? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[855](studies/855-accrual-quality/)** | **Accrual Quality (Dechow-Dichev)** | Does accrual quality predict forward returns? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[856](studies/856-book-tax-differences/)** | **Book-Tax Differences** | Does a large book-tax gap predict lower future returns? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[857](studies/857-sga-cost-stickiness/)** | **SG&A Cost Stickiness** | Do sticky-cost firms under-earn? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[858](studies/858-margin-inventory-divergence/)** | **Margin ÷ Inventory Divergence** | Does the margin/inventory contradiction sort returns? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[859](studies/859-roic-premium/)** | **Return-on-Invested-Capital Premium** | Does ROIC sort future returns? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[860](studies/860-conservatism-cscore/)** | **Accounting Conservatism (C-Score)** | Does a high C-score predict forward returns? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[861](studies/861-debt-maturity-rollover/)** | **Debt-Maturity Rollover Risk** | Do high-short-term-debt firms under-earn? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) |
+| **[862](studies/862-real-earnings-management/)** | **Real Earnings Management** | Does a Roychowdhury REM proxy predict forward returns? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[863](studies/863-treasury-noise-liquidity/)** | **Treasury Noise Liquidity** | Does Treasury-curve **roughness** precede lower equity / wider credit (Hu-Pan-Wang noise)? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[864](studies/864-yield-curve-twist/)** | **Yield-Curve Twist (Butterfly)** | Does the butterfly (curve *curvature*) predict forward returns? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[865](studies/865-credit-equity-lead-lag/)** | **Credit → Equity Lead-Lag** | Does the trailing HY-excess return **lead** next-week SPY? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[866](studies/866-flight-to-quality-beta/)** | **Flight-to-Quality Beta** | Do the true defensives (high flight-to-quality beta) under-earn, as you'd pay for a hedge? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[867](studies/867-currency-crash-risk/)** | **Currency Crash Risk** | Are high-carry currencies more negatively skewed (Brunnermeier-Nagel-Pedersen crash risk)? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[868](studies/868-global-curve-slope-carry/)** | **Global Curve-Slope Carry** | Does a high-carry / steep-curve cross-sectional sort pay a duration holder (Koijen-Moskowitz-Pedersen-Vrugt carry)? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[869](studies/869-breakout-52wk-high/)** | **52-Week-High Breakout Drift** | After a fresh 52-week-high *breakout*, does the name drift up or fade? | ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[870](studies/870-industry-leader-lead-lag/)** | **Industry-Leader Lead-Lag** | Does the biggest name in a sector lead the rest (Hou 2007)? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[871](studies/871-rank-effect/)** | **The Rank Effect** | Do the best- and worst-ranked names under-earn the middle (Hartzmark)? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[872](studies/872-nominal-price-illusion/)** | **Nominal-Price Illusion** | Do low nominal-price names carry the lottery look & under-earn (Kumar; Birru-Wang)? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[873](studies/873-sentiment-beta/)** | **Sentiment Beta** | Do high-sentiment-beta names go on to earn *less* (Baker-Wurgler)? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[874](studies/874-ipo-anchoring/)** | **IPO-Price Anchoring** | Does the gap from the IPO offer price predict drift (and is below-offer a drag)? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[875](studies/875-ivol-change/)** | **Idiosyncratic-Vol Change** | Does *rising* idiosyncratic vol precede lower returns (a *change*, not the idio-vol *level*)? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[876](studies/876-max-in-industry/)** | **Industry-Relative MAX** | Does industry-adjusting MAX sharpen the negative MAX→return relation? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[877](studies/877-gdpnow-revisions/)** | **GDPNow Revisions** | Does the daily GDPNow revision predict forward SPY? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[878](studies/878-policy-uncertainty-epu/)** | **Economic Policy Uncertainty** | Does high policy uncertainty predict higher forward vol *and* higher forward returns? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[879](studies/879-weekly-economic-index/)** | **Weekly Economic Index** | Does the WEI level / weekly change time forward SPY & the XLY−XLP rotation? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[880](studies/880-aggregate-short-interest/)** | **Aggregate Short Interest** | Is market-wide short interest "the strongest known predictor" of the market (Rapach-Ringgenberg-Zhou)? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[881](studies/881-jobless-claims-nowcast/)** | **Jobless-Claims Sector Rotation** | Does a 4-week claims uptick tilt the market to defensives over cyclicals? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
+| **[882](studies/882-gasoline-discretionary/)** | **Gas-Price → Discretionary** | Does a rising gas price forecast consumer-discretionary (XLY) lagging staples (XLP) next month — the "pump tax" rotation? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 </details>
 
