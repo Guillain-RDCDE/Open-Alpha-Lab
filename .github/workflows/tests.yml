@@ -1557,6 +1557,111 @@ jobs:
       - name: Study 912 — Gold + Trend test-suite
         run: pytest -q studies/912-gold-trend-managed/tests
 
+      - name: Study 913 — Tracking-Difference Persistence test-suite
+        run: pytest -q studies/913-tracking-difference-persistence/tests
+      - name: Study 914 — Securities-Lending Offset test-suite
+        run: pytest -q studies/914-sec-lending-offset/tests
+      - name: Study 915 — K-1 vs 1099 test-suite
+        run: pytest -q studies/915-k1-vs-1099-structure/tests
+      - name: Study 916 — Withholding Drag test-suite
+        run: pytest -q studies/916-withholding-drag-international/tests
+      - name: Study 917 — Stale NAV test-suite
+        run: pytest -q studies/917-nav-staleness-timezone/tests
+      - name: Study 918 — Creation Halt test-suite
+        run: pytest -q studies/918-etn-creation-halt/tests
+      - name: Study 919 — Methodology Shock test-suite
+        run: pytest -q studies/919-index-methodology-change/tests
+      - name: Study 920 — Total Cost of Ownership test-suite
+        run: pytest -q studies/920-total-cost-of-ownership/tests
+      - name: Study 921 — Bill Ladder vs ETF test-suite
+        run: pytest -q studies/921-bill-ladder-vs-etf/tests
+      - name: Study 922 — Floating-Rate Front End test-suite
+        run: pytest -q studies/922-frn-vs-fixed-front-end/tests
+
+      - name: Study 923 — The Cash Lag test-suite
+        run: pytest -q studies/923-mmf-yield-lag/tests
+      - name: Study 924 — First Cut test-suite
+        run: pytest -q studies/924-cut-cycle-duration-extension/tests
+      - name: Study 925 — Front-End Trend test-suite
+        run: pytest -q studies/925-short-rate-momentum-switch/tests
+      - name: Study 926 — T+1 test-suite
+        run: pytest -q studies/926-t-plus-one-settlement/tests
+      - name: Study 927 — Dutch Auction test-suite
+        run: pytest -q studies/927-dutch-auction-buyback/tests
+      - name: Study 928 — Odd-Lot Priority test-suite
+        run: pytest -q studies/928-odd-lot-tender/tests
+      - name: Study 929 — Rights Offering test-suite
+        run: pytest -q studies/929-rights-offering-discount/tests
+      - name: Study 930 — When-Issued Window test-suite
+        run: pytest -q studies/930-when-issued-spinoff/tests
+      - name: Study 931 — The CEF IPO Hole test-suite
+        run: pytest -q studies/931-cef-ipo-decay/tests
+      - name: Study 932 — Trust Yield test-suite
+        run: pytest -q studies/932-spac-trust-yield/tests
+
+      - name: Study 933 — Same Issuer, Two Ladders test-suite
+        run: pytest -q studies/933-preferred-vs-baby-bond/tests
+      - name: Study 934 — Lump Sum vs DCA test-suite
+        run: pytest -q studies/934-lump-sum-vs-dca/tests
+      - name: Study 935 — Value Averaging test-suite
+        run: pytest -q studies/935-value-averaging/tests
+      - name: Study 936 — Tolerance Bands test-suite
+        run: pytest -q studies/936-rebalance-bands/tests
+      - name: Study 937 — Tranches test-suite
+        run: pytest -q studies/937-tranched-rebalancing/tests
+      - name: Study 938 — Open or Close test-suite
+        run: pytest -q studies/938-open-vs-close-execution/tests
+      - name: Study 939 — DRIP or Sweep test-suite
+        run: pytest -q studies/939-drip-vs-sweep/tests
+      - name: Study 940 — The Turnover Budget test-suite
+        run: pytest -q studies/940-turnover-budget/tests
+      - name: Study 941 — Short Both Legs test-suite
+        run: pytest -q studies/941-double-short-leveraged-pair/tests
+      - name: Study 942 — The Inverse Tax test-suite
+        run: pytest -q studies/942-inverse-etf-structural-loss/tests
+
+      - name: Study 943 — Reset Frequency test-suite
+        run: pytest -q studies/943-leverage-reset-frequency/tests
+      - name: Study 944 — How Much Leverage test-suite
+        run: pytest -q studies/944-optimal-leverage-realized/tests
+      - name: Study 945 — The Hidden Financing test-suite
+        run: pytest -q studies/945-leverage-financing-cost/tests
+      - name: Study 946 — Distribution is not Return test-suite
+        run: pytest -q studies/946-distribution-rate-illusion/tests
+      - name: Study 947 — The Buffer Ladder test-suite
+        run: pytest -q studies/947-buffer-ladder-vs-single/tests
+      - name: Study 948 — Capture Ratio test-suite
+        run: pytest -q studies/948-income-fund-capture-ratio/tests
+      - name: Study 949 — Riding the TIPS Curve test-suite
+        run: pytest -q studies/949-tips-roll-carry/tests
+      - name: Study 950 — Zero-Coupon Convexity test-suite
+        run: pytest -q studies/950-strips-convexity-pickup/tests
+      - name: Study 951 — The Crossover Rung test-suite
+        run: pytest -q studies/951-crossover-credit-bbb-bb/tests
+      - name: Study 952 — After-Tax Equivalent test-suite
+        run: pytest -q studies/952-muni-after-tax-equivalent/tests
+
+      - name: Study 953 — Replicating the Convert test-suite
+        run: pytest -q studies/953-convertible-replication/tests
+      - name: Study 954 — High Yield in Disguise test-suite
+        run: pytest -q studies/954-hy-as-levered-equity/tests
+      - name: Study 955 — ADR Catch-Up test-suite
+        run: pytest -q studies/955-adr-overnight-catchup/tests
+      - name: Study 956 — The Custody Fee test-suite
+        run: pytest -q studies/956-adr-custody-fee-drag/tests
+      - name: Study 957 — Holdco Discount test-suite
+        run: pytest -q studies/957-holdco-nav-discount/tests
+      - name: Study 958 — Spot ETF Basis test-suite
+        run: pytest -q studies/958-spot-btc-etf-basis/tests
+      - name: Study 959 — Crypto Fee War test-suite
+        run: pytest -q studies/959-crypto-etf-fee-war/tests
+      - name: Study 960 — The Unstaked ETF test-suite
+        run: pytest -q studies/960-eth-staking-yield-forgone/tests
+      - name: Study 961 — Which Gold test-suite
+        run: pytest -q studies/961-gold-wrapper-cheapest/tests
+      - name: Study 962 — Do It Yourself test-suite
+        run: pytest -q studies/962-sector-etf-vs-holdings/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py

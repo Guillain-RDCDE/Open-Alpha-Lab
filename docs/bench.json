@@ -1,5 +1,5 @@
 {
- "total": 912,
+ "total": 962,
  "repo": "https://github.com/Guillain-RDCDE/Open-Alpha-Lab",
  "signals": [
   "Real",
@@ -13,19 +13,19 @@
  ],
  "counts": {
   "Real": {
-   "Investable": 6,
-   "Fragile": 47,
-   "Mirage": 31
+   "Investable": 9,
+   "Fragile": 53,
+   "Mirage": 34
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 98,
-   "Mirage": 213
+   "Fragile": 106,
+   "Mirage": 224
   },
   "None": {
    "Investable": 0,
    "Fragile": 4,
-   "Mirage": 512
+   "Mirage": 531
   }
  },
  "studies": [
@@ -8231,11 +8231,461 @@
   {
    "num": 912,
    "name": "Gold + Trend",
-   "claim": "Is the edge real?",
+   "claim": "Does a 200-day trend filter turn gold into the drawdown-managed diversifier it promises to be?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "studies/912-gold-trend-managed/",
    "family": "Vol, hedges & allocation"
+  },
+  {
+   "num": 913,
+   "name": "Tracking-Difference Persistence",
+   "claim": "Does last year's best index-fund tracker stay the best?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/913-tracking-difference-persistence/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 914,
+   "name": "Securities-Lending Offset",
+   "claim": "Index funds lend your shares to short sellers — does any of that money find its way back to you?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/914-sec-lending-offset/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 915,
+   "name": "K-1 vs 1099",
+   "claim": "Does the tax-friendly commodity wrapper give back its convenience in performance?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/915-k1-vs-1099-structure/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 916,
+   "name": "Withholding Drag",
+   "claim": "Can the tape see the foreign tax withheld before an international fund's dividend reaches you?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/916-withholding-drag-international/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 917,
+   "name": "Stale NAV",
+   "claim": "US closes strong — does tomorrow's Tokyo ETF already owe you the move?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/917-nav-staleness-timezone/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 918,
+   "name": "Creation Halt",
+   "claim": "When a fund stops printing new shares, does its price float free — and can you trade it?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/918-etn-creation-halt/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 919,
+   "name": "Methodology Shock",
+   "claim": "When an index rewrites its own rules, can you front-run the trade every tracker is contractually forced to make?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/919-index-methodology-change/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 920,
+   "name": "Total Cost of Ownership",
+   "claim": "Cheapest fee or tightest spread — how long must you hold before the cheap wrapper wins?",
+   "signal": "Real",
+   "tradability": "Investable",
+   "href": "studies/920-total-cost-of-ownership/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 921,
+   "name": "Bill Ladder vs ETF",
+   "claim": "Does rolling your own T-bill ladder out-earn the cash ETF that does it for you?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/921-bill-ladder-vs-etf/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 922,
+   "name": "Floating-Rate Front End",
+   "claim": "Does the floating end of the cash curve out-pay the fixed end?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/922-frn-vs-fixed-front-end/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 923,
+   "name": "The Cash Lag",
+   "claim": "Cash vehicles reprice at different speeds — does knowing how each one lags tell you which to hold?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/923-mmf-yield-lag/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 924,
+   "name": "First Cut",
+   "claim": "When the Fed starts cutting, is that the moment to buy duration?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/924-cut-cycle-duration-extension/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 925,
+   "name": "Front-End Trend",
+   "claim": "If the 3-month bill yield has been falling all quarter, is that your cue to own the long bond?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/925-short-rate-momentum-switch/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 926,
+   "name": "T+1",
+   "claim": "The US halved its settlement cycle — did the tape notice?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/926-t-plus-one-settlement/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 927,
+   "name": "Dutch Auction",
+   "claim": "When a board posts a price range and buys a block of its own stock back at a premium, does that mark the bottom?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/927-dutch-auction-buyback/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 928,
+   "name": "Odd-Lot Priority",
+   "claim": "Tender an odd lot and you are bought first and in full — is that entitlement a real retail-only edge?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/928-odd-lot-tender/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 929,
+   "name": "Rights Offering",
+   "claim": "Is the deep subscription discount on a rights issue a gift, or a dilution warning?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/929-rights-offering-discount/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 930,
+   "name": "When-Issued Window",
+   "claim": "When a company splits in two, is the freshly cut-loose half a bargain in its first days?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/930-when-issued-spinoff/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 931,
+   "name": "The CEF IPO Hole",
+   "claim": "A closed-end fund sells you a basket of securities you could buy yourself. What happens to the price of the wrapper after the sales desk stops calling?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/931-cef-ipo-decay/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 932,
+   "name": "Trust Yield",
+   "claim": "When a shell company trades below the cash it is legally holding for you, is that a free lunch or a trap?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/932-spac-trust-yield/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 933,
+   "name": "Same Issuer, Two Ladders",
+   "claim": "For one and the same balance sheet, does the junior rung pay you for standing behind the senior one?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/933-preferred-vs-baby-bond/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 934,
+   "name": "Lump Sum vs DCA",
+   "claim": "A windfall lands — send it all in on Monday, or drip it in over a year?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/934-lump-sum-vs-dca/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 935,
+   "name": "Value Averaging",
+   "claim": "Value averaging tops up to a rising target instead of writing the same cheque each month — but where does the money for the top-up come from?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/935-value-averaging/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 936,
+   "name": "Tolerance Bands",
+   "claim": "Should you rebalance when the calendar says so, or when the book has actually drifted?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/936-rebalance-bands/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 937,
+   "name": "Tranches",
+   "claim": "\"Rebalanced monthly\" — but on which day of the month, and does splitting the book cure it?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/937-tranched-rebalancing/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 938,
+   "name": "Open or Close",
+   "claim": "The same timing rule, filled at tomorrow's open or at tomorrow's close. Does it matter?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/938-open-vs-close-execution/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 939,
+   "name": "DRIP or Sweep",
+   "claim": "Does reinvesting a fund's distribution the day it lands beat parking it in T-bills until the quarter ends?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/939-drip-vs-sweep/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 940,
+   "name": "The Turnover Budget",
+   "claim": "Rebalancing faster tracks a decaying signal better but costs more to trade — how much friction can each speed actually afford?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/940-turnover-budget/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 941,
+   "name": "Short Both Legs",
+   "claim": "Short the 3x long *and* the 3x short of the same index — is the decay harvest free money?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/941-double-short-leveraged-pair/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 942,
+   "name": "The Inverse Tax",
+   "claim": "Is an inverse ETF really a worse way to be short than shorting the index yourself?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/942-inverse-etf-structural-loss/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 943,
+   "name": "Reset Frequency",
+   "claim": "Leveraged ETFs reset their leverage every single evening — would resetting once a month instead have been better?",
+   "signal": "Mixed",
+   "tradability": "Mirage",
+   "href": "studies/943-leverage-reset-frequency/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 944,
+   "name": "How Much Leverage",
+   "claim": "Is there a best amount of leverage to hold the index at — and could you have found it in advance?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/944-optimal-leverage-realized/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 945,
+   "name": "The Hidden Financing",
+   "claim": "A leveraged ETF borrows on your behalf — at what interest rate?",
+   "signal": "Real",
+   "tradability": "Investable",
+   "href": "studies/945-leverage-financing-cost/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 946,
+   "name": "Distribution is not Return",
+   "claim": "An income fund advertises a distribution rate on its fact sheet — does that number tell you anything about where you end up?",
+   "signal": "Real",
+   "tradability": "Mirage",
+   "href": "studies/946-distribution-rate-illusion/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 947,
+   "name": "The Buffer Ladder",
+   "claim": "Does bundling four vintages of the same buffer fund into one ticker do anything four trades could not?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/947-buffer-ladder-vs-single/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 948,
+   "name": "Capture Ratio",
+   "claim": "Do income funds really give up a little upside to avoid a lot of downside?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/948-income-fund-capture-ratio/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 949,
+   "name": "Riding the TIPS Curve",
+   "claim": "Extend from short inflation-linked bonds into long ones and the pitch says you pick up the roll as each bond ages down the real curve - does the curve actually pay you to ride it, or only to carry the duration?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/949-tips-roll-carry/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 950,
+   "name": "Zero-Coupon Convexity",
+   "claim": "A zero-coupon Treasury fund bends harder against yields than the coupon long bond — once you match the duration, does the extra curvature actually pay you?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/950-strips-convexity-pickup/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 951,
+   "name": "The Crossover Rung",
+   "claim": "Is the boundary between investment grade and junk the best-paid rung on the credit ladder?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/951-crossover-credit-bbb-bb/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 952,
+   "name": "After-Tax Equivalent",
+   "claim": "Municipal bonds pay less than corporate bonds and hand you the difference back as a tax break — at what bracket does that trade become worth taking?",
+   "signal": "Weak",
+   "tradability": "Fragile",
+   "href": "studies/952-muni-after-tax-equivalent/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 953,
+   "name": "Replicating the Convert",
+   "claim": "Is a convertible-bond fund anything more than equity plus credit in a costume?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/953-convertible-replication/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 954,
+   "name": "High Yield in Disguise",
+   "claim": "Is a junk-bond fund just equity and Treasuries in a costume — and if it isn't, does the difference pay?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/954-hy-as-levered-equity/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 955,
+   "name": "ADR Catch-Up",
+   "claim": "The home market already moved — does the ADR still owe you the gap?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/955-adr-overnight-catchup/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 956,
+   "name": "The Custody Fee",
+   "claim": "An American Depositary Receipt is a foreign share held for you by a bank in New York. Can the tape see what the bank quietly takes for holding it?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/956-adr-custody-fee-drag/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 957,
+   "name": "Holdco Discount",
+   "claim": "Buy a conglomerate below the sum of its parts — does the gap ever close?",
+   "signal": "Weak",
+   "tradability": "Mirage",
+   "href": "studies/957-holdco-nav-discount/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 958,
+   "name": "Spot ETF Basis",
+   "claim": "When the spot bitcoin ETFs finally arrived, did the futures wrapper's carry compress — or is the same toll still being paid?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/958-spot-btc-etf-basis/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 959,
+   "name": "Crypto Fee War",
+   "claim": "Ten funds hold the identical coin under identical rules at wildly different prices — does the expensive one visibly hand you back less?",
+   "signal": "Real",
+   "tradability": "Fragile",
+   "href": "studies/959-crypto-etf-fee-war/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 960,
+   "name": "The Unstaked ETF",
+   "claim": "A US spot-Ethereum ETF owns the coins but never stakes them — so can the tape actually see what that costs a holder, and is the coin even the right yardstick to measure it against?",
+   "signal": "Mixed",
+   "tradability": "Fragile",
+   "href": "studies/960-eth-staking-yield-forgone/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 961,
+   "name": "Which Gold",
+   "claim": "Five trusts hold the same bullion in the same vaults — does the tape hand back the difference in what they charge?",
+   "signal": "Real",
+   "tradability": "Investable",
+   "href": "studies/961-gold-wrapper-cheapest/",
+   "family": "Unclassified"
+  },
+  {
+   "num": 962,
+   "name": "Do It Yourself",
+   "claim": "A sector fund is mostly a handful of big names — so why not just buy them yourself and skip the fee?",
+   "signal": "None",
+   "tradability": "Mirage",
+   "href": "studies/962-sector-etf-vs-holdings/",
+   "family": "Unclassified"
   }
  ],
  "special": [
