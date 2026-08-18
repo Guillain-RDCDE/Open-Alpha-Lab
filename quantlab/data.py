@@ -131,7 +131,16 @@ def _download(ticker: str, mode: str) -> pd.DataFrame:
 
     out = _apply_mode(raw, mode)
     out.index.name = "Date"
-    return out[["Open", "High", "Low", "Close", "Volume"]]
+    out = out[["Open", "High", "Low", "Close", "Volume"]]
+
+    # Drop bars with no close. Yahoo publishes the CURRENT, unsettled session as a
+    # row whose close is NaN (seen live on 2026-08-17 for SPY: one trailing NaN on
+    # an otherwise clean 8,444-row tape). A bar without a close is not a bar — it
+    # is a placeholder for a session that has not printed yet — and letting it
+    # through puts a NaN at the end of every series a study slices, which is both
+    # a silent contaminant in any rolling statistic and a false failure in the
+    # data-sanity checks studies run on the real tape.
+    return out[out["Close"].notna()]
 
 
 def _apply_mode(raw: pd.DataFrame, mode: str) -> pd.DataFrame:
