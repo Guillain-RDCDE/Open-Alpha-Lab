@@ -27,9 +27,12 @@ out_*.png
 # Internal handoff/planning doc — kept local, not part of the public repo.
 PROJECT_BRIEF.md
 
-# Root-level scratch/work scripts and their outputs — local only.
+# Root-level scratch/work scripts, desk notes and their outputs — local only.
+# (the _candidates_*.md lots are selection notes, not published research)
 /_*.py
 /_*.out
+/_*.md
+/_*.txt
 
 # Editor/build temp droppings (e.g. build_notebooks.py.tmp.<pid>.<hash>)
 *.tmp.*
