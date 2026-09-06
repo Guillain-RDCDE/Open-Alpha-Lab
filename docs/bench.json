@@ -14,18 +14,18 @@
  "counts": {
   "Real": {
    "Investable": 10,
-   "Fragile": 62,
-   "Mirage": 36
+   "Fragile": 79,
+   "Mirage": 37
   },
   "Weak": {
    "Investable": 0,
-   "Fragile": 108,
+   "Fragile": 116,
    "Mirage": 228
   },
   "None": {
    "Investable": 0,
-   "Fragile": 4,
-   "Mirage": 532
+   "Fragile": 7,
+   "Mirage": 534
   }
  },
  "studies": [
@@ -6170,7 +6170,7 @@
   {
    "num": 683,
    "name": "Evening-Star",
-   "claim": "placeholder",
+   "claim": "Tall up day, a small gapping star, then a tall down day — the textbook \"crash incoming\" top. Is there any bearish edge once it's measured against what the same basket does on an ordinary day?",
    "signal": "None",
    "tradability": "Mirage",
    "href": "../studies/683-evening-star/",
@@ -8694,7 +8694,7 @@
    "signal": "Weak",
    "tradability": "Fragile",
    "href": "../studies/963-half-day-sessions/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 964,
@@ -8703,16 +8703,16 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "../studies/964-ath-buying/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 965,
    "name": "The Range Estimators",
    "claim": "The textbooks say the day's high and low measure volatility five times better than its close — is the free lunch real, and is it still there once the market gaps?",
    "signal": "Real",
-   "tradability": "Useful",
+   "tradability": "Fragile",
    "href": "../studies/965-range-vol-estimators/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 966,
@@ -8721,7 +8721,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "../studies/966-har-vs-garch/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 967,
@@ -8730,61 +8730,61 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "../studies/967-rolling-vs-expanding/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 968,
    "name": "Which Bootstrap",
    "claim": "Every backtest ships a bootstrapped confidence interval — do the intervals actually contain the truth 95% of the time, or is the resampling flavour quietly deciding the answer?",
    "signal": "Real",
-   "tradability": "Useful",
+   "tradability": "Fragile",
    "href": "../studies/968-bootstrap-choice/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 969,
    "name": "Log or Simple",
    "claim": "Log returns add up neatly and simple returns are what you actually get paid — so what breaks when a backtest quietly uses the wrong one?",
    "signal": "Real",
-   "tradability": "Useful",
+   "tradability": "Fragile",
    "href": "../studies/969-log-vs-simple-returns/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 970,
    "name": "Root Time",
    "claim": "Multiply the daily number by the square root of 252 and call it annual — how wrong is the most-used formula in finance?",
    "signal": "Weak",
-   "tradability": "Useful",
+   "tradability": "Fragile",
    "href": "../studies/970-sqrt-time-scaling/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 971,
    "name": "Does the Tape Agree With Itself?",
    "claim": "Ask the same free data source for the same asset three different ways — daily, weekly, monthly — and does it tell you the same story?",
    "signal": "Real",
-   "tradability": "Useful",
+   "tradability": "Fragile",
    "href": "../studies/971-tape-self-consistency/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 972,
    "name": "Adjusted or Not",
    "claim": "Run the same backtest on price charts instead of total-return series — how much of your answer was the dividend all along?",
    "signal": "Real",
-   "tradability": "Useful",
+   "tradability": "Fragile",
    "href": "../studies/972-adjustment-mode-matters/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 973,
    "name": "Different Holidays",
    "claim": "Tokyo is shut, New York is open, and your correlation matrix does not know — how much of a cross-market number is just the calendar?",
    "signal": "None",
-   "tradability": "Useful",
+   "tradability": "Fragile",
    "href": "../studies/973-calendar-misalignment/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 974,
@@ -8793,7 +8793,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "../studies/974-diversification-saturation/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 975,
@@ -8802,7 +8802,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "../studies/975-covariance-shrinkage/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 976,
@@ -8811,7 +8811,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "../studies/976-hierarchical-risk-parity/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 977,
@@ -8820,7 +8820,7 @@
    "signal": "Real",
    "tradability": "Mirage",
    "href": "../studies/977-max-diversification/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 978,
@@ -8829,7 +8829,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "../studies/978-resampled-frontier/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 979,
@@ -8838,7 +8838,7 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "../studies/979-black-litterman-zero-views/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 980,
@@ -8847,7 +8847,7 @@
    "signal": "Weak",
    "tradability": "Fragile",
    "href": "../studies/980-semis-lead-the-market/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 981,
@@ -8856,7 +8856,7 @@
    "signal": "Real",
    "tradability": "Investable",
    "href": "../studies/981-confirmation-delay/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 982,
@@ -8865,7 +8865,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "../studies/982-risk-appetite-ratio/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 983,
@@ -8874,7 +8874,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "../studies/983-bitcoin-leads-equities/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 984,
@@ -8883,7 +8883,7 @@
    "signal": "None",
    "tradability": "Mirage",
    "href": "../studies/984-ex-day-drop-ratio/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 985,
@@ -8892,151 +8892,151 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "../studies/985-last-hike-timing/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 986,
    "name": "The Rolling Ladder",
    "claim": "Hold a bond to maturity and you get the yield you were promised — so why does a bond fund with the same yield behave nothing like it?",
-   "signal": "Confirmed",
-   "tradability": "Useful",
+   "signal": "Real",
+   "tradability": "Fragile",
    "href": "../studies/986-etf-vs-hold-to-maturity/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 987,
    "name": "Gold's Loud Cousin",
    "claim": "Silver is supposed to be gold with the volume turned up — so is holding it the same as holding more gold, or is there something else in there?",
-   "signal": "Busted",
-   "tradability": "Useful",
+   "signal": "None",
+   "tradability": "Fragile",
    "href": "../studies/987-silver-high-beta-gold/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 988,
    "name": "The Taming",
    "claim": "Every cycle someone says Bitcoin is maturing and its volatility is coming down — is that a trend, or is it what a wild asset looks like between storms?",
    "signal": "Weak",
-   "tradability": "Useful",
+   "tradability": "Fragile",
    "href": "../studies/988-bitcoin-volatility-decay/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 989,
    "name": "The One-Way Beta",
    "claim": "Altcoins are sold as high-beta bets on Bitcoin — but is the beta the same on the way down as on the way up?",
    "signal": "Real",
-   "tradability": "Partial",
+   "tradability": "Fragile",
    "href": "../studies/989-altcoin-downside-beta/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 990,
    "name": "Counting the Breaks",
    "claim": "A 99% VaR should be broken two or three days a year — so count the days it was broken, and find out what your risk model was really telling you.",
-   "signal": "Confirmed",
-   "tradability": "Partial",
+   "signal": "Real",
+   "tradability": "Fragile",
    "href": "../studies/990-var-breach-count/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 991,
    "name": "The Slow Bell",
    "claim": "Daily returns have fat tails, but the central limit theorem promises a bell curve eventually — so how long is eventually, and does the tape agree?",
-   "signal": "Confirmed",
+   "signal": "Real",
    "tradability": "Mirage",
    "href": "../studies/991-aggregational-gaussianity/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 992,
    "name": "How Long Is a Storm?",
    "claim": "Markets get wild and stay wild — but for how long, and can you put a number on it that means the same thing tomorrow?",
-   "signal": "Confirmed",
-   "tradability": "Useful",
+   "signal": "Real",
+   "tradability": "Fragile",
    "href": "../studies/992-vol-clustering-halflife/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 993,
    "name": "Down Hurts More",
    "claim": "A 3% fall stirs up more volatility than a 3% rise — everyone knows it, but the explanation everyone gives has been wrong since 1976.",
-   "signal": "Confirmed",
-   "tradability": "Partial",
+   "signal": "Real",
+   "tradability": "Fragile",
    "href": "../studies/993-leverage-effect-asymmetry/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 994,
    "name": "The Rounding Tax",
    "claim": "You cannot buy 3.7 shares of a $600 stock — so what does a portfolio built out of whole numbers actually cost you?",
    "signal": "Weak",
-   "tradability": "Partial",
+   "tradability": "Fragile",
    "href": "../studies/994-small-account-lot-drag/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 995,
    "name": "Whose Sharpe Is It?",
    "claim": "The S&P's Sharpe ratio is a number everyone quotes — but it is a different number depending on which country you are sitting in.",
    "signal": "Weak",
-   "tradability": "Partial",
+   "tradability": "Fragile",
    "href": "../studies/995-sharpe-in-your-currency/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 996,
    "name": "The Palindrome Portfolio",
    "claim": "Do stocks behave differently on palindromic dates? Obviously not — so this study is about how easy it is to prove they do.",
-   "signal": "Busted",
+   "signal": "None",
    "tradability": "Mirage",
    "href": "../studies/996-palindrome-dates/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 997,
    "name": "The Rebalance Lottery",
    "claim": "Two investors run the identical rule and rebalance a fortnight apart — how differently can they end up?",
-   "signal": "Confirmed",
-   "tradability": "Useful",
+   "signal": "Real",
+   "tradability": "Fragile",
    "href": "../studies/997-rebalance-timing-luck/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 998,
    "name": "The Moving Target",
    "claim": "A pairs trade needs a hedge ratio, and the relationship it is hedging keeps changing — so how should you keep up, and does keeping up help?",
-   "signal": "Confirmed",
-   "tradability": "Useful",
+   "signal": "Real",
+   "tradability": "Fragile",
    "href": "../studies/998-kalman-hedge-ratio/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 999,
    "name": "The Break",
    "claim": "Markets change regime — and every method for spotting it tells you afterwards, so the real question is how long afterwards.",
-   "signal": "Partial",
-   "tradability": "Partial",
+   "signal": "Weak",
+   "tradability": "Fragile",
    "href": "../studies/999-cusum-change-points/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 1000,
    "name": "The Cycle Hunt",
    "claim": "Run a Fourier transform on the stock market and you will find cycles — the question is whether a random walk would have shown you the same ones.",
-   "signal": "Busted",
-   "tradability": "Partial",
+   "signal": "None",
+   "tradability": "Fragile",
    "href": "../studies/1000-fourier-cycles/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 1001,
    "name": "The Leaky Fold",
    "claim": "Standard cross-validation on a time series will tell you your model works. It is wrong, and this study measures by how much.",
-   "signal": "Confirmed",
-   "tradability": "Partial",
+   "signal": "Real",
+   "tradability": "Fragile",
    "href": "../studies/1001-purged-cv-embargo/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 1002,
@@ -9045,7 +9045,7 @@
    "signal": "Real",
    "tradability": "Fragile",
    "href": "../studies/1002-best-days-missed/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 1003,
@@ -9054,34 +9054,34 @@
    "signal": "Real",
    "tradability": "Mirage",
    "href": "../studies/1003-bitcoin-in-a-portfolio/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 1004,
    "name": "How Many Stocks",
    "claim": "The textbook says twenty or thirty stocks diversify a portfolio. It is answering a question no investor has ever asked.",
-   "signal": "Confirmed",
-   "tradability": "Useful",
+   "signal": "Real",
+   "tradability": "Fragile",
    "href": "../studies/1004-how-many-stocks/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 1005,
    "name": "Beta Has a Half-Life",
    "claim": "Every risk report quotes a beta to two decimal places. This measures how many of those decimals survive contact with next year.",
    "signal": "Real",
-   "tradability": "Useful",
+   "tradability": "Fragile",
    "href": "../studies/1005-beta-stability/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 1006,
    "name": "Most Stocks Lose",
    "claim": "\"Most stocks underperform Treasury bills.\" Not these ones — and working out why not produces the condition that decides when the famous result holds.",
-   "signal": "Busted",
+   "signal": "None",
    "tradability": "Mirage",
    "href": "../studies/1006-most-stocks-underperform-cash/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 1007,
@@ -9090,52 +9090,52 @@
    "signal": "Weak",
    "tradability": "Mirage",
    "href": "../studies/1007-time-diversification/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 1008,
    "name": "The Start-Date Lottery",
    "claim": "Two investors follow the same plan for thirty years and retire on different continents. The only difference is the year they were born.",
    "signal": "Weak",
-   "tradability": "Useful",
+   "tradability": "Fragile",
    "href": "../studies/1008-start-date-lottery/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 1009,
    "name": "Sortino's Free Lunch",
    "claim": "Sortino only penalises downside volatility, which sounds strictly better. It also throws away half the data, and the two facts are the same fact.",
    "signal": "Real",
-   "tradability": "Partial",
+   "tradability": "Fragile",
    "href": "../studies/1009-sortino-vs-sharpe/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 1010,
    "name": "Mostly Noise",
    "claim": "A 50-asset correlation matrix has 1,225 numbers in it. With a year of daily data, Marchenko-Pastur says most of them are noise — and it says exactly how many.",
-   "signal": "Confirmed",
-   "tradability": "Useful",
+   "signal": "Real",
+   "tradability": "Fragile",
    "href": "../studies/1010-correlation-matrix-stability/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 1011,
    "name": "The Half-Life of an Edge",
    "claim": "A signal that decays in three days and one that decays in three months need completely different portfolios. Grinold's law says exactly how different.",
    "signal": "Weak",
-   "tradability": "Useful",
+   "tradability": "Fragile",
    "href": "../studies/1011-turnover-and-alpha-half-life/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   },
   {
    "num": 1012,
    "name": "Choose Your Benchmark",
    "claim": "Alpha is a residual. Change what you regress against and the residual changes — sometimes by more than the alpha being argued about.",
    "signal": "Weak",
-   "tradability": "Useful",
+   "tradability": "Fragile",
    "href": "../studies/1012-benchmark-choice-and-alpha/",
-   "family": "Unclassified"
+   "family": "Measurement, estimation & portfolio construction"
   }
  ],
  "special": [
@@ -9147,285 +9147,6 @@
    "tradability": "Pre-reg",
    "href": "../studies/14-gamma-gospel/",
    "family": "Pre-registered"
-  },
-  {
-   "num": 965,
-   "name": "The Range Estimators",
-   "claim": "The textbooks say the day's high and low measure volatility five times better than its close — is the free lunch real, and is it still there once the market gaps?",
-   "signal": "Real",
-   "tradability": "Useful",
-   "href": "../studies/965-range-vol-estimators/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 968,
-   "name": "Which Bootstrap",
-   "claim": "Every backtest ships a bootstrapped confidence interval — do the intervals actually contain the truth 95% of the time, or is the resampling flavour quietly deciding the answer?",
-   "signal": "Real",
-   "tradability": "Useful",
-   "href": "../studies/968-bootstrap-choice/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 969,
-   "name": "Log or Simple",
-   "claim": "Log returns add up neatly and simple returns are what you actually get paid — so what breaks when a backtest quietly uses the wrong one?",
-   "signal": "Real",
-   "tradability": "Useful",
-   "href": "../studies/969-log-vs-simple-returns/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 970,
-   "name": "Root Time",
-   "claim": "Multiply the daily number by the square root of 252 and call it annual — how wrong is the most-used formula in finance?",
-   "signal": "Weak",
-   "tradability": "Useful",
-   "href": "../studies/970-sqrt-time-scaling/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 971,
-   "name": "Does the Tape Agree With Itself?",
-   "claim": "Ask the same free data source for the same asset three different ways — daily, weekly, monthly — and does it tell you the same story?",
-   "signal": "Real",
-   "tradability": "Useful",
-   "href": "../studies/971-tape-self-consistency/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 972,
-   "name": "Adjusted or Not",
-   "claim": "Run the same backtest on price charts instead of total-return series — how much of your answer was the dividend all along?",
-   "signal": "Real",
-   "tradability": "Useful",
-   "href": "../studies/972-adjustment-mode-matters/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 973,
-   "name": "Different Holidays",
-   "claim": "Tokyo is shut, New York is open, and your correlation matrix does not know — how much of a cross-market number is just the calendar?",
-   "signal": "None",
-   "tradability": "Useful",
-   "href": "../studies/973-calendar-misalignment/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 986,
-   "name": "The Rolling Ladder",
-   "claim": "Hold a bond to maturity and you get the yield you were promised — so why does a bond fund with the same yield behave nothing like it?",
-   "signal": "Confirmed",
-   "tradability": "Useful",
-   "href": "../studies/986-etf-vs-hold-to-maturity/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 987,
-   "name": "Gold's Loud Cousin",
-   "claim": "Silver is supposed to be gold with the volume turned up — so is holding it the same as holding more gold, or is there something else in there?",
-   "signal": "Busted",
-   "tradability": "Useful",
-   "href": "../studies/987-silver-high-beta-gold/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 988,
-   "name": "The Taming",
-   "claim": "Every cycle someone says Bitcoin is maturing and its volatility is coming down — is that a trend, or is it what a wild asset looks like between storms?",
-   "signal": "Weak",
-   "tradability": "Useful",
-   "href": "../studies/988-bitcoin-volatility-decay/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 989,
-   "name": "The One-Way Beta",
-   "claim": "Altcoins are sold as high-beta bets on Bitcoin — but is the beta the same on the way down as on the way up?",
-   "signal": "Real",
-   "tradability": "Partial",
-   "href": "../studies/989-altcoin-downside-beta/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 990,
-   "name": "Counting the Breaks",
-   "claim": "A 99% VaR should be broken two or three days a year — so count the days it was broken, and find out what your risk model was really telling you.",
-   "signal": "Confirmed",
-   "tradability": "Partial",
-   "href": "../studies/990-var-breach-count/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 991,
-   "name": "The Slow Bell",
-   "claim": "Daily returns have fat tails, but the central limit theorem promises a bell curve eventually — so how long is eventually, and does the tape agree?",
-   "signal": "Confirmed",
-   "tradability": "Mirage",
-   "href": "../studies/991-aggregational-gaussianity/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 992,
-   "name": "How Long Is a Storm?",
-   "claim": "Markets get wild and stay wild — but for how long, and can you put a number on it that means the same thing tomorrow?",
-   "signal": "Confirmed",
-   "tradability": "Useful",
-   "href": "../studies/992-vol-clustering-halflife/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 993,
-   "name": "Down Hurts More",
-   "claim": "A 3% fall stirs up more volatility than a 3% rise — everyone knows it, but the explanation everyone gives has been wrong since 1976.",
-   "signal": "Confirmed",
-   "tradability": "Partial",
-   "href": "../studies/993-leverage-effect-asymmetry/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 994,
-   "name": "The Rounding Tax",
-   "claim": "You cannot buy 3.7 shares of a $600 stock — so what does a portfolio built out of whole numbers actually cost you?",
-   "signal": "Weak",
-   "tradability": "Partial",
-   "href": "../studies/994-small-account-lot-drag/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 995,
-   "name": "Whose Sharpe Is It?",
-   "claim": "The S&P's Sharpe ratio is a number everyone quotes — but it is a different number depending on which country you are sitting in.",
-   "signal": "Weak",
-   "tradability": "Partial",
-   "href": "../studies/995-sharpe-in-your-currency/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 996,
-   "name": "The Palindrome Portfolio",
-   "claim": "Do stocks behave differently on palindromic dates? Obviously not — so this study is about how easy it is to prove they do.",
-   "signal": "Busted",
-   "tradability": "Mirage",
-   "href": "../studies/996-palindrome-dates/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 997,
-   "name": "The Rebalance Lottery",
-   "claim": "Two investors run the identical rule and rebalance a fortnight apart — how differently can they end up?",
-   "signal": "Confirmed",
-   "tradability": "Useful",
-   "href": "../studies/997-rebalance-timing-luck/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 998,
-   "name": "The Moving Target",
-   "claim": "A pairs trade needs a hedge ratio, and the relationship it is hedging keeps changing — so how should you keep up, and does keeping up help?",
-   "signal": "Confirmed",
-   "tradability": "Useful",
-   "href": "../studies/998-kalman-hedge-ratio/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 999,
-   "name": "The Break",
-   "claim": "Markets change regime — and every method for spotting it tells you afterwards, so the real question is how long afterwards.",
-   "signal": "Partial",
-   "tradability": "Partial",
-   "href": "../studies/999-cusum-change-points/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 1000,
-   "name": "The Cycle Hunt",
-   "claim": "Run a Fourier transform on the stock market and you will find cycles — the question is whether a random walk would have shown you the same ones.",
-   "signal": "Busted",
-   "tradability": "Partial",
-   "href": "../studies/1000-fourier-cycles/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 1001,
-   "name": "The Leaky Fold",
-   "claim": "Standard cross-validation on a time series will tell you your model works. It is wrong, and this study measures by how much.",
-   "signal": "Confirmed",
-   "tradability": "Partial",
-   "href": "../studies/1001-purged-cv-embargo/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 1004,
-   "name": "How Many Stocks",
-   "claim": "The textbook says twenty or thirty stocks diversify a portfolio. It is answering a question no investor has ever asked.",
-   "signal": "Confirmed",
-   "tradability": "Useful",
-   "href": "../studies/1004-how-many-stocks/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 1005,
-   "name": "Beta Has a Half-Life",
-   "claim": "Every risk report quotes a beta to two decimal places. This measures how many of those decimals survive contact with next year.",
-   "signal": "Real",
-   "tradability": "Useful",
-   "href": "../studies/1005-beta-stability/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 1006,
-   "name": "Most Stocks Lose",
-   "claim": "\"Most stocks underperform Treasury bills.\" Not these ones — and working out why not produces the condition that decides when the famous result holds.",
-   "signal": "Busted",
-   "tradability": "Mirage",
-   "href": "../studies/1006-most-stocks-underperform-cash/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 1008,
-   "name": "The Start-Date Lottery",
-   "claim": "Two investors follow the same plan for thirty years and retire on different continents. The only difference is the year they were born.",
-   "signal": "Weak",
-   "tradability": "Useful",
-   "href": "../studies/1008-start-date-lottery/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 1009,
-   "name": "Sortino's Free Lunch",
-   "claim": "Sortino only penalises downside volatility, which sounds strictly better. It also throws away half the data, and the two facts are the same fact.",
-   "signal": "Real",
-   "tradability": "Partial",
-   "href": "../studies/1009-sortino-vs-sharpe/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 1010,
-   "name": "Mostly Noise",
-   "claim": "A 50-asset correlation matrix has 1,225 numbers in it. With a year of daily data, Marchenko-Pastur says most of them are noise — and it says exactly how many.",
-   "signal": "Confirmed",
-   "tradability": "Useful",
-   "href": "../studies/1010-correlation-matrix-stability/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 1011,
-   "name": "The Half-Life of an Edge",
-   "claim": "A signal that decays in three days and one that decays in three months need completely different portfolios. Grinold's law says exactly how different.",
-   "signal": "Weak",
-   "tradability": "Useful",
-   "href": "../studies/1011-turnover-and-alpha-half-life/",
-   "family": "Unclassified"
-  },
-  {
-   "num": 1012,
-   "name": "Choose Your Benchmark",
-   "claim": "Alpha is a residual. Change what you regress against and the residual changes — sometimes by more than the alpha being argued about.",
-   "signal": "Weak",
-   "tradability": "Useful",
-   "href": "../studies/1012-benchmark-choice-and-alpha/",
-   "family": "Unclassified"
   }
  ]
 }

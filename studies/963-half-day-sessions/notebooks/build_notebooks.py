@@ -51,7 +51,7 @@ def build_curious():
 
         md(
             r"""
-# The Half Day 🕑
+# The Half Day 🕐
 ### A couple of times a year the exchange shuts at one o'clock. Does the tape notice?
 
 ![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)

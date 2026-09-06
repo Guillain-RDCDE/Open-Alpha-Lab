@@ -301,19 +301,19 @@ def synthetic_world(n: int = 5000, true_beta: float = 1.8, industrial_load: floa
 def verdict(h: dict) -> dict:
     """Stamps by a pre-registered rule.
 
-    - **Signal**: **Confirmed** (silver *is* levered gold) only if the residual has no
+    - **Signal**: **Real** (silver *is* levered gold) only if the residual has no
       significant loading on any outside factor **and** beta is stable — its rolling range is
-      under half its mean; **Partial** if one of those holds; **Busted** if neither does.
-    - **Tradability**: **Useful** if the levered-gold replica beats silver on Sharpe by a
-      margin worth acting on; **Partial** if the two are within a rounding error; **Mirage** if
+      under half its mean; **Fragile** if one of those holds; **None** if neither does.
+    - **Tradability**: **Fragile** if the levered-gold replica beats silver on Sharpe by a
+      margin worth acting on; **Fragile** if the two are within a rounding error; **Mirage** if
       the replica is worse.
     """
     clean_residual = h["max_abs_residual_t"] < 2.0
     stable_beta = h["beta_range_over_mean"] < 0.5
-    signal = ("Confirmed" if (clean_residual and stable_beta)
-              else ("Partial" if (clean_residual or stable_beta) else "Busted"))
+    signal = ("Real" if (clean_residual and stable_beta)
+              else ("Weak" if (clean_residual or stable_beta) else "None"))
     edge = h["replica_sharpe"] - h["silver_sharpe"]
-    trad = ("Useful" if edge > 0.1 else ("Partial" if edge > -0.1 else "Mirage"))
+    trad = "Fragile" if edge > -0.1 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

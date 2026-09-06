@@ -55,7 +55,7 @@ def build_curious():
 ### The most-used formula in finance, and the assumption nobody checks
 
 ![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)
-![Usefulness: Useful](https://img.shields.io/badge/Usefulness-Useful-2ea44f?style=flat-square)
+![Usefulness: Fragile](https://img.shields.io/badge/Usefulness-Fragile-dab617?style=flat-square)
 
 Daily volatility times √252 is annual volatility. One-day VaR times √10 is the regulator's
 ten-day VaR. It is on every fact sheet and in every risk system, and it is exactly right only
@@ -241,7 +241,7 @@ plt.show()
 
 **Signal: Weak.** Yes, and not subtly. At the annual horizon **2 of 10** tapes reject VR = 1 with a heteroskedasticity-robust |z| >= 2. The extremes are **SHY** at VR = **2.54** (trending: sqrt(T) *understates* its annual volatility by 59%) and **TQQQ** at VR = **0.54** (mean-reverting: it *overstates* by 27%). Equity indices sit close to 1, which is why the rule survived: it is nearly right for the one asset class everybody tests it on.
 
-**Usefulness: Useful.** On a 10-day 99% VaR — the Basel horizon, computed by exactly this rule — the correction reaches **-19%** on EEM. An annualised Sharpe moves too: Lo's (2002) factor differs from sqrt(252) by up to **+42%** — though that correction carries a 12% standard deviation of its own on i.i.d. data, so the variance ratio, not the Sharpe factor, is the load-bearing number. On SPY the whole correction is -15.7% — invisible, and that is precisely why nobody checks it on anything else.
+**Usefulness: Fragile.** On a 10-day 99% VaR — the Basel horizon, computed by exactly this rule — the correction reaches **-19%** on EEM. An annualised Sharpe moves too: Lo's (2002) factor differs from sqrt(252) by up to **+42%** — though that correction carries a 12% standard deviation of its own on i.i.d. data, so the variance ratio, not the Sharpe factor, is the load-bearing number. On SPY the whole correction is -15.7% — invisible, and that is precisely why nobody checks it on anything else.
 """
         ),
         md(
@@ -284,7 +284,7 @@ def build_quants():
 ### Lo-MacKinlay variance ratios · robust z · non-overlapping cross-check · VaR and Sharpe consequences
 
 ![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)
-![Usefulness: Useful](https://img.shields.io/badge/Usefulness-Useful-2ea44f?style=flat-square)
+![Usefulness: Fragile](https://img.shields.io/badge/Usefulness-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The one
 methodological point that decides whether this study says anything at all: the variance-ratio
@@ -332,7 +332,7 @@ for tk, r in rets.items():
 | Axis | Stamp | Why |
 |---|---|---|
 | **Signal** | Weak | Yes, and not subtly. At the annual horizon **2 of 10** tapes reject VR = 1 with a heteroskedasticity-robust |z| >= 2. The extremes are **SHY** at VR = **2.54** (trending: sqrt(T) *understates* its annual volatility by 59%) and **TQQQ** at VR = **0.54** (mean-reverting: it *overstates* by 27%). Equity indices sit close to 1, which is why the rule survived: it is nearly right for the one asset class everybody tests it on. |
-| **Usefulness** | Useful | On a 10-day 99% VaR — the Basel horizon, computed by exactly this rule — the correction reaches **-19%** on EEM. An annualised Sharpe moves too: Lo's (2002) factor differs from sqrt(252) by up to **+42%** — though that correction carries a 12% standard deviation of its own on i.i.d. data, so the variance ratio, not the Sharpe factor, is the load-bearing number. On SPY the whole correction is -15.7% — invisible, and that is precisely why nobody checks it on anything else. |
+| **Usefulness** | Fragile | On a 10-day 99% VaR — the Basel horizon, computed by exactly this rule — the correction reaches **-19%** on EEM. An annualised Sharpe moves too: Lo's (2002) factor differs from sqrt(252) by up to **+42%** — though that correction carries a 12% standard deviation of its own on i.i.d. data, so the variance ratio, not the Sharpe factor, is the load-bearing number. On SPY the whole correction is -15.7% — invisible, and that is precisely why nobody checks it on anything else. |
 
 > \U0001F4A1 **In plain words.** √T is not an approximation that gets better with more data —
 > it is exactly right or exactly wrong depending on one property of the series, and that

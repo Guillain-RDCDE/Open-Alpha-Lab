@@ -54,8 +54,8 @@ def build_curious():
 # Down Hurts More \U00002696
 ### Falls stir up more volatility than rises. The reason everyone gives is wrong.
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 Fischer Black spotted it in 1976 and gave it a name that has outlived its explanation. The
 "leverage effect" says a falling share price raises a company's debt-to-equity ratio, making
@@ -256,9 +256,9 @@ print("knows that if the price gets there, volatility will be higher when it doe
 
 ## 6 · The verdict
 
-**Signal: Confirmed.** For SPY over 7,764 sessions, volatility over the five days after a down day averaged **15.9%** against **13.5%** after an up day — a ratio of **1.18×**. That survives the obvious objection: matching on the *size* of the move (down days are bigger on average, and big moves are followed by volatility whatever their sign) leaves a ratio of **1.15×**. It survives honest inference too — block-bootstrapping the difference gives *t* = **+7.70** against the naive +9.37. And the parametric version agrees: EGARCH gamma = **-0.110**, implying a down shock raises volatility 1.25× as much as an equal up shock. The news-impact curve bottoms out at **z = +0.28**, shifted toward positive returns exactly as the leverage story predicts.
+**Signal: Real.** For SPY over 7,764 sessions, volatility over the five days after a down day averaged **15.9%** against **13.5%** after an up day — a ratio of **1.18×**. That survives the obvious objection: matching on the *size* of the move (down days are bigger on average, and big moves are followed by volatility whatever their sign) leaves a ratio of **1.15×**. It survives honest inference too — block-bootstrapping the difference gives *t* = **+7.70** against the naive +9.37. And the parametric version agrees: EGARCH gamma = **-0.110**, implying a down shock raises volatility 1.25× as much as an equal up shock. The news-impact curve bottoms out at **z = +0.28**, shifted toward positive returns exactly as the leverage story predicts.
 
-**Tradability: Partial.** Now the part the name gets wrong. If financial leverage were the mechanism, assets with **no balance sheet** could not show the effect. Gold's ratio is 1.02× and Bitcoin's is 1.03×, against equities' 1.18× — and the effect is materially weaker there, which is at least consistent with the leverage story. The lead-lag test points the same way: the correlation between returns and *subsequent* volatility changes averages -0.051, against +0.015 for volatility leading returns — leaning **leverage**. For a hedger the practical content is the ratio itself: a 1.18× asymmetric response is why put skew exists and why a delta-hedged short-vol book bleeds asymmetrically. The name is wrong; the effect is real and it is priced.
+**Tradability: Fragile.** Now the part the name gets wrong. If financial leverage were the mechanism, assets with **no balance sheet** could not show the effect. Gold's ratio is 1.02× and Bitcoin's is 1.03×, against equities' 1.18× — and the effect is materially weaker there, which is at least consistent with the leverage story. The lead-lag test points the same way: the correlation between returns and *subsequent* volatility changes averages -0.051, against +0.015 for volatility leading returns — leaning **leverage**. For a hedger the practical content is the ratio itself: a 1.18× asymmetric response is why put skew exists and why a delta-hedged short-vol book bleeds asymmetrically. The name is wrong; the effect is real and it is priced.
 """
         ),
         md(
@@ -290,8 +290,8 @@ def build_quants():
 # Down Hurts More — a quantitative teardown \U0001F52C
 ### Magnitude-matched splits · news-impact curves · EGARCH γ · lead-lag identification
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The effect is
 easy to find and easy to fake; most of this notebook is about telling those apart, and the
@@ -341,8 +341,8 @@ print(f"ratio: {ss['ratio']:.3f}x")
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** | Confirmed | For SPY over 7,764 sessions, volatility over the five days after a down day averaged **15.9%** against **13.5%** after an up day — a ratio of **1.18×**. That survives the obvious objection: matching on the *size* of the move (down days are bigger on average, and big moves are followed by volatility whatever their sign) leaves a ratio of **1.15×**. It survives honest inference too — block-bootstrapping the difference gives *t* = **+7.70** against the naive +9.37. And the parametric version agrees: EGARCH gamma = **-0.110**, implying a down shock raises volatility 1.25× as much as an equal up shock. The news-impact curve bottoms out at **z = +0.28**, shifted toward positive returns exactly as the leverage story predicts. |
-| **Tradability** | Partial | Now the part the name gets wrong. If financial leverage were the mechanism, assets with **no balance sheet** could not show the effect. Gold's ratio is 1.02× and Bitcoin's is 1.03×, against equities' 1.18× — and the effect is materially weaker there, which is at least consistent with the leverage story. The lead-lag test points the same way: the correlation between returns and *subsequent* volatility changes averages -0.051, against +0.015 for volatility leading returns — leaning **leverage**. For a hedger the practical content is the ratio itself: a 1.18× asymmetric response is why put skew exists and why a delta-hedged short-vol book bleeds asymmetrically. The name is wrong; the effect is real and it is priced. |
+| **Signal** | Real | For SPY over 7,764 sessions, volatility over the five days after a down day averaged **15.9%** against **13.5%** after an up day — a ratio of **1.18×**. That survives the obvious objection: matching on the *size* of the move (down days are bigger on average, and big moves are followed by volatility whatever their sign) leaves a ratio of **1.15×**. It survives honest inference too — block-bootstrapping the difference gives *t* = **+7.70** against the naive +9.37. And the parametric version agrees: EGARCH gamma = **-0.110**, implying a down shock raises volatility 1.25× as much as an equal up shock. The news-impact curve bottoms out at **z = +0.28**, shifted toward positive returns exactly as the leverage story predicts. |
+| **Tradability** | Fragile | Now the part the name gets wrong. If financial leverage were the mechanism, assets with **no balance sheet** could not show the effect. Gold's ratio is 1.02× and Bitcoin's is 1.03×, against equities' 1.18× — and the effect is materially weaker there, which is at least consistent with the leverage story. The lead-lag test points the same way: the correlation between returns and *subsequent* volatility changes averages -0.051, against +0.015 for volatility leading returns — leaning **leverage**. For a hedger the practical content is the ratio itself: a 1.18× asymmetric response is why put skew exists and why a delta-hedged short-vol book bleeds asymmetrically. The name is wrong; the effect is real and it is priced. |
 
 > \U0001F4A1 **In plain words.** The effect is real and survives everything. The *name* does
 > not survive a single column of the cross-asset table.

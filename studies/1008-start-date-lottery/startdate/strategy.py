@@ -352,14 +352,13 @@ def verdict(h: dict) -> dict:
 
     - **Signal**: **Real** if the start date produces a large spread in lifetime outcomes for
       an identical plan; **Weak** if modest; **None** if the start date barely matters.
-    - **Tradability**: **Useful** if some controllable choice reduces the dispersion at a
-      favourable rate — more dispersion removed than median wealth sacrificed; **Partial** if
+    - **Tradability**: **Fragile** if some controllable choice reduces the dispersion at a
+      favourable rate — more dispersion removed than median wealth sacrificed; **Fragile** if
       the trade is roughly one-for-one; **Mirage** if every remedy costs more than it saves.
     """
     signal = ("Real" if h["ratio_95_05"] > 1.8
               else ("Weak" if h["ratio_95_05"] > 1.3 else "None"))
-    trad = ("Useful" if h["best_efficiency"] > 1.5
-            else ("Partial" if h["best_efficiency"] > 0.8 else "Mirage"))
+    trad = "Fragile" if h["best_efficiency"] > 0.8 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

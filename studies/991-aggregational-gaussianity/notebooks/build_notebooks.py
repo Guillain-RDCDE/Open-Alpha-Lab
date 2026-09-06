@@ -54,7 +54,7 @@ def build_curious():
 # The Slow Bell \U0001F514
 ### Returns are fat-tailed daily and nearly normal annually. How long is "annually"?
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
 ![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-c0392b?style=flat-square)
 
 The central limit theorem is the closest thing finance has to a law of nature: add up enough
@@ -266,7 +266,7 @@ test" is not much of a finding.
 
 ## 6 · The verdict
 
-**Signal: Confirmed.** For SPY over 7,764 sessions, excess kurtosis falls from **10.6 at one day to 6.73 at 252 days** — so the stylised fact is real. But it is not the central limit theorem's rate. For independent draws the decay is exactly ``k₁/n``, which would put the 252-day kurtosis at **0.042**; the tape delivers 160× that. Fitting `kurtosis ~ horizon^(−b)` gives **b = -0.04** (se 0.12) against the i.i.d. value of 1.00, *t* = **-8.77**. The Hill tail index is **2.99** — above 2, so the variance exists and the theorem does apply, but below 4, meaning the kurtosis itself may not exist and every kurtosis number above is an unstable statistic rather than an estimate.
+**Signal: Real.** For SPY over 7,764 sessions, excess kurtosis falls from **10.6 at one day to 6.73 at 252 days** — so the stylised fact is real. But it is not the central limit theorem's rate. For independent draws the decay is exactly ``k₁/n``, which would put the 252-day kurtosis at **0.042**; the tape delivers 160× that. Fitting `kurtosis ~ horizon^(−b)` gives **b = -0.04** (se 0.12) against the i.i.d. value of 1.00, *t* = **-8.77**. The Hill tail index is **2.99** — above 2, so the variance exists and the theorem does apply, but below 4, meaning the kurtosis itself may not exist and every kurtosis number above is an unstable statistic rather than an estimate.
 
 **Tradability: Mirage.** The practical question is when normal arithmetic becomes safe. Excess kurtosis first drops below 0.5 at **None days** against the 63 days independence would have predicted — a slowdown of **nan×**. At the longest horizon measured, 3-sigma moves still arrive **nan× more often** than a normal says. And a warning about the tests: at 252 days there are only 30 non-overlapping observations, where Jarque-Bera has about **33% power** against a *t*(4). A passing normality test at long horizons is mostly evidence that the sample is small.
 """
@@ -300,7 +300,7 @@ def build_quants():
 # The Slow Bell — a quantitative teardown \U0001F52C
 ### The exact k₁/n identity · fitted decay exponents · Hill tail indices · test power
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
 ![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-c0392b?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). This study has a
@@ -350,7 +350,7 @@ print(prof[["n", "excess_kurtosis", "iid_prediction", "kurtosis_vs_iid",
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** | Confirmed | For SPY over 7,764 sessions, excess kurtosis falls from **10.6 at one day to 6.73 at 252 days** — so the stylised fact is real. But it is not the central limit theorem's rate. For independent draws the decay is exactly ``k₁/n``, which would put the 252-day kurtosis at **0.042**; the tape delivers 160× that. Fitting `kurtosis ~ horizon^(−b)` gives **b = -0.04** (se 0.12) against the i.i.d. value of 1.00, *t* = **-8.77**. The Hill tail index is **2.99** — above 2, so the variance exists and the theorem does apply, but below 4, meaning the kurtosis itself may not exist and every kurtosis number above is an unstable statistic rather than an estimate. |
+| **Signal** | Real | For SPY over 7,764 sessions, excess kurtosis falls from **10.6 at one day to 6.73 at 252 days** — so the stylised fact is real. But it is not the central limit theorem's rate. For independent draws the decay is exactly ``k₁/n``, which would put the 252-day kurtosis at **0.042**; the tape delivers 160× that. Fitting `kurtosis ~ horizon^(−b)` gives **b = -0.04** (se 0.12) against the i.i.d. value of 1.00, *t* = **-8.77**. The Hill tail index is **2.99** — above 2, so the variance exists and the theorem does apply, but below 4, meaning the kurtosis itself may not exist and every kurtosis number above is an unstable statistic rather than an estimate. |
 | **Tradability** | Mirage | The practical question is when normal arithmetic becomes safe. Excess kurtosis first drops below 0.5 at **None days** against the 63 days independence would have predicted — a slowdown of **nan×**. At the longest horizon measured, 3-sigma moves still arrive **nan× more often** than a normal says. And a warning about the tests: at 252 days there are only 30 non-overlapping observations, where Jarque-Bera has about **33% power** against a *t*(4). A passing normality test at long horizons is mostly evidence that the sample is small. |
 
 > \U0001F4A1 **In plain words.** The bell does arrive. It arrives late, and by the time it does

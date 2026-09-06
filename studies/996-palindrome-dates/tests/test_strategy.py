@@ -279,13 +279,13 @@ def _headline(**over):
 
 
 def test_verdict_is_busted_when_the_search_finds_nothing_real():
-    assert st.verdict(_headline())["signal"] == "Busted"
+    assert st.verdict(_headline())["signal"] == "None"
 
 
 def test_verdict_escalates_if_a_rule_somehow_survives():
-    assert st.verdict(_headline(shuffle_p=0.01))["signal"] == "Partial"
+    assert st.verdict(_headline(shuffle_p=0.01))["signal"] == "Weak"
     assert st.verdict(_headline(shuffle_p=0.01,
-                                n_surviving_bonferroni=1))["signal"] == "Confirmed"
+                                n_surviving_bonferroni=1))["signal"] == "Real"
 
 
 def test_verdict_tradability_is_a_mirage():

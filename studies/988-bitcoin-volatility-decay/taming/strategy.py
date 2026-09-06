@@ -339,8 +339,8 @@ def verdict(h: dict) -> dict:
       **and** the decline survives the start-date control (a significant decline from at least
       80% of possible start dates); **Weak** if the point estimate is negative but one of those
       fails; **None** if the slope is not negative.
-    - **Tradability**: **Useful** if volatility targeting beat buy-and-hold on Sharpe;
-      **Partial** if it matched within 0.1; **Mirage** if it lost.
+    - **Tradability**: **Fragile** if volatility targeting beat buy-and-hold on Sharpe;
+      **Fragile** if it matched within 0.1; **Mirage** if it lost.
     """
     negative = h["boot_slope"] < 0
     significant = abs(h["boot_t"]) >= 2.0
@@ -348,7 +348,7 @@ def verdict(h: dict) -> dict:
     signal = ("Real" if (negative and significant and robust)
               else ("Weak" if negative else "None"))
     edge = h["vt_sharpe"] - h["bh_sharpe"]
-    trad = ("Useful" if edge > 0.1 else ("Partial" if edge > -0.1 else "Mirage"))
+    trad = "Fragile" if edge > -0.1 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

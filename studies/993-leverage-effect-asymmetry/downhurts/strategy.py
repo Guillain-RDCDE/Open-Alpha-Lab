@@ -410,20 +410,19 @@ def synthetic_returns(n: int = 6000, gamma: float = 0.0, alpha: float = 0.12,
 def verdict(h: dict) -> dict:
     """Stamps by a pre-registered rule.
 
-    - **Signal**: **Confirmed** if the asymmetry survives magnitude matching **and** the block
+    - **Signal**: **Real** if the asymmetry survives magnitude matching **and** the block
       bootstrap (|*t*| >= 2) **and** the EGARCH gamma is negative — three measurements agreeing;
-      **Partial** if two of the three hold; **Busted** otherwise.
-    - **Tradability**: this is a hedging question, not an alpha one. **Useful** if the
+      **Fragile** if two of the three hold; **None** otherwise.
+    - **Tradability**: this is a hedging question, not an alpha one. **Fragile** if the
       volatility response to a down move is at least 20% larger than to an up move (enough to
-      change an option hedge); **Partial** if it is positive but smaller; **Mirage** if absent.
+      change an option hedge); **Fragile** if it is positive but smaller; **Mirage** if absent.
     """
     survives_matching = h["matched_ratio"] > 1.05
     survives_bootstrap = abs(h["boot_t"]) >= 2.0
     egarch_agrees = h["egarch_gamma"] < 0
     score = sum([survives_matching, survives_bootstrap, egarch_agrees])
-    signal = "Confirmed" if score == 3 else ("Partial" if score == 2 else "Busted")
-    trad = ("Useful" if h["ratio"] > 1.20
-            else ("Partial" if h["ratio"] > 1.02 else "Mirage"))
+    signal = "Real" if score == 3 else ("Weak" if score == 2 else "None")
+    trad = "Fragile" if h["ratio"] > 1.02 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

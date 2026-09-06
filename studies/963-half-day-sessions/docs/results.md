@@ -150,11 +150,11 @@ Break-even one-way cost: **18.6 bps**.
 ## Synthetic control
 
 Planted +60 bps on the flagged days: recovered
-**+66.8** bps, mean *t*
-**+4.52**, |*t*| ≥ 2 in
+**+60.4** bps, mean *t*
+**+3.95**, |*t*| ≥ 2 in
 6/6 seeds. Null (thin volume, no bump): recovered
-**+6.8** bps, mean *t*
-**+0.44**, |*t*| ≥ 2 in 0/6.
+**+0.3** bps, mean *t*
+**-0.09**, |*t*| ≥ 2 in 0/6.
 The apparatus finds what is put in front of it and does not invent what is not.
 
 ## Verdict

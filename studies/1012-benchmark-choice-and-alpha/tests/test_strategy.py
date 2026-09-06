@@ -355,9 +355,12 @@ def test_verdict_signal_compares_the_spread_against_the_standard_error():
 
 
 def test_verdict_tradability_keys_off_whether_the_data_can_decide():
+    # The two upper branches deliberately share the Fragile stamp: the desk's
+    # documented Tradability axis is Investable/Fragile/Mirage, and neither of these
+    # is a bankable edge. The finer distinction between them lives in the prose.
     assert st.verdict(_headline())["trad"] == "Mirage"
-    assert st.verdict(_headline(share_decisive=0.5))["trad"] == "Partial"
-    assert st.verdict(_headline(share_decisive=0.9))["trad"] == "Useful"
+    assert st.verdict(_headline(share_decisive=0.5))["trad"] == "Fragile"
+    assert st.verdict(_headline(share_decisive=0.9))["trad"] == "Fragile"
 
 
 def test_verdict_prose_names_the_false_positive_rate():

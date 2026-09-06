@@ -54,8 +54,8 @@ def build_curious():
 # The Leaky Fold \U0001F9EA
 ### Your model passed cross-validation. That is not the good news it sounds like.
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 Split the data into five folds, train on four, test on the fifth, repeat. It is the first thing
 anyone learns about model evaluation and it is *wrong* on time series — for two separate
@@ -279,9 +279,9 @@ print(f"  and {d['overlap_leak']:+.4f} is overlapping labels "
 
 ## 6 · The verdict
 
-**Signal: Confirmed.** On SPY with a 20-day forward label, ordinary shuffled five-fold cross-validation reported an information coefficient of **+0.078** (R² +0.005). Walk-forward validation — the only scheme that resembles how a model is actually used — reported **-0.021**. The gap is **+0.099**, and it splits into two quite different causes. Letting the model see the future at all (shuffled minus sequential) is worth +0.052. **Label overlap** — neighbouring observations sharing 95% of their label days, with no date out of order whatsoever — is worth -0.002, which is **-2% of the total illusion**. That second channel is invisible to the usual advice about not shuffling time series, and at long label horizons it is the bigger one: the sweep shows it growing from +0.000 at a one-day label to +0.005 at 120 days.
+**Signal: Real.** On SPY with a 20-day forward label, ordinary shuffled five-fold cross-validation reported an information coefficient of **+0.078** (R² +0.005). Walk-forward validation — the only scheme that resembles how a model is actually used — reported **-0.021**. The gap is **+0.099**, and it splits into two quite different causes. Letting the model see the future at all (shuffled minus sequential) is worth +0.052. **Label overlap** — neighbouring observations sharing 95% of their label days, with no date out of order whatsoever — is worth -0.002, which is **-2% of the total illusion**. That second channel is invisible to the usual advice about not shuffling time series, and at long label horizons it is the bigger one: the sweep shows it growing from +0.000 at a one-day label to +0.005 at 120 days.
 
-**Tradability: Partial.** The fix works and it is cheap. Purging training observations whose label windows touch the test block brought the estimate to +0.028; adding a 1% embargo brought it to **+0.029** against walk-forward's -0.021 — a residual difference of 0.0501. And it does not achieve that by destroying everything: on synthetic data with a **planted** information coefficient of 1.00, purged-and-embargoed cross-validation recovered +0.855, so it still finds real signal. The cost is data: purging removed 0% of the training set at this horizon, which is the real reason people skip it.
+**Tradability: Fragile.** The fix works and it is cheap. Purging training observations whose label windows touch the test block brought the estimate to +0.028; adding a 1% embargo brought it to **+0.029** against walk-forward's -0.021 — a residual difference of 0.0501. And it does not achieve that by destroying everything: on synthetic data with a **planted** information coefficient of 1.00, purged-and-embargoed cross-validation recovered +0.855, so it still finds real signal. The cost is data: purging removed 0% of the training set at this horizon, which is the real reason people skip it.
 """
         ),
         md(
@@ -313,8 +313,8 @@ def build_quants():
 # The Leaky Fold — a quantitative teardown \U0001F52C
 ### Five schemes on identical data · temporal vs overlap leakage · purging and embargo
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The finding that
 matters is the decomposition: most of the illusion at realistic label horizons comes from
@@ -363,8 +363,8 @@ print(f"two adjacent labels share {st.overlap_fraction(20, 1):.0%} of their days
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** | Confirmed | On SPY with a 20-day forward label, ordinary shuffled five-fold cross-validation reported an information coefficient of **+0.078** (R² +0.005). Walk-forward validation — the only scheme that resembles how a model is actually used — reported **-0.021**. The gap is **+0.099**, and it splits into two quite different causes. Letting the model see the future at all (shuffled minus sequential) is worth +0.052. **Label overlap** — neighbouring observations sharing 95% of their label days, with no date out of order whatsoever — is worth -0.002, which is **-2% of the total illusion**. That second channel is invisible to the usual advice about not shuffling time series, and at long label horizons it is the bigger one: the sweep shows it growing from +0.000 at a one-day label to +0.005 at 120 days. |
-| **Tradability** | Partial | The fix works and it is cheap. Purging training observations whose label windows touch the test block brought the estimate to +0.028; adding a 1% embargo brought it to **+0.029** against walk-forward's -0.021 — a residual difference of 0.0501. And it does not achieve that by destroying everything: on synthetic data with a **planted** information coefficient of 1.00, purged-and-embargoed cross-validation recovered +0.855, so it still finds real signal. The cost is data: purging removed 0% of the training set at this horizon, which is the real reason people skip it. |
+| **Signal** | Real | On SPY with a 20-day forward label, ordinary shuffled five-fold cross-validation reported an information coefficient of **+0.078** (R² +0.005). Walk-forward validation — the only scheme that resembles how a model is actually used — reported **-0.021**. The gap is **+0.099**, and it splits into two quite different causes. Letting the model see the future at all (shuffled minus sequential) is worth +0.052. **Label overlap** — neighbouring observations sharing 95% of their label days, with no date out of order whatsoever — is worth -0.002, which is **-2% of the total illusion**. That second channel is invisible to the usual advice about not shuffling time series, and at long label horizons it is the bigger one: the sweep shows it growing from +0.000 at a one-day label to +0.005 at 120 days. |
+| **Tradability** | Fragile | The fix works and it is cheap. Purging training observations whose label windows touch the test block brought the estimate to +0.028; adding a 1% embargo brought it to **+0.029** against walk-forward's -0.021 — a residual difference of 0.0501. And it does not achieve that by destroying everything: on synthetic data with a **planted** information coefficient of 1.00, purged-and-embargoed cross-validation recovered +0.855, so it still finds real signal. The cost is data: purging removed 0% of the training set at this horizon, which is the real reason people skip it. |
 
 > \U0001F4A1 **In plain words.** The leak everyone warns about is the smaller one.
 """

@@ -55,7 +55,7 @@ def build_curious():
 ### Four views of the same asset, from the same provider, in one pass
 
 ![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
-![Usefulness: Useful](https://img.shields.io/badge/Usefulness-Useful-2ea44f?style=flat-square)
+![Usefulness: Fragile](https://img.shields.io/badge/Usefulness-Fragile-dab617?style=flat-square)
 
 Every backtest ever written begins with a download and a leap of faith. This notebook takes the
 leap out: ask the same provider for daily, weekly and monthly bars and for the raw prices with
@@ -283,7 +283,7 @@ backtest reads as a 75% crash.
 
 **Signal: Real.** The audit ran **62** checks across 8 tickers and returned **1 errors** and **3 warnings**. The weekly and monthly bars compound from the daily ones to within **4504 bps** at worst; rebuilding the total-return series from price plus dividends and splits reproduces the provider's own adjusted close to **+0.005%/yr** at worst (XLU); and the reference calendar shows **0** missing sessions in total.
 
-**Usefulness: Useful.** The same buy-and-hold statistic computed from the daily tape and from the provider's own weekly bars differs by up to **0.052** of Sharpe and **+0.01%/yr** of CAGR (SPY) — most of which is the arithmetic of measuring volatility at a different frequency rather than a data fault. The fault that *would* change a published number is the reconstruction gap, and the audit prices it at +0.005%/yr.
+**Usefulness: Fragile.** The same buy-and-hold statistic computed from the daily tape and from the provider's own weekly bars differs by up to **0.052** of Sharpe and **+0.01%/yr** of CAGR (SPY) — most of which is the arithmetic of measuring volatility at a different frequency rather than a data fault. The fault that *would* change a published number is the reconstruction gap, and the audit prices it at +0.005%/yr.
 """
         ),
         md(
@@ -339,7 +339,7 @@ def build_quants():
 ### Resampling · total-return reconstruction · calendar coverage · splits · dividends · a planted-fault control
 
 ![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
-![Usefulness: Useful](https://img.shields.io/badge/Usefulness-Useful-2ea44f?style=flat-square)
+![Usefulness: Fragile](https://img.shields.io/badge/Usefulness-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The design
 constraint worth stating: with one provider you can prove a feed **contradicts itself**, never
@@ -388,7 +388,7 @@ for tk, fr in tapes.items():
 | Axis | Stamp | Why |
 |---|---|---|
 | **Signal** | Real | The audit ran **62** checks across 8 tickers and returned **1 errors** and **3 warnings**. The weekly and monthly bars compound from the daily ones to within **4504 bps** at worst; rebuilding the total-return series from price plus dividends and splits reproduces the provider's own adjusted close to **+0.005%/yr** at worst (XLU); and the reference calendar shows **0** missing sessions in total. |
-| **Usefulness** | Useful | The same buy-and-hold statistic computed from the daily tape and from the provider's own weekly bars differs by up to **0.052** of Sharpe and **+0.01%/yr** of CAGR (SPY) — most of which is the arithmetic of measuring volatility at a different frequency rather than a data fault. The fault that *would* change a published number is the reconstruction gap, and the audit prices it at +0.005%/yr. |
+| **Usefulness** | Fragile | The same buy-and-hold statistic computed from the daily tape and from the provider's own weekly bars differs by up to **0.052** of Sharpe and **+0.01%/yr** of CAGR (SPY) — most of which is the arithmetic of measuring volatility at a different frequency rather than a data fault. The fault that *would* change a published number is the reconstruction gap, and the audit prices it at +0.005%/yr. |
 
 > \U0001F4A1 **In plain words.** The feed is coherent to a few basis points nearly everywhere.
 > "Nearly" is why the audit exists, and the audit is cheap.

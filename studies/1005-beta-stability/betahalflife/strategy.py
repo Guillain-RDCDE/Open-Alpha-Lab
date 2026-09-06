@@ -419,16 +419,15 @@ def verdict(h: dict) -> dict:
     - **Signal**: **Real** if beta persists materially — a persistence slope well above zero
       with a half-life over a year; **Weak** if it persists but decays within a year; **None**
       if last period's beta does not predict this one's.
-    - **Tradability**: **Useful** if a shrinkage adjustment beats the raw estimate out of
-      sample **and** beats the do-nothing baseline of assuming 1.0 for everything; **Partial**
+    - **Tradability**: **Fragile** if a shrinkage adjustment beats the raw estimate out of
+      sample **and** beats the do-nothing baseline of assuming 1.0 for everything; **Fragile**
       if it beats only one; **Mirage** if the raw estimate is as good as anything.
     """
     signal = ("Real" if (h["slope"] > 0.3 and h["half_life_years"] >= 1.0)
               else ("Weak" if h["slope"] > 0.1 else "None"))
     beats_raw = h["best_rmse"] < h["raw_rmse"]
     beats_one = h["best_rmse"] < h["one_rmse"]
-    trad = ("Useful" if (beats_raw and beats_one)
-            else ("Partial" if (beats_raw or beats_one) else "Mirage"))
+    trad = "Fragile" if (beats_raw or beats_one) else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

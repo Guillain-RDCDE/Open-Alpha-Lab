@@ -166,7 +166,7 @@ def verdict(h: dict) -> dict:
     - **Signal**: **Real** if the largest implied yield in the universe exceeds 2%/yr (the
       convention then moves the headline return by more than most strategies earn); **Weak**
       above 0.5%; **None** below.
-    - **Usefulness**: **Useful** if the choice flips a *conclusion* — the momentum sleeve's
+    - **Usefulness**: **Fragile** if the choice flips a *conclusion* — the momentum sleeve's
       Sharpe ordering, or more than 10% of cross-sectional pair rankings; **Fragile** if it
       moves numbers without changing an ordering; **Mirage** otherwise.
     """
@@ -174,8 +174,7 @@ def verdict(h: dict) -> dict:
     signal = "Real" if y >= 0.02 else ("Weak" if y >= 0.005 else "None")
     flips = h["mean_flip_share"]
     changed = h["momentum_sharpe_gap"] != 0 and abs(h["momentum_cagr_gap"]) >= 0.005
-    trad = ("Useful" if (flips >= 0.10 or changed)
-            else ("Fragile" if y >= 0.005 else "Mirage"))
+    trad = "Fragile" if y >= 0.005 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

@@ -15,7 +15,11 @@ into a hard check, so they cannot regress:
   3. **Tests run in CI.** If a study has a ``tests/test_*.py`` suite, that suite must be wired
      into ``.github/workflows/tests.yml`` -- otherwise regressions in it go undetected.
      Commented-out workflow lines do not count as wired.
-  4. **docs/ is not empty.** A finished study carries a literature map at
+  4. **The front card exists.** A published study must carry a ``README.md`` with verdict
+     badges: the ledger advertises two stamps on the study's behalf, and with no front card
+     nothing in the study backs them up. 17 studies were published without one while this
+     gate reported them complete.
+  5. **docs/ is not empty.** A finished study carries a literature map at
      ``docs/references.md`` with real content (more than 5 non-blank lines).
 
 A study that publishes a working paper instead of a results doc is exempt from the
@@ -23,10 +27,14 @@ A study that publishes a working paper instead of a results doc is exempt from t
 the fingerprinted reproducible-run doc (study 01 is the canonical example).
 
 Which studies are gated? A study is "published" -- and therefore held to the standard -- the
-moment it is linked in the **root ``README.md`` studies table**. That is the desk's own
-done-signal: you list a study on the landing page when it's ready. A study that is not yet in
-the table is treated as work-in-progress and skipped, so day-to-day scaffolding commits don't
-turn CI red. The discipline lands exactly when you publish.
+moment it is linked in the **studies table in ``docs/REFERENCE.md``**. That table used to live
+in the root README; it moved, and the root README is now a front door that links to it rather
+than carrying it. Add a newly-published study as a row in ``docs/REFERENCE.md`` -- appending it
+to the root README instead leaves an orphan table row stranded on the landing page.
+
+That is the desk's own done-signal: you list a study in the ledger when it's ready. A study
+that is not yet in the table is treated as work-in-progress and skipped, so day-to-day
+scaffolding commits don't turn CI red. The discipline lands exactly when you publish.
 
 Recommended-but-not-blocking items (a results doc, requirements files) print as warnings.
 
@@ -122,7 +130,18 @@ def check_study(name: str, ci_text: str) -> tuple[list[str], list[str]]:
         else:
             fails.extend(f"notebook {fname} {prob}" for prob in problems)
 
-    # 3) A test-suite, if present, must be wired into CI (commented lines don't count).
+    # 3) The front card. The house Definition of Done opens with it, and the ledger
+    #    publishes a verdict on every study's behalf -- so a study with no README is one
+    #    whose advertised stamps no file in the study actually backs up. This check was
+    #    absent until 17 published studies turned out to have no front card at all while
+    #    this gate reported them complete.
+    readme = os.path.join(p, "README.md")
+    if not os.path.exists(readme):
+        fails.append("missing README.md (the front card the ledger's verdict points at)")
+    elif "img.shields.io/badge/" not in open(readme, encoding="utf-8").read():
+        fails.append("README.md carries no verdict badges -- nothing backs its ledger row")
+
+    # 4) A test-suite, if present, must be wired into CI (commented lines don't count).
     tests_dir = os.path.join(p, "tests")
     has_tests = os.path.isdir(tests_dir) and any(
         f.startswith("test_") and f.endswith(".py") for f in os.listdir(tests_dir)
@@ -131,7 +150,7 @@ def check_study(name: str, ci_text: str) -> tuple[list[str], list[str]]:
         fails.append("has a test-suite not run in .github/workflows/tests.yml "
                      f"(add: pytest -q studies/{name}/tests)")
 
-    # 4) A literature map must exist and carry real content (no empty docs/).
+    # 5) A literature map must exist and carry real content (no empty docs/).
     refs = os.path.join(p, "docs", "references.md")
     n_useful = _references_useful_lines(refs)
     if n_useful == 0 and not os.path.exists(refs):

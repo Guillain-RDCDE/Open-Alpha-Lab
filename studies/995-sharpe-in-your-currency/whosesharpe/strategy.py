@@ -344,16 +344,15 @@ def verdict(h: dict) -> dict:
       more than 0.15 **and** the currency changes the *ranking* of at least two assets — i.e.
       it is not just a level shift that cancels out of every comparison; **Weak** if the spread
       is material but rankings are stable; **None** if the spread is negligible.
-    - **Tradability**: **Useful** if hedging raises the Sharpe for a majority of currencies
-      after the interest-rate differential is charged; **Partial** if it helps some; **Mirage**
+    - **Tradability**: **Fragile** if hedging raises the Sharpe for a majority of currencies
+      after the interest-rate differential is charged; **Fragile** if it helps some; **Mirage**
       if it helps none.
     """
     material = h["sharpe_spread"] > 0.15
     reorders = h["rank_spread"] >= 2
     signal = ("Real" if (material and reorders)
               else ("Weak" if material else "None"))
-    trad = ("Useful" if h["hedge_helps_share"] > 0.5
-            else ("Partial" if h["hedge_helps_share"] > 0 else "Mirage"))
+    trad = "Fragile" if h["hedge_helps_share"] > 0 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

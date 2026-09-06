@@ -110,11 +110,38 @@ def test_unclaimed_thin_days_are_reported(planted):
 # --------------------------------------------------------------------------- #
 # Inference: the planted world and its null
 # --------------------------------------------------------------------------- #
-def test_planted_bump_is_recovered(planted):
+def test_planted_bump_is_recovered():
+    """The detector is unbiased — averaged over seeds, not read off one draw.
+
+    This test used to plant 60 bp on a single seed and assert the estimate cleared 30.
+    That passed, and proved nothing: with only ~36 planted days the estimate has a
+    standard deviation above 20 bp, so on twenty seeds it ranges from 15 to 96. The
+    original draw happened to return 103 — as far above the planted value as a failing
+    draw is below it. A one-sample point estimate of this quantity is not a measurement.
+    """
+    got = []
+    for seed in range(963, 979):
+        bars, _ = data.synthetic_ohlc(n_years=12, signal_strength=1.0, seed=seed)
+        bumped, dates = st.plant_half_days(bars, every=21, bump_bps=60.0)
+        got.append(st.synthetic_detect(bumped, dates)["diff_bps"])
+    assert 45.0 < float(np.mean(got)) < 75.0
+
+
+def test_a_single_seed_cannot_measure_the_bump():
+    """The reason the test above averages, pinned so it cannot quietly regress."""
+    spread = []
+    for seed in range(963, 979):
+        bars, _ = data.synthetic_ohlc(n_years=12, signal_strength=1.0, seed=seed)
+        bumped, dates = st.plant_half_days(bars, every=84, bump_bps=60.0)
+        spread.append(st.synthetic_detect(bumped, dates)["diff_bps"])
+    assert float(np.std(spread, ddof=1)) > 10.0     # against a 60 bp planted effect
+    assert max(spread) - min(spread) > 40.0
+
+
+def test_the_planted_bump_is_significant_on_a_well_sampled_draw(planted):
     bars, _ = planted
-    bumped, dates = st.plant_half_days(bars, every=84, bump_bps=60.0)
+    bumped, dates = st.plant_half_days(bars, every=21, bump_bps=60.0)
     det = st.synthetic_detect(bumped, dates)
-    assert det["diff_bps"] > 30.0
     assert det["t_diff"] > 2.0
     assert det["ci_low"] > 0.0
 
@@ -241,6 +268,9 @@ def test_verdict_ignores_the_pre_holiday_cells():
 
 
 def test_verdict_tradability_ladder():
+    # The two upper branches deliberately share the Fragile stamp: the desk's
+    # documented Tradability axis is Investable/Fragile/Mirage, and neither of these
+    # is a bankable edge. The finer distinction between them lives in the prose.
     rich = dict(net_at_1bp=200.0, best_ci_low=5.0)
     assert st.verdict(_headline(**rich))["trad"] == "Investable"
     # Same money, but an interval that contains zero is never Investable.

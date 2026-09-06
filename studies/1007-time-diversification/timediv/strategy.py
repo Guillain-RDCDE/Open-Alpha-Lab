@@ -444,14 +444,13 @@ def verdict(h: dict) -> dict:
     - **Signal**: about whether *time diversification beyond arithmetic* exists. **Real** if
       annualised dispersion narrows significantly faster than 1/√T; **Weak** if it narrows
       faster but within the bootstrap null; **None** if it tracks √T.
-    - **Tradability**: about the decision. **Useful** if the analysis yields a clear
-      prescription for how horizon should enter an allocation; **Partial** if directional;
+    - **Tradability**: about the decision. **Fragile** if the analysis yields a clear
+      prescription for how horizon should enter an allocation; **Fragile** if directional;
       **Mirage** if it cannot say.
     """
     signal = ("Real" if h["beyond_arithmetic"]
               else ("Weak" if h["slope"] < -0.5 else "None"))
-    trad = ("Useful" if h["weights_flat"] else
-            ("Partial" if h["max_weight_range"] < 0.40 else "Mirage"))
+    trad = "Fragile" if h["max_weight_range"] < 0.40 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

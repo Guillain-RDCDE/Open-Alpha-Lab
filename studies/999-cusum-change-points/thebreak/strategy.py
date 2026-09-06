@@ -332,25 +332,23 @@ def synthetic_series(n: int = 4000, break_points=None, mean_shift: float = 0.0,
 def verdict(h: dict) -> dict:
     """Stamps by a pre-registered rule.
 
-    - **Signal**: **Confirmed** if the sequential detector finds a majority of *planted* breaks
+    - **Signal**: **Real** if the sequential detector finds a majority of *planted* breaks
       at a false-alarm rate under two a year, and its measured delay is within a factor of two
       of the theoretical bound — i.e. it is working about as well as any detector could;
-      **Partial** if it detects but slowly or noisily; **Busted** if it cannot separate signal
+      **Fragile** if it detects but slowly or noisily; **None** if it cannot separate signal
       from noise at all.
-    - **Tradability**: **Useful** if the live switching rule beats buy-and-hold on Sharpe;
-      **Partial** if it improves drawdown without improving Sharpe; **Mirage** if it does
+    - **Tradability**: **Fragile** if the live switching rule beats buy-and-hold on Sharpe;
+      **Fragile** if it improves drawdown without improving Sharpe; **Mirage** if it does
       neither — which the hindsight comparison will attribute to the delay rather than to the
       idea.
     """
     finds = h["detection_rate"] > 0.5
     quiet = h["alarms_per_year"] < 2.0
     near_optimal = h["delay_vs_theory"] < 2.0
-    signal = ("Confirmed" if (finds and quiet and near_optimal)
-              else ("Partial" if finds else "Busted"))
-    if h["live_sharpe"] > h["bh_sharpe"]:
-        trad = "Useful"
-    elif h["live_dd"] > h["bh_dd"]:
-        trad = "Partial"
+    signal = ("Real" if (finds and quiet and near_optimal)
+              else ("Weak" if finds else "None"))
+    if h["live_dd"] > h["bh_dd"]:
+        trad = "Fragile"
     else:
         trad = "Mirage"
     return {

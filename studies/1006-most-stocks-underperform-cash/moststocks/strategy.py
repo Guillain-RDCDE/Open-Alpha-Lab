@@ -415,18 +415,18 @@ def survivorship_experiment(n_stocks: int = 300, n_days: int = 5000, drift: floa
 def verdict(h: dict) -> dict:
     """Stamps by a pre-registered rule.
 
-    - **Signal**: about the claim *as tested here*, on surviving large caps. **Confirmed** if
-      the median holding underperforms cash at long horizons; **Partial** if marginally;
-      **Busted** if the median comfortably beats cash throughout. The stamp is deliberately
+    - **Signal**: about the claim *as tested here*, on surviving large caps. **Real** if
+      the median holding underperforms cash at long horizons; **Fragile** if marginally;
+      **None** if the median comfortably beats cash throughout. The stamp is deliberately
       about this basket, not about Bessembinder's universe, which this data cannot reach.
-    - **Tradability**: **Useful** if the study still yields a quantified, actionable statement
+    - **Tradability**: **Fragile** if the study still yields a quantified, actionable statement
       — the breakeven condition and the concentration penalty both survive a Busted signal;
-      **Partial** if only directional; **Mirage** if nothing actionable remains.
+      **Fragile** if only directional; **Mirage** if nothing actionable remains.
     """
-    signal = ("Confirmed" if h["share_beat_cash_long"] < 0.50
-              else ("Partial" if h["share_beat_cash_long"] < 0.60 else "Busted"))
+    signal = ("Real" if h["share_beat_cash_long"] < 0.50
+              else ("Weak" if h["share_beat_cash_long"] < 0.60 else "None"))
     gap = h["odds_index_50"] - h["odds_index_5"]
-    trad = ("Useful" if gap > 0.10 else ("Partial" if gap > 0.03 else "Mirage"))
+    trad = "Fragile" if gap > 0.03 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

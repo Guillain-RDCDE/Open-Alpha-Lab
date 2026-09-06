@@ -9,9 +9,9 @@
 That's not a typo. I put every market anomaly, folk strategy and named factor
 people swear by through the **same brutal protocol**, and publish the verdict: **edge or mirage.**
 
-`1012 tested` · `10 survive` · `116 real signals` · `799 mirages`
+`1012 tested` · `10 survive` · `126 real signals` · `799 mirages`
 
-***Most are mirages. The honest write-up of why is the point. The nine survivors don't forecast anything — three manage risk, three harvest a premium or a mechanical identity, and three are simply costs you stop paying.***
+***Most are mirages. The honest write-up of why is the point. The ten survivors don't forecast anything — three manage risk, three harvest a premium or a mechanical identity, three are simply costs you stop paying, and one is a discipline that pays for itself.***
 
 [![tests](https://github.com/Guillain-RDCDE/Open-Alpha-Lab/actions/workflows/tests.yml/badge.svg)](https://github.com/Guillain-RDCDE/Open-Alpha-Lab/actions/workflows/tests.yml)
 [![python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
@@ -32,7 +32,7 @@ Every idea goes through the *same* protocol and earns **two stamps**, so results
 
 | | |
 |---|---|
-| **Signal** — is the effect statistically real? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) |
+| **Signal** — is the effect statistically real? | ![Real](https://img.shields.io/badge/Real-2ea44f?style=flat-square) ![Weak](https://img.shields.io/badge/Weak-dab617?style=flat-square) ![Mixed](https://img.shields.io/badge/Mixed-dab617?style=flat-square) ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) |
 | **Tradability** — does it survive costs, capacity & scale? | ![Investable](https://img.shields.io/badge/Investable-2ea44f?style=flat-square) ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) ![Mirage](https://img.shields.io/badge/Mirage-c0392b?style=flat-square) |
 
 Robust inference (Newey-West / Lo SEs, bootstrap CIs, White Reality Check for data-snooping),
@@ -43,8 +43,11 @@ style is written up in **[METHODOLOGY.md](METHODOLOGY.md)**.
 
 ## The graveyard
 
-The whole bench on one grid — every study is a numbered chip, sorted by its two stamps.
-Almost everything ends up bottom-right; six chips are green — and not one of them is a forecaster.
+The bench on one grid — each study a numbered chip, sorted by its two stamps.
+Almost everything ends up bottom-right; ten chips are green — and not one of them is a forecaster.
+A **Mixed** signal — the verdict splits by regime or leg — counts with Weak, in the same amber
+bucket. The map's caption states its own denominator, and names anything still carrying a stamp
+outside the two axes; the [ledger](docs/REFERENCE.md) lists every study either way.
 
 [![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)](https://guillain-rdcde.github.io/Open-Alpha-Lab/)
 
@@ -52,10 +55,20 @@ Almost everything ends up bottom-right; six chips are green — and not one of t
 > **click any chip to open its study**, search by name or claim, and filter the whole bench by verdict.
 > (The static image above never gets less readable; the interactive page is where it scales.)
 
-The counts, the mortality by family of idea, and the five lessons the bench keeps
-teaching are in **[What 962 teardowns taught us](docs/bench.md)**.
-
 ---
+
+## Where to go next
+
+| | |
+|---|---|
+| **[The full ledger →](docs/REFERENCE.md)** | Every one of the 1012 studies, two stamps each, with the ten greens called out first. This is the single source of truth the map and the live page are built from. |
+| **[What the teardowns taught us →](docs/bench.md)** | The view from above: mortality by family of idea, and the lessons the bench keeps repeating. All 1012 folded in. |
+| **[The method →](METHODOLOGY.md)** | How a claim earns its two stamps — inference, the alpha-vs-beta split, the capacity test. |
+| **[Reproduce the numbers →](docs/reproducibility.md)** | Data caches, fingerprints and the release bundle, to verify the published figures byte-for-byte. |
+
+**New here?** Open **[study 01, *for the curious*](studies/01-overnight-anomaly/notebooks/01_for_the_curious.ipynb)** — one famous idea, taken apart in plain language, no finance background needed.
+
+**Here for the method?** Open **[study 01, *for the quants*](studies/01-overnight-anomaly/notebooks/02_for_the_quants.ipynb)** and the **[working paper](studies/01-overnight-anomaly/paper/overnight_alpha.pdf)** — the same result with the inference, the robustness checks and the capacity work shown. Every study carries the same pair of notebooks.
 
 ---
 
@@ -70,10 +83,8 @@ pytest -q                                                            # the engin
 python studies/01-overnight-anomaly/examples/run_synthetic_demo.py   # offline, no network
 ```
 
-Then open **[studies/01-overnight-anomaly/](studies/01-overnight-anomaly/)** — start with the
-notebook *for the curious*, or read the working paper.
-
-To verify the published numbers byte-for-byte (data caches, fingerprints, release bundle), see **[docs/reproducibility.md](docs/reproducibility.md)**.
+Then open **[studies/01-overnight-anomaly/](studies/01-overnight-anomaly/)**, or any of the
+other 1011 — every study folder has the same shape.
 
 <details>
 <summary><b>The engine — <code>quantlab/</code></b> (a small, tested, reusable toolkit that powers every study)</summary>

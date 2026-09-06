@@ -294,16 +294,19 @@ def _headline(**over):
 
 
 def test_verdict_signal_needs_both_failures():
-    assert st.verdict(_headline())["signal"] == "Confirmed"
-    assert st.verdict(_headline(normal_indep_reject_share=0.2))["signal"] == "Partial"
-    assert st.verdict(_headline(normal_reject_share=0.2))["signal"] == "Partial"
+    assert st.verdict(_headline())["signal"] == "Real"
+    assert st.verdict(_headline(normal_indep_reject_share=0.2))["signal"] == "Weak"
+    assert st.verdict(_headline(normal_reject_share=0.2))["signal"] == "Weak"
     assert st.verdict(_headline(normal_reject_share=0.2,
-                                normal_indep_reject_share=0.2))["signal"] == "Busted"
+                                normal_indep_reject_share=0.2))["signal"] == "None"
 
 
 def test_verdict_tradability_ladder():
-    assert st.verdict(_headline())["trad"] == "Useful"
-    assert st.verdict(_headline(best_joint_pass_share=0.3))["trad"] == "Partial"
+    # The two upper branches deliberately share the Fragile stamp: the desk's
+    # documented Tradability axis is Investable/Fragile/Mirage, and neither of these
+    # is a bankable edge. The finer distinction between them lives in the prose.
+    assert st.verdict(_headline())["trad"] == "Fragile"
+    assert st.verdict(_headline(best_joint_pass_share=0.3))["trad"] == "Fragile"
     assert st.verdict(_headline(best_joint_pass_share=0.3,
                                 best_breach_error=0.02))["trad"] == "Mirage"
 

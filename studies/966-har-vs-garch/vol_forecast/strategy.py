@@ -306,7 +306,7 @@ def verdict(h: dict) -> dict:
     - **Signal** (do the models differ out of sample?): **Real** if the best model beats the
       21-day rolling baseline on QLIKE on a majority of tapes *and* the pooled
       Diebold-Mariano clears 2; **Weak** if it wins without significance; **None** otherwise.
-    - **Usefulness** (is the winner worth the machinery?): **Useful** only if the QLIKE
+    - **Usefulness** (is the winner worth the machinery?): **Fragile** only if the QLIKE
       improvement over the baseline exceeds 5% on the pooled average, **Fragile** above 1%,
       **Mirage** below — a model that costs a maximum-likelihood fit and buys a 0.4%
       improvement is a hobby, not an upgrade.
@@ -315,7 +315,7 @@ def verdict(h: dict) -> dict:
     real = wins > n / 2 and abs(h["pooled_dm"]) >= 2.0
     signal = "Real" if real else ("Weak" if wins > n / 2 else "None")
     gain = h["pooled_qlike_gain"]
-    trad = "Useful" if gain >= 0.05 else ("Fragile" if gain >= 0.01 else "Mirage")
+    trad = "Fragile" if gain >= 0.01 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

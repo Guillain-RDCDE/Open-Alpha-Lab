@@ -208,7 +208,7 @@ def verdict(h: dict) -> dict:
 
     - **Signal**: **Real** if adding assets cuts average portfolio volatility by at least 20%
       from one asset to the full universe; **Weak** above 5%; **None** below.
-    - **Usefulness**: **Useful** if the curve visibly saturates — the last asset buys less than
+    - **Usefulness**: **Fragile** if the curve visibly saturates — the last asset buys less than
       a fifth of what the third one did — so a stopping rule exists; **Fragile** if the benefit
       is still material at the end of the universe; **Mirage** if the whole effect is inside
       the dispersion across random draws.
@@ -216,8 +216,7 @@ def verdict(h: dict) -> dict:
     total = h["vol_reduction_total"]
     signal = "Real" if total >= 0.20 else ("Weak" if total >= 0.05 else "None")
     saturates = h["last_gain"] < h["third_gain"] / 5
-    trad = ("Useful" if saturates and h["dispersion_at_k5"] < h["vol_reduction_total"]
-            else ("Fragile" if saturates else "Mirage"))
+    trad = "Fragile" if saturates else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

@@ -309,7 +309,7 @@ def verdict(h: dict) -> dict:
     - **Signal** (is the efficiency gain real?): **Real** if, on simulated bars with a known
       sigma, Parkinson's MSE efficiency against close-to-close is at least 3x; **Weak** above
       1.5x; **None** otherwise.
-    - **Usefulness** (does it improve a forecast?): **Useful** if the best rescaled range
+    - **Usefulness** (does it improve a forecast?): **Fragile** if the best rescaled range
       estimator beats close-to-close on QLIKE on a majority of tapes *and* the pooled
       Diebold-Mariano statistic clears 2; **Fragile** if it wins without significance;
       **Mirage** if it does not win.
@@ -317,8 +317,7 @@ def verdict(h: dict) -> dict:
     eff = h["efficiency_parkinson"]
     signal = "Real" if eff >= 3.0 else ("Weak" if eff >= 1.5 else "None")
     wins, n = h["n_qlike_wins"], len(h["tickers"])
-    trad = ("Useful" if wins > n / 2 and abs(h["pooled_dm"]) >= 2.0
-            else ("Fragile" if wins > n / 2 else "Mirage"))
+    trad = "Fragile" if wins > n / 2 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

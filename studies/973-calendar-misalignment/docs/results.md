@@ -108,7 +108,7 @@ Produced by `strategy.verdict`, fixed before the run and unit-tested in
 
 **Signal: None.** Correlation with the US market rises from **0.75** at daily frequency to **0.77** at monthly on EWJ — a lift of **+0.02** — and **0 of 4** foreign tapes lift by more than 0.10. The same-market control (IWM) lifts by **+0.01**, which is the machinery's own noise floor. Dimson's correction recovers most of it without changing frequency: beta on EWJ goes from 0.81 to **0.78**, and the lagged US coefficient — the smoking gun — is -0.03.
 
-**Usefulness: Useful.** A minimum-variance book built on the **daily** covariance matrix promises 17.63% annualised and delivers **15.35%** at the monthly horizon — it understates its own risk by **-12.9%** — and its weights differ from the ones the unbiased matrix would choose by up to 18%. The fix costs nothing: measure at a lower frequency, or add one lead and one lag.
+**Usefulness: Fragile.** A minimum-variance book built on the **daily** covariance matrix promises 17.63% annualised and delivers **15.35%** at the monthly horizon — it understates its own risk by **-12.9%** — and its weights differ from the ones the unbiased matrix would choose by up to 18%. The fix costs nothing: measure at a lower frequency, or add one lead and one lag.
 
 ---
 

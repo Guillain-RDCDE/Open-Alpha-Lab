@@ -158,7 +158,7 @@ Produced by `strategy.verdict`, fixed before the run and unit-tested in
 
 **Signal: Real.** The audit ran **62** checks across 8 tickers and returned **1 errors** and **3 warnings**. The weekly and monthly bars compound from the daily ones to within **4504 bps** at worst; rebuilding the total-return series from price plus dividends and splits reproduces the provider's own adjusted close to **+0.005%/yr** at worst (XLU); and the reference calendar shows **0** missing sessions in total.
 
-**Usefulness: Useful.** The same buy-and-hold statistic computed from the daily tape and from the provider's own weekly bars differs by up to **0.052** of Sharpe and **+0.01%/yr** of CAGR (SPY) — most of which is the arithmetic of measuring volatility at a different frequency rather than a data fault. The fault that *would* change a published number is the reconstruction gap, and the audit prices it at +0.005%/yr.
+**Usefulness: Fragile.** The same buy-and-hold statistic computed from the daily tape and from the provider's own weekly bars differs by up to **0.052** of Sharpe and **+0.01%/yr** of CAGR (SPY) — most of which is the arithmetic of measuring volatility at a different frequency rather than a data fault. The fault that *would* change a published number is the reconstruction gap, and the audit prices it at +0.005%/yr.
 
 ---
 

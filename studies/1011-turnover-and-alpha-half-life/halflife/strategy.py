@@ -508,14 +508,13 @@ def verdict(h: dict) -> dict:
     - **Signal**: **Real** if signals show measurably different decay profiles and the
       half-lives are estimable; **Weak** if decay is visible but poorly identified; **None** if
       no decay can be measured.
-    - **Tradability**: **Useful** if rebalancing near the estimated half-life beats both much
-      faster and much slower trading after costs; **Partial** if it beats one side; **Mirage**
+    - **Tradability**: **Fragile** if rebalancing near the estimated half-life beats both much
+      faster and much slower trading after costs; **Fragile** if it beats one side; **Mirage**
       if the rate does not matter.
     """
     signal = ("Real" if (h["hl_spread"] > 3.0 and h["hl_interval_ratio"] < 10)
               else ("Weak" if h["hl_spread"] > 1.5 else "None"))
-    trad = ("Useful" if (h["beats_faster"] and h["beats_slower"])
-            else ("Partial" if (h["beats_faster"] or h["beats_slower"]) else "Mirage"))
+    trad = "Fragile" if (h["beats_faster"] or h["beats_slower"]) else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

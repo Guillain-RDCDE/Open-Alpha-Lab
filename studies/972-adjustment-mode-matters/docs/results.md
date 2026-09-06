@@ -97,7 +97,7 @@ Produced by `strategy.verdict`, fixed before the run and unit-tested in
 
 **Signal: Real.** The gap between the two conventions is the reinvested dividend, and on this universe it runs from **0.69%/yr** (QQQ) to **6.31%/yr** (HYG) — which on HYG is **128% of its entire total return**. Volatility is almost untouched (largest difference 0.14%), so every risk-adjusted ratio moves with the numerator alone: the Sharpe gap reaches **0.57**.
 
-**Usefulness: Useful.** Yes. Ranking the same universe on price charts instead of total returns reorders **4%** of asset pairs in an average month and picks a different leader in **6%** of them. Run as a momentum sleeve — both arms scored on total returns, so only the *selection* differs — ranking on price gives +7.26%/yr against +6.41%/yr for ranking on total return (-0.85%/yr, Sharpe +0.51 vs +0.47), and it holds a portfolio yielding -0.16% less. The price-only signal is not neutral — it is a systematic bet against income.
+**Usefulness: Fragile.** Yes. Ranking the same universe on price charts instead of total returns reorders **4%** of asset pairs in an average month and picks a different leader in **6%** of them. Run as a momentum sleeve — both arms scored on total returns, so only the *selection* differs — ranking on price gives +7.26%/yr against +6.41%/yr for ranking on total return (-0.85%/yr, Sharpe +0.51 vs +0.47), and it holds a portfolio yielding -0.16% less. The price-only signal is not neutral — it is a systematic bet against income.
 
 ---
 

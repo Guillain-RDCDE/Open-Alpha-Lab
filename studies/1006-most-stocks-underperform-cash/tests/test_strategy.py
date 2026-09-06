@@ -389,14 +389,17 @@ def _headline(**over):
 
 
 def test_verdict_signal_reports_the_failure_on_this_basket():
-    assert st.verdict(_headline())["signal"] == "Busted"
-    assert st.verdict(_headline(share_beat_cash_long=0.55))["signal"] == "Partial"
-    assert st.verdict(_headline(share_beat_cash_long=0.44))["signal"] == "Confirmed"
+    assert st.verdict(_headline())["signal"] == "None"
+    assert st.verdict(_headline(share_beat_cash_long=0.55))["signal"] == "Weak"
+    assert st.verdict(_headline(share_beat_cash_long=0.44))["signal"] == "Real"
 
 
 def test_verdict_tradability_keys_off_the_concentration_penalty():
-    assert st.verdict(_headline())["trad"] == "Useful"
-    assert st.verdict(_headline(odds_index_5=0.45))["trad"] == "Partial"
+    # The two upper branches deliberately share the Fragile stamp: the desk's
+    # documented Tradability axis is Investable/Fragile/Mirage, and neither of these
+    # is a bankable edge. The finer distinction between them lives in the prose.
+    assert st.verdict(_headline())["trad"] == "Fragile"
+    assert st.verdict(_headline(odds_index_5=0.45))["trad"] == "Fragile"
     assert st.verdict(_headline(odds_index_5=0.49))["trad"] == "Mirage"
 
 

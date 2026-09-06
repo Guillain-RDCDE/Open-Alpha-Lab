@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""Build the bench map — docs/bench_map.png — from the root README studies table.
+"""Build the bench map — docs/bench_map.png — from the desk's studies table.
 
-The README table is the single source of truth for verdicts; this script parses
-it (it never re-judges anything) and draws the whole bench as one 3x3 matrix:
+The table (docs/REFERENCE.md; the root README until it moved) is the single source
+of truth for verdicts; this script parses it (it never re-judges anything) and draws
+the whole bench as one 3x3 matrix:
 
     Signal (rows)        x  Tradability (columns)
     REAL / WEAK / NONE      INVESTABLE / FRAGILE / MIRAGE
 
-Every published study is a numbered chip in its cell. Special stamps
-(e.g. the pre-registered Gamma-Gospel study) are listed in a footnote rather
-than forced into a cell. ``Mixed`` counts with ``Weak`` (same amber bucket,
+Most published studies are a numbered chip in its cell. Stamps outside the two
+documented axes are NOT forced into a cell — they are counted in a footnote and
+listed to stderr, because a study that is off the grid is absent from every number
+this script produces, and that has to be visible rather than inferred. ``Mixed`` counts with ``Weak`` (same amber bucket,
 see METHODOLOGY.md).
 
 Deterministic — no data fetch, no randomness. Re-run whenever the table
@@ -272,7 +274,15 @@ def draw(grid, special, total: int, out: Path = OUT) -> None:
                   file=sys.stderr)
             for s in special:
                 print(f"    {s['num']:>5} {s['name']}  [{_pretty(s)}]", file=sys.stderr)
-    notes.append("Study 03's “Mixed” signal counts with Weak (same amber bucket).")
+    # Counted, not named: this line said "Study 03's Mixed signal" and was written when
+    # exactly one study carried it. Sixty-eight do now, and a caption that names one of
+    # them reads as a footnote about an oddity rather than a fact about the corpus.
+    n_mixed = sum(1 for v in grid.values() for st in v if st["signal"] == "Mixed")
+    if n_mixed:
+        notes.append(f"{n_mixed} studies carry a Mixed signal (verdict splits by regime "
+                     f"or leg); they count with Weak, the same amber bucket.")
+    notes.append(f"Grid shows {total - len(special)} of {total} studies; "
+                 f"{len(special)} sit outside the documented axes.")
     for k, note in enumerate(notes):
         ax.text(-0.80, -0.26 - 0.155 * k, note, ha="left", va="top",
                 fontsize=9.5, color=GREY)

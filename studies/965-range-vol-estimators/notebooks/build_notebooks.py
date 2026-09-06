@@ -55,7 +55,7 @@ def build_curious():
 ### The high and the low know more than the close — until the market gaps
 
 ![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
-![Usefulness: Useful](https://img.shields.io/badge/Usefulness-Useful-2ea44f?style=flat-square)
+![Usefulness: Fragile](https://img.shields.io/badge/Usefulness-Fragile-dab617?style=flat-square)
 
 Every volatility textbook says the same thing: stop throwing away the day's high and low,
 because the range measures volatility about five times better than the closing price does.
@@ -237,7 +237,7 @@ miss even more of it.
 
 **Signal: Real.** On simulated bars where the day's true sigma is known, Parkinson's estimator has **4.9x** the efficiency of close-to-close against the truth (Garman-Klass 6.8x, Rogers-Satchell 5.5x) — the textbook claim survives, in the textbook's own world. On the real tape that world does not exist: the overnight gap carries **33%** of SPY's daily variance and none of the three can see it, so they report **69%** of the close-to-close level.
 
-**Usefulness: Useful.** Rescaled to remove that level error, the best range estimator (Yang-Zhang (2000)) beat close-to-close on QLIKE on **5 of 5** tapes with a pooled Diebold-Mariano *t* of **+3.73** — a real but modest improvement in forecasting the next month's realised variance (22.4% lower QLIKE on SPY). Yang-Zhang, the only gap-aware estimator, needs no rescaling and is the honest default.
+**Usefulness: Fragile.** Rescaled to remove that level error, the best range estimator (Yang-Zhang (2000)) beat close-to-close on QLIKE on **5 of 5** tapes with a pooled Diebold-Mariano *t* of **+3.73** — a real but modest improvement in forecasting the next month's realised variance (22.4% lower QLIKE on SPY). Yang-Zhang, the only gap-aware estimator, needs no rescaling and is the honest default.
 """
         ),
         md(
@@ -294,7 +294,7 @@ def build_quants():
 ### Parkinson · Garman-Klass · Rogers-Satchell · Yang-Zhang · QLIKE · Diebold-Mariano
 
 ![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
-![Usefulness: Useful](https://img.shields.io/badge/Usefulness-Useful-2ea44f?style=flat-square)
+![Usefulness: Fragile](https://img.shields.io/badge/Usefulness-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The design
 problem here is that **efficiency cannot be measured on real data**: there is no truth to
@@ -343,7 +343,7 @@ print(f"overnight share of SPY's daily variance: {st.overnight_share(spy):.0%}")
 | Axis | Stamp | Why |
 |---|---|---|
 | **Signal** | Real | On simulated bars where the day's true sigma is known, Parkinson's estimator has **4.9x** the efficiency of close-to-close against the truth (Garman-Klass 6.8x, Rogers-Satchell 5.5x) — the textbook claim survives, in the textbook's own world. On the real tape that world does not exist: the overnight gap carries **33%** of SPY's daily variance and none of the three can see it, so they report **69%** of the close-to-close level. |
-| **Usefulness** | Useful | Rescaled to remove that level error, the best range estimator (Yang-Zhang (2000)) beat close-to-close on QLIKE on **5 of 5** tapes with a pooled Diebold-Mariano *t* of **+3.73** — a real but modest improvement in forecasting the next month's realised variance (22.4% lower QLIKE on SPY). Yang-Zhang, the only gap-aware estimator, needs no rescaling and is the honest default. |
+| **Usefulness** | Fragile | Rescaled to remove that level error, the best range estimator (Yang-Zhang (2000)) beat close-to-close on QLIKE on **5 of 5** tapes with a pooled Diebold-Mariano *t* of **+3.73** — a real but modest improvement in forecasting the next month's realised variance (22.4% lower QLIKE on SPY). Yang-Zhang, the only gap-aware estimator, needs no rescaling and is the honest default. |
 
 > \U0001F4A1 **In plain words.** The theorem is fine. The application is where the money is
 > lost: three of the four range estimators are systematically low on any market that gaps, and

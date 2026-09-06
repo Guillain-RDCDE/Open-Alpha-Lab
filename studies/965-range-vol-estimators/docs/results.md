@@ -120,7 +120,7 @@ Produced by `strategy.verdict`, fixed before the run and unit-tested in
 
 **Signal: Real.** On simulated bars where the day's true sigma is known, Parkinson's estimator has **4.9x** the efficiency of close-to-close against the truth (Garman-Klass 6.8x, Rogers-Satchell 5.5x) — the textbook claim survives, in the textbook's own world. On the real tape that world does not exist: the overnight gap carries **33%** of SPY's daily variance and none of the three can see it, so they report **69%** of the close-to-close level.
 
-**Usefulness: Useful.** Rescaled to remove that level error, the best range estimator (Yang-Zhang (2000)) beat close-to-close on QLIKE on **5 of 5** tapes with a pooled Diebold-Mariano *t* of **+3.73** — a real but modest improvement in forecasting the next month's realised variance (22.4% lower QLIKE on SPY). Yang-Zhang, the only gap-aware estimator, needs no rescaling and is the honest default.
+**Usefulness: Fragile.** Rescaled to remove that level error, the best range estimator (Yang-Zhang (2000)) beat close-to-close on QLIKE on **5 of 5** tapes with a pooled Diebold-Mariano *t* of **+3.73** — a real but modest improvement in forecasting the next month's realised variance (22.4% lower QLIKE on SPY). Yang-Zhang, the only gap-aware estimator, needs no rescaling and is the honest default.
 
 ---
 

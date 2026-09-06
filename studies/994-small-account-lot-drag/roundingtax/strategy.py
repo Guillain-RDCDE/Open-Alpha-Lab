@@ -321,8 +321,8 @@ def verdict(h: dict) -> dict:
       tracking error above 0.5%/yr against the fractional ideal **and** an average allocation
       error above 2%; **Weak** if only one holds; **None** if whole-share constraints are
       immaterial even at that size.
-    - **Tradability**: this is an advice question. **Useful** if the escapes materially help —
-      the best alternative cuts the allocation error by more than half; **Partial** if it helps
+    - **Tradability**: this is an advice question. **Fragile** if the escapes materially help —
+      the best alternative cuts the allocation error by more than half; **Fragile** if it helps
       a little; **Mirage** if nothing helps.
     """
     material_te = h["tracking_error"] > 0.005
@@ -330,8 +330,7 @@ def verdict(h: dict) -> dict:
     signal = ("Real" if (material_te and material_error)
               else ("Weak" if (material_te or material_error) else "None"))
     improvement = 1 - h["best_escape_error"] / max(h["mean_l1_error"], 1e-9)
-    trad = ("Useful" if improvement > 0.5
-            else ("Partial" if improvement > 0.1 else "Mirage"))
+    trad = "Fragile" if improvement > 0.1 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

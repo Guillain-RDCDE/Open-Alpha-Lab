@@ -386,8 +386,11 @@ def test_verdict_signal_needs_persistence_and_a_useful_half_life():
 
 
 def test_verdict_tradability_needs_shrinkage_to_beat_doing_nothing_clever():
-    assert st.verdict(_headline())["trad"] == "Useful"
-    assert st.verdict(_headline(one_rmse=0.20))["trad"] == "Partial"
+    # The two upper branches deliberately share the Fragile stamp: the desk's
+    # documented Tradability axis is Investable/Fragile/Mirage, and neither of these
+    # is a bankable edge. The finer distinction between them lives in the prose.
+    assert st.verdict(_headline())["trad"] == "Fragile"
+    assert st.verdict(_headline(one_rmse=0.20))["trad"] == "Fragile"
     assert st.verdict(_headline(best_rmse=0.35))["trad"] == "Mirage"
 
 

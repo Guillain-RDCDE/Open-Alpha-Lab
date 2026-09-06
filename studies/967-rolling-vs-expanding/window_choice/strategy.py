@@ -277,7 +277,7 @@ def verdict(h: dict) -> dict:
       window's MSE exceeds 25% on at least two of the three quantities *and* at least one
       pairwise Diebold-Mariano clears 2; **Weak** if the spread is there without the *t*;
       **None** if every window performs within 10%.
-    - **Usefulness** (is there one default?): **Useful** only if the *same* window wins all
+    - **Usefulness** (is there one default?): **Fragile** only if the *same* window wins all
       three experiments; **Fragile** if the winners differ but each is stable;
       **Mirage** if the ranking is inconsistent enough that no advice survives.
     """
@@ -286,7 +286,7 @@ def verdict(h: dict) -> dict:
     real = big >= 2 and h["max_abs_dm"] >= 2.0
     signal = "Real" if real else ("Weak" if big >= 2 or h["max_abs_dm"] >= 2.0 else "None")
     same = len({str(h["best_beta"]), str(h["best_mean"]), str(h["best_cov"])}) == 1
-    trad = "Useful" if same else ("Fragile" if h["max_abs_dm"] >= 2.0 else "Mirage")
+    trad = "Fragile" if h["max_abs_dm"] >= 2.0 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

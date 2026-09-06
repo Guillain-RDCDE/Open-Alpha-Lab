@@ -282,7 +282,7 @@ def verdict(h: dict) -> dict:
       minimum-variance weights by more than 10% of the book on both panels **and** it achieves
       a higher in-sample diversification ratio; **Weak** if only one holds; **None** if the two
       portfolios are effectively the same.
-    - **Usefulness**: **Useful** if the MDP beats **inverse volatility** — the free competitor
+    - **Usefulness**: **Fragile** if the MDP beats **inverse volatility** — the free competitor
       — on realised volatility with a paired |*t*| >= 2 on at least one panel; **Fragile** if it
       wins without significance; **Mirage** if the free version is as good.
     """
@@ -291,7 +291,7 @@ def verdict(h: dict) -> dict:
     signal = ("Real" if distinct and higher_dr
               else ("Weak" if distinct or higher_dr else "None"))
     t = h["best_t_vs_invvol"]
-    trad = ("Useful" if t > 2.0 else ("Fragile" if h["beats_invvol_panels"] >= 1 else "Mirage"))
+    trad = "Fragile" if h["beats_invvol_panels"] >= 1 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

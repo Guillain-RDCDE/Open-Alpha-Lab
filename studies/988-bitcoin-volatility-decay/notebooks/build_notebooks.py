@@ -55,7 +55,7 @@ def build_curious():
 ### "Bitcoin's volatility is coming down." Is it, though?
 
 ![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)
-![Tradability: Useful](https://img.shields.io/badge/Tradability-Useful-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 It is the reassuring story of every cycle: the asset is maturing, the wild days are behind us,
 the chart slopes gently down. The chart is real. What it means is another matter — because in a
@@ -230,7 +230,7 @@ for c in rel.columns:
 
 **Signal: Weak.** Bitcoin's trailing 30-day volatility averaged **60%** over 11.7 years, ranging 14% to 175%. Fitted four ways, the trend in log volatility is: OLS **-2.7%/yr** (naive *t* = -13.62), Theil-Sen -3.7%/yr, and OLS with a block-bootstrap standard error -0.027 with *t* = **-1.60** — the naive *t* is 8.5× too large because volatility residuals are nothing like independent (the 100-day autocorrelation is still +0.15). The control that settles it: refitting from **every** possible start date, 100% of windows slope down but only **97%** do so significantly, and the fitted slope correlates -0.22 with the volatility on the day the window opens. That last number is the whole trick: start at a peak, get a decline.
 
-**Tradability: Useful.** Sizing to a constant 40% volatility rather than holding a fixed position returned **+inf%/yr** against buy-and-hold's **+53.7%** (Sharpe 7.41 vs 0.98, drawdown -inf% vs -83%) at average leverage 0.81×. Note what the trend question does to this: if volatility really is decaying, a vol-targeted holder must lever up over time — the fitted leverage trend here is +0.027/yr — and is therefore making a bet on the trend continuing whether they meant to or not.
+**Tradability: Fragile.** Sizing to a constant 40% volatility rather than holding a fixed position returned **+inf%/yr** against buy-and-hold's **+53.7%** (Sharpe 7.41 vs 0.98, drawdown -inf% vs -83%) at average leverage 0.81×. Note what the trend question does to this: if volatility really is decaying, a vol-targeted holder must lever up over time — the fitted leverage trend here is +0.027/yr — and is therefore making a bet on the trend continuing whether they meant to or not.
 """
         ),
         md(
@@ -262,7 +262,7 @@ def build_quants():
 ### Calendar-correct annualisation · four trend estimators · block bootstrap · start-date surface
 
 ![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)
-![Tradability: Useful](https://img.shields.io/badge/Tradability-Useful-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The interesting
 object here is not the slope; it is the *distribution of slopes over start dates*, which turns a
@@ -310,7 +310,7 @@ print(f"autocorrelation of that vol at 100 days: {v.autocorr(100):+.2f}")
 | Axis | Stamp | Why |
 |---|---|---|
 | **Signal** | Weak | Bitcoin's trailing 30-day volatility averaged **60%** over 11.7 years, ranging 14% to 175%. Fitted four ways, the trend in log volatility is: OLS **-2.7%/yr** (naive *t* = -13.62), Theil-Sen -3.7%/yr, and OLS with a block-bootstrap standard error -0.027 with *t* = **-1.60** — the naive *t* is 8.5× too large because volatility residuals are nothing like independent (the 100-day autocorrelation is still +0.15). The control that settles it: refitting from **every** possible start date, 100% of windows slope down but only **97%** do so significantly, and the fitted slope correlates -0.22 with the volatility on the day the window opens. That last number is the whole trick: start at a peak, get a decline. |
-| **Tradability** | Useful | Sizing to a constant 40% volatility rather than holding a fixed position returned **+inf%/yr** against buy-and-hold's **+53.7%** (Sharpe 7.41 vs 0.98, drawdown -inf% vs -83%) at average leverage 0.81×. Note what the trend question does to this: if volatility really is decaying, a vol-targeted holder must lever up over time — the fitted leverage trend here is +0.027/yr — and is therefore making a bet on the trend continuing whether they meant to or not. |
+| **Tradability** | Fragile | Sizing to a constant 40% volatility rather than holding a fixed position returned **+inf%/yr** against buy-and-hold's **+53.7%** (Sharpe 7.41 vs 0.98, drawdown -inf% vs -83%) at average leverage 0.81×. Note what the trend question does to this: if volatility really is decaying, a vol-targeted holder must lever up over time — the fitted leverage trend here is +0.027/yr — and is therefore making a bet on the trend continuing whether they meant to or not. |
 
 > \U0001F4A1 **In plain words.** The volatility is lower than it was. Whether that is a *trend*
 > is a much weaker claim than the charts suggest.

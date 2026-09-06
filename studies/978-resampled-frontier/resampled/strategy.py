@@ -288,7 +288,7 @@ def verdict(h: dict) -> dict:
     - **Signal**: **Real** if resampling changes the portfolio materially (more than 10% of the
       book versus plain optimisation) **and** reduces the utility gap against a known truth in
       simulation; **Weak** if only one holds; **None** otherwise.
-    - **Usefulness**: **Useful** only if resampling beats **shrinkage** — the cheap competitor
+    - **Usefulness**: **Fragile** only if resampling beats **shrinkage** — the cheap competitor
       — on out-of-sample Sharpe with a paired |*t*| >= 2; **Fragile** if it beats plain
       optimisation but not shrinkage; **Mirage** if it beats neither.
     """
@@ -297,7 +297,7 @@ def verdict(h: dict) -> dict:
     signal = "Real" if distinct and better else ("Weak" if distinct or better else "None")
     beats_shrink = h["t_vs_shrunk"] > 2.0
     beats_plain = h["t_vs_plain"] > 0
-    trad = ("Useful" if beats_shrink else ("Fragile" if beats_plain else "Mirage"))
+    trad = "Fragile" if beats_plain else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

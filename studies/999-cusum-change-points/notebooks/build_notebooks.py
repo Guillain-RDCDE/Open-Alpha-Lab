@@ -54,8 +54,8 @@ def build_curious():
 # The Break \U0001F517
 ### Markets change regime. Nobody tells you when.
 
-![Signal: Partial](https://img.shields.io/badge/Signal-Partial-dab617?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 Look at any long chart and the regime shifts are obvious — calm here, chaos there, calm again.
 Now cover the right-hand side of the chart with your hand and try to say, standing at the edge,
@@ -306,9 +306,9 @@ section 3 says most of it cannot be closed.
 
 ## 7 · The verdict
 
-**Signal: Partial.** Against **planted** change points — the only kind whose dates are known — a variance CUSUM at threshold 5 found **100%** of them, with a median delay of **6 sessions** and 13.7 alarms a year. That delay is not a flaw in the algorithm: Wald's identity puts the unavoidable floor at about inf sessions for a shift this size, so the detector is running at **0.0× the information-theoretic limit**. The threshold is the only real dial, and it buys exactly one thing with another: dropping it to 2 cut the median delay to 3 sessions and raised the alarm rate to 38.2 a year. On the real tape the detector fired around the episodes everyone would name, but a **retrospective** method placed the same breaks 2 sessions earlier on average — which is the gap between what is knowable afterwards and what was knowable at the time.
+**Signal: Weak.** Against **planted** change points — the only kind whose dates are known — a variance CUSUM at threshold 5 found **100%** of them, with a median delay of **6 sessions** and 13.7 alarms a year. That delay is not a flaw in the algorithm: Wald's identity puts the unavoidable floor at about inf sessions for a shift this size, so the detector is running at **0.0× the information-theoretic limit**. The threshold is the only real dial, and it buys exactly one thing with another: dropping it to 2 cut the median delay to 3 sessions and raised the alarm rate to 38.2 a year. On the real tape the detector fired around the episodes everyone would name, but a **retrospective** method placed the same breaks 2 sessions earlier on average — which is the gap between what is knowable afterwards and what was knowable at the time.
 
-**Tradability: Partial.** Run live with no look-ahead, going to cash for 21 sessions after each alarm, the rule returned **+3.43%/yr at a Sharpe of 0.49** against buy-and-hold's +10.68% and 0.64, with a drawdown of -15% versus -55%. Now the number that explains it: the **identical rule given the break dates in advance** returned +12.01% at a Sharpe of 0.74. The gap between the live and hindsight versions — +0.25 of Sharpe — is not a failure of the strategy. It is the price of the 6-session delay, and no better detector removes more than a fraction of it.
+**Tradability: Fragile.** Run live with no look-ahead, going to cash for 21 sessions after each alarm, the rule returned **+3.43%/yr at a Sharpe of 0.49** against buy-and-hold's +10.68% and 0.64, with a drawdown of -15% versus -55%. Now the number that explains it: the **identical rule given the break dates in advance** returned +12.01% at a Sharpe of 0.74. The gap between the live and hindsight versions — +0.25 of Sharpe — is not a failure of the strategy. It is the price of the 6-session delay, and no better detector removes more than a fraction of it.
 """
         ),
         md(
@@ -339,8 +339,8 @@ def build_quants():
 # The Break — a quantitative teardown \U0001F52C
 ### CUSUM against planted breaks · Wald's delay bound · retrospective vs sequential
 
-![Signal: Partial](https://img.shields.io/badge/Signal-Partial-dab617?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The result worth
 carrying away is not which detector wins — it is that the delay has a **floor** set by
@@ -387,8 +387,8 @@ print(f"as-of {data.AS_OF} | {data.EQUITY}: {len(lead):,} sessions, "
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** | Partial | Against **planted** change points — the only kind whose dates are known — a variance CUSUM at threshold 5 found **100%** of them, with a median delay of **6 sessions** and 13.7 alarms a year. That delay is not a flaw in the algorithm: Wald's identity puts the unavoidable floor at about inf sessions for a shift this size, so the detector is running at **0.0× the information-theoretic limit**. The threshold is the only real dial, and it buys exactly one thing with another: dropping it to 2 cut the median delay to 3 sessions and raised the alarm rate to 38.2 a year. On the real tape the detector fired around the episodes everyone would name, but a **retrospective** method placed the same breaks 2 sessions earlier on average — which is the gap between what is knowable afterwards and what was knowable at the time. |
-| **Tradability** | Partial | Run live with no look-ahead, going to cash for 21 sessions after each alarm, the rule returned **+3.43%/yr at a Sharpe of 0.49** against buy-and-hold's +10.68% and 0.64, with a drawdown of -15% versus -55%. Now the number that explains it: the **identical rule given the break dates in advance** returned +12.01% at a Sharpe of 0.74. The gap between the live and hindsight versions — +0.25 of Sharpe — is not a failure of the strategy. It is the price of the 6-session delay, and no better detector removes more than a fraction of it. |
+| **Signal** | Weak | Against **planted** change points — the only kind whose dates are known — a variance CUSUM at threshold 5 found **100%** of them, with a median delay of **6 sessions** and 13.7 alarms a year. That delay is not a flaw in the algorithm: Wald's identity puts the unavoidable floor at about inf sessions for a shift this size, so the detector is running at **0.0× the information-theoretic limit**. The threshold is the only real dial, and it buys exactly one thing with another: dropping it to 2 cut the median delay to 3 sessions and raised the alarm rate to 38.2 a year. On the real tape the detector fired around the episodes everyone would name, but a **retrospective** method placed the same breaks 2 sessions earlier on average — which is the gap between what is knowable afterwards and what was knowable at the time. |
+| **Tradability** | Fragile | Run live with no look-ahead, going to cash for 21 sessions after each alarm, the rule returned **+3.43%/yr at a Sharpe of 0.49** against buy-and-hold's +10.68% and 0.64, with a drawdown of -15% versus -55%. Now the number that explains it: the **identical rule given the break dates in advance** returned +12.01% at a Sharpe of 0.74. The gap between the live and hindsight versions — +0.25 of Sharpe — is not a failure of the strategy. It is the price of the 6-session delay, and no better detector removes more than a fraction of it. |
 
 > \U0001F4A1 **In plain words.** The detector works. The delay is close to a mathematical floor.
 > Those two facts together are the whole result.

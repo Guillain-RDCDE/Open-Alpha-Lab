@@ -1,38 +1,47 @@
-# What 962 teardowns taught us
+# What 1012 teardowns taught us
 
-*Nine hundred and sixty-two famous trading ideas — anomalies, folk strategies, vendor backtests, things
+*A thousand and twelve famous trading ideas — anomalies, folk strategies, vendor backtests, things
 people swear by — each put through the [same protocol](../METHODOLOGY.md) and
 stamped twice: **is the signal real?** and **does it survive real execution and
 scale?** This page is the view from above. It aggregates; it doesn't re-judge —
 every verdict below links back to the study that earned it.*
 
-![The bench map — 962 studies on a Signal × Tradability grid](bench_map.png)
+![The bench map — 1012 studies on a Signal × Tradability grid](bench_map.png)
 
 *(Regenerate with `python tools/make_bench_figures.py` — it parses the
-[README table](../README.md), so it's always in sync.)*
+[ledger](REFERENCE.md), so it's always in sync.)*
+
+> **Two denominators, on purpose.** The [ledger](REFERENCE.md) holds **1012** rows — every
+> study, no exceptions. The grid below holds **1011**: study
+> [14](../studies/14-gamma-gospel/) is pre-registered, so it carries a `Pre-reg` stamp on
+> both axes and a 3×3 grid has nowhere to put it. The map's caption states its own
+> denominator and names any stray. Where a number here says "of 1011", it means the grid;
+> where it says "of 1012", it means the ledger. They are not meant to agree, and
+> [`tools/check_reference_table.py`](../tools/check_reference_table.py) is what stops them
+> from disagreeing by accident.
 
 ---
 
 ## The score
 
-Of the 962 studies on the bench, 961 carry final stamps (study
+Of the 1012 studies on the bench, 1011 carry final stamps (study
 [14](../studies/14-gamma-gospel/) is pre-registered, verdict pending):
 
 | | Investable | Fragile | Mirage | |
 |---|:--:|:--:|:--:|:--:|
-| **Real** | **9** | 53 | 34 | 96 |
-| **Weak** | 0 | 106 | 224 | 330 |
-| **None** | 0 | 4 | 531 | 535 |
-| | **9** | **163** | **789** | **961** |
+| **Real** | **10** | 79 | 37 | 126 |
+| **Weak** | 0 | 116 | 228 | 344 |
+| **None** | 0 | 7 | 534 | 541 |
+| | **10** | **202** | **799** | **1011** |
 
 Read it the way the colours tell you to:
 
-- **96 / 961 signals are statistically real.** About one famous idea in ten
-  survives autocorrelation-robust inference. The other nine-tenths are weak
-  (330, Mixed folded in) or plain noise (535).
-- **789 / 961 are mirages once you try to trade them.** Costs, capacity,
+- **126 / 1011 signals are statistically real.** About one famous idea in eight
+  survives autocorrelation-robust inference. The other seven-eighths are weak
+  (344, Mixed folded in) or plain noise (541).
+- **799 / 1011 are mirages once you try to trade them.** Costs, capacity,
   decay, or the discovery that the "edge" was beta all along.
-- **9 / 961 are investable**, in three distinct flavours. The three originals —
+- **10 / 1011 are investable**, in four distinct flavours. The three originals —
   [Storm-Shy](../studies/16-storm-shy/), [All-Weather](../studies/68-all-weather/),
   [Balancing-Act](../studies/97-balancing-act/) — are risk-managers, not forecasters.
   The three added by the "green hunt" lot (591–640) are harvestable *return* engines,
@@ -46,28 +55,43 @@ Read it the way the colours tell you to:
   fee-versus-spread trade-off by holding period, [Hidden-Financing](../studies/945-leverage-financing-cost/)
   backs out what a leveraged wrapper really charges you to borrow, and
   [Which-Gold](../studies/961-gold-wrapper-cheapest/) shows the cheapest wrapper for one
-  identical metal genuinely wins. You can bank a premium, an identity, or a saving; you
-  still can't see the future.
+  identical metal genuinely wins. The tenth, from the measurement lot (963–1012), is a
+  fourth kind: **a discipline that pays for itself**. Confirmation — wait *k* days before
+  acting on a signal — cuts whipsaw round trips from 78% to 30%
+  [[981](../studies/981-confirmation-delay/)], and the study prices *both* sides of the
+  trade-off instead of netting them, then admits the winning *k* is only knowable
+  afterwards. You can bank a premium, an identity, a saving, or a discipline; you still
+  can't see the future.
 
 The single most important cell isn't the green one — it's **Real × Mirage
-(34 studies)**. Thirty-four effects that are *genuinely there in the data* and still
+(37 studies)**. Thirty-seven effects that are *genuinely there in the data* and still
 can't pay you. That gap between "true" and "tradable" is the bench's whole
-thesis, measured — and it *widened* under the green hunt: chase likely-real
-premia and most still die at the trading desk (borrow fees, roll drag, one-way
-bounds you can't stand on).
+thesis, measured — and it has now widened twice: first under the green hunt (chase
+likely-real premia and most still die at the trading desk — borrow fees, roll drag,
+one-way bounds you can't stand on), then under the measurement lot, where an effect can
+be real *because it is arithmetic* and still unbankable — the 1% bitcoin sleeve
+[[1003](../studies/1003-bitcoin-in-a-portfolio/)] is the cleanest case.
 
-A quieter cell worth a look: **None × Fragile (4 studies)** — gold
+A quieter cell worth a look: **None × Fragile (7 studies)** — gold
 [[69](../studies/69-safe-haven/)] and bitcoin [[70](../studies/70-digital-gold/)]
 flunk the *claims* made for them (inflation hedge, digital haven) yet keep a
-Fragile stamp as plain diversifiers. The story dies; the asset survives.
+Fragile stamp as plain diversifiers. The story dies; the asset survives. The measurement
+lot added three of exactly that shape: mismatched holiday calendars
+[[973](../studies/973-calendar-misalignment/)], silver as "gold with a beta"
+[[987](../studies/987-silver-high-beta-gold/)] and the hunt for cycles in a Fourier
+spectrum [[1000](../studies/1000-fourier-cycles/)] — a folk claim that fails, sitting on
+top of a real thing you still have to handle.
 
 ---
 
 ## Where ideas go to die — mortality by family
 
-We sorted the 962 into rough families. The boundaries are judgement calls (is
+We sorted all 1012 into rough families. The boundaries are judgement calls (is
 the 52-week high a chart pattern or a momentum factor? we said factor) — the
-totals below are honest, the taxonomy is approximate.
+totals below are honest, the taxonomy is approximate. This table *is* the taxonomy:
+[`tools/make_bench_figures.py`](../tools/make_bench_figures.py) parses the family
+rows below rather than carrying a family map of its own, so a study missing from
+here is a study missing from every per-family count.
 
 | Family | Studies | Real | Survived costs* | Investable |
 |---|:--:|:--:|:--:|:--:|
@@ -84,34 +108,46 @@ totals below are honest, the taxonomy is approximate.
 | ML & model forecasting — [10](../studies/10-markov-mint/) [12](../studies/12-paper-prophet/) [39](../studies/39-black-box/) [84](../studies/84-moon-math/) [138](../studies/138-random-forest/) [139](../studies/139-ai-powered-etf/) [765](../studies/765-stock-to-flow/) | 7 | 0 | 0 | 0 |
 | Microstructure & crowds — [4](../studies/04-social-oracle/) [9](../studies/09-phantom-kernel/) [11](../studies/11-vanishing-penny/) [140](../studies/140-amihud-illiquidity/) [141](../studies/141-turnover-anomaly/) [169](../studies/169-fluent-tickers/) [170](../studies/170-alphabetical-bias/) [213](../studies/213-meme-stocks/) [249](../studies/249-index-inclusion/) [252](../studies/252-google-trends/) [253](../studies/253-wikipedia-views/) [254](../studies/254-wsb-mentions/) [256](../studies/256-twitter-mood/) [259](../studies/259-news-tone/) [328](../studies/328-benford-law/) [334](../studies/334-ark-innovation/) [335](../studies/335-buzz-sentiment-etf/) [336](../studies/336-inverse-cramer/) [351](../studies/351-btc-5m-polymarket-momentum/) [376](../studies/376-moc-imbalance/) [377](../studies/377-bid-ask-bounce/) [378](../studies/378-etf-nav-premium/) [379](../studies/379-etf-lead-lag/) [389](../studies/389-name-change-effect/) [392](../studies/392-glassdoor-sentiment/) [549](../studies/549-spotify-mood/) [550](../studies/550-box-office-momentum/) [551](../studies/551-netflix-top10/) [552](../studies/552-app-store-rankings/) [553](../studies/553-github-activity/) [554](../studies/554-airline-bookings/) [555](../studies/555-opentable-reservations/) [557](../studies/557-borrow-fee-signal/) [558](../studies/558-failures-to-deliver/) [559](../studies/559-dark-pool-ratio/) [560](../studies/560-odd-lot-ratio/) [561](../studies/561-etf-flow-momentum/) [562](../studies/562-block-trade-signal/) [564](../studies/564-short-report-event/) [565](../studies/565-filing-readability/) [566](../studies/566-earnings-call-tone/) [567](../studies/567-uncertainty-word-count/) [588](../studies/588-llm-headline-sentiment/) [608](../studies/608-friday-news-dump/) [622](../studies/622-thematic-etf-curse/) [634](../studies/634-us-leads-the-world/) [635](../studies/635-coinbase-premium/) [636](../studies/636-exchange-listing-pop/) [722](../studies/722-logo-rebrand/) [750](../studies/750-return-to-office/) [751](../studies/751-fortune-500-inclusion/) [758](../studies/758-tsa-throughput/) [759](../studies/759-redbook-retail/) [761](../studies/761-hotel-revpar/) [769](../studies/769-disney-parks/) [771](../studies/771-box-office-bomb/) [772](../studies/772-album-drop/) [773](../studies/773-spotify-wrapped/) [774](../studies/774-nintendo-direct/) [778](../studies/778-chipotle-scare/) [782](../studies/782-ceo-name-length/) [783](../studies/783-ipo-deal-of-year/) [784](../studies/784-analyst-cluster/) [785](../studies/785-parking-lot/) [788](../studies/788-overnight-intraday-tug-of-war/) [843](../studies/843-waffle-house-index/) [844](../studies/844-madden-cover-curse/) [845](../studies/845-stadium-naming-curse/) [846](../studies/846-game-launch-drift/) [847](../studies/847-rotten-tomatoes-studio/) [850](../studies/850-airline-meltdown/) [851](../studies/851-netflix-password-crackdown/) [852](../studies/852-movie-sequel-fatigue/) [870](../studies/870-industry-leader-lead-lag/) | 74 | 6 | 14 | 0 |
 | Research-method demos — [343](../studies/343-data-mining-roulette/) [344](../studies/344-backtest-overfitting/) [345](../studies/345-survivorship-bias/) [346](../studies/346-multiple-testing/) [347](../studies/347-look-ahead-bias/) [348](../studies/348-curve-fitting/) [349](../studies/349-regime-dependence/) [350](../studies/350-dartboard-portfolio/) [355](../studies/355-magnificent-seven/) [393](../studies/393-ai-datacenter-basket/) [399](../studies/399-kalshi-efficiency/) [401](../studies/401-signal-stacking/) [589](../studies/589-genetic-algo-overfit/) [590](../studies/590-sharpe-hacking/) [833](../studies/833-deflated-sharpe-ratio/) [834](../studies/834-minimum-backtest-length/) [835](../studies/835-spurious-regression/) [836](../studies/836-timing-luck/) [837](../studies/837-lookahead-standardization/) [838](../studies/838-hac-necessity/) [839](../studies/839-tstat-three-threshold/) [840](../studies/840-clustered-standard-errors/) [841](../studies/841-overlapping-returns/) [842](../studies/842-implementation-shortfall/) | 24 | 0 | 0 | 0 |
+| Measurement, estimation & portfolio construction — [963](../studies/963-half-day-sessions/) [964](../studies/964-ath-buying/) [965](../studies/965-range-vol-estimators/) [966](../studies/966-har-vs-garch/) [967](../studies/967-rolling-vs-expanding/) [968](../studies/968-bootstrap-choice/) [969](../studies/969-log-vs-simple-returns/) [970](../studies/970-sqrt-time-scaling/) [971](../studies/971-tape-self-consistency/) [972](../studies/972-adjustment-mode-matters/) [973](../studies/973-calendar-misalignment/) [974](../studies/974-diversification-saturation/) [975](../studies/975-covariance-shrinkage/) [976](../studies/976-hierarchical-risk-parity/) [977](../studies/977-max-diversification/) [978](../studies/978-resampled-frontier/) [979](../studies/979-black-litterman-zero-views/) [980](../studies/980-semis-lead-the-market/) [981](../studies/981-confirmation-delay/) [982](../studies/982-risk-appetite-ratio/) [983](../studies/983-bitcoin-leads-equities/) [984](../studies/984-ex-day-drop-ratio/) [985](../studies/985-last-hike-timing/) [986](../studies/986-etf-vs-hold-to-maturity/) [987](../studies/987-silver-high-beta-gold/) [988](../studies/988-bitcoin-volatility-decay/) [989](../studies/989-altcoin-downside-beta/) [990](../studies/990-var-breach-count/) [991](../studies/991-aggregational-gaussianity/) [992](../studies/992-vol-clustering-halflife/) [993](../studies/993-leverage-effect-asymmetry/) [994](../studies/994-small-account-lot-drag/) [995](../studies/995-sharpe-in-your-currency/) [996](../studies/996-palindrome-dates/) [997](../studies/997-rebalance-timing-luck/) [998](../studies/998-kalman-hedge-ratio/) [999](../studies/999-cusum-change-points/) [1000](../studies/1000-fourier-cycles/) [1001](../studies/1001-purged-cv-embargo/) [1002](../studies/1002-best-days-missed/) [1003](../studies/1003-bitcoin-in-a-portfolio/) [1004](../studies/1004-how-many-stocks/) [1005](../studies/1005-beta-stability/) [1006](../studies/1006-most-stocks-underperform-cash/) [1007](../studies/1007-time-diversification/) [1008](../studies/1008-start-date-lottery/) [1009](../studies/1009-sortino-vs-sharpe/) [1010](../studies/1010-correlation-matrix-stability/) [1011](../studies/1011-turnover-and-alpha-half-life/) [1012](../studies/1012-benchmark-choice-and-alpha/) | 50 | 30 | 40 | **1** |
 | Pre-registered — [14](../studies/14-gamma-gospel/) | 1 | — | — | — |
 
 \* *"Survived costs" = stamped Investable or Fragile (alive on paper, even if
 thin). The complement is Mirage.*
 
-Three patterns jump out:
+Four patterns jump out:
 
 - **ML & forecasting is the deadest corner of the bench: 0 for 7.** Every
   model-driven forecaster — Markov pipeline [10], ARIMA+GARCH [12], neural net
   [39], the Stock-to-Flow model [84], a Random Forest [138] and the 'AI-powered' ETF [139] — produced an in-sample story and an out-of-sample coin flip.
 - **Calendar effects are the opposite failure mode: among the most *real* per
-  capita (6 of 60) and almost none tradable.** The pattern is genuinely in the
+  capita (11 of 127) and almost none tradable — 10 of 127 survive costs.** The pattern is genuinely in the
   data; the trade built on it forfeits more than it captures
   ([42](../studies/42-last-call/), [55](../studies/55-summer-lull/)) — or dies
   the moment it's published ([67](../studies/67-fed-drift/)).
 - **Momentum, trend and carry don't die — they limp.** These families
-  collect Fragile stamps, not Mirage ones (momentum 9/11 alive-but-thin, carry
-  5/10): premia with a century of literature that one tape can't certify and
+  collect Fragile stamps, not Mirage ones (momentum 10/13 alive-but-thin, carry
+  17/58): premia with a century of literature that one tape can't certify and
   costs nearly erase.
+- **The measurement lot inverts the whole table: 30 real out of 50, 40 of 50
+  alive — and one investable.** Every other family asks *does this edge exist?*
+  and mostly hears no. This one asks *what does the choice of estimator, window,
+  benchmark or rebalance date do to the number you publish?* — and the answer is
+  almost always "something real", because these effects are properties of the
+  arithmetic, not of the market. The tradability column is the punchline: knowing
+  that [rebalance dates are a lottery](../studies/997-rebalance-timing-luck/), that
+  [a correlation matrix is mostly noise](../studies/1010-correlation-matrix-stability/)
+  or that [beta has a half-life](../studies/1005-beta-stability/) makes your
+  measurement honest. It does not make you money. Real is cheap here; the costs
+  line is still where it ends.
 
 ---
 
-## Five lessons the bench keeps teaching
+## Six lessons the bench keeps teaching
 
 These aren't opinions — each one fell out of multiple studies independently.
 
 **1 · The edge dies at the costs line, not the signal line.**
-Of the 47 statistically real signals, 44 failed or barely survived
+Of the 126 statistically real signals, 116 failed or barely survived
 tradability. The overnight drift is real and untradable
 [[01](../studies/01-overnight-anomaly/)]; intraday reversal is real with a
 3.31 bp break-even that lives in the least-liquid names
@@ -186,14 +222,41 @@ already spent [[628](../studies/628-buffetts-alpha/)]. Nothing on this bench
 forecasts returns and pays. Several things manage risk, harvest a premium, or
 bank an identity — and those do.
 
+**6 · Before you ask whether the edge is real, ask what the number is made of.**
+The measurement lot (963–1012) went looking not for edges but for the choices buried in
+every backtest — which volatility estimator, which window, which benchmark, which
+rebalance date, which bootstrap — and found that those choices move the published number
+more than most of the "anomalies" on this bench ever did. A **rebalance date chosen a week
+apart changes the result** [[997](../studies/997-rebalance-timing-luck/)]; a correlation
+matrix estimated from a normal sample **is mostly sampling noise**
+[[1010](../studies/1010-correlation-matrix-stability/)]; **beta has a half-life** and the
+Blume slope everyone uses to "correct" it turns out to measure the signal-to-noise ratio
+rather than the stability [[1005](../studies/1005-beta-stability/)]; a purged-CV fold
+boundary quietly **invents a negative IC out of signal-free data**
+[[1001](../studies/1001-purged-cv-embargo/)]; and your Sharpe ratio **depends on the
+currency you happen to bank in** [[995](../studies/995-sharpe-in-your-currency/)].
+
+Six of the fifty rejected their own pre-registered hypothesis, and those write-ups were
+kept rather than rewritten — the data *can* tell 1% from 5% bitcoin and wants 16.5%
+[[1003](../studies/1003-bitcoin-in-a-portfolio/)]; the "most stocks underperform cash"
+result is absent on a survivor panel [[1006](../studies/1006-most-stocks-underperform-cash/)];
+time does not diversify, but the small-sample bias in measuring that is larger than the
+effect [[1007](../studies/1007-time-diversification/)]; Sortino and Sharpe rank identically
+(Spearman 1.000) [[1009](../studies/1009-sortino-vs-sharpe/)]. Three of the lot's own
+measurement errors were caught mid-build and are now pinned by tests that fail if the
+mistake comes back. That is the lesson in one line: **the most reliable way to find a
+signal that isn't there is to measure carelessly**, and 30 of these 50 are real precisely
+because they are properties of the arithmetic. Exactly one is investable.
+
 ---
 
 ## The podium
 
-**🟩 The six that made it.** Three risk-managers found in the first 590, and
-three harvestable *return* engines surfaced by the "green hunt" lot (591–640) —
-the first time the bench's green column contains anything you buy for its yield
-rather than its calm.
+**🟩 The ten that made it.** Three risk-managers found in the first 590, three
+harvestable *return* engines surfaced by the "green hunt" lot (591–640) — the first time
+the bench's green column contained anything you buy for its yield rather than its calm —
+three savings dug out by the "plumbing" lot (913–962), and one discipline from the
+measurement lot (963–1012).
 
 *The three risk-managers — they predict nothing and win on risk-adjusted terms:*
 [**16 · Storm-Shy**](../studies/16-storm-shy/) — Real × Investable. Scale
@@ -225,6 +288,33 @@ no forecasting, just collecting the differential the wrapper hands you for free.
 *t* = 12.5, identity slope ≈ 1 — pure **duration arithmetic** (Bogle/Leibowitz), robust across
 pre/post-1950 and a drop-one-decade jackknife. One entry per decade, ~$0 cost, effectively
 unlimited capacity. You don't forecast the yield; you *read it off the ticket*.
+
+*The three savings — not a return you go and get, but a cost you stop paying:*
+[**920 · Total-Cost-of-Ownership**](../studies/920-total-cost-of-ownership/) — Real ×
+Investable. The cheapest fund is not the one with the lowest fee: expense ratio and spread
+trade off against each other, and which wins is decided entirely by how long you hold. The
+crossover is computable in advance, per holding period, and it is the rare bench result you
+can act on before you place the trade rather than after.
+[**945 · Hidden-Financing**](../studies/945-leverage-financing-cost/) — Real × Investable.
+Back out what a leveraged wrapper actually charges you to borrow, rather than what the
+factsheet says. The implied rate is recoverable from the fund's own tape, it is materially
+above the headline, and it is a cost you can decline by financing the leverage yourself.
+[**961 · Which-Gold**](../studies/961-gold-wrapper-cheapest/) — Real × Investable. Several
+wrappers hold one identical metal, so the return difference between them is *pure* cost with
+nothing else in it — the cleanest natural experiment on the bench. The cheapest wrapper wins
+by exactly the fee gap, persistently, with no forecast involved.
+
+*The one discipline — the only green on the bench that is about how you act, not what you hold:*
+[**981 · The Price of Waiting**](../studies/981-confirmation-delay/) — Real × Investable.
+Requiring *k* consecutive days of agreement before acting cuts whipsaw round trips from
+**78% to 30%** and trades from 7.1 to 1.9 a year, across all 12 tape × signal cells. What
+makes it green rather than folklore is that the study prices *both* sides separately instead
+of netting them: 3,636 sessions spent in cash while the raw signal was already right, worth
+**−216,670 bps** forgone, against **+253,703 bps** avoided by exiting late. Some *k* beat the
+unconfirmed rule on Sharpe in 92% of cells by +0.110 — and the study says plainly that the
+winning *k* differs in almost every cell, which is what choosing it in hindsight looks like.
+Every arm carries the same one-day execution lag, so the comparison is about confirmation and
+not about being late.
 
 **🟨 The honest fragiles** — Real signals that survive on paper but are thin,
 decaying, or capacity-starved. Worth knowing; not worth quitting your job for:
@@ -272,9 +362,10 @@ decaying, or capacity-starved. Worth knowing; not worth quitting your job for:
 
 ## Challenge the bench
 
-This page will be wrong eventually — that's the design. Eight hundred and forty-one verdicts is
-eight hundred and forty-one falsifiable claims, each with reproducible code, pinned data
-fingerprints, and the exact line where we think the dream dies.
+This page will be wrong eventually — that's the design. A thousand and eleven verdicts is
+a thousand and eleven falsifiable claims (the thousand-and-twelfth,
+[14](../studies/14-gamma-gospel/), is still pre-registered), each with reproducible code,
+pinned data fingerprints, and the exact line where we think the dream dies.
 
 - **Think a Mirage is tradable?** Fork the study, change the cost model or
   the venue, and show the break-even. Beat 7 of every notebook says what we'd
@@ -289,6 +380,8 @@ redraws it.
 
 ---
 
-*Part of [Open-Alpha-Lab](../README.md). Counts generated from the README
-table by [`tools/make_bench_figures.py`](../tools/make_bench_figures.py).
+*Part of [Open-Alpha-Lab](../README.md). Counts generated from the
+[ledger](REFERENCE.md) by [`tools/make_bench_figures.py`](../tools/make_bench_figures.py),
+and checked against the studies themselves by
+[`tools/check_reference_table.py`](../tools/check_reference_table.py).
 Not investment advice — research and education. See [LICENSE](../LICENSE).*

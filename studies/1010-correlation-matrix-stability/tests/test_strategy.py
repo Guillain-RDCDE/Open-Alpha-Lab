@@ -402,14 +402,17 @@ def _headline(**over):
 
 def test_verdict_signal_keys_off_the_informative_fraction():
     """Not `share_inside`: eigenvalues leaving through the bottom of the band are noise too."""
-    assert st.verdict(_headline())["signal"] == "Confirmed"
-    assert st.verdict(_headline(n_above=12))["signal"] == "Partial"
-    assert st.verdict(_headline(n_above=25))["signal"] == "Busted"
+    assert st.verdict(_headline())["signal"] == "Real"
+    assert st.verdict(_headline(n_above=12))["signal"] == "Weak"
+    assert st.verdict(_headline(n_above=25))["signal"] == "None"
 
 
 def test_verdict_tradability_requires_beating_the_diagonal_baseline():
-    assert st.verdict(_headline())["trad"] == "Useful"
-    assert st.verdict(_headline(best_method="diagonal"))["trad"] == "Partial"
+    # The two upper branches deliberately share the Fragile stamp: the desk's
+    # documented Tradability axis is Investable/Fragile/Mirage, and neither of these
+    # is a bankable edge. The finer distinction between them lives in the prose.
+    assert st.verdict(_headline())["trad"] == "Fragile"
+    assert st.verdict(_headline(best_method="diagonal"))["trad"] == "Fragile"
     assert st.verdict(_headline(best_calibration_err=0.9))["trad"] == "Mirage"
 
 

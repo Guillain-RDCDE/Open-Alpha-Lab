@@ -131,7 +131,7 @@ Produced by `strategy.verdict`, fixed before the run and unit-tested in
 
 **Signal: Real.** It matters, and it matters where you would not look. On an i.i.d. tape every scheme covers near nominal. Once volatility clusters and the tape is fat-tailed, the **Sharpe** interval degrades for all of them — the worst method covers **87%** against a promised 95% — and the spread between best and worst method reaches **9%** of coverage. With genuine AR(1) in the returns the i.i.d. resample is the one that breaks: **97%** coverage of the mean, because it destroys the dependence that inflates the true standard error.
 
-**Usefulness: Useful.** **Moving block (Kunsch 1989)** is the least-bad default: its worst coverage across every world tested is **100%**-ish, within 0.3% of nominal, and it costs the same as any other resample. On the real tapes the choice moves the published Sharpe interval by up to **17%** of its width (SPY: [+0.34, +0.97]) — enough to change whether a strategy 'clears zero', which is exactly the decision these intervals are used for.
+**Usefulness: Fragile.** **Moving block (Kunsch 1989)** is the least-bad default: its worst coverage across every world tested is **100%**-ish, within 0.3% of nominal, and it costs the same as any other resample. On the real tapes the choice moves the published Sharpe interval by up to **17%** of its width (SPY: [+0.34, +0.97]) — enough to change whether a strategy 'clears zero', which is exactly the decision these intervals are used for.
 
 ---
 

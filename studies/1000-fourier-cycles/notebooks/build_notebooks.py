@@ -54,8 +54,8 @@ def build_curious():
 # The Cycle Hunt \U0001F30A
 ### Fourier says the market has cycles. Fourier says a coin toss has cycles too.
 
-![Signal: Busted](https://img.shields.io/badge/Signal-Busted-c0392b?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 Feed a price series into a Fourier transform and peaks come out. They always come out. The
 periodogram of pure noise is not a flat line — it is a jagged mess, and its tallest spike is
@@ -292,9 +292,9 @@ print(f"  first half {sr['period_first']:.1f}, second half {sr['period_second']:
 
 ## 7 · The verdict
 
-**Signal: Busted.** Across 7 assets the strongest spectral peak averaged **8.0× the average power**, which sounds like a finding until you compute what noise gives. With 3,882 frequency bins the periodogram ordinates are independent exponentials, so their maximum is expected at **8.8×** the mean — and simulating random walks of the same length put the 95th percentile at **10.3×**. Fisher's *g* test, which has had the correct answer since 1929, rejected the null for **0 of 7** assets against white noise and **1** against an AR(1) null — and the AR(1) column is the honest one, because returns are autocorrelated and a flat null tilts every test toward finding long cycles. The positive control worked: UNG, which has a genuine annual demand cycle, showed a peak at **246 sessions** (0.98 years), so the machinery detects cycles when they exist. On SPY the best period found in the first half of the sample was 14 sessions and in the second half 8, and the phase coherence was **0.49** against the 0.70 needed to call a cycle coherent — which is what no cycle looks like.
+**Signal: None.** Across 7 assets the strongest spectral peak averaged **8.0× the average power**, which sounds like a finding until you compute what noise gives. With 3,882 frequency bins the periodogram ordinates are independent exponentials, so their maximum is expected at **8.8×** the mean — and simulating random walks of the same length put the 95th percentile at **10.3×**. Fisher's *g* test, which has had the correct answer since 1929, rejected the null for **0 of 7** assets against white noise and **1** against an AR(1) null — and the AR(1) column is the honest one, because returns are autocorrelated and a flat null tilts every test toward finding long cycles. The positive control worked: UNG, which has a genuine annual demand cycle, showed a peak at **246 sessions** (0.98 years), so the machinery detects cycles when they exist. On SPY the best period found in the first half of the sample was 14 sessions and in the second half 8, and the phase coherence was **0.49** against the 0.70 needed to call a cycle coherent — which is what no cycle looks like.
 
-**Tradability: Partial.** Trading the best detected period out of sample — fitting the sinusoid on a rolling 1000-session window and taking the next step's sign — returned +2.47%/yr at a Sharpe of **0.22**, with a 52.2% hit rate against the 50% a coin gives, and 108 position changes a year to pay for. Buy-and-hold over the same window returned +9.65%. That is the expected outcome for a peak that is a peak because some bin has to be the largest.
+**Tradability: Fragile.** Trading the best detected period out of sample — fitting the sinusoid on a rolling 1000-session window and taking the next step's sign — returned +2.47%/yr at a Sharpe of **0.22**, with a 52.2% hit rate against the 50% a coin gives, and 108 position changes a year to pay for. Buy-and-hold over the same window returned +9.65%. That is the expected outcome for a peak that is a peak because some bin has to be the largest.
 """
         ),
         md(
@@ -326,8 +326,8 @@ def build_quants():
 # The Cycle Hunt — a quantitative teardown \U0001F52C
 ### Fisher's exact g test · AR(1) nulls · a natural-gas positive control · phase agreement
 
-![Signal: Busted](https://img.shields.io/badge/Signal-Busted-c0392b?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). Two corrections
 do all the work: the multiple-comparison problem across frequency bins (Fisher solved it in
@@ -374,8 +374,8 @@ print(f"as-of {data.AS_OF} | {data.EQUITY}: {len(lead):,} sessions -> "
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** | Busted | Across 7 assets the strongest spectral peak averaged **8.0× the average power**, which sounds like a finding until you compute what noise gives. With 3,882 frequency bins the periodogram ordinates are independent exponentials, so their maximum is expected at **8.8×** the mean — and simulating random walks of the same length put the 95th percentile at **10.3×**. Fisher's *g* test, which has had the correct answer since 1929, rejected the null for **0 of 7** assets against white noise and **1** against an AR(1) null — and the AR(1) column is the honest one, because returns are autocorrelated and a flat null tilts every test toward finding long cycles. The positive control worked: UNG, which has a genuine annual demand cycle, showed a peak at **246 sessions** (0.98 years), so the machinery detects cycles when they exist. On SPY the best period found in the first half of the sample was 14 sessions and in the second half 8, and the phase coherence was **0.49** against the 0.70 needed to call a cycle coherent — which is what no cycle looks like. |
-| **Tradability** | Partial | Trading the best detected period out of sample — fitting the sinusoid on a rolling 1000-session window and taking the next step's sign — returned +2.47%/yr at a Sharpe of **0.22**, with a 52.2% hit rate against the 50% a coin gives, and 108 position changes a year to pay for. Buy-and-hold over the same window returned +9.65%. That is the expected outcome for a peak that is a peak because some bin has to be the largest. |
+| **Signal** | None | Across 7 assets the strongest spectral peak averaged **8.0× the average power**, which sounds like a finding until you compute what noise gives. With 3,882 frequency bins the periodogram ordinates are independent exponentials, so their maximum is expected at **8.8×** the mean — and simulating random walks of the same length put the 95th percentile at **10.3×**. Fisher's *g* test, which has had the correct answer since 1929, rejected the null for **0 of 7** assets against white noise and **1** against an AR(1) null — and the AR(1) column is the honest one, because returns are autocorrelated and a flat null tilts every test toward finding long cycles. The positive control worked: UNG, which has a genuine annual demand cycle, showed a peak at **246 sessions** (0.98 years), so the machinery detects cycles when they exist. On SPY the best period found in the first half of the sample was 14 sessions and in the second half 8, and the phase coherence was **0.49** against the 0.70 needed to call a cycle coherent — which is what no cycle looks like. |
+| **Tradability** | Fragile | Trading the best detected period out of sample — fitting the sinusoid on a rolling 1000-session window and taking the next step's sign — returned +2.47%/yr at a Sharpe of **0.22**, with a 52.2% hit rate against the 50% a coin gives, and 108 position changes a year to pay for. Buy-and-hold over the same window returned +9.65%. That is the expected outcome for a peak that is a peak because some bin has to be the largest. |
 
 > \U0001F4A1 **In plain words.** The peaks are real numbers. What they are not is evidence,
 > until compared against what noise of the same length produces.

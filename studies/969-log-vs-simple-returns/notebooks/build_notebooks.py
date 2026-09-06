@@ -55,7 +55,7 @@ def build_curious():
 ### Two definitions of "the return". Both correct. Not interchangeable.
 
 ![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
-![Usefulness: Useful](https://img.shields.io/badge/Usefulness-Useful-2ea44f?style=flat-square)
+![Usefulness: Fragile](https://img.shields.io/badge/Usefulness-Fragile-dab617?style=flat-square)
 
 One adds up across time. The other adds up across assets. No definition does both, every
 codebase mixes them somewhere, and the mistake is invisible on a bond fund and enormous on
@@ -249,7 +249,7 @@ print(f"correct CAGR {err['cagr_correct']:+.2%} | wrong CAGR {err['cagr_wrong']:
 
 **Signal: Real.** It scales with the square of volatility, so it is invisible at one end of the tape and enormous at the other. On **BIL** (0% annualised vol) the mean simple and mean log returns differ by **0.00%/yr**; on **TQQQ** (61% vol) they differ by **18.9%/yr**, and the sigma-squared-over-two prediction accounts for 99% of it. The Sharpe ratio moves too: up to **0.31** between the two conventions.
 
-**Usefulness: Useful.** Yes, and it is two lines. **Across time, use logs** (they add, and their mean exponentiates to the CAGR the path delivered). **Across assets, use simple returns** (a portfolio's return is a weighted average of them, exactly). The failure mode is weighting log returns: on an equal-weight book of 7 tapes it understated the CAGR by **6.11%/yr** — 1.80x of terminal wealth over 12 years — and it understated on **essentially every day**, because Jensen's inequality only points one way.
+**Usefulness: Fragile.** Yes, and it is two lines. **Across time, use logs** (they add, and their mean exponentiates to the CAGR the path delivered). **Across assets, use simple returns** (a portfolio's return is a weighted average of them, exactly). The failure mode is weighting log returns: on an equal-weight book of 7 tapes it understated the CAGR by **6.11%/yr** — 1.80x of terminal wealth over 12 years — and it understated on **essentially every day**, because Jensen's inequality only points one way.
 """
         ),
         md(
@@ -294,7 +294,7 @@ def build_quants():
 ### Jensen · the σ²/2 expansion and its residual · terminal-wealth cost · Sharpe vs beta sensitivity
 
 ![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
-![Usefulness: Useful](https://img.shields.io/badge/Usefulness-Useful-2ea44f?style=flat-square)
+![Usefulness: Fragile](https://img.shields.io/badge/Usefulness-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). Unusually for
 this desk there is nothing to *test* here — the results are identities — so the study is about
@@ -341,7 +341,7 @@ for tk in data.TICKERS:
 | Axis | Stamp | Why |
 |---|---|---|
 | **Signal** | Real | It scales with the square of volatility, so it is invisible at one end of the tape and enormous at the other. On **BIL** (0% annualised vol) the mean simple and mean log returns differ by **0.00%/yr**; on **TQQQ** (61% vol) they differ by **18.9%/yr**, and the sigma-squared-over-two prediction accounts for 99% of it. The Sharpe ratio moves too: up to **0.31** between the two conventions. |
-| **Usefulness** | Useful | Yes, and it is two lines. **Across time, use logs** (they add, and their mean exponentiates to the CAGR the path delivered). **Across assets, use simple returns** (a portfolio's return is a weighted average of them, exactly). The failure mode is weighting log returns: on an equal-weight book of 7 tapes it understated the CAGR by **6.11%/yr** — 1.80x of terminal wealth over 12 years — and it understated on **essentially every day**, because Jensen's inequality only points one way. |
+| **Usefulness** | Fragile | Yes, and it is two lines. **Across time, use logs** (they add, and their mean exponentiates to the CAGR the path delivered). **Across assets, use simple returns** (a portfolio's return is a weighted average of them, exactly). The failure mode is weighting log returns: on an equal-weight book of 7 tapes it understated the CAGR by **6.11%/yr** — 1.80x of terminal wealth over 12 years — and it understated on **essentially every day**, because Jensen's inequality only points one way. |
 
 > \U0001F4A1 **In plain words.** Two conventions, one rule each, and one bug that silently
 > costs you the rebalancing bonus.

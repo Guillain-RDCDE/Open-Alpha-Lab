@@ -348,8 +348,8 @@ def verdict(h: dict) -> dict:
       panel — one measurement is an artefact factory, two agreeing is evidence; **Weak** if the
       difference is positive but fails one of those; **None** otherwise.
     - **Tradability**: **Mirage** by construction if the effect is not Real — there is nothing
-      to trade. Otherwise **Useful** if the down-capture penalty is large enough to change a
-      sizing decision (over 20 percentage points), **Partial** below that.
+      to trade. Otherwise **Fragile** if the down-capture penalty is large enough to change a
+      sizing decision (over 20 percentage points), **Fragile** below that.
     """
     positive = h["median_difference"] > 0
     significant = abs(h["median_boot_t"]) >= 2.0
@@ -360,7 +360,7 @@ def verdict(h: dict) -> dict:
         trad = "Mirage"
     else:
         gap = h["median_down_capture"] - h["median_up_capture"]
-        trad = "Useful" if gap > 0.20 else "Partial"
+        trad = "Fragile"
     return {
         "signal": signal,
         "signal_why": (

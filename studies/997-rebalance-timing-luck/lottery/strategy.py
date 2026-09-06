@@ -296,21 +296,19 @@ def synthetic_prices(n: int = 5000, n_assets: int = 10, momentum: float = 0.0,
 def verdict(h: dict) -> dict:
     """Stamps by a pre-registered rule.
 
-    - **Signal**: **Confirmed** if the momentum rule's CAGR spread across offsets exceeds one
+    - **Signal**: **Real** if the momentum rule's CAGR spread across offsets exceeds one
       percentage point **and** exceeds its own edge over buy-and-hold — i.e. the luck is bigger
-      than the finding; **Partial** if the spread is material but smaller than the edge;
-      **Busted** if offsets barely matter.
-    - **Tradability**: **Useful** if overlapping portfolios remove the dispersion without
+      than the finding; **Fragile** if the spread is material but smaller than the edge;
+      **None** if offsets barely matter.
+    - **Tradability**: **Fragile** if overlapping portfolios remove the dispersion without
       costing return — specifically, if the blended Sharpe is at least the mean variant Sharpe;
-      **Partial** if it costs a little; **Mirage** if the fix is worse than the disease.
+      **Fragile** if it costs a little; **Mirage** if the fix is worse than the disease.
     """
     material = h["mom_cagr_spread"] > 0.01
     swamps = h["mom_spread_over_edge"] > 1.0
-    signal = ("Confirmed" if (material and swamps)
-              else ("Partial" if material else "Busted"))
-    trad = ("Useful" if h["blend_sharpe"] >= h["mean_variant_sharpe"]
-            else ("Partial" if h["blend_sharpe"] > h["mean_variant_sharpe"] - 0.1
-                  else "Mirage"))
+    signal = ("Real" if (material and swamps)
+              else ("Weak" if material else "None"))
+    trad = "Fragile" if h["blend_sharpe"] > h["mean_variant_sharpe"] - 0.1 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

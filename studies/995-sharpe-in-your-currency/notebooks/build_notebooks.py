@@ -55,7 +55,7 @@ def build_curious():
 ### The same fund. The same shares. Six different answers.
 
 ![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 Every performance statistic you have ever read was computed in some currency, almost always
 dollars, almost always without saying so. If you do not spend dollars, the number is not about
@@ -282,7 +282,7 @@ is the risk one, not the return one.
 
 **Signal: Weak.** Over 19 years, SPY delivered a Sharpe of **0.46** to a dollar-based investor and anywhere from **0.35** (CHF) to **0.50** (CAD) to investors based elsewhere — a spread of **0.15**, on the identical shares. Three separate channels do the work and they behave differently. The **variance** channel is mechanical: adding a currency leg raised volatility from 19.7% to a median 19.4% because var(a−c) = var(a) + var(c) − 2cov, and the median correlation between SPY and these currencies was only +0.27. The **drift** channel is luck: the dollar happened to move. The **rate** channel is the one nobody adjusts for — each investor's cash leg is their own, and using the US bill rate for everyone (the standard shortcut) biases every high-rate country's Sharpe downward. Across 5 assets the currency moved at least one pair's ranking by **1 places**.
 
-**Tradability: Partial.** Hedging is priced here rather than assumed, because a rolling forward hedge earns the **interest-rate differential** and not zero — selling dollars forward while US rates exceed yours costs you the gap, which is the charge hedged share classes pass on quietly. After that charge, a full hedge raised the Sharpe for **50%** of the currencies here, by a median -0.00. The variance-minimising ratio is not 1.0 either: its median across currencies is **1.57**, because SPY itself co-moves with risk-off currencies, so a full hedge is close to right. The practical reading is that the hedge buys volatility reduction reliably and return unreliably — which is the right way round for a long-horizon holder and the wrong way round for anyone hoping the hedge pays for itself.
+**Tradability: Fragile.** Hedging is priced here rather than assumed, because a rolling forward hedge earns the **interest-rate differential** and not zero — selling dollars forward while US rates exceed yours costs you the gap, which is the charge hedged share classes pass on quietly. After that charge, a full hedge raised the Sharpe for **50%** of the currencies here, by a median -0.00. The variance-minimising ratio is not 1.0 either: its median across currencies is **1.57**, because SPY itself co-moves with risk-off currencies, so a full hedge is close to right. The practical reading is that the hedge buys volatility reduction reliably and return unreliably — which is the right way round for a long-horizon holder and the wrong way round for anyone hoping the hedge pays for itself.
 """
         ),
         md(
@@ -314,7 +314,7 @@ def build_quants():
 ### Exact conversion · the variance identity · drift/variance/rate decomposition · hedge carry
 
 ![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). Three channels
 move a Sharpe ratio when you change currency, and they have completely different half-lives.
@@ -369,7 +369,7 @@ print(tbl[["cagr", "vol", "rf_ann", "sharpe"]].round(4).to_string())
 | Axis | Stamp | Why |
 |---|---|---|
 | **Signal** | Weak | Over 19 years, SPY delivered a Sharpe of **0.46** to a dollar-based investor and anywhere from **0.35** (CHF) to **0.50** (CAD) to investors based elsewhere — a spread of **0.15**, on the identical shares. Three separate channels do the work and they behave differently. The **variance** channel is mechanical: adding a currency leg raised volatility from 19.7% to a median 19.4% because var(a−c) = var(a) + var(c) − 2cov, and the median correlation between SPY and these currencies was only +0.27. The **drift** channel is luck: the dollar happened to move. The **rate** channel is the one nobody adjusts for — each investor's cash leg is their own, and using the US bill rate for everyone (the standard shortcut) biases every high-rate country's Sharpe downward. Across 5 assets the currency moved at least one pair's ranking by **1 places**. |
-| **Tradability** | Partial | Hedging is priced here rather than assumed, because a rolling forward hedge earns the **interest-rate differential** and not zero — selling dollars forward while US rates exceed yours costs you the gap, which is the charge hedged share classes pass on quietly. After that charge, a full hedge raised the Sharpe for **50%** of the currencies here, by a median -0.00. The variance-minimising ratio is not 1.0 either: its median across currencies is **1.57**, because SPY itself co-moves with risk-off currencies, so a full hedge is close to right. The practical reading is that the hedge buys volatility reduction reliably and return unreliably — which is the right way round for a long-horizon holder and the wrong way round for anyone hoping the hedge pays for itself. |
+| **Tradability** | Fragile | Hedging is priced here rather than assumed, because a rolling forward hedge earns the **interest-rate differential** and not zero — selling dollars forward while US rates exceed yours costs you the gap, which is the charge hedged share classes pass on quietly. After that charge, a full hedge raised the Sharpe for **50%** of the currencies here, by a median -0.00. The variance-minimising ratio is not 1.0 either: its median across currencies is **1.57**, because SPY itself co-moves with risk-off currencies, so a full hedge is close to right. The practical reading is that the hedge buys volatility reduction reliably and return unreliably — which is the right way round for a long-horizon holder and the wrong way round for anyone hoping the hedge pays for itself. |
 
 > \U0001F4A1 **In plain words.** One of the three channels is arithmetic, one is a coin flip, and
 > one is a rate differential nobody adjusts for. They are usually reported as a single number.

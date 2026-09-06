@@ -271,9 +271,12 @@ def test_a_signal_that_is_not_real_cannot_be_tradable():
 
 
 def test_verdict_tradability_ladder_when_the_signal_is_real():
+    # The two upper branches deliberately share the Fragile stamp: the desk's
+    # documented Tradability axis is Investable/Fragile/Mirage, and neither of these
+    # is a bankable edge. The finer distinction between them lives in the prose.
     real = {"median_boot_t": 2.5}
-    assert st.verdict(_headline(**real))["trad"] == "Partial"
-    assert st.verdict(_headline(median_down_capture=1.30, **real))["trad"] == "Useful"
+    assert st.verdict(_headline(**real))["trad"] == "Fragile"
+    assert st.verdict(_headline(median_down_capture=1.30, **real))["trad"] == "Fragile"
 
 
 def test_verdict_prose_names_the_false_positive_rate():

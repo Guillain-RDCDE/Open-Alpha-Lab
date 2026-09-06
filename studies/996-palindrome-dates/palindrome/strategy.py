@@ -393,17 +393,17 @@ def verdict(h: dict) -> dict:
     This study is inverted: finding an effect is the *failure* mode, because the hypothesis is
     known false. So the stamps grade the **demonstration**, not the pattern.
 
-    - **Signal**: **Busted** — the intended result — when the best rule fails the shuffle test,
-      i.e. its *t* is no larger than what a search over shuffled returns produces. **Partial**
-      if it beats the shuffle but fails Bonferroni. **Confirmed** would mean a palindrome effect
+    - **Signal**: **None** — the intended result — when the best rule fails the shuffle test,
+      i.e. its *t* is no larger than what a search over shuffled returns produces. **Fragile**
+      if it beats the shuffle but fails Bonferroni. **Real** would mean a palindrome effect
       genuinely survived correction, which would indicate a bug rather than a discovery, and
       the results section says so.
     - **Tradability**: **Mirage** unless a rule survives out of sample, which none should.
     """
     beats_shuffle = h["shuffle_p"] < 0.05
     survives_bonferroni = h["n_surviving_bonferroni"] > 0
-    signal = ("Confirmed" if (beats_shuffle and survives_bonferroni)
-              else ("Partial" if beats_shuffle else "Busted"))
+    signal = ("Real" if (beats_shuffle and survives_bonferroni)
+              else ("Weak" if beats_shuffle else "None"))
     trad = ("Mirage" if h["median_oos_t"] < 2 else "Fragile")
     return {
         "signal": signal,

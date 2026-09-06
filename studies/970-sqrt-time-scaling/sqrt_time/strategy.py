@@ -193,14 +193,14 @@ def verdict(h: dict) -> dict:
     - **Signal** (do real tapes violate independence?): **Real** if at least three tapes
       reject VR = 1 at the annual horizon with a robust |z| >= 2; **Weak** if one or two do;
       **None** otherwise.
-    - **Usefulness** (does the error matter?): **Useful** if the implied volatility error
+    - **Usefulness** (does the error matter?): **Fragile** if the implied volatility error
       exceeds 10% on at least one tape a desk would actually hold; **Fragile** above 3%;
       **Mirage** below.
     """
     n_rej = h["n_reject_annual"]
     signal = "Real" if n_rej >= 3 else ("Weak" if n_rej >= 1 else "None")
     err = h["max_abs_vol_error"]
-    trad = "Useful" if err >= 0.10 else ("Fragile" if err >= 0.03 else "Mirage")
+    trad = "Fragile" if err >= 0.03 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

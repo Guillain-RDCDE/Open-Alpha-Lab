@@ -54,8 +54,8 @@ def build_curious():
 # The Moving Target \U0001F3AF
 ### The relationship you are hedging keeps changing. How fast should you chase it?
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Useful](https://img.shields.io/badge/Tradability-Useful-2ea44f?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 Hedge a pair and you need a ratio: how much of the second thing per unit of the first. Estimate
 it over sixty days and it is jumpy. Estimate it over a year and it is out of date. There is no
@@ -255,9 +255,9 @@ has to be traded to be maintained — and the filter moves more than the window 
 
 ## 6 · The verdict
 
-**Signal: Confirmed.** Graded against a hedge ratio that is **known** because it was planted, the Kalman filter tracked it with an RMSE of **0.0471** against the best rolling window's 0.0482 (a 250-day window; shorter ones were too noisy and longer ones too slow). The reason is visible in one diagnostic: the filter's estimate moved **3.43×** as much as the truth did, against 14.01× for the rolling window — adaptiveness without the thrashing. On the 7 real pairs the filter produced the tighter spread in **57%** of them. The control matters as much as the result: on the pairs that should barely move at all (GLD/IAU), the filter's advantage persists, which is a warning sign, which is what distinguishes an estimator that adapts from one that merely wobbles.
+**Signal: Real.** Graded against a hedge ratio that is **known** because it was planted, the Kalman filter tracked it with an RMSE of **0.0471** against the best rolling window's 0.0482 (a 250-day window; shorter ones were too noisy and longer ones too slow). The reason is visible in one diagnostic: the filter's estimate moved **3.43×** as much as the truth did, against 14.01× for the rolling window — adaptiveness without the thrashing. On the 7 real pairs the filter produced the tighter spread in **57%** of them. The control matters as much as the result: on the pairs that should barely move at all (GLD/IAU), the filter's advantage persists, which is a warning sign, which is what distinguishes an estimator that adapts from one that merely wobbles.
 
-**Tradability: Useful.** Tracking is not trading, and the gap between them is the hedge-rebalancing cost that most comparisons omit. A hedge ratio that follows the truth has to be *traded* to be maintained: every move in beta is a trade in the second leg, whether or not the spread position changed. Charged properly, the filter's annual hedge turnover was **0.15** against the rolling window's 1.55, costing 1.25% a year versus 1.31%. Gross, the filter earned a Sharpe of 0.60 against 0.53; **net, -0.03 against -0.11**. And a caveat that outranks all of it: the best pairs-trade Sharpe here is -0.03 across 21 years, which is not a business.
+**Tradability: Fragile.** Tracking is not trading, and the gap between them is the hedge-rebalancing cost that most comparisons omit. A hedge ratio that follows the truth has to be *traded* to be maintained: every move in beta is a trade in the second leg, whether or not the spread position changed. Charged properly, the filter's annual hedge turnover was **0.15** against the rolling window's 1.55, costing 1.25% a year versus 1.31%. Gross, the filter earned a Sharpe of 0.60 against 0.53; **net, -0.03 against -0.11**. And a caveat that outranks all of it: the best pairs-trade Sharpe here is -0.03 across 21 years, which is not a business.
 """
         ),
         md(
@@ -288,8 +288,8 @@ def build_quants():
 # The Moving Target — a quantitative teardown \U0001F52C
 ### Planted-beta grading · excess movement · effective window · gross vs net
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Useful](https://img.shields.io/badge/Tradability-Useful-2ea44f?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). Two questions
 that get conflated: does the filter *track* better, and does it *trade* better? The second is
@@ -339,8 +339,8 @@ for a, b in pairs:
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** | Confirmed | Graded against a hedge ratio that is **known** because it was planted, the Kalman filter tracked it with an RMSE of **0.0471** against the best rolling window's 0.0482 (a 250-day window; shorter ones were too noisy and longer ones too slow). The reason is visible in one diagnostic: the filter's estimate moved **3.43×** as much as the truth did, against 14.01× for the rolling window — adaptiveness without the thrashing. On the 7 real pairs the filter produced the tighter spread in **57%** of them. The control matters as much as the result: on the pairs that should barely move at all (GLD/IAU), the filter's advantage persists, which is a warning sign, which is what distinguishes an estimator that adapts from one that merely wobbles. |
-| **Tradability** | Useful | Tracking is not trading, and the gap between them is the hedge-rebalancing cost that most comparisons omit. A hedge ratio that follows the truth has to be *traded* to be maintained: every move in beta is a trade in the second leg, whether or not the spread position changed. Charged properly, the filter's annual hedge turnover was **0.15** against the rolling window's 1.55, costing 1.25% a year versus 1.31%. Gross, the filter earned a Sharpe of 0.60 against 0.53; **net, -0.03 against -0.11**. And a caveat that outranks all of it: the best pairs-trade Sharpe here is -0.03 across 21 years, which is not a business. |
+| **Signal** | Real | Graded against a hedge ratio that is **known** because it was planted, the Kalman filter tracked it with an RMSE of **0.0471** against the best rolling window's 0.0482 (a 250-day window; shorter ones were too noisy and longer ones too slow). The reason is visible in one diagnostic: the filter's estimate moved **3.43×** as much as the truth did, against 14.01× for the rolling window — adaptiveness without the thrashing. On the 7 real pairs the filter produced the tighter spread in **57%** of them. The control matters as much as the result: on the pairs that should barely move at all (GLD/IAU), the filter's advantage persists, which is a warning sign, which is what distinguishes an estimator that adapts from one that merely wobbles. |
+| **Tradability** | Fragile | Tracking is not trading, and the gap between them is the hedge-rebalancing cost that most comparisons omit. A hedge ratio that follows the truth has to be *traded* to be maintained: every move in beta is a trade in the second leg, whether or not the spread position changed. Charged properly, the filter's annual hedge turnover was **0.15** against the rolling window's 1.55, costing 1.25% a year versus 1.31%. Gross, the filter earned a Sharpe of 0.60 against 0.53; **net, -0.03 against -0.11**. And a caveat that outranks all of it: the best pairs-trade Sharpe here is -0.03 across 21 years, which is not a business. |
 
 > \U0001F4A1 **In plain words.** Better estimation is real and measurable. Better *trading* is a
 > separate claim and a weaker one.

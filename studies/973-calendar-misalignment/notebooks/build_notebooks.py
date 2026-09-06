@@ -55,7 +55,7 @@ def build_curious():
 ### Tokyo is shut. Your correlation matrix has not noticed.
 
 ![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)
-![Usefulness: Useful](https://img.shields.io/badge/Usefulness-Useful-2ea44f?style=flat-square)
+![Usefulness: Fragile](https://img.shields.io/badge/Usefulness-Fragile-dab617?style=flat-square)
 
 A US-listed Japan fund trades in New York all day while the market it tracks has been closed
 since 2 a.m. Its price still moves — on stale news, and on whatever New York decides. Every
@@ -225,7 +225,7 @@ pd.DataFrame({"daily matrix": imp["weights_estimated"],
 
 **Signal: None.** Correlation with the US market rises from **0.75** at daily frequency to **0.77** at monthly on EWJ — a lift of **+0.02** — and **0 of 4** foreign tapes lift by more than 0.10. The same-market control (IWM) lifts by **+0.01**, which is the machinery's own noise floor. Dimson's correction recovers most of it without changing frequency: beta on EWJ goes from 0.81 to **0.78**, and the lagged US coefficient — the smoking gun — is -0.03.
 
-**Usefulness: Useful.** A minimum-variance book built on the **daily** covariance matrix promises 17.63% annualised and delivers **15.35%** at the monthly horizon — it understates its own risk by **-12.9%** — and its weights differ from the ones the unbiased matrix would choose by up to 18%. The fix costs nothing: measure at a lower frequency, or add one lead and one lag.
+**Usefulness: Fragile.** A minimum-variance book built on the **daily** covariance matrix promises 17.63% annualised and delivers **15.35%** at the monthly horizon — it understates its own risk by **-12.9%** — and its weights differ from the ones the unbiased matrix would choose by up to 18%. The fix costs nothing: measure at a lower frequency, or add one lead and one lag.
 """
         ),
         md(
@@ -257,7 +257,7 @@ def build_quants():
 ### Scholes-Williams · Dimson · frequency aggregation · a same-market control · optimiser consequences
 
 ![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)
-![Usefulness: Useful](https://img.shields.io/badge/Usefulness-Useful-2ea44f?style=flat-square)
+![Usefulness: Fragile](https://img.shields.io/badge/Usefulness-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The design
 point worth repeating: **every tape here is New-York-listed and closes at the same minute**, so
@@ -305,7 +305,7 @@ print(f"US market: {data.US} | foreign: {', '.join(data.FOREIGN)} | "
 | Axis | Stamp | Why |
 |---|---|---|
 | **Signal** | None | Correlation with the US market rises from **0.75** at daily frequency to **0.77** at monthly on EWJ — a lift of **+0.02** — and **0 of 4** foreign tapes lift by more than 0.10. The same-market control (IWM) lifts by **+0.01**, which is the machinery's own noise floor. Dimson's correction recovers most of it without changing frequency: beta on EWJ goes from 0.81 to **0.78**, and the lagged US coefficient — the smoking gun — is -0.03. |
-| **Usefulness** | Useful | A minimum-variance book built on the **daily** covariance matrix promises 17.63% annualised and delivers **15.35%** at the monthly horizon — it understates its own risk by **-12.9%** — and its weights differ from the ones the unbiased matrix would choose by up to 18%. The fix costs nothing: measure at a lower frequency, or add one lead and one lag. |
+| **Usefulness** | Fragile | A minimum-variance book built on the **daily** covariance matrix promises 17.63% annualised and delivers **15.35%** at the monthly horizon — it understates its own risk by **-12.9%** — and its weights differ from the ones the unbiased matrix would choose by up to 18%. The fix costs nothing: measure at a lower frequency, or add one lead and one lag. |
 
 > \U0001F4A1 **In plain words.** The estimate is biased, the bias has a known sign, and two
 > fifty-year-old corrections remove most of it for free.

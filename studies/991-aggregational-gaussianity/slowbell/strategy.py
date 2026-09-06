@@ -334,23 +334,22 @@ def synthetic_returns(n: int = 8000, df_t: float = 4.0, clustering: float = 0.0,
 def verdict(h: dict) -> dict:
     """Stamps by a pre-registered rule.
 
-    - **Signal**: **Confirmed** if excess kurtosis falls monotonically with horizon (the
+    - **Signal**: **Real** if excess kurtosis falls monotonically with horizon (the
       stylised fact holds) but the fitted decay exponent is significantly **below** the i.i.d.
-      value of 1 (convergence is slower than independence would give); **Partial** if it decays
-      at or above the i.i.d. rate; **Busted** if kurtosis does not fall at all.
-    - **Tradability**: **Useful** if there is a horizon within a normal planning window (three
+      value of 1 (convergence is slower than independence would give); **Fragile** if it decays
+      at or above the i.i.d. rate; **None** if kurtosis does not fall at all.
+    - **Tradability**: **Fragile** if there is a horizon within a normal planning window (three
       years or less) where excess kurtosis drops below 0.5 and 3-sigma events occur at close to
-      the normal rate; **Partial** if only one holds; **Mirage** if neither does.
+      the normal rate; **Fragile** if only one holds; **Mirage** if neither does.
     """
     falls = h["kurtosis_1d"] > h["kurtosis_longest"] > -1
     slower = h["decay_t_vs_one"] < -2.0
-    signal = ("Confirmed" if (falls and slower)
-              else ("Partial" if falls else "Busted"))
+    signal = ("Real" if (falls and slower)
+              else ("Weak" if falls else "None"))
     reachable = (h["actual_horizon"] is not None
                  and h["actual_horizon"] <= 3 * 252)
     tails_ok = h["ratio_3sig_longest"] < 2.0
-    trad = ("Useful" if (reachable and tails_ok)
-            else ("Partial" if (reachable or tails_ok) else "Mirage"))
+    trad = "Fragile" if (reachable or tails_ok) else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

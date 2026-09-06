@@ -54,8 +54,8 @@ def build_curious():
 # Gold's Loud Cousin \U0001F948
 ### If silver is just gold on leverage, why not hold more gold instead?
 
-![Signal: Busted](https://img.shields.io/badge/Signal-Busted-c0392b?style=flat-square)
-![Tradability: Useful](https://img.shields.io/badge/Tradability-Useful-2ea44f?style=flat-square)
+![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 Everyone in the metals trade says it: silver is gold with the volume turned up. That is a
 checkable claim, and it has a sharp consequence — if it is exactly true then silver is
@@ -227,9 +227,9 @@ for k in ("silver", "replica"):
 
 ## 6 · The verdict
 
-**Signal: Busted.** Regressed on gold over 4,801 sessions, silver's beta is **1.45** (±0.03) with an R² of 62% — so about 38% of silver's variance is *not* gold. That leftover is not noise. Its annualised volatility is 20.3%, and it loads on outside factors with a largest |*t*| of **10.58** (on industrial). Nor is the beta a constant: over rolling one-year windows it ranges 0.94 to 2.15, a spread of **86% of its own mean**, and it is 1.29 on gold's up days against 1.57 on its down days. 'Silver is levered gold' is a reasonable first approximation and a poor second one.
+**Signal: None.** Regressed on gold over 4,801 sessions, silver's beta is **1.45** (±0.03) with an R² of 62% — so about 38% of silver's variance is *not* gold. That leftover is not noise. Its annualised volatility is 20.3%, and it loads on outside factors with a largest |*t*| of **10.58** (on industrial). Nor is the beta a constant: over rolling one-year windows it ranges 0.94 to 2.15, a spread of **86% of its own mean**, and it is 1.29 on gold's up days against 1.57 on its down days. 'Silver is levered gold' is a reasonable first approximation and a poor second one.
 
-**Tradability: Useful.** Holding a 1.45× daily-rebalanced gold position instead of silver, financed at cash plus 0.5%, tracked it with a correlation of 0.79 and an annualised tracking error of **20.3%** — which is not tracking, it is a different asset. Over 19 years silver compounded at +7.7% against the replica's +11.9% (Sharpe 0.39 vs 0.56). Part of that gap is pure arithmetic: levering a 18%-vol asset 1.45× costs about **1.1% a year** in volatility drag, before financing and before costs.
+**Tradability: Fragile.** Holding a 1.45× daily-rebalanced gold position instead of silver, financed at cash plus 0.5%, tracked it with a correlation of 0.79 and an annualised tracking error of **20.3%** — which is not tracking, it is a different asset. Over 19 years silver compounded at +7.7% against the replica's +11.9% (Sharpe 0.39 vs 0.56). Part of that gap is pure arithmetic: levering a 18%-vol asset 1.45× costs about **1.1% a year** in volatility drag, before financing and before costs.
 """
         ),
         md(
@@ -261,8 +261,8 @@ def build_quants():
 # Gold's Loud Cousin — a quantitative teardown \U0001F52C
 ### Rolling and regime betas · residual factor hunt · β(β−1)σ²/2 · a financed replication
 
-![Signal: Busted](https://img.shields.io/badge/Signal-Busted-c0392b?style=flat-square)
-![Tradability: Useful](https://img.shields.io/badge/Tradability-Useful-2ea44f?style=flat-square)
+![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). Three separate
 questions get collapsed into one in most versions of this argument: whether the beta is stable,
@@ -312,8 +312,8 @@ print(f"silver = {b['alpha_ann']:+.2%}/yr + {b['beta']:.3f} x gold   R2 {b['r2']
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** | Busted | Regressed on gold over 4,801 sessions, silver's beta is **1.45** (±0.03) with an R² of 62% — so about 38% of silver's variance is *not* gold. That leftover is not noise. Its annualised volatility is 20.3%, and it loads on outside factors with a largest |*t*| of **10.58** (on industrial). Nor is the beta a constant: over rolling one-year windows it ranges 0.94 to 2.15, a spread of **86% of its own mean**, and it is 1.29 on gold's up days against 1.57 on its down days. 'Silver is levered gold' is a reasonable first approximation and a poor second one. |
-| **Tradability** | Useful | Holding a 1.45× daily-rebalanced gold position instead of silver, financed at cash plus 0.5%, tracked it with a correlation of 0.79 and an annualised tracking error of **20.3%** — which is not tracking, it is a different asset. Over 19 years silver compounded at +7.7% against the replica's +11.9% (Sharpe 0.39 vs 0.56). Part of that gap is pure arithmetic: levering a 18%-vol asset 1.45× costs about **1.1% a year** in volatility drag, before financing and before costs. |
+| **Signal** | None | Regressed on gold over 4,801 sessions, silver's beta is **1.45** (±0.03) with an R² of 62% — so about 38% of silver's variance is *not* gold. That leftover is not noise. Its annualised volatility is 20.3%, and it loads on outside factors with a largest |*t*| of **10.58** (on industrial). Nor is the beta a constant: over rolling one-year windows it ranges 0.94 to 2.15, a spread of **86% of its own mean**, and it is 1.29 on gold's up days against 1.57 on its down days. 'Silver is levered gold' is a reasonable first approximation and a poor second one. |
+| **Tradability** | Fragile | Holding a 1.45× daily-rebalanced gold position instead of silver, financed at cash plus 0.5%, tracked it with a correlation of 0.79 and an annualised tracking error of **20.3%** — which is not tracking, it is a different asset. Over 19 years silver compounded at +7.7% against the replica's +11.9% (Sharpe 0.39 vs 0.56). Part of that gap is pure arithmetic: levering a 18%-vol asset 1.45× costs about **1.1% a year** in volatility drag, before financing and before costs. |
 
 > \U0001F4A1 **In plain words.** Silver is levered gold in roughly the sense that a dog is a
 > levered cat: correlated, similar in outline, and not a substitute.

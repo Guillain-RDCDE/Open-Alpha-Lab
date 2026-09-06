@@ -55,7 +55,7 @@ def build_curious():
 ### Altcoins promise leverage on Bitcoin. Do they deliver it in both directions?
 
 ![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 "It's a high-beta bet on Bitcoin." Nobody ever finishes that sentence with "in both
 directions" — but that is how it is heard. This study measures the up-beta and the down-beta
@@ -252,7 +252,7 @@ d.round(3)
 
 **Signal: Real.** Across 6 majors against Bitcoin over 8.6 years, the median altcoin's beta is **0.77 on Bitcoin's up days and 1.13 on its down days** — a difference of **+0.37**. The naive two-sample *t* on that difference averages +4.23; the block-bootstrapped one, which also accounts for the randomness in *which days count as down days*, is **+5.06** — smaller by a factor of 0.8. The corroborating measurement: 100% of the panel has negative coskewness, the third-moment fingerprint of the same phenomenon. And the control that matters most — under a symmetric simulated world with one beta, a naive split still declares asymmetry in **5%** of runs.
 
-**Tradability: Partial.** Compounded rather than averaged, the median altcoin captured **107% of Bitcoin's up days and 109% of its down days**, and ran a maximum drawdown of -95% against Bitcoin's -83% (1.14×). That gap is large enough to matter to position sizing: the leverage you are buying is not the leverage you are paying for.
+**Tradability: Fragile.** Compounded rather than averaged, the median altcoin captured **107% of Bitcoin's up days and 109% of its down days**, and ran a maximum drawdown of -95% against Bitcoin's -83% (1.14×). That gap is large enough to matter to position sizing: the leverage you are buying is not the leverage you are paying for.
 """
         ),
         md(
@@ -285,7 +285,7 @@ def build_quants():
 ### Conditional betas · block-bootstrapped differences · Longin-Solnik benchmarks · coskewness
 
 ![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The object of
 study is not really the altcoins; it is the up/down beta split, which is among the most
@@ -332,7 +332,7 @@ print(panel[["beta", "beta_up", "beta_down", "difference", "naive_t"]].round(3).
 | Axis | Stamp | Why |
 |---|---|---|
 | **Signal** | Real | Across 6 majors against Bitcoin over 8.6 years, the median altcoin's beta is **0.77 on Bitcoin's up days and 1.13 on its down days** — a difference of **+0.37**. The naive two-sample *t* on that difference averages +4.23; the block-bootstrapped one, which also accounts for the randomness in *which days count as down days*, is **+5.06** — smaller by a factor of 0.8. The corroborating measurement: 100% of the panel has negative coskewness, the third-moment fingerprint of the same phenomenon. And the control that matters most — under a symmetric simulated world with one beta, a naive split still declares asymmetry in **5%** of runs. |
-| **Tradability** | Partial | Compounded rather than averaged, the median altcoin captured **107% of Bitcoin's up days and 109% of its down days**, and ran a maximum drawdown of -95% against Bitcoin's -83% (1.14×). That gap is large enough to matter to position sizing: the leverage you are buying is not the leverage you are paying for. |
+| **Tradability** | Fragile | Compounded rather than averaged, the median altcoin captured **107% of Bitcoin's up days and 109% of its down days**, and ran a maximum drawdown of -95% against Bitcoin's -83% (1.14×). That gap is large enough to matter to position sizing: the leverage you are buying is not the leverage you are paying for. |
 
 > \U0001F4A1 **In plain words.** The point estimates lean the way the folklore says. The error
 > bars, once computed properly, are wide enough to swallow the claim.

@@ -55,7 +55,7 @@ def build_curious():
 ### A 95% confidence interval is a promise. Does yours keep it?
 
 ![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
-![Usefulness: Useful](https://img.shields.io/badge/Usefulness-Useful-2ea44f?style=flat-square)
+![Usefulness: Fragile](https://img.shields.io/badge/Usefulness-Fragile-dab617?style=flat-square)
 
 Resampling is the most democratic tool in statistics: no formulas, no distributional
 assumptions, just draw your data again and see how much the answer wobbles. But there are four
@@ -245,7 +245,7 @@ tbl.round(3)
 
 **Signal: Real.** It matters, and it matters where you would not look. On an i.i.d. tape every scheme covers near nominal. Once volatility clusters and the tape is fat-tailed, the **Sharpe** interval degrades for all of them — the worst method covers **87%** against a promised 95% — and the spread between best and worst method reaches **9%** of coverage. With genuine AR(1) in the returns the i.i.d. resample is the one that breaks: **97%** coverage of the mean, because it destroys the dependence that inflates the true standard error.
 
-**Usefulness: Useful.** **Moving block (Kunsch 1989)** is the least-bad default: its worst coverage across every world tested is **100%**-ish, within 0.3% of nominal, and it costs the same as any other resample. On the real tapes the choice moves the published Sharpe interval by up to **17%** of its width (SPY: [+0.34, +0.97]) — enough to change whether a strategy 'clears zero', which is exactly the decision these intervals are used for.
+**Usefulness: Fragile.** **Moving block (Kunsch 1989)** is the least-bad default: its worst coverage across every world tested is **100%**-ish, within 0.3% of nominal, and it costs the same as any other resample. On the real tapes the choice moves the published Sharpe interval by up to **17%** of its width (SPY: [+0.34, +0.97]) — enough to change whether a strategy 'clears zero', which is exactly the decision these intervals are used for.
 """
         ),
         md(
@@ -295,7 +295,7 @@ def build_quants():
 ### Coverage by simulation · i.i.d. vs moving vs circular vs stationary · block-length sweeps · Lo and Mertens
 
 ![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
-![Usefulness: Useful](https://img.shields.io/badge/Usefulness-Useful-2ea44f?style=flat-square)
+![Usefulness: Fragile](https://img.shields.io/badge/Usefulness-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The
 methodological commitment of this study is simple and unusual: **no result is taken from real
@@ -343,7 +343,7 @@ for tk, r in rets.items():
 | Axis | Stamp | Why |
 |---|---|---|
 | **Signal** | Real | It matters, and it matters where you would not look. On an i.i.d. tape every scheme covers near nominal. Once volatility clusters and the tape is fat-tailed, the **Sharpe** interval degrades for all of them — the worst method covers **87%** against a promised 95% — and the spread between best and worst method reaches **9%** of coverage. With genuine AR(1) in the returns the i.i.d. resample is the one that breaks: **97%** coverage of the mean, because it destroys the dependence that inflates the true standard error. |
-| **Usefulness** | Useful | **Moving block (Kunsch 1989)** is the least-bad default: its worst coverage across every world tested is **100%**-ish, within 0.3% of nominal, and it costs the same as any other resample. On the real tapes the choice moves the published Sharpe interval by up to **17%** of its width (SPY: [+0.34, +0.97]) — enough to change whether a strategy 'clears zero', which is exactly the decision these intervals are used for. |
+| **Usefulness** | Fragile | **Moving block (Kunsch 1989)** is the least-bad default: its worst coverage across every world tested is **100%**-ish, within 0.3% of nominal, and it costs the same as any other resample. On the real tapes the choice moves the published Sharpe interval by up to **17%** of its width (SPY: [+0.34, +0.97]) — enough to change whether a strategy 'clears zero', which is exactly the decision these intervals are used for. |
 
 > \U0001F4A1 **In plain words.** The choice of resampler is a modelling assumption wearing the
 > costume of a technical detail.

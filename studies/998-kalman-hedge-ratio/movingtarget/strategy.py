@@ -320,22 +320,20 @@ def synthetic_pair(n: int = 4000, beta_start: float = 1.0, beta_vol: float = 0.0
 def verdict(h: dict) -> dict:
     """Stamps by a pre-registered rule.
 
-    - **Signal**: **Confirmed** if the Kalman filter tracks a *known* moving hedge ratio with
+    - **Signal**: **Real** if the Kalman filter tracks a *known* moving hedge ratio with
       lower RMSE than the best rolling window **and** produces a tighter spread on the real
-      pairs; **Partial** if it wins one; **Busted** if a rolling window is at least as good on
+      pairs; **Fragile** if it wins one; **None** if a rolling window is at least as good on
       both.
-    - **Tradability**: **Useful** if the best Kalman configuration beats the best rolling one on
-      net Sharpe after the hedge-rebalancing cost is charged; **Partial** if it wins gross and
+    - **Tradability**: **Fragile** if the best Kalman configuration beats the best rolling one on
+      net Sharpe after the hedge-rebalancing cost is charged; **Fragile** if it wins gross and
       loses net; **Mirage** if it loses both.
     """
     tracks = h["kalman_rmse"] < h["best_rolling_rmse"]
     tighter = h["kalman_wins_spread"] > 0.5
-    signal = ("Confirmed" if (tracks and tighter)
-              else ("Partial" if (tracks or tighter) else "Busted"))
-    if h["kalman_net_sharpe"] > h["rolling_net_sharpe"]:
-        trad = "Useful"
-    elif h["kalman_gross_sharpe"] > h["rolling_gross_sharpe"]:
-        trad = "Partial"
+    signal = ("Real" if (tracks and tighter)
+              else ("Weak" if (tracks or tighter) else "None"))
+    if h["kalman_gross_sharpe"] > h["rolling_gross_sharpe"]:
+        trad = "Fragile"
     else:
         trad = "Mirage"
     return {

@@ -349,7 +349,7 @@ def verdict(h: dict) -> dict:
 
     - **Signal**: **Real** if the arithmetic of the best-days claim checks out *and* the omitted
       symmetric statistic is at least as large — i.e. the number is true and the argument built
-      on it is not; **Mixed** if only one holds; **Busted** if the arithmetic itself fails.
+      on it is not; **Weak** if only one holds; **None** if the arithmetic itself fails.
     - **Tradability**: keyed to the accuracy a timer must earn **above what random selection
       already gives**, which is the only version of the question that means anything.
       **Investable** if the required edge is under a point; **Fragile** if it is a few points
@@ -358,7 +358,7 @@ def verdict(h: dict) -> dict:
     arith = h["cost_of_missing_best"] > 0.01
     symmetric = h["asym_ratio"] >= 1.0
     signal = ("Real" if (arith and symmetric)
-              else ("Mixed" if arith else "Busted"))
+              else ("Weak" if arith else "None"))
     be = h["breakeven_hit_rate"]
     edge = h["timing_edge_needed"]
     trad = ("Investable" if edge <= 0.01 else ("Fragile" if edge <= 0.05 else "Mirage"))

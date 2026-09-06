@@ -54,8 +54,8 @@ def build_curious():
 # How Many Stocks \U0001F522
 ### "Twenty is enough" is the right answer to the wrong question.
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Useful](https://img.shields.io/badge/Tradability-Useful-2ea44f?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 Every textbook has the chart: portfolio risk against number of holdings, dropping steeply then
 flattening out around fifteen or twenty names. The chart is accurate. But it plots the risk of
@@ -240,9 +240,9 @@ sk.round(4)
 
 ## 5 · The verdict
 
-**Signal: Confirmed.** The textbook curve is real. Across 40 large-cap names over 16 years, the average equal-weighted portfolio's volatility falls from 27.9% with one stock to 17.0% with all of them, and **10 holdings** capture 90% of that reduction. Evans and Archer's fifteen is the right answer to the question they asked, and anyone repeating it is not making an arithmetic error.
+**Signal: Real.** The textbook curve is real. Across 40 large-cap names over 16 years, the average equal-weighted portfolio's volatility falls from 27.9% with one stock to 17.0% with all of them, and **10 holdings** capture 90% of that reduction. Evans and Archer's fifteen is the right answer to the question they asked, and anyone repeating it is not making an arithmetic error.
 
-**Tradability: Useful.** They are answering the wrong question. Standard deviation describes the *average* portfolio; an investor holds *one*, for decades. Measured on the dispersion of terminal wealth across randomly drawn portfolios — what actually varies between one investor and another — 90% of the available benefit needs **32 holdings**, 3.1× the textbook number. With 10 stocks the 5th-to-95th percentile of outcomes still spans a factor of **2.6×**; reaching the textbook's implied comfort takes far more names. The mechanism is skew, not covariance: 0% of these names lost money outright over the period and the top decile produced 49% of the basket's total return, so a small portfolio probably misses the names that mattered. Its median terminal wealth sits 5% below the mean at 10 names and -1% below at 32. Volatility cannot see any of this, because averaging across draws is exactly the step that hides it.
+**Tradability: Fragile.** They are answering the wrong question. Standard deviation describes the *average* portfolio; an investor holds *one*, for decades. Measured on the dispersion of terminal wealth across randomly drawn portfolios — what actually varies between one investor and another — 90% of the available benefit needs **32 holdings**, 3.1× the textbook number. With 10 stocks the 5th-to-95th percentile of outcomes still spans a factor of **2.6×**; reaching the textbook's implied comfort takes far more names. The mechanism is skew, not covariance: 0% of these names lost money outright over the period and the top decile produced 49% of the basket's total return, so a small portfolio probably misses the names that mattered. Its median terminal wealth sits 5% below the mean at 10 names and -1% below at 32. Volatility cannot see any of this, because averaging across draws is exactly the step that hides it.
 """
         ),
         md(
@@ -275,8 +275,8 @@ def build_quants():
 # How Many Stocks — a quantitative teardown \U0001F52C
 ### Three curves, identical draws · skew not covariance · a falsifiable identification
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Useful](https://img.shields.io/badge/Tradability-Useful-2ea44f?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The load-bearing
 section is **§3.6**: a synthetic cross-section whose average correlation and expected-return
@@ -325,8 +325,8 @@ print("at the start. It inflates the LEVEL of every curve; the SHAPE is the subj
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** | Confirmed | The textbook curve is real. Across 40 large-cap names over 16 years, the average equal-weighted portfolio's volatility falls from 27.9% with one stock to 17.0% with all of them, and **10 holdings** capture 90% of that reduction. Evans and Archer's fifteen is the right answer to the question they asked, and anyone repeating it is not making an arithmetic error. |
-| **Tradability** | Useful | They are answering the wrong question. Standard deviation describes the *average* portfolio; an investor holds *one*, for decades. Measured on the dispersion of terminal wealth across randomly drawn portfolios — what actually varies between one investor and another — 90% of the available benefit needs **32 holdings**, 3.1× the textbook number. With 10 stocks the 5th-to-95th percentile of outcomes still spans a factor of **2.6×**; reaching the textbook's implied comfort takes far more names. The mechanism is skew, not covariance: 0% of these names lost money outright over the period and the top decile produced 49% of the basket's total return, so a small portfolio probably misses the names that mattered. Its median terminal wealth sits 5% below the mean at 10 names and -1% below at 32. Volatility cannot see any of this, because averaging across draws is exactly the step that hides it. |
+| **Signal** | Real | The textbook curve is real. Across 40 large-cap names over 16 years, the average equal-weighted portfolio's volatility falls from 27.9% with one stock to 17.0% with all of them, and **10 holdings** capture 90% of that reduction. Evans and Archer's fifteen is the right answer to the question they asked, and anyone repeating it is not making an arithmetic error. |
+| **Tradability** | Fragile | They are answering the wrong question. Standard deviation describes the *average* portfolio; an investor holds *one*, for decades. Measured on the dispersion of terminal wealth across randomly drawn portfolios — what actually varies between one investor and another — 90% of the available benefit needs **32 holdings**, 3.1× the textbook number. With 10 stocks the 5th-to-95th percentile of outcomes still spans a factor of **2.6×**; reaching the textbook's implied comfort takes far more names. The mechanism is skew, not covariance: 0% of these names lost money outright over the period and the top decile produced 49% of the basket's total return, so a small portfolio probably misses the names that mattered. Its median terminal wealth sits 5% below the mean at 10 names and -1% below at 32. Volatility cannot see any of this, because averaging across draws is exactly the step that hides it. |
 
 > \U0001F4A1 **In plain words.** The textbook is right, about something else.
 """

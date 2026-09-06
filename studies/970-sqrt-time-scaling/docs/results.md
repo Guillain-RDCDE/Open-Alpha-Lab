@@ -162,7 +162,7 @@ Produced by `strategy.verdict`, fixed before the run and unit-tested in
 
 **Signal: Weak.** Yes, and not subtly. At the annual horizon **2 of 10** tapes reject VR = 1 with a heteroskedasticity-robust |z| >= 2. The extremes are **SHY** at VR = **2.54** (trending: sqrt(T) *understates* its annual volatility by 59%) and **TQQQ** at VR = **0.54** (mean-reverting: it *overstates* by 27%). Equity indices sit close to 1, which is why the rule survived: it is nearly right for the one asset class everybody tests it on.
 
-**Usefulness: Useful.** On a 10-day 99% VaR — the Basel horizon, computed by exactly this rule — the correction reaches **-19%** on EEM. An annualised Sharpe moves too: Lo's (2002) factor differs from sqrt(252) by up to **+42%** — though that correction carries a 12% standard deviation of its own on i.i.d. data, so the variance ratio, not the Sharpe factor, is the load-bearing number. On SPY the whole correction is -15.7% — invisible, and that is precisely why nobody checks it on anything else.
+**Usefulness: Fragile.** On a 10-day 99% VaR — the Basel horizon, computed by exactly this rule — the correction reaches **-19%** on EEM. An annualised Sharpe moves too: Lo's (2002) factor differs from sqrt(252) by up to **+42%** — though that correction carries a 12% standard deviation of its own on i.i.d. data, so the variance ratio, not the Sharpe factor, is the load-bearing number. On SPY the whole correction is -15.7% — invisible, and that is precisely why nobody checks it on anything else.
 
 ---
 

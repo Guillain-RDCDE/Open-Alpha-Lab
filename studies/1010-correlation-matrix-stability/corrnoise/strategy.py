@@ -411,20 +411,19 @@ def estimator_error(rets: pd.DataFrame, truth: np.ndarray) -> dict:
 def verdict(h: dict) -> dict:
     """Stamps by a pre-registered rule.
 
-    - **Signal**: **Confirmed** if most of the estimated matrix falls inside the
-      Marchenko-Pastur noise band at a realistic estimation window; **Partial** if a substantial
-      minority does; **Busted** if the spectrum escapes the band.
-    - **Tradability**: **Useful** if a cleaning method produces materially better-calibrated
+    - **Signal**: **Real** if most of the estimated matrix falls inside the
+      Marchenko-Pastur noise band at a realistic estimation window; **Fragile** if a substantial
+      minority does; **None** if the spectrum escapes the band.
+    - **Tradability**: **Fragile** if a cleaning method produces materially better-calibrated
       out-of-sample risk than the raw sample matrix **and** beats the diagonal baseline;
-      **Partial** if it manages one; **Mirage** if ignoring correlations entirely does as well.
+      **Fragile** if it manages one; **Mirage** if ignoring correlations entirely does as well.
     """
     informative = h["n_above"] / max(h["n_assets"], 1)
-    signal = ("Confirmed" if informative < 0.15
-              else ("Partial" if informative < 0.35 else "Busted"))
+    signal = ("Real" if informative < 0.15
+              else ("Weak" if informative < 0.35 else "None"))
     beats_raw = h["best_calibration_err"] < h["sample_calibration_err"]
     beats_diag = h["best_method"] != "diagonal"
-    trad = ("Useful" if (beats_raw and beats_diag)
-            else ("Partial" if beats_raw else "Mirage"))
+    trad = "Fragile" if beats_raw else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

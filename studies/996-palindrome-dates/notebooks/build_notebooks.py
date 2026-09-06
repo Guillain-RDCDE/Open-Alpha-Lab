@@ -54,7 +54,7 @@ def build_curious():
 # The Palindrome Portfolio \U0001FA9E
 ### A market pattern based on absolutely nothing, and how significant we can make it look
 
-![Signal: Busted](https://img.shields.io/badge/Signal-Busted-c0392b?style=flat-square)
+![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)
 ![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-c0392b?style=flat-square)
 
 Every other study on this desk tries to avoid finding things that are not there. This one goes
@@ -285,7 +285,7 @@ print(oos.round(3).to_string())
 
 ## 7 · The verdict
 
-**Signal: Busted.** Searching **98 meaningless calendar rules** across 6 assets — 531 tests in total — produced **25 results significant at 5%**, against 27 expected by pure luck. The best was *day is a power of two* on SPY at *t* = **+3.22**, worth +28.8% a year. On a *t*-table that is a one-in-786 event. It is nothing of the sort. Reshuffling the returns and rerunning the identical search produced a best |*t*| of **2.63** at the median and 3.42 at the 95th percentile, so the observed maximum has a shuffle *p*-value of **0.10**. Bonferroni would have required *t* > 3.91; **0** rules cleared it. The correct reading of the headline number is that it is a draw from the distribution of the *maximum* of 531 tries, whose median is 3.22 — not from a *t*-distribution, whose median is 0.67.
+**Signal: None.** Searching **98 meaningless calendar rules** across 6 assets — 531 tests in total — produced **25 results significant at 5%**, against 27 expected by pure luck. The best was *day is a power of two* on SPY at *t* = **+3.22**, worth +28.8% a year. On a *t*-table that is a one-in-786 event. It is nothing of the sort. Reshuffling the returns and rerunning the identical search produced a best |*t*| of **2.63** at the median and 3.42 at the 95th percentile, so the observed maximum has a shuffle *p*-value of **0.10**. Bonferroni would have required *t* > 3.91; **0** rules cleared it. The correct reading of the headline number is that it is a draw from the distribution of the *maximum* of 531 tries, whose median is 3.22 — not from a *t*-distribution, whose median is 0.67.
 
 **Tradability: Mirage.** Selecting the ten best rules on the first half of the sample and testing them on the second half is the whole story in one table: their in-sample *t* averaged **-0.59** and their out-of-sample *t* averaged **+0.65**, with 6 of 10 keeping the same sign. Traded with costs, the single best rule turned +28.8% a year of apparent edge into -5.88% against simply holding the index. That is the price of believing a pattern with no mechanism, and it is charged in full.
 """
@@ -324,7 +324,7 @@ def build_quants():
 # The Palindrome Portfolio — a quantitative teardown \U0001F52C
 ### ~700 tests · the distribution of the maximum · a shuffle test that respects overlap
 
-![Signal: Busted](https://img.shields.io/badge/Signal-Busted-c0392b?style=flat-square)
+![Signal: None](https://img.shields.io/badge/Signal-None-c0392b?style=flat-square)
 ![Tradability: Mirage](https://img.shields.io/badge/Tradability-Mirage-c0392b?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The point is not
@@ -372,7 +372,7 @@ print(f"total tests to be run: {len(assets) * len(preds)}")
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** | Busted | Searching **98 meaningless calendar rules** across 6 assets — 531 tests in total — produced **25 results significant at 5%**, against 27 expected by pure luck. The best was *day is a power of two* on SPY at *t* = **+3.22**, worth +28.8% a year. On a *t*-table that is a one-in-786 event. It is nothing of the sort. Reshuffling the returns and rerunning the identical search produced a best |*t*| of **2.63** at the median and 3.42 at the 95th percentile, so the observed maximum has a shuffle *p*-value of **0.10**. Bonferroni would have required *t* > 3.91; **0** rules cleared it. The correct reading of the headline number is that it is a draw from the distribution of the *maximum* of 531 tries, whose median is 3.22 — not from a *t*-distribution, whose median is 0.67. |
+| **Signal** | None | Searching **98 meaningless calendar rules** across 6 assets — 531 tests in total — produced **25 results significant at 5%**, against 27 expected by pure luck. The best was *day is a power of two* on SPY at *t* = **+3.22**, worth +28.8% a year. On a *t*-table that is a one-in-786 event. It is nothing of the sort. Reshuffling the returns and rerunning the identical search produced a best |*t*| of **2.63** at the median and 3.42 at the 95th percentile, so the observed maximum has a shuffle *p*-value of **0.10**. Bonferroni would have required *t* > 3.91; **0** rules cleared it. The correct reading of the headline number is that it is a draw from the distribution of the *maximum* of 531 tries, whose median is 3.22 — not from a *t*-distribution, whose median is 0.67. |
 | **Tradability** | Mirage | Selecting the ten best rules on the first half of the sample and testing them on the second half is the whole story in one table: their in-sample *t* averaged **-0.59** and their out-of-sample *t* averaged **+0.65**, with 6 of 10 keeping the same sign. Traded with costs, the single best rule turned +28.8% a year of apparent edge into -5.88% against simply holding the index. That is the price of believing a pattern with no mechanism, and it is charged in full. |
 
 > \U0001F4A1 **In plain words.** "Busted" is the correct answer and the intended one. The stamps

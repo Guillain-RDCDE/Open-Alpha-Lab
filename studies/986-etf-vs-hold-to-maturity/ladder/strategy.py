@@ -354,23 +354,22 @@ def synthetic_world(n_years: int = 20, shock_bp: float = 200.0, maturity: float 
 def verdict(h: dict) -> dict:
     """Stamps by a pre-registered rule.
 
-    - **Signal**: **Confirmed** if the fund's realised return demonstrably fails to converge to
+    - **Signal**: **Real** if the fund's realised return demonstrably fails to converge to
       its starting yield — specifically, if the error's standard deviation at a horizon equal to
       the fund's duration is still above 1% a year, *and* the error is explained by duration ×
       rate change with an R² above 0.5 (the mechanism, not just the phenomenon);
-      **Partial** if the phenomenon holds but the mechanism does not; **Busted** otherwise.
-    - **Tradability**: **Useful** if the convergence horizon is within a normal investor's
+      **Fragile** if the phenomenon holds but the mechanism does not; **None** otherwise.
+    - **Tradability**: **Fragile** if the convergence horizon is within a normal investor's
       planning window (under 20 years) and the effect is large enough to change an allocation
-      (over 1% a year at short horizons); **Partial** if only one holds; **Mirage** otherwise.
+      (over 1% a year at short horizons); **Fragile** if only one holds; **Mirage** otherwise.
     """
     fails_to_converge = h["sd_error_at_duration"] > 0.01
     mechanism = h["decomp_r2"] > 0.5
-    signal = ("Confirmed" if (fails_to_converge and mechanism)
-              else ("Partial" if fails_to_converge or mechanism else "Busted"))
+    signal = ("Real" if (fails_to_converge and mechanism)
+              else ("Weak" if fails_to_converge or mechanism else "None"))
     reachable = np.isfinite(h["convergence_years"]) and h["convergence_years"] < 20
     material = h["sd_error_1y"] > 0.01
-    trad = ("Useful" if (reachable and material)
-            else ("Partial" if (reachable or material) else "Mirage"))
+    trad = "Fragile" if (reachable or material) else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

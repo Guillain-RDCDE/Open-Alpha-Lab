@@ -351,22 +351,20 @@ def synthetic_returns(n: int = 5000, df_t: float = 4.0, clustering: float = 0.0,
 def verdict(h: dict) -> dict:
     """Stamps by a pre-registered rule.
 
-    - **Signal**: **Confirmed** (the promise is broken) if the *normal* model's breach rate is
+    - **Signal**: **Real** (the promise is broken) if the *normal* model's breach rate is
       significantly above target on a majority of assets at 99% **and** the independence test
-      rejects for it too — that is, both the shape and the conditioning fail; **Partial** if
-      only one fails; **Busted** if the standard model is actually well calibrated.
-    - **Tradability**: **Useful** if the best model passes the joint test on a majority of
-      assets — meaning a practitioner has something better to switch to; **Partial** if it beats
+      rejects for it too — that is, both the shape and the conditioning fail; **Fragile** if
+      only one fails; **None** if the standard model is actually well calibrated.
+    - **Tradability**: **Fragile** if the best model passes the joint test on a majority of
+      assets — meaning a practitioner has something better to switch to; **Fragile** if it beats
       the normal model without passing; **Mirage** if nothing passes.
     """
     shape_fails = h["normal_reject_share"] > 0.5
     clustering_fails = h["normal_indep_reject_share"] > 0.5
-    signal = ("Confirmed" if (shape_fails and clustering_fails)
-              else ("Partial" if (shape_fails or clustering_fails) else "Busted"))
-    if h["best_joint_pass_share"] > 0.5:
-        trad = "Useful"
-    elif h["best_breach_error"] < h["normal_breach_error"]:
-        trad = "Partial"
+    signal = ("Real" if (shape_fails and clustering_fails)
+              else ("Weak" if (shape_fails or clustering_fails) else "None"))
+    if h["best_breach_error"] < h["normal_breach_error"]:
+        trad = "Fragile"
     else:
         trad = "Mirage"
     return {

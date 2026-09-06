@@ -54,8 +54,8 @@ def build_curious():
 # The Rolling Ladder \U0001FA9C
 ### A bond fund yielding 4% will not give you 4%. Here is how long it takes to find out.
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Useful](https://img.shields.io/badge/Tradability-Useful-2ea44f?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 Hold a ten-year Treasury to maturity and you earn what you were promised. Hold a ten-year
 Treasury *fund* and you do not — because the fund never matures. It sells each bond as it ages
@@ -212,9 +212,9 @@ for tk in (data.SHORT, data.INTERMEDIATE, data.LONG):
 
 ## 5 · The verdict
 
-**Signal: Confirmed.** A bond's starting yield is its return; a fund's is a forecast. Over 203 rolling 7.5-year windows — a horizon equal to IEF's own duration, where immunisation theory says the error should have washed out — the realised annualised return missed the starting yield by **+3.46% on average with a standard deviation of 2.32%**, and only 21% of windows landed within a percentage point of what was on offer. The mechanism checks out: regressing the error on **−duration × Δyield ⁄ horizon** gives a slope of 13.34 with R² **91%**, so the shortfall is the refusal to mature and essentially nothing else. At one year the error's standard deviation is 6.4%; it falls to 1.9% at ten years — shrinking, but nothing like a bond's, which is zero at maturity by construction.
+**Signal: Real.** A bond's starting yield is its return; a fund's is a forecast. Over 203 rolling 7.5-year windows — a horizon equal to IEF's own duration, where immunisation theory says the error should have washed out — the realised annualised return missed the starting yield by **+3.46% on average with a standard deviation of 2.32%**, and only 21% of windows landed within a percentage point of what was on offer. The mechanism checks out: regressing the error on **−duration × Δyield ⁄ horizon** gives a slope of 13.34 with R² **91%**, so the shortfall is the refusal to mature and essentially nothing else. At one year the error's standard deviation is 6.4%; it falls to 1.9% at ten years — shrinking, but nothing like a bond's, which is zero at maturity by construction.
 
-**Tradability: Useful.** In the controlled experiment — one rate path, a 10-year bond held to maturity against a 10-year constant-maturity fund, a 200 bp rise a year in — the fund fell 0.5% behind and took **5.6 years** to catch the bond, against a starting duration of 8.2. On a steadily trending rate path the fund's annualised return crossed back through its purchase yield after **11.1 years** — against Leibowitz, Bova & Kogelman's 2D − 1 = 15.4, and *below* it because the fund's duration shrinks as yields rise, so the cumulative price loss is smaller than D₀ × Δy. That is the practical content: the fund is not worse, it is *slower to be right*, and the delay is set by its duration. An investor whose horizon comfortably exceeds it is close to indifferent; one whose horizon is shorter is holding a rate bet they may not know they have taken.
+**Tradability: Fragile.** In the controlled experiment — one rate path, a 10-year bond held to maturity against a 10-year constant-maturity fund, a 200 bp rise a year in — the fund fell 0.5% behind and took **5.6 years** to catch the bond, against a starting duration of 8.2. On a steadily trending rate path the fund's annualised return crossed back through its purchase yield after **11.1 years** — against Leibowitz, Bova & Kogelman's 2D − 1 = 15.4, and *below* it because the fund's duration shrinks as yields rise, so the cumulative price loss is smaller than D₀ × Δy. That is the practical content: the fund is not worse, it is *slower to be right*, and the delay is set by its duration. An investor whose horizon comfortably exceeds it is close to indifferent; one whose horizon is shorter is holding a rate bet they may not know they have taken.
 """
         ),
         md(
@@ -245,8 +245,8 @@ def build_quants():
 # The Rolling Ladder — a quantitative teardown \U0001F52C
 ### Duration arithmetic · a one-path controlled experiment · immunisation, measured
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Useful](https://img.shields.io/badge/Tradability-Useful-2ea44f?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). Both instruments
 are simulated on the *same* rate path, so every difference between them is the roll — and the
@@ -291,8 +291,8 @@ print(f"a 10-year 4% bond: Macaulay duration {st.macaulay_duration(0.04, 10):.2f
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** | Confirmed | A bond's starting yield is its return; a fund's is a forecast. Over 203 rolling 7.5-year windows — a horizon equal to IEF's own duration, where immunisation theory says the error should have washed out — the realised annualised return missed the starting yield by **+3.46% on average with a standard deviation of 2.32%**, and only 21% of windows landed within a percentage point of what was on offer. The mechanism checks out: regressing the error on **−duration × Δyield ⁄ horizon** gives a slope of 13.34 with R² **91%**, so the shortfall is the refusal to mature and essentially nothing else. At one year the error's standard deviation is 6.4%; it falls to 1.9% at ten years — shrinking, but nothing like a bond's, which is zero at maturity by construction. |
-| **Tradability** | Useful | In the controlled experiment — one rate path, a 10-year bond held to maturity against a 10-year constant-maturity fund, a 200 bp rise a year in — the fund fell 0.5% behind and took **5.6 years** to catch the bond, against a starting duration of 8.2. On a steadily trending rate path the fund's annualised return crossed back through its purchase yield after **11.1 years** — against Leibowitz, Bova & Kogelman's 2D − 1 = 15.4, and *below* it because the fund's duration shrinks as yields rise, so the cumulative price loss is smaller than D₀ × Δy. That is the practical content: the fund is not worse, it is *slower to be right*, and the delay is set by its duration. An investor whose horizon comfortably exceeds it is close to indifferent; one whose horizon is shorter is holding a rate bet they may not know they have taken. |
+| **Signal** | Real | A bond's starting yield is its return; a fund's is a forecast. Over 203 rolling 7.5-year windows — a horizon equal to IEF's own duration, where immunisation theory says the error should have washed out — the realised annualised return missed the starting yield by **+3.46% on average with a standard deviation of 2.32%**, and only 21% of windows landed within a percentage point of what was on offer. The mechanism checks out: regressing the error on **−duration × Δyield ⁄ horizon** gives a slope of 13.34 with R² **91%**, so the shortfall is the refusal to mature and essentially nothing else. At one year the error's standard deviation is 6.4%; it falls to 1.9% at ten years — shrinking, but nothing like a bond's, which is zero at maturity by construction. |
+| **Tradability** | Fragile | In the controlled experiment — one rate path, a 10-year bond held to maturity against a 10-year constant-maturity fund, a 200 bp rise a year in — the fund fell 0.5% behind and took **5.6 years** to catch the bond, against a starting duration of 8.2. On a steadily trending rate path the fund's annualised return crossed back through its purchase yield after **11.1 years** — against Leibowitz, Bova & Kogelman's 2D − 1 = 15.4, and *below* it because the fund's duration shrinks as yields rise, so the cumulative price loss is smaller than D₀ × Δy. That is the practical content: the fund is not worse, it is *slower to be right*, and the delay is set by its duration. An investor whose horizon comfortably exceeds it is close to indifferent; one whose horizon is shorter is holding a rate bet they may not know they have taken. |
 
 > \U0001F4A1 **In plain words.** Duration is not just a risk number. It is also a *clock*: it
 > tells you how long the fund takes to deliver what it advertised.

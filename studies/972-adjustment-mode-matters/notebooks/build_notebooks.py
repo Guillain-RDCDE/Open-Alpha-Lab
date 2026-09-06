@@ -55,7 +55,7 @@ def build_curious():
 ### The same fund, two lines on a chart, one of them missing a third of the return
 
 ![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
-![Usefulness: Useful](https://img.shields.io/badge/Usefulness-Useful-2ea44f?style=flat-square)
+![Usefulness: Fragile](https://img.shields.io/badge/Usefulness-Fragile-dab617?style=flat-square)
 
 Download a price series and you get whatever the default gave you. This notebook takes both
 conventions for the same eight funds and measures what the choice is worth: in return, in
@@ -221,7 +221,7 @@ like laggards.
 
 **Signal: Real.** The gap between the two conventions is the reinvested dividend, and on this universe it runs from **0.69%/yr** (QQQ) to **6.31%/yr** (HYG) — which on HYG is **128% of its entire total return**. Volatility is almost untouched (largest difference 0.14%), so every risk-adjusted ratio moves with the numerator alone: the Sharpe gap reaches **0.57**.
 
-**Usefulness: Useful.** Yes. Ranking the same universe on price charts instead of total returns reorders **4%** of asset pairs in an average month and picks a different leader in **6%** of them. Run as a momentum sleeve — both arms scored on total returns, so only the *selection* differs — ranking on price gives +7.26%/yr against +6.41%/yr for ranking on total return (-0.85%/yr, Sharpe +0.51 vs +0.47), and it holds a portfolio yielding -0.16% less. The price-only signal is not neutral — it is a systematic bet against income.
+**Usefulness: Fragile.** Yes. Ranking the same universe on price charts instead of total returns reorders **4%** of asset pairs in an average month and picks a different leader in **6%** of them. Run as a momentum sleeve — both arms scored on total returns, so only the *selection* differs — ranking on price gives +7.26%/yr against +6.41%/yr for ranking on total return (-0.85%/yr, Sharpe +0.51 vs +0.47), and it holds a portfolio yielding -0.16% less. The price-only signal is not neutral — it is a systematic bet against income.
 """
         ),
         md(
@@ -253,7 +253,7 @@ def build_quants():
 ### Implied yields · Spearman and pair flips · selection isolated from income · an equal-total-return control
 
 ![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
-![Usefulness: Useful](https://img.shields.io/badge/Usefulness-Useful-2ea44f?style=flat-square)
+![Usefulness: Fragile](https://img.shields.io/badge/Usefulness-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The design
 decision that makes this study more than an arithmetic reminder: both arms of the backtest are
@@ -300,7 +300,7 @@ print(yt[["cagr_tr", "cagr_px", "implied_yield", "share_of_return"]].round(4).to
 | Axis | Stamp | Why |
 |---|---|---|
 | **Signal** | Real | The gap between the two conventions is the reinvested dividend, and on this universe it runs from **0.69%/yr** (QQQ) to **6.31%/yr** (HYG) — which on HYG is **128% of its entire total return**. Volatility is almost untouched (largest difference 0.14%), so every risk-adjusted ratio moves with the numerator alone: the Sharpe gap reaches **0.57**. |
-| **Usefulness** | Useful | Yes. Ranking the same universe on price charts instead of total returns reorders **4%** of asset pairs in an average month and picks a different leader in **6%** of them. Run as a momentum sleeve — both arms scored on total returns, so only the *selection* differs — ranking on price gives +7.26%/yr against +6.41%/yr for ranking on total return (-0.85%/yr, Sharpe +0.51 vs +0.47), and it holds a portfolio yielding -0.16% less. The price-only signal is not neutral — it is a systematic bet against income. |
+| **Usefulness** | Fragile | Yes. Ranking the same universe on price charts instead of total returns reorders **4%** of asset pairs in an average month and picks a different leader in **6%** of them. Run as a momentum sleeve — both arms scored on total returns, so only the *selection* differs — ranking on price gives +7.26%/yr against +6.41%/yr for ranking on total return (-0.85%/yr, Sharpe +0.51 vs +0.47), and it holds a portfolio yielding -0.16% less. The price-only signal is not neutral — it is a systematic bet against income. |
 
 > \U0001F4A1 **In plain words.** The convention subtracts a constant from every return, and a
 > constant subtraction is exactly the kind of thing a cross-sectional sort is most sensitive

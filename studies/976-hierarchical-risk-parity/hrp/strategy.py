@@ -303,7 +303,7 @@ def verdict(h: dict) -> dict:
       materially from inverse variance — mean absolute weight difference above 2% of the book
       — on at least two panels; **Weak** on one; **None** otherwise. This is the honest test of
       the *hierarchy*, as opposed to the risk weighting anyone gets for free.
-    - **Usefulness**: **Useful** if HRP's realised volatility beats **both** minimum variance
+    - **Usefulness**: **Fragile** if HRP's realised volatility beats **both** minimum variance
       and 1/N on the wide panel with a paired |*t*| >= 2; **Fragile** if it beats one; **Mirage**
       if it beats neither.
     """
@@ -311,8 +311,7 @@ def verdict(h: dict) -> dict:
               else ("Weak" if h["n_panels_hierarchy_matters"] >= 1 else "None"))
     beats_mv = h["t_vs_minvar"] > 2.0
     beats_eq = h["t_vs_equal"] > 2.0
-    trad = ("Useful" if beats_mv and beats_eq
-            else ("Fragile" if beats_mv or beats_eq else "Mirage"))
+    trad = "Fragile" if beats_mv or beats_eq else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

@@ -117,7 +117,7 @@ Produced by `strategy.verdict`, fixed before the run and unit-tested in
 
 **Signal: Real.** It scales with the square of volatility, so it is invisible at one end of the tape and enormous at the other. On **BIL** (0% annualised vol) the mean simple and mean log returns differ by **0.00%/yr**; on **TQQQ** (61% vol) they differ by **18.9%/yr**, and the sigma-squared-over-two prediction accounts for 99% of it. The Sharpe ratio moves too: up to **0.31** between the two conventions.
 
-**Usefulness: Useful.** Yes, and it is two lines. **Across time, use logs** (they add, and their mean exponentiates to the CAGR the path delivered). **Across assets, use simple returns** (a portfolio's return is a weighted average of them, exactly). The failure mode is weighting log returns: on an equal-weight book of 7 tapes it understated the CAGR by **6.11%/yr** — 1.80x of terminal wealth over 12 years — and it understated on **essentially every day**, because Jensen's inequality only points one way.
+**Usefulness: Fragile.** Yes, and it is two lines. **Across time, use logs** (they add, and their mean exponentiates to the CAGR the path delivered). **Across assets, use simple returns** (a portfolio's return is a weighted average of them, exactly). The failure mode is weighting log returns: on an equal-weight book of 7 tapes it understated the CAGR by **6.11%/yr** — 1.80x of terminal wealth over 12 years — and it understated on **essentially every day**, because Jensen's inequality only points one way.
 
 ---
 

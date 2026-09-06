@@ -311,8 +311,8 @@ def _headline(**over):
 
 def test_verdict_signal_needs_both_the_arithmetic_and_the_asymmetry():
     assert st.verdict(_headline())["signal"] == "Real"
-    assert st.verdict(_headline(asym_ratio=0.8))["signal"] == "Mixed"
-    assert st.verdict(_headline(cost_of_missing_best=0.001))["signal"] == "Busted"
+    assert st.verdict(_headline(asym_ratio=0.8))["signal"] == "Weak"
+    assert st.verdict(_headline(cost_of_missing_best=0.001))["signal"] == "None"
 
 
 def test_verdict_tradability_keys_off_the_edge_over_random_not_over_one_half():

@@ -159,9 +159,9 @@ drifting beta when those are planted.
 Produced by `strategy.verdict`, fixed before the run and unit-tested in
 [`tests/test_strategy.py`](../tests/test_strategy.py).
 
-**Signal: Busted.** Regressed on gold over 4,801 sessions, silver's beta is **1.45** (±0.03) with an R² of 62% — so about 38% of silver's variance is *not* gold. That leftover is not noise. Its annualised volatility is 20.3%, and it loads on outside factors with a largest |*t*| of **10.58** (on industrial). Nor is the beta a constant: over rolling one-year windows it ranges 0.94 to 2.15, a spread of **86% of its own mean**, and it is 1.29 on gold's up days against 1.57 on its down days. 'Silver is levered gold' is a reasonable first approximation and a poor second one.
+**Signal: None.** Regressed on gold over 4,801 sessions, silver's beta is **1.45** (±0.03) with an R² of 62% — so about 38% of silver's variance is *not* gold. That leftover is not noise. Its annualised volatility is 20.3%, and it loads on outside factors with a largest |*t*| of **10.58** (on industrial). Nor is the beta a constant: over rolling one-year windows it ranges 0.94 to 2.15, a spread of **86% of its own mean**, and it is 1.29 on gold's up days against 1.57 on its down days. 'Silver is levered gold' is a reasonable first approximation and a poor second one.
 
-**Tradability: Useful.** Holding a 1.45× daily-rebalanced gold position instead of silver, financed at cash plus 0.5%, tracked it with a correlation of 0.79 and an annualised tracking error of **20.3%** — which is not tracking, it is a different asset. Over 19 years silver compounded at +7.7% against the replica's +11.9% (Sharpe 0.39 vs 0.56). Part of that gap is pure arithmetic: levering a 18%-vol asset 1.45× costs about **1.1% a year** in volatility drag, before financing and before costs.
+**Tradability: Fragile.** Holding a 1.45× daily-rebalanced gold position instead of silver, financed at cash plus 0.5%, tracked it with a correlation of 0.79 and an annualised tracking error of **20.3%** — which is not tracking, it is a different asset. Over 19 years silver compounded at +7.7% against the replica's +11.9% (Sharpe 0.39 vs 0.56). Part of that gap is pure arithmetic: levering a 18%-vol asset 1.45× costs about **1.1% a year** in volatility drag, before financing and before costs.
 
 ---
 

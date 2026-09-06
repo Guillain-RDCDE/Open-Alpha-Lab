@@ -386,7 +386,7 @@ def verdict(h: dict) -> dict:
 
     - **Signal** (are there real inconsistencies?): **Real** if any check returns an *error*
       severity on any ticker; **Weak** if only warnings; **None** if everything is clean.
-    - **Usefulness** (would it change a published result?): **Useful** if the largest
+    - **Usefulness** (would it change a published result?): **Fragile** if the largest
       daily-versus-weekly Sharpe discrepancy exceeds 0.05 or the reconstruction gap exceeds
       0.5%/yr — both are large enough to move a conclusion; **Fragile** at a tenth of that;
       **Mirage** below.
@@ -395,7 +395,7 @@ def verdict(h: dict) -> dict:
               ("Weak" if h["n_warnings"] > 0 else "None"))
     big = h["max_sharpe_gap"] >= 0.05 or h["max_reconstruction_gap"] >= 0.005
     small = h["max_sharpe_gap"] >= 0.005 or h["max_reconstruction_gap"] >= 0.0005
-    trad = "Useful" if big else ("Fragile" if small else "Mirage")
+    trad = "Fragile" if small else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

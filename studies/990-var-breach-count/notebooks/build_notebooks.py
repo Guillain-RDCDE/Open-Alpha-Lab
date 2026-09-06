@@ -54,8 +54,8 @@ def build_curious():
 # Counting the Breaks \U0001F6A8
 ### A 99% VaR promises to be wrong two days a year. Let's count.
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 Most risk numbers cannot be checked. Value-at-Risk can: it says the loss will exceed *this*
 number on one day in a hundred, and you can count the days. So we counted — five standard
@@ -235,9 +235,9 @@ anyone has.
 
 ## 6 · The verdict
 
-**Signal: Confirmed.** At 99% confidence over 6 assets, the textbook **normal** VaR model breached on **1.95%** of days against a promised 1.00% — 1.9× too often — and Kupiec's coverage test rejected it on **100%** of assets. Worse, and this is the part standard practice never checks: the independence test rejected it on **83%**, with runs of up to 4 consecutive breaches. Those are two different failures — the distribution's shape is wrong *and* it does not know today's volatility — and a breach count alone cannot tell them apart. The best model here is **ewma** at 1.79%, passing the joint test on 17% of assets.
+**Signal: Real.** At 99% confidence over 6 assets, the textbook **normal** VaR model breached on **1.95%** of days against a promised 1.00% — 1.9× too often — and Kupiec's coverage test rejected it on **100%** of assets. Worse, and this is the part standard practice never checks: the independence test rejected it on **83%**, with runs of up to 4 consecutive breaches. Those are two different failures — the distribution's shape is wrong *and* it does not know today's volatility — and a breach count alone cannot tell them apart. The best model here is **ewma** at 1.79%, passing the joint test on 17% of assets.
 
-**Tradability: Partial.** Before switching models on this evidence, note how weak the evidence can be. With 5,282 sessions at 99%, a model that breaches **50% too often** (1.5% instead of 1.0%) is caught by Kupiec only **91%** of the time; detecting that reliably needs about **3,536 sessions** — 14 years. On the days the models were wrong they were wrong by a lot: the normal model's average breach overshot its own forecast by 40%, and its worst day lost 37.2% against a forecast of 8.3%. Breach counting says nothing about that, which is the argument for expected shortfall.
+**Tradability: Fragile.** Before switching models on this evidence, note how weak the evidence can be. With 5,282 sessions at 99%, a model that breaches **50% too often** (1.5% instead of 1.0%) is caught by Kupiec only **91%** of the time; detecting that reliably needs about **3,536 sessions** — 14 years. On the days the models were wrong they were wrong by a lot: the normal model's average breach overshot its own forecast by 40%, and its worst day lost 37.2% against a forecast of 8.3%. Breach counting says nothing about that, which is the argument for expected shortfall.
 """
         ),
         md(
@@ -268,8 +268,8 @@ def build_quants():
 # Counting the Breaks — a quantitative teardown \U0001F52C
 ### Kupiec · Christoffersen · joint conditional coverage · a power curve nobody prints
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The two failure
 modes — a distribution of the wrong shape, and a model blind to today's volatility — produce the
@@ -318,8 +318,8 @@ for tk, s in assets.items():
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** | Confirmed | At 99% confidence over 6 assets, the textbook **normal** VaR model breached on **1.95%** of days against a promised 1.00% — 1.9× too often — and Kupiec's coverage test rejected it on **100%** of assets. Worse, and this is the part standard practice never checks: the independence test rejected it on **83%**, with runs of up to 4 consecutive breaches. Those are two different failures — the distribution's shape is wrong *and* it does not know today's volatility — and a breach count alone cannot tell them apart. The best model here is **ewma** at 1.79%, passing the joint test on 17% of assets. |
-| **Tradability** | Partial | Before switching models on this evidence, note how weak the evidence can be. With 5,282 sessions at 99%, a model that breaches **50% too often** (1.5% instead of 1.0%) is caught by Kupiec only **91%** of the time; detecting that reliably needs about **3,536 sessions** — 14 years. On the days the models were wrong they were wrong by a lot: the normal model's average breach overshot its own forecast by 40%, and its worst day lost 37.2% against a forecast of 8.3%. Breach counting says nothing about that, which is the argument for expected shortfall. |
+| **Signal** | Real | At 99% confidence over 6 assets, the textbook **normal** VaR model breached on **1.95%** of days against a promised 1.00% — 1.9× too often — and Kupiec's coverage test rejected it on **100%** of assets. Worse, and this is the part standard practice never checks: the independence test rejected it on **83%**, with runs of up to 4 consecutive breaches. Those are two different failures — the distribution's shape is wrong *and* it does not know today's volatility — and a breach count alone cannot tell them apart. The best model here is **ewma** at 1.79%, passing the joint test on 17% of assets. |
+| **Tradability** | Fragile | Before switching models on this evidence, note how weak the evidence can be. With 5,282 sessions at 99%, a model that breaches **50% too often** (1.5% instead of 1.0%) is caught by Kupiec only **91%** of the time; detecting that reliably needs about **3,536 sessions** — 14 years. On the days the models were wrong they were wrong by a lot: the normal model's average breach overshot its own forecast by 40%, and its worst day lost 37.2% against a forecast of 8.3%. Breach counting says nothing about that, which is the argument for expected shortfall. |
 
 > \U0001F4A1 **In plain words.** The models fail in two distinguishable ways, and the test that
 > distinguishes them is the one nobody runs.

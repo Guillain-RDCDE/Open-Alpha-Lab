@@ -206,14 +206,13 @@ def verdict(h: dict) -> dict:
     - **Signal** (does the scheme matter?): **Real** if, in any tested world, the coverage
       spread across methods exceeds 5 percentage points; **Weak** above 2 points; **None**
       below.
-    - **Usefulness** (is there a default?): **Useful** if one method stays within 2 points of
+    - **Usefulness** (is there a default?): **Fragile** if one method stays within 2 points of
       nominal in *every* world tested; **Fragile** if the best method is world-dependent but
       one is never badly wrong; **Mirage** if nothing is reliable.
     """
     spread = h["max_coverage_spread"]
     signal = "Real" if spread >= 0.05 else ("Weak" if spread >= 0.02 else "None")
-    trad = ("Useful" if h["best_worst_case_gap"] <= 0.02
-            else ("Fragile" if h["best_worst_case_gap"] <= 0.05 else "Mirage"))
+    trad = "Fragile" if h["best_worst_case_gap"] <= 0.05 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

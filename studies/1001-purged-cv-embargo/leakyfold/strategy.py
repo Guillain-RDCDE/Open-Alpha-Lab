@@ -337,22 +337,21 @@ def synthetic_panel(n: int = 4000, predictability: float = 0.0, horizon: int = 2
 def verdict(h: dict) -> dict:
     """Stamps by a pre-registered rule.
 
-    - **Signal**: **Confirmed** if shuffled k-fold reports a materially higher information
+    - **Signal**: **Real** if shuffled k-fold reports a materially higher information
       coefficient than walk-forward on data where the honest answer is near zero — i.e. the
-      illusion is demonstrated; **Partial** if the gap exists but is small; **Busted** if
+      illusion is demonstrated; **Fragile** if the gap exists but is small; **None** if
       ordinary cross-validation turns out to be fine.
-    - **Tradability**: this is a methodology question. **Useful** if purging plus embargo
+    - **Tradability**: this is a methodology question. **Fragile** if purging plus embargo
       recovers an estimate close to the walk-forward truth **and** still detects a planted
       signal — a fix that destroyed real signal along with the leakage would be no fix;
-      **Partial** if it does one; **Mirage** if neither.
+      **Fragile** if it does one; **Mirage** if neither.
     """
     material = h["total_illusion"] > 0.02
-    signal = ("Confirmed" if material and h["honest_ic"] < 0.05
-              else ("Partial" if h["total_illusion"] > 0 else "Busted"))
+    signal = ("Real" if material and h["honest_ic"] < 0.05
+              else ("Weak" if h["total_illusion"] > 0 else "None"))
     recovers = abs(h["embargo_ic"] - h["honest_ic"]) < 0.02
     keeps_signal = h["planted_detected"]
-    trad = ("Useful" if (recovers and keeps_signal)
-            else ("Partial" if (recovers or keeps_signal) else "Mirage"))
+    trad = "Fragile" if (recovers or keeps_signal) else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

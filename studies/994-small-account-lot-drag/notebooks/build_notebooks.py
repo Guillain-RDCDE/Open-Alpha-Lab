@@ -55,7 +55,7 @@ def build_curious():
 ### Your model portfolio says 40% SPY. Your $3,000 account says four shares.
 
 ![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 Every asset-allocation article in the world is written in percentages. Percentages assume you
 can buy 3.7 shares. For most of investing history, and still today in most retirement plans and
@@ -257,7 +257,7 @@ print(esc.round(4).to_string())
 
 **Signal: Weak.** A **$3,000** account holding the 6-fund target could not place it: the achieved weights missed the plan by **5.4%** in total absolute terms on average, worst position off by 17.2%, and **0.6%** of the account sat in uninvested residue. Against a fractional-share portfolio running the identical plan, the tracking error was **0.28%/yr** over 15 years. Two numbers put that in proportion. One share of each fund costs $1,518 — the figure usually quoted — but the account that actually *hits* the target weights to within one percentage point is **$38,857**, an order of magnitude more, because owning one of everything gives you a portfolio whose weights are set by share prices rather than by your plan.
 
-**Tradability: Partial.** But the shortfall is mostly **noise, not drag**, and the difference decides the advice. Over 15 years the whole-share portfolio compounded at +9.10% against the fractional ideal's +9.20% — a gap of **-0.10%/yr**, of which cash drag explains -0.03% and trading costs -0.01%, leaving -0.06% that is simply which way the dice fell. Allocation error is mean-zero — you are as likely to be overweight as under — so it produces tracking error without an expected cost; only the cash residue is one-directional. The fix that works is not fractional shares but **fewer funds**: cutting the target to its three largest positions dropped the allocation error from 5.4% to **3.4%**.
+**Tradability: Fragile.** But the shortfall is mostly **noise, not drag**, and the difference decides the advice. Over 15 years the whole-share portfolio compounded at +9.10% against the fractional ideal's +9.20% — a gap of **-0.10%/yr**, of which cash drag explains -0.03% and trading costs -0.01%, leaving -0.06% that is simply which way the dice fell. Allocation error is mean-zero — you are as likely to be overweight as under — so it produces tracking error without an expected cost; only the cash residue is one-directional. The fix that works is not fractional shares but **fewer funds**: cutting the target to its three largest positions dropped the allocation error from 5.4% to **3.4%**.
 """
         ),
         md(
@@ -291,7 +291,7 @@ def build_quants():
 ### Largest-remainder allocation · error-versus-capital · drag vs mean-zero noise
 
 ![Signal: Weak](https://img.shields.io/badge/Signal-Weak-dab617?style=flat-square)
-![Tradability: Partial](https://img.shields.io/badge/Tradability-Partial-dab617?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The central
 distinction is between a shortfall that **compounds** and one that **cancels**, because they
@@ -341,7 +341,7 @@ print(f"\none share of everything: ${st.one_share_cost(target, last):,.2f}")
 | Axis | Stamp | Why |
 |---|---|---|
 | **Signal** | Weak | A **$3,000** account holding the 6-fund target could not place it: the achieved weights missed the plan by **5.4%** in total absolute terms on average, worst position off by 17.2%, and **0.6%** of the account sat in uninvested residue. Against a fractional-share portfolio running the identical plan, the tracking error was **0.28%/yr** over 15 years. Two numbers put that in proportion. One share of each fund costs $1,518 — the figure usually quoted — but the account that actually *hits* the target weights to within one percentage point is **$38,857**, an order of magnitude more, because owning one of everything gives you a portfolio whose weights are set by share prices rather than by your plan. |
-| **Tradability** | Partial | But the shortfall is mostly **noise, not drag**, and the difference decides the advice. Over 15 years the whole-share portfolio compounded at +9.10% against the fractional ideal's +9.20% — a gap of **-0.10%/yr**, of which cash drag explains -0.03% and trading costs -0.01%, leaving -0.06% that is simply which way the dice fell. Allocation error is mean-zero — you are as likely to be overweight as under — so it produces tracking error without an expected cost; only the cash residue is one-directional. The fix that works is not fractional shares but **fewer funds**: cutting the target to its three largest positions dropped the allocation error from 5.4% to **3.4%**. |
+| **Tradability** | Fragile | But the shortfall is mostly **noise, not drag**, and the difference decides the advice. Over 15 years the whole-share portfolio compounded at +9.10% against the fractional ideal's +9.20% — a gap of **-0.10%/yr**, of which cash drag explains -0.03% and trading costs -0.01%, leaving -0.06% that is simply which way the dice fell. Allocation error is mean-zero — you are as likely to be overweight as under — so it produces tracking error without an expected cost; only the cash residue is one-directional. The fix that works is not fractional shares but **fewer funds**: cutting the target to its three largest positions dropped the allocation error from 5.4% to **3.4%**. |
 
 > \U0001F4A1 **In plain words.** The constraint is real and the *cost* is smaller than it looks,
 > because most of the shortfall is a coin flip rather than a leak.

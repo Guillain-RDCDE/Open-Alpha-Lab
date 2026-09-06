@@ -242,15 +242,14 @@ def verdict(h: dict) -> dict:
     - **Signal**: **Real** if the sample covariance's in-sample optimism exceeds 20% on the
       wide cross-section (it promises a fifth less risk than it delivers); **Weak** above 5%;
       **None** below.
-    - **Usefulness**: **Useful** if the best shrinkage estimator cuts realised volatility by
+    - **Usefulness**: **Fragile** if the best shrinkage estimator cuts realised volatility by
       at least 5% relative to the sample matrix with a paired |*t*| >= 2; **Fragile** if it
       wins without significance; **Mirage** if it does not win.
     """
     opt = h["wide_optimism_sample"]
     signal = "Real" if opt >= 0.20 else ("Weak" if opt >= 0.05 else "None")
     gain, t = h["wide_vol_saving"], h["wide_paired_t"]
-    trad = ("Useful" if gain >= 0.05 and abs(t) >= 2.0
-            else ("Fragile" if gain > 0 else "Mirage"))
+    trad = "Fragile" if gain > 0 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

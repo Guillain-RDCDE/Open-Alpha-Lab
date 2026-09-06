@@ -446,15 +446,14 @@ def verdict(h: dict) -> dict:
     - **Signal**: **Real** if the spread of alpha across defensible benchmarks exceeds the
       standard error of a single estimate for most funds; **Weak** if comparable; **None** if
       the choice barely matters.
-    - **Tradability**: about whether the choice is decidable. **Useful** if the data reliably
-      identifies one benchmark, so the problem is solvable; **Partial** if it narrows the field;
+    - **Tradability**: about whether the choice is decidable. **Fragile** if the data reliably
+      identifies one benchmark, so the problem is solvable; **Fragile** if it narrows the field;
       **Mirage** if the winner changes from resample to resample, since then any single reported
       alpha is a judgement call presented as a measurement.
     """
     signal = ("Real" if h["median_spread_over_se"] > 2.0
               else ("Weak" if h["median_spread_over_se"] > 0.8 else "None"))
-    trad = ("Useful" if h["share_decisive"] > 0.7
-            else ("Partial" if h["share_decisive"] > 0.3 else "Mirage"))
+    trad = "Fragile" if h["share_decisive"] > 0.3 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

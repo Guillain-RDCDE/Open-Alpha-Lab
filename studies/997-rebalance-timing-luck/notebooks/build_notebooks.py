@@ -54,8 +54,8 @@ def build_curious():
 # The Rebalance Lottery \U0001F3B0
 ### Same strategy, same data, same rules. Different Tuesday.
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Useful](https://img.shields.io/badge/Tradability-Useful-2ea44f?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 Two people read the same paper and implement the same rule. One rebalances on the first of the
 month, the other on the fifteenth. Twenty years later one of them has substantially more money
@@ -259,9 +259,9 @@ one.
 
 ## 6 · The verdict
 
-**Signal: Confirmed.** The identical momentum rule, run at all **21 possible rebalance offsets** over 19 years, produced CAGRs from **+6.50% to +9.92%** — a spread of **3.42%** and a terminal-wealth ratio of **1.85×** between the luckiest and unluckiest start day. Nothing about the rule differed; only the day of the month it happened to trade. For scale, the rule's average edge over buy-and-hold was +0.29%/yr, so the luck is **11.6×** the edge, and 62% of the offsets beat the benchmark. A fixed-weight 60/40 shows far less — a spread of only 0.22% — because both variants hold the *same assets* and differ only in drift, while a ranking rule's variants hold different assets entirely. Any backtest of a selection rule that reports one rebalance date is reporting one draw from a distribution this wide.
+**Signal: Real.** The identical momentum rule, run at all **21 possible rebalance offsets** over 19 years, produced CAGRs from **+6.50% to +9.92%** — a spread of **3.42%** and a terminal-wealth ratio of **1.85×** between the luckiest and unluckiest start day. Nothing about the rule differed; only the day of the month it happened to trade. For scale, the rule's average edge over buy-and-hold was +0.29%/yr, so the luck is **11.6×** the edge, and 62% of the offsets beat the benchmark. A fixed-weight 60/40 shows far less — a spread of only 0.22% — because both variants hold the *same assets* and differ only in drift, while a ranking rule's variants hold different assets entirely. Any backtest of a selection rule that reports one rebalance date is reporting one draw from a distribution this wide.
 
-**Tradability: Useful.** The fix is real and it is cheap. Running all 21 offsets at once — rebalancing 1/21 of the book each day — removes the dispersion by construction, and it does not cost return: the blended portfolio delivered **+8.66%/yr at a Sharpe of 0.65**, against the average single-offset variant's +8.54% and 0.62. It also cut volatility by 0.78% and improved the worst drawdown by 2.3% against the average variant, because the sleeves are imperfectly correlated with each other. The catch a practitioner should know: it is operationally more demanding — a daily trade instead of a monthly one — and section 6 confirms it preserves genuine signal rather than diluting it away.
+**Tradability: Fragile.** The fix is real and it is cheap. Running all 21 offsets at once — rebalancing 1/21 of the book each day — removes the dispersion by construction, and it does not cost return: the blended portfolio delivered **+8.66%/yr at a Sharpe of 0.65**, against the average single-offset variant's +8.54% and 0.62. It also cut volatility by 0.78% and improved the worst drawdown by 2.3% against the average variant, because the sleeves are imperfectly correlated with each other. The catch a practitioner should know: it is operationally more demanding — a daily trade instead of a monthly one — and section 6 confirms it preserves genuine signal rather than diluting it away.
 """
         ),
         md(
@@ -292,8 +292,8 @@ def build_quants():
 # The Rebalance Lottery — a quantitative teardown \U0001F52C
 ### All 21 offsets · selection vs drift · period scaling · overlapping portfolios
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Useful](https://img.shields.io/badge/Tradability-Useful-2ea44f?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The key
 observation is that timing luck is a **selection** phenomenon: a fixed-weight rule barely
@@ -342,8 +342,8 @@ print(f"-> 21 possible offsets, all of them equally defensible")
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** | Confirmed | The identical momentum rule, run at all **21 possible rebalance offsets** over 19 years, produced CAGRs from **+6.50% to +9.92%** — a spread of **3.42%** and a terminal-wealth ratio of **1.85×** between the luckiest and unluckiest start day. Nothing about the rule differed; only the day of the month it happened to trade. For scale, the rule's average edge over buy-and-hold was +0.29%/yr, so the luck is **11.6×** the edge, and 62% of the offsets beat the benchmark. A fixed-weight 60/40 shows far less — a spread of only 0.22% — because both variants hold the *same assets* and differ only in drift, while a ranking rule's variants hold different assets entirely. Any backtest of a selection rule that reports one rebalance date is reporting one draw from a distribution this wide. |
-| **Tradability** | Useful | The fix is real and it is cheap. Running all 21 offsets at once — rebalancing 1/21 of the book each day — removes the dispersion by construction, and it does not cost return: the blended portfolio delivered **+8.66%/yr at a Sharpe of 0.65**, against the average single-offset variant's +8.54% and 0.62. It also cut volatility by 0.78% and improved the worst drawdown by 2.3% against the average variant, because the sleeves are imperfectly correlated with each other. The catch a practitioner should know: it is operationally more demanding — a daily trade instead of a monthly one — and section 6 confirms it preserves genuine signal rather than diluting it away. |
+| **Signal** | Real | The identical momentum rule, run at all **21 possible rebalance offsets** over 19 years, produced CAGRs from **+6.50% to +9.92%** — a spread of **3.42%** and a terminal-wealth ratio of **1.85×** between the luckiest and unluckiest start day. Nothing about the rule differed; only the day of the month it happened to trade. For scale, the rule's average edge over buy-and-hold was +0.29%/yr, so the luck is **11.6×** the edge, and 62% of the offsets beat the benchmark. A fixed-weight 60/40 shows far less — a spread of only 0.22% — because both variants hold the *same assets* and differ only in drift, while a ranking rule's variants hold different assets entirely. Any backtest of a selection rule that reports one rebalance date is reporting one draw from a distribution this wide. |
+| **Tradability** | Fragile | The fix is real and it is cheap. Running all 21 offsets at once — rebalancing 1/21 of the book each day — removes the dispersion by construction, and it does not cost return: the blended portfolio delivered **+8.66%/yr at a Sharpe of 0.65**, against the average single-offset variant's +8.54% and 0.62. It also cut volatility by 0.78% and improved the worst drawdown by 2.3% against the average variant, because the sleeves are imperfectly correlated with each other. The catch a practitioner should know: it is operationally more demanding — a daily trade instead of a monthly one — and section 6 confirms it preserves genuine signal rather than diluting it away. |
 
 > \U0001F4A1 **In plain words.** Timing luck is a standard error that backtests do not report,
 > and for selection rules it is larger than the effect being reported.

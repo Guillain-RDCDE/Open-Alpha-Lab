@@ -411,23 +411,21 @@ def synthetic_vol(n: int = 6000, halflife: float = 20.0, second_halflife: float 
 def verdict(h: dict) -> dict:
     """Stamps by a pre-registered rule.
 
-    - **Signal**: **Confirmed** (clustering is real and persistent) if the impulse-response
+    - **Signal**: **Real** (clustering is real and persistent) if the impulse-response
       half-life exceeds five days **and** the two-component fit beats the single-exponential fit
       by more than 20% of squared error — i.e. the clustering is real *and* it is not one
-      simple exponential; **Partial** if only the first holds; **Busted** if volatility shows no
+      simple exponential; **Fragile** if only the first holds; **None** if volatility shows no
       measurable persistence.
-    - **Tradability**: **Useful** if volatility after a shock is still materially elevated at
-      one month (ratio above 1.2) — long enough to reposition against; **Partial** if it is
+    - **Tradability**: **Fragile** if volatility after a shock is still materially elevated at
+      one month (ratio above 1.2) — long enough to reposition against; **Fragile** if it is
       elevated at a week but not a month; **Mirage** otherwise.
     """
     persistent = h["impulse_halflife"] > 5
     multiscale = h["two_component_improvement"] > 0.20
-    signal = ("Confirmed" if (persistent and multiscale)
-              else ("Partial" if persistent else "Busted"))
-    if h["ratio_21d"] > 1.2:
-        trad = "Useful"
-    elif h["ratio_5d"] > 1.2:
-        trad = "Partial"
+    signal = ("Real" if (persistent and multiscale)
+              else ("Weak" if persistent else "None"))
+    if h["ratio_5d"] > 1.2:
+        trad = "Fragile"
     else:
         trad = "Mirage"
     return {

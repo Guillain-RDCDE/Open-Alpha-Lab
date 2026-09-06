@@ -192,13 +192,13 @@ def verdict(h: dict) -> dict:
     - **Signal**: **Real** if the daily-to-monthly correlation lift exceeds 0.10 on at least
       two foreign tapes **and** stays below 0.05 on the same-market control; **Weak** if the
       lift is there without the control staying clean; **None** otherwise.
-    - **Usefulness**: **Useful** if the minimum-variance book built on the biased matrix
+    - **Usefulness**: **Fragile** if the minimum-variance book built on the biased matrix
       understates its own volatility by more than 5%; **Fragile** above 1%; **Mirage** below.
     """
     real = h["n_big_lifts"] >= 2 and abs(h["control_lift"]) < 0.05
     signal = "Real" if real else ("Weak" if h["n_big_lifts"] >= 1 else "None")
     u = abs(h["understatement"])
-    trad = "Useful" if u >= 0.05 else ("Fragile" if u >= 0.01 else "Mirage")
+    trad = "Fragile" if u >= 0.01 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

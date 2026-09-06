@@ -329,14 +329,17 @@ def _headline(**over):
 
 
 def test_verdict_signal_needs_a_material_illusion():
-    assert st.verdict(_headline())["signal"] == "Confirmed"
-    assert st.verdict(_headline(total_illusion=0.005))["signal"] == "Partial"
-    assert st.verdict(_headline(total_illusion=-0.01))["signal"] == "Busted"
+    assert st.verdict(_headline())["signal"] == "Real"
+    assert st.verdict(_headline(total_illusion=0.005))["signal"] == "Weak"
+    assert st.verdict(_headline(total_illusion=-0.01))["signal"] == "None"
 
 
 def test_verdict_tradability_needs_the_fix_to_work_and_not_overcorrect():
-    assert st.verdict(_headline())["trad"] == "Useful"
-    assert st.verdict(_headline(planted_detected=False))["trad"] == "Partial"
+    # The two upper branches deliberately share the Fragile stamp: the desk's
+    # documented Tradability axis is Investable/Fragile/Mirage, and neither of these
+    # is a bankable edge. The finer distinction between them lives in the prose.
+    assert st.verdict(_headline())["trad"] == "Fragile"
+    assert st.verdict(_headline(planted_detected=False))["trad"] == "Fragile"
     assert st.verdict(_headline(planted_detected=False,
                                 embargo_ic=0.09))["trad"] == "Mirage"
 

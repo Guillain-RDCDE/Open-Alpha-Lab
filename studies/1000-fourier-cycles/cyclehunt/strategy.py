@@ -388,9 +388,9 @@ def synthetic_series(n: int = 4000, period: float = 0.0, amplitude: float = 0.0,
 def verdict(h: dict) -> dict:
     """Stamps by a pre-registered rule.
 
-    - **Signal**: **Busted** — the expected result — if no asset's peak survives Fisher's *g*
-      test against the appropriate null; **Partial** if one survives against white noise but not
-      against AR(1); **Confirmed** if a peak survives both **and** holds its phase out of
+    - **Signal**: **None** — the expected result — if no asset's peak survives Fisher's *g*
+      test against the appropriate null; **Fragile** if one survives against white noise but not
+      against AR(1); **Real** if a peak survives both **and** holds its phase out of
       sample. The positive control must be detected either way, or the machinery is broken.
     - **Tradability**: **Mirage** unless a detected cycle trades profitably out of sample.
     """
@@ -398,13 +398,12 @@ def verdict(h: dict) -> dict:
     survives_ar1 = h["n_significant_ar1"] > 0
     holds_phase = h["phase_concentration"] > 0.7
     if survives_ar1 and holds_phase:
-        signal = "Confirmed"
+        signal = "Real"
     elif survives_white:
-        signal = "Partial"
+        signal = "Weak"
     else:
-        signal = "Busted"
-    trad = "Useful" if h["cycle_sharpe"] > 0.3 else (
-        "Partial" if h["cycle_sharpe"] > 0 else "Mirage")
+        signal = "None"
+    trad = "Fragile" if h["cycle_sharpe"] > 0 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

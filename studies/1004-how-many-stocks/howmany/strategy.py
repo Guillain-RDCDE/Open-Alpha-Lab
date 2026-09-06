@@ -294,18 +294,18 @@ def synthetic_cross_section(n_stocks: int = 60, n_days: int = 5000,
 def verdict(h: dict) -> dict:
     """Stamps by a pre-registered rule.
 
-    - **Signal**: **Confirmed** if the textbook volatility curve does flatten early — the claim
-      being examined is real before it is criticised; **Partial** if it flattens slowly;
-      **Busted** if it does not flatten.
-    - **Tradability**: **Useful** if the terminal-wealth criterion demands materially more
+    - **Signal**: **Real** if the textbook volatility curve does flatten early — the claim
+      being examined is real before it is criticised; **Fragile** if it flattens slowly;
+      **None** if it does not flatten.
+    - **Tradability**: **Fragile** if the terminal-wealth criterion demands materially more
       holdings than the volatility criterion, since then the textbook number is actively
-      misleading and a better one is available; **Partial** if the two roughly agree;
+      misleading and a better one is available; **Fragile** if the two roughly agree;
       **Mirage** if the distinction makes no difference.
     """
-    signal = ("Confirmed" if h["n_for_90_vol"] <= 20
-              else ("Partial" if h["n_for_90_vol"] <= 40 else "Busted"))
+    signal = ("Real" if h["n_for_90_vol"] <= 20
+              else ("Weak" if h["n_for_90_vol"] <= 40 else "None"))
     ratio = h["n_for_90_wealth"] / max(h["n_for_90_vol"], 1e-9)
-    trad = ("Useful" if ratio >= 1.8 else ("Partial" if ratio >= 1.2 else "Mirage"))
+    trad = "Fragile" if ratio >= 1.2 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

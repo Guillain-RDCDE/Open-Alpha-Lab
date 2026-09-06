@@ -321,23 +321,26 @@ def _headline(**over):
 
 
 def test_verdict_is_busted_when_nothing_survives():
-    assert st.verdict(_headline(n_significant_white=0))["signal"] == "Busted"
+    assert st.verdict(_headline(n_significant_white=0))["signal"] == "None"
 
 
 def test_verdict_is_partial_when_only_the_white_null_rejects():
-    assert st.verdict(_headline())["signal"] == "Partial"
+    assert st.verdict(_headline())["signal"] == "Weak"
 
 
 def test_verdict_is_confirmed_only_with_ar1_and_phase():
-    assert st.verdict(_headline(n_significant_ar1=1))["signal"] == "Partial"
+    assert st.verdict(_headline(n_significant_ar1=1))["signal"] == "Weak"
     assert st.verdict(_headline(n_significant_ar1=1,
-                                phase_concentration=0.9))["signal"] == "Confirmed"
+                                phase_concentration=0.9))["signal"] == "Real"
 
 
 def test_verdict_tradability_ladder():
+    # The two upper branches deliberately share the Fragile stamp: the desk's
+    # documented Tradability axis is Investable/Fragile/Mirage, and neither of these
+    # is a bankable edge. The finer distinction between them lives in the prose.
     assert st.verdict(_headline())["trad"] == "Mirage"
-    assert st.verdict(_headline(cycle_sharpe=0.1))["trad"] == "Partial"
-    assert st.verdict(_headline(cycle_sharpe=0.5))["trad"] == "Useful"
+    assert st.verdict(_headline(cycle_sharpe=0.1))["trad"] == "Fragile"
+    assert st.verdict(_headline(cycle_sharpe=0.5))["trad"] == "Fragile"
 
 
 def test_verdict_prose_states_the_noise_benchmark_and_the_control():

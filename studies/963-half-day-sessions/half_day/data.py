@@ -158,7 +158,7 @@ def synthetic_ohlc(
     vol_ann: float = 0.16,              # annualised close-to-close vol
     vol_of_vol: float = 0.6,            # log-vol shock size (clustering)
     vol_halflife_days: float = 21.0,    # persistence of the vol process
-    n_intraday: int = 26,               # sub-steps used to build the day's range
+    n_intraday: int = 78,               # sub-steps used to build the day's range (5-min bars)
     overnight_share: float = 0.35,      # share of daily variance that arrives as a gap
     signal_strength: float = 1.0,       # 0 = constant vol (the null), 1 = full clustering
     start: str = "2004-01-02",
@@ -171,7 +171,18 @@ def synthetic_ohlc(
     Brownian intraday path of ``n_intraday`` steps whose running max/min become the bar's
     high and low — so a range estimator (Parkinson, Garman-Klass, Rogers-Satchell) reads a
     genuine range rather than a fabricated one, and its known efficiency gain over
-    close-to-close is recoverable. Volatility follows an AR(1) in logs scaled by
+    close-to-close is recoverable.
+
+    Note one consequence, which is a feature and not an artefact: a path sampled at
+    finitely many points has a **smaller range than the continuous path it approximates**,
+    so range-based estimators read low on these bars exactly as they do on a real,
+    discretely-traded market (Marsh & Rosenfeld 1986). Raising ``n_intraday`` shrinks that
+    bias toward zero, which is itself a testable prediction. The default of 78 is one
+    five-minute bar per US session; it was 26 (half-hourly) until study 965 showed the
+    discretisation bias at that resolution was large enough to swamp the effect it
+    measures.
+
+    Volatility follows an AR(1) in logs scaled by
     ``signal_strength``: at ``0.0`` vol is constant (the null), at ``1.0`` it clusters.
 
     Returns ``(bars, truth)`` with columns ``open, high, low, close`` plus the realised

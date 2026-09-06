@@ -42,6 +42,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STUDIES = os.path.join(ROOT, "studies")
 OUT_DIR = os.path.join(ROOT, "docs", "previews")
 README = os.path.join(ROOT, "README.md")
+REFERENCE = os.path.join(ROOT, "docs", "REFERENCE.md")
+# The studies table used to live in the root README and now lives in docs/REFERENCE.md.
+# Read both, for the same reason check_study_completeness.py does: a scan that silently
+# stops finding any study still exits 0, so looking in one place only turns this into a
+# no-op the day the table moves.
+INDEX_FILES = (README, REFERENCE)
 
 NOTEBOOKS = ("01_for_the_curious.ipynb", "02_for_the_quants.ipynb")
 WIDTH = 480             # 2x the card's rendered width — sharp on a retina screen
@@ -54,13 +60,16 @@ _MARKER = '"image/png":'
 
 
 def published_studies() -> list[str]:
-    """Study directory names linked in the root README — the desk's own done-signal."""
-    text = open(README, encoding="utf-8").read()
+    """Study directory names linked from the desk's index — its 'this is ready' signal."""
     seen, out = set(), []
-    for name in re.findall(r"studies/(\d+-[a-z0-9-]+)/", text):
-        if name not in seen:
-            seen.add(name)
-            out.append(name)
+    for path in INDEX_FILES:
+        if not os.path.exists(path):
+            continue
+        text = open(path, encoding="utf-8").read()
+        for name in re.findall(r"studies/(\d+-[a-z0-9-]+)/", text):
+            if name not in seen:
+                seen.add(name)
+                out.append(name)
     return out
 
 

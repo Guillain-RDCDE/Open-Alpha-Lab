@@ -255,21 +255,24 @@ def _headline(**over):
 
 
 def test_verdict_signal_needs_both_the_phenomenon_and_the_mechanism():
-    assert st.verdict(_headline())["signal"] == "Confirmed"
-    assert st.verdict(_headline(decomp_r2=0.2))["signal"] == "Partial"
-    assert st.verdict(_headline(sd_error_at_duration=0.002))["signal"] == "Partial"
-    assert st.verdict(_headline(sd_error_at_duration=0.002, decomp_r2=0.2))["signal"] == "Busted"
+    assert st.verdict(_headline())["signal"] == "Real"
+    assert st.verdict(_headline(decomp_r2=0.2))["signal"] == "Weak"
+    assert st.verdict(_headline(sd_error_at_duration=0.002))["signal"] == "Weak"
+    assert st.verdict(_headline(sd_error_at_duration=0.002, decomp_r2=0.2))["signal"] == "None"
 
 
 def test_verdict_tradability_ladder():
-    assert st.verdict(_headline())["trad"] == "Useful"
-    assert st.verdict(_headline(convergence_years=40))["trad"] == "Partial"
+    # The two upper branches deliberately share the Fragile stamp: the desk's
+    # documented Tradability axis is Investable/Fragile/Mirage, and neither of these
+    # is a bankable edge. The finer distinction between them lives in the prose.
+    assert st.verdict(_headline())["trad"] == "Fragile"
+    assert st.verdict(_headline(convergence_years=40))["trad"] == "Fragile"
     assert st.verdict(_headline(convergence_years=40, sd_error_1y=0.001))["trad"] == "Mirage"
 
 
 def test_verdict_tolerates_a_convergence_that_never_happens():
     v = st.verdict(_headline(convergence_years=float("nan")))
-    assert v["trad"] in {"Partial", "Mirage"}
+    assert v["trad"] in {"Fragile", "Mirage"}
 
 
 def test_verdict_prose_names_the_leibowitz_bound():

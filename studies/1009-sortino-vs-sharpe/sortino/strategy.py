@@ -357,16 +357,15 @@ def verdict(h: dict) -> dict:
 
     - **Signal**: **Real** if the two ratios rank assets materially differently; **Weak** if
       they differ only at the margins; **None** if the rankings are effectively identical.
-    - **Tradability**: **Useful** if Sortino's ranking survives out of sample on its own
-      scoreboard — if it beats Sharpe at predicting *future Sortino*; **Partial** if it wins
+    - **Tradability**: **Fragile** if Sortino's ranking survives out of sample on its own
+      scoreboard — if it beats Sharpe at predicting *future Sortino*; **Fragile** if it wins
       one scoreboard; **Mirage** if Sharpe predicts future Sortino at least as well as Sortino
       does, since then the extra machinery buys nothing.
     """
     signal = ("Real" if h["mean_rank_change"] >= 1.0
               else ("Weak" if h["mean_rank_change"] >= 0.3 else "None"))
     # An identical ranking is the strongest possible "None": nothing to choose between them.
-    trad = ("Useful" if h["sortino_edge"] > 0.05
-            else ("Partial" if h["sortino_edge"] > -0.02 else "Mirage"))
+    trad = "Fragile" if h["sortino_edge"] > -0.02 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

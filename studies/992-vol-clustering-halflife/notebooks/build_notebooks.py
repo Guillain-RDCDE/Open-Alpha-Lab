@@ -54,8 +54,8 @@ def build_curious():
 # How Long Is a Storm? \U0001F32A
 ### Markets get wild and stay wild. For how long, exactly?
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Useful](https://img.shields.io/badge/Tradability-Useful-2ea44f?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 Everyone knows volatility clusters. Ask a room of quants how long the clustering lasts and you
 will get answers between a week and half a year — all of them computed correctly, from the same
@@ -248,9 +248,9 @@ d.round(1)
 
 ## 6 · The verdict
 
-**Signal: Confirmed.** For SPY over 7,764 sessions, the five standard ways of measuring the half-life of a volatility storm give **11 to 71 days** — a spread of 6.3×. They are not contradicting each other; they are measuring different things, because volatility is not one process. Fitting a two-component autocorrelation gives a **fast part with a 14.1-day half-life carrying 44% of the variation, and a slow part at 172 days** — a fit that beats the single-exponential version by **100%** of squared error. Every single-number estimator returns a weighted average of those two, weighted by whichever lags it happens to look at, which is why GARCH (40 days) systematically exceeds the raw autocorrelation reading (41 days) rather than differing from it at random. The model-free impulse response — after a 95th-percentile volatility day, how long until half the excess is gone — says **51 days**.
+**Signal: Real.** For SPY over 7,764 sessions, the five standard ways of measuring the half-life of a volatility storm give **11 to 71 days** — a spread of 6.3×. They are not contradicting each other; they are measuring different things, because volatility is not one process. Fitting a two-component autocorrelation gives a **fast part with a 14.1-day half-life carrying 44% of the variation, and a slow part at 172 days** — a fit that beats the single-exponential version by **100%** of squared error. Every single-number estimator returns a weighted average of those two, weighted by whichever lags it happens to look at, which is why GARCH (40 days) systematically exceeds the raw autocorrelation reading (41 days) rather than differing from it at random. The model-free impulse response — after a 95th-percentile volatility day, how long until half the excess is gone — says **51 days**.
 
-**Tradability: Useful.** The version that decides anything: after a top-5% volatility day, realised volatility over the next week ran **2.59×** the level following a normal day, over the next month **2.27×**, and over the next quarter 1.90×. That is a slow enough decay to reposition against — nobody needs a same-day reaction to exploit a signal that is still worth 2.27× a month later. Two caveats travel with it: the half-life is itself unstable (across the 7 assets here it ranges 32 to 97 days), and the AR(1) number is partly an artefact of the estimation window — sweeping that window from 1 to 63 days moves the answer from 0.4 to 409 days on identical data, attenuated at the short end by proxy noise and inflated at the long end by the rolling mean's own autocorrelation.
+**Tradability: Fragile.** The version that decides anything: after a top-5% volatility day, realised volatility over the next week ran **2.59×** the level following a normal day, over the next month **2.27×**, and over the next quarter 1.90×. That is a slow enough decay to reposition against — nobody needs a same-day reaction to exploit a signal that is still worth 2.27× a month later. Two caveats travel with it: the half-life is itself unstable (across the 7 assets here it ranges 32 to 97 days), and the AR(1) number is partly an artefact of the estimation window — sweeping that window from 1 to 63 days moves the answer from 0.4 to 409 days on identical data, attenuated at the short end by proxy noise and inflated at the long end by the rolling mean's own autocorrelation.
 """
         ),
         md(
@@ -282,8 +282,8 @@ def build_quants():
 # How Long Is a Storm? — a quantitative teardown \U0001F52C
 ### Five estimators · a two-component ACF fit · window-smoothing artefacts · planted truths
 
-![Signal: Confirmed](https://img.shields.io/badge/Signal-Confirmed-2ea44f?style=flat-square)
-![Tradability: Useful](https://img.shields.io/badge/Tradability-Useful-2ea44f?style=flat-square)
+![Signal: Real](https://img.shields.io/badge/Signal-Real-2ea44f?style=flat-square)
+![Tradability: Fragile](https://img.shields.io/badge/Tradability-Fragile-dab617?style=flat-square)
 
 The deep companion to the [notebook for the curious](01_for_the_curious.ipynb). The estimators
 do not disagree because one of them is broken. They disagree because volatility has more than
@@ -330,8 +330,8 @@ print(tbl.round(2).to_string())
 
 | Axis | Stamp | Why |
 |---|---|---|
-| **Signal** | Confirmed | For SPY over 7,764 sessions, the five standard ways of measuring the half-life of a volatility storm give **11 to 71 days** — a spread of 6.3×. They are not contradicting each other; they are measuring different things, because volatility is not one process. Fitting a two-component autocorrelation gives a **fast part with a 14.1-day half-life carrying 44% of the variation, and a slow part at 172 days** — a fit that beats the single-exponential version by **100%** of squared error. Every single-number estimator returns a weighted average of those two, weighted by whichever lags it happens to look at, which is why GARCH (40 days) systematically exceeds the raw autocorrelation reading (41 days) rather than differing from it at random. The model-free impulse response — after a 95th-percentile volatility day, how long until half the excess is gone — says **51 days**. |
-| **Tradability** | Useful | The version that decides anything: after a top-5% volatility day, realised volatility over the next week ran **2.59×** the level following a normal day, over the next month **2.27×**, and over the next quarter 1.90×. That is a slow enough decay to reposition against — nobody needs a same-day reaction to exploit a signal that is still worth 2.27× a month later. Two caveats travel with it: the half-life is itself unstable (across the 7 assets here it ranges 32 to 97 days), and the AR(1) number is partly an artefact of the estimation window — sweeping that window from 1 to 63 days moves the answer from 0.4 to 409 days on identical data, attenuated at the short end by proxy noise and inflated at the long end by the rolling mean's own autocorrelation. |
+| **Signal** | Real | For SPY over 7,764 sessions, the five standard ways of measuring the half-life of a volatility storm give **11 to 71 days** — a spread of 6.3×. They are not contradicting each other; they are measuring different things, because volatility is not one process. Fitting a two-component autocorrelation gives a **fast part with a 14.1-day half-life carrying 44% of the variation, and a slow part at 172 days** — a fit that beats the single-exponential version by **100%** of squared error. Every single-number estimator returns a weighted average of those two, weighted by whichever lags it happens to look at, which is why GARCH (40 days) systematically exceeds the raw autocorrelation reading (41 days) rather than differing from it at random. The model-free impulse response — after a 95th-percentile volatility day, how long until half the excess is gone — says **51 days**. |
+| **Tradability** | Fragile | The version that decides anything: after a top-5% volatility day, realised volatility over the next week ran **2.59×** the level following a normal day, over the next month **2.27×**, and over the next quarter 1.90×. That is a slow enough decay to reposition against — nobody needs a same-day reaction to exploit a signal that is still worth 2.27× a month later. Two caveats travel with it: the half-life is itself unstable (across the 7 assets here it ranges 32 to 97 days), and the AR(1) number is partly an artefact of the estimation window — sweeping that window from 1 to 63 days moves the answer from 0.4 to 409 days on identical data, attenuated at the short end by proxy noise and inflated at the long end by the rolling mean's own autocorrelation. |
 
 > \U0001F4A1 **In plain words.** The estimators are fine. The question — "what is *the*
 > half-life?" — presupposes something false.

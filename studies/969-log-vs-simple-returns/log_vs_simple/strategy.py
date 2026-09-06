@@ -244,13 +244,13 @@ def verdict(h: dict) -> dict:
     - **Signal** (does the convention move the numbers?): **Real** if the largest annualised
       mean-return gap across the universe exceeds 5 percentage points; **Weak** above 1 point;
       **None** below.
-    - **Usefulness** (is there a rule?): **Useful** if the log-weighting mistake is
+    - **Usefulness** (is there a rule?): **Fragile** if the log-weighting mistake is
       *directional* (it understates on essentially every day, so the fix is unambiguous);
       **Fragile** if the sign is mixed; **Mirage** if the effect is unmeasurable.
     """
     gap = h["max_gap_ann"]
     signal = "Real" if gap >= 0.05 else ("Weak" if gap >= 0.01 else "None")
-    trad = "Useful" if h["understates_always"] else ("Fragile" if gap >= 0.01 else "Mirage")
+    trad = "Fragile" if gap >= 0.01 else "Mirage"
     return {
         "signal": signal,
         "signal_why": (

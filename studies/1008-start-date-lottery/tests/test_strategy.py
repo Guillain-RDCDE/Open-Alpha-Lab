@@ -352,8 +352,11 @@ def test_verdict_signal_keys_off_the_spread():
 
 
 def test_verdict_tradability_keys_off_efficiency_not_dispersion_alone():
-    assert st.verdict(_headline())["trad"] == "Useful"
-    assert st.verdict(_headline(best_efficiency=1.0))["trad"] == "Partial"
+    # The two upper branches deliberately share the Fragile stamp: the desk's
+    # documented Tradability axis is Investable/Fragile/Mirage, and neither of these
+    # is a bankable edge. The finer distinction between them lives in the prose.
+    assert st.verdict(_headline())["trad"] == "Fragile"
+    assert st.verdict(_headline(best_efficiency=1.0))["trad"] == "Fragile"
     assert st.verdict(_headline(best_efficiency=0.5))["trad"] == "Mirage"
 
 
