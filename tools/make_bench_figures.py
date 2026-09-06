@@ -34,6 +34,10 @@ from matplotlib.patches import Circle, FancyBboxPatch
 
 ROOT = Path(__file__).resolve().parents[1]
 README = ROOT / "README.md"
+REFERENCE = ROOT / "docs" / "REFERENCE.md"
+# The studies table used to live in the root README and now lives in docs/REFERENCE.md.
+# Try both, in order, so this keeps working whichever page carries the table.
+TABLE_FILES = (REFERENCE, README)
 BENCH_MD = ROOT / "docs" / "bench.md"  # canonical family taxonomy ("mortality by family")
 OUT = ROOT / "docs" / "bench_map.png"
 OUT_JSON = ROOT / "docs" / "bench.json"  # feeds the interactive page (docs/index.html)
@@ -58,7 +62,8 @@ SEVERITY = {"Real": 0, "Weak": 1, "None": 2,
 # A study row looks like:
 #   | **[16](studies/16-storm-shy/)** | **Storm-Shy** | claim... | ![Real](...) | ![Investable](...) |
 ROW_RE = re.compile(
-    r"^\|\s*\*\*\[(?P<num>\d+)\]\((?P<href>studies/[^)]*)\)\*\*"  # | **[NN](studies/...)**
+    # `../` because the table moved from the root README into docs/REFERENCE.md
+    r"^\|\s*\*\*\[(?P<num>\d+)\]\((?P<href>(?:\.\./)?studies/[^)]*)\)\*\*"
     r"\s*\|\s*\*\*(?P<name>.+?)\*\*"                      # | **Name**
     r"\s*\|\s*(?P<claim>.*?)"                             # | claim
     r"\s*\|\s*(?P<signal>!\[[^\]]+\][^|]*)"               # | ![Signal badge]
@@ -74,8 +79,23 @@ def _stamp(cell: str) -> str:
     return m.group(1).strip() if m else cell.strip()
 
 
-def parse_readme(path: Path = README) -> list[dict]:
-    """Every published study row in the README table, in table order."""
+def parse_readme(path: Path | None = None) -> list[dict]:
+    """Every published study row in the studies table, in table order.
+
+    ``path`` overrides the search; by default the first file in ``TABLE_FILES``
+    that actually contains rows wins, so moving the table between pages does not
+    silently empty the map.
+    """
+    if path is None:
+        for candidate in TABLE_FILES:
+            if candidate.exists() and any(
+                    ROW_RE.match(l)
+                    for l in candidate.read_text(encoding="utf-8").splitlines()):
+                path = candidate
+                break
+        else:
+            sys.exit("No studies table found in "
+                     + " or ".join(str(p) for p in TABLE_FILES))
     studies = []
     for line in path.read_text(encoding="utf-8").splitlines():
         m = ROW_RE.match(line)
@@ -235,8 +255,23 @@ def draw(grid, special, total: int, out: Path = OUT) -> None:
 
     notes = []
     if special:
-        det = ", ".join(f"{s['num']:02d} {s['name']} ({_pretty(s)})" for s in special)
-        notes.append(f"Not on the grid: {det}.")
+        # Off-palette stamps land here. A handful can be named on the figure; a crowd
+        # cannot, and a crowd is a signal in itself — studies are drifting away from the
+        # documented Real/Weak/None x Investable/Fragile/Mirage axes, and every count on
+        # this map silently excludes them. Say so loudly rather than printing a wall.
+        if len(special) <= 4:
+            det = ", ".join(f"{s['num']:02d} {s['name']} ({_pretty(s)})" for s in special)
+            notes.append(f"Not on the grid: {det}.")
+        else:
+            kinds = sorted({_pretty(s) for s in special})
+            notes.append(f"Not on the grid: {len(special)} studies carrying off-palette "
+                         f"stamps ({', '.join(kinds[:4])}"
+                         f"{', …' if len(kinds) > 4 else ''}).")
+            print(f"WARNING: {len(special)} of {total} studies use stamps outside the "
+                  f"documented palette and are absent from every count on this map:",
+                  file=sys.stderr)
+            for s in special:
+                print(f"    {s['num']:>5} {s['name']}  [{_pretty(s)}]", file=sys.stderr)
     notes.append("Study 03's “Mixed” signal counts with Weak (same amber bucket).")
     for k, note in enumerate(notes):
         ax.text(-0.80, -0.26 - 0.155 * k, note, ha="left", va="top",
