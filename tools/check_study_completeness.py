@@ -46,12 +46,22 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STUDIES = os.path.join(ROOT, "studies")
 CI_FILE = os.path.join(ROOT, ".github", "workflows", "tests.yml")
 README = os.path.join(ROOT, "README.md")
+REFERENCE = os.path.join(ROOT, "docs", "REFERENCE.md")
+# The studies table used to live in the root README and now lives in docs/REFERENCE.md.
+# Read both: a gate that silently stops finding any study still reports "passed", so
+# looking in only one place turns this check into a no-op the day the table moves.
+INDEX_FILES = (README, REFERENCE)
 
 
 def published_studies() -> set[str]:
-    """Study dir names linked in the root README (the desk's 'this is ready' signal)."""
-    text = open(README, encoding="utf-8").read() if os.path.exists(README) else ""
-    return set(re.findall(r"studies/(\d+-[a-z0-9-]+)/", text))
+    """Study dir names linked from the desk's index — its 'this is ready' signal."""
+    out: set[str] = set()
+    for path in INDEX_FILES:
+        if not os.path.exists(path):
+            continue
+        text = open(path, encoding="utf-8").read()
+        out |= set(re.findall(r"studies/(\d+-[a-z0-9-]+)/", text))
+    return out
 
 
 def _notebook_problems(path: str) -> list[str] | None:

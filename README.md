@@ -1,15 +1,15 @@
 <div align="center">
 
-<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — out of 962 famous trading edges, nine survive">
+<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — out of 1012 famous trading edges, ten survive">
 
 # Open-Alpha-Lab
 
-### Out of 962 famous trading edges, nine survive — and not one of them is a crystal ball.
+### Out of 1012 famous trading edges, ten survive — and not one of them is a crystal ball.
 
 That's not a typo. I put every market anomaly, folk strategy and named factor
 people swear by through the **same brutal protocol**, and publish the verdict: **edge or mirage.**
 
-`962 tested` · `9 survive` · `96 real signals` · `789 mirages`
+`1012 tested` · `10 survive` · `116 real signals` · `799 mirages`
 
 ***Most are mirages. The honest write-up of why is the point. The nine survivors don't forecast anything — three manage risk, three harvest a premium or a mechanical identity, and three are simply costs you stop paying.***
 

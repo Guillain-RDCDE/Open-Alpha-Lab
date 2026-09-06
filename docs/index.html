@@ -119,19 +119,54 @@
   .stat.s-trad{background:rgba(218,182,23,.18); color:#8a6d00}
   .stat.s-inv{background:var(--green); color:#fff}
   .grp[data-open="false"] .cards{display:none}
-  .cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(248px,1fr)); gap:10px; padding:14px}
+  .cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(262px,1fr)); gap:14px; padding:14px}
   .card{
-    display:block; text-decoration:none; color:inherit; border:1px solid #eceef0; border-radius:11px;
-    border-left:5px solid var(--grey); padding:11px 13px; background:#fff; transition:.12s; min-height:84px;
+    display:flex; flex-direction:column; text-decoration:none; color:inherit;
+    border:1px solid #eceef0; border-radius:14px; background:#fff; overflow:hidden;
+    box-shadow:0 1px 2px rgba(16,22,26,.05);
+    transition:transform .16s cubic-bezier(.2,.7,.3,1), box-shadow .16s, border-color .16s;
   }
-  .card:hover{border-color:#d0d4d8; box-shadow:0 3px 10px rgba(0,0,0,.07); transform:translateY(-1px)}
+  .card:hover{border-color:#d7dbdf; box-shadow:0 10px 26px -12px rgba(16,22,26,.35); transform:translateY(-3px)}
+  .card:focus-visible{outline:3px solid var(--green); outline-offset:2px}
+  .card .body{padding:11px 13px 12px; display:flex; flex-direction:column; flex:1;
+    border-left:5px solid var(--grey); border-top:0}
+
+  /* ---- the preview: the study's own figure, so you can see what you are opening ---- */
+  .card .thumb{
+    position:relative; aspect-ratio:16/9; overflow:hidden; background:#f4f5f6;
+    border-bottom:1px solid #eef0f1;
+  }
+  .card .thumb img{
+    width:100%; height:100%; object-fit:cover; object-position:center 42%; display:block;
+    filter:saturate(.86) contrast(1.02);
+    transform:scale(1.01); transition:transform .5s cubic-bezier(.2,.7,.3,1), filter .3s;
+  }
+  .card:hover .thumb img{transform:scale(1.06); filter:saturate(1) contrast(1.04)}
+  /* a scrim so the floating number and the verdict tint never sit on bare chart ink */
+  .card .thumb::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.30) 0%, rgba(255,255,255,0) 34%),
+      linear-gradient(0deg, rgba(20,24,28,.30) 0%, rgba(20,24,28,.06) 26%, rgba(20,24,28,0) 52%);
+  }
+  .card .thumb .num{
+    position:absolute; left:9px; bottom:8px; z-index:2; width:auto; min-width:30px; height:22px;
+    padding:0 8px; border-radius:999px; font-size:11.5px; letter-spacing:.3px;
+    box-shadow:0 2px 8px rgba(0,0,0,.28), inset 0 0 0 1px rgba(255,255,255,.35);
+  }
+  .card .thumb .tint{position:absolute; inset:auto 0 0 0; height:3px; z-index:2}
+  .card.no-thumb .body{padding-top:12px}
   .card .top{display:flex; align-items:center; gap:8px; margin-bottom:5px}
   .card .num{width:26px; height:26px; flex:none; border-radius:50%; color:#fff; font-weight:800; font-size:11.5px;
     display:flex; align-items:center; justify-content:center}
   .card .nm{font-weight:800; font-size:14.5px; line-height:1.2}
-  .card .cl{color:#48515a; font-size:12.5px; line-height:1.35; margin:0 0 9px;
+  .card .cl{color:#48515a; font-size:12.5px; line-height:1.35; margin:0 0 10px;
     display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden}
-  .card .stamps{display:flex; gap:5px}
+  .card .stamps{display:flex; gap:5px; margin-top:auto}
+  @media (prefers-reduced-motion:reduce){
+    .card, .card .thumb img{transition:none}
+    .card:hover{transform:none} .card:hover .thumb img{transform:none}
+  }
   table{width:100%; border-collapse:collapse; font-size:14.5px}
   thead th{
     position:sticky; top:64px; background:var(--paper); text-align:left; padding:9px 10px;
@@ -242,6 +277,7 @@ function cellColor(sig,trad){
 
 const state = {q:"", signal:new Set(), tradability:new Set(), sort:"num", dir:1, group:"family"};
 let DATA=null, REPO="";
+const PREVIEWS=new Set();   // study numbers that have a card thumbnail (previews/manifest.json)
 const collapsed = new Set();  // group keys the user has folded
 
 const treeUrl = href => `${REPO}/tree/main/${href.replace(/\/$/,"")}`;
@@ -379,16 +415,39 @@ function groupData(rows){
 function card(st){
   const a=document.createElement("a");
   a.className="card"; a.href=treeUrl(st.href); a.target="_blank"; a.rel="noopener";
-  a.style.borderLeftColor=PALETTE[st.tradability]||"#8b949e";
   a.title=`Signal: ${st.signal} · Tradability: ${st.tradability}`;
+
+  const sigColour = PALETTE[bucketSig(st.signal)]||"#8b949e";
+  const tradColour = PALETTE[st.tradability]||"#8b949e";
+  const num = el("div",String(st.num).padStart(2,"0"),"num");
+  num.style.background = sigColour;
+
+  // The preview: the study's own figure, lifted from its executed notebook by
+  // tools/make_card_previews.py. Studies without one keep the plain card.
+  const hasThumb = PREVIEWS.has(Number(st.num));
+  if(hasThumb){
+    const th=el("div","","thumb");
+    const img=document.createElement("img");
+    img.src=`previews/${st.num}.webp`; img.alt="";
+    img.loading="lazy"; img.decoding="async";
+    img.onerror=()=>{ th.remove(); a.classList.add("no-thumb"); body.prepend(num); };
+    const tint=el("div","","tint"); tint.style.background=tradColour;
+    th.appendChild(img); th.appendChild(tint); th.appendChild(num);
+    a.appendChild(th);
+  } else {
+    a.classList.add("no-thumb");
+  }
+
+  const body=el("div","","body");
+  body.style.borderLeftColor = tradColour;
   const top=el("div","","top");
-  const n=el("div",String(st.num).padStart(2,"0"),"num");
-  n.style.background=PALETTE[bucketSig(st.signal)]||"#8b949e";
-  top.appendChild(n); top.appendChild(el("div",st.name,"nm"));
-  a.appendChild(top);
-  a.appendChild(el("p",st.claim,"cl"));
+  if(!hasThumb) top.appendChild(num);
+  top.appendChild(el("div",st.name,"nm"));
+  body.appendChild(top);
+  body.appendChild(el("p",st.claim,"cl"));
   const s=el("div","","stamps"); s.appendChild(badge(st.signal)); s.appendChild(badge(st.tradability));
-  a.appendChild(s);
+  body.appendChild(s);
+  a.appendChild(body);
   return a;
 }
 
@@ -479,6 +538,15 @@ function wire(){
     syncPills(); apply();
   });
 }
+
+// Which studies have a card preview. Loaded before the ledger is built; if the manifest is
+// missing (a fresh clone that has not run tools/make_card_previews.py) every card simply
+// renders in its plain form, so the page never depends on the thumbnails existing.
+fetch("previews/manifest.json")
+  .then(r=>r.ok?r.json():null)
+  .then(m=>{ if(m&&Array.isArray(m.studies)) m.studies.forEach(n=>PREVIEWS.add(Number(n))); })
+  .catch(()=>{})
+  .finally(()=>{ if(DATA) apply(); });
 
 fetch("bench.json").then(r=>r.json()).then(d=>{
   DATA=d; REPO=d.repo;

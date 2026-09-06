@@ -1662,6 +1662,156 @@ jobs:
       - name: Study 962 — Do It Yourself test-suite
         run: pytest -q studies/962-sector-etf-vs-holdings/tests
 
+      - name: Study 963 — The Half Day test-suite
+        run: pytest -q studies/963-half-day-sessions/tests
+
+      - name: Study 964 — All-Time High test-suite
+        run: pytest -q studies/964-ath-buying/tests
+
+      - name: Study 965 — The Range Estimators test-suite
+        run: pytest -q studies/965-range-vol-estimators/tests
+
+      - name: Study 967 — Window Shopping test-suite
+        run: pytest -q studies/967-rolling-vs-expanding/tests
+
+      - name: Study 969 — Log or Simple test-suite
+        run: pytest -q studies/969-log-vs-simple-returns/tests
+
+      - name: Study 970 — Root Time test-suite
+        run: pytest -q studies/970-sqrt-time-scaling/tests
+
+      - name: Study 971 — Does the Tape Agree With Itself? test-suite
+        run: pytest -q studies/971-tape-self-consistency/tests
+
+      - name: Study 973 — Different Holidays test-suite
+        run: pytest -q studies/973-calendar-misalignment/tests
+
+      - name: Study 972 — Adjusted or Not test-suite
+        run: pytest -q studies/972-adjustment-mode-matters/tests
+
+      - name: Study 968 — Which Bootstrap test-suite
+        run: pytest -q studies/968-bootstrap-choice/tests
+
+      - name: Study 966 — Forecasting Tomorrow's Vol test-suite
+        run: pytest -q studies/966-har-vs-garch/tests
+
+      - name: Study 975 — Shrink the Matrix test-suite
+        run: pytest -q studies/975-covariance-shrinkage/tests
+
+      - name: Study 976 — The Family Tree test-suite
+        run: pytest -q studies/976-hierarchical-risk-parity/tests
+
+      - name: Study 974 — The Nth Asset test-suite
+        run: pytest -q studies/974-diversification-saturation/tests
+
+      - name: Study 980 — The Silicon Canary test-suite
+        run: pytest -q studies/980-semis-lead-the-market/tests
+
+      - name: Study 977 — Maximum Diversification test-suite
+        run: pytest -q studies/977-max-diversification/tests
+
+      - name: Study 981 — The Price of Waiting test-suite
+        run: pytest -q studies/981-confirmation-delay/tests
+
+      - name: Study 979 — The Prior Is the Portfolio test-suite
+        run: pytest -q studies/979-black-litterman-zero-views/tests
+
+      - name: Study 982 — The Appetite Gauge test-suite
+        run: pytest -q studies/982-risk-appetite-ratio/tests
+
+      - name: Study 983 — The Weekend Oracle test-suite
+        run: pytest -q studies/983-bitcoin-leads-equities/tests
+
+      - name: Study 984 — A Dollar Off test-suite
+        run: pytest -q studies/984-ex-day-drop-ratio/tests
+
+      - name: Study 985 — The Last Hike test-suite
+        run: pytest -q studies/985-last-hike-timing/tests
+
+      - name: Study 978 — The Resampled Frontier test-suite
+        run: pytest -q studies/978-resampled-frontier/tests
+
+      - name: Study 986 — The Rolling Ladder test-suite
+        run: pytest -q studies/986-etf-vs-hold-to-maturity/tests
+
+      - name: Study 987 — Gold's Loud Cousin test-suite
+        run: pytest -q studies/987-silver-high-beta-gold/tests
+
+      - name: Study 988 — The Taming test-suite
+        run: pytest -q studies/988-bitcoin-volatility-decay/tests
+
+      - name: Study 989 — The One-Way Beta test-suite
+        run: pytest -q studies/989-altcoin-downside-beta/tests
+
+      - name: Study 990 — Counting the Breaks test-suite
+        run: pytest -q studies/990-var-breach-count/tests
+
+      - name: Study 991 — The Slow Bell test-suite
+        run: pytest -q studies/991-aggregational-gaussianity/tests
+
+      - name: Study 992 — How Long Is a Storm? test-suite
+        run: pytest -q studies/992-vol-clustering-halflife/tests
+
+      - name: Study 993 — Down Hurts More test-suite
+        run: pytest -q studies/993-leverage-effect-asymmetry/tests
+
+      - name: Study 994 — The Rounding Tax test-suite
+        run: pytest -q studies/994-small-account-lot-drag/tests
+
+      - name: Study 995 — Whose Sharpe Is It? test-suite
+        run: pytest -q studies/995-sharpe-in-your-currency/tests
+
+      - name: Study 998 — The Moving Target test-suite
+        run: pytest -q studies/998-kalman-hedge-ratio/tests
+
+      - name: Study 997 — The Rebalance Lottery test-suite
+        run: pytest -q studies/997-rebalance-timing-luck/tests
+
+      - name: Study 999 — The Break test-suite
+        run: pytest -q studies/999-cusum-change-points/tests
+
+      - name: Study 996 — The Palindrome Portfolio test-suite
+        run: pytest -q studies/996-palindrome-dates/tests
+
+      - name: Study 1000 — The Cycle Hunt test-suite
+        run: pytest -q studies/1000-fourier-cycles/tests
+
+      - name: Study 1002 — The Ten Best Days test-suite
+        run: pytest -q studies/1002-best-days-missed/tests
+
+      - name: Study 1003 — The 1% Allocation test-suite
+        run: pytest -q studies/1003-bitcoin-in-a-portfolio/tests
+
+      - name: Study 1004 — How Many Stocks test-suite
+        run: pytest -q studies/1004-how-many-stocks/tests
+
+      - name: Study 1005 — Beta Has a Half-Life test-suite
+        run: pytest -q studies/1005-beta-stability/tests
+
+      - name: Study 1006 — Most Stocks Lose test-suite
+        run: pytest -q studies/1006-most-stocks-underperform-cash/tests
+
+      - name: Study 1007 — Time Does Not Diversify test-suite
+        run: pytest -q studies/1007-time-diversification/tests
+
+      - name: Study 1009 — Sortino's Free Lunch test-suite
+        run: pytest -q studies/1009-sortino-vs-sharpe/tests
+
+      - name: Study 1010 — Mostly Noise test-suite
+        run: pytest -q studies/1010-correlation-matrix-stability/tests
+
+      - name: Study 1001 — The Leaky Fold test-suite
+        run: pytest -q studies/1001-purged-cv-embargo/tests
+
+      - name: Study 1008 — The Start-Date Lottery test-suite
+        run: pytest -q studies/1008-start-date-lottery/tests
+
+      - name: Study 1012 — Choose Your Benchmark test-suite
+        run: pytest -q studies/1012-benchmark-choice-and-alpha/tests
+
+      - name: Study 1011 — The Half-Life of an Edge test-suite
+        run: pytest -q studies/1011-turnover-and-alpha-half-life/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
