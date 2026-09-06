@@ -225,4 +225,3 @@ The real-tape flatness is therefore a property of **sector momentum**, not of th
   year**, ~92% of it genuine rank churn, and therefore needs ~5× the gross edge of a
   monthly clock to break even. Read the break-even column as the price of admission, and
   ask of any signal whether its *gross* alpha clears it — this one does not.
-</content>
