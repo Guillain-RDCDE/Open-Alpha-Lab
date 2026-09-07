@@ -49,9 +49,18 @@ every study and is the only place worth counting.
 
 [![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)](https://guillain-rdcde.github.io/Open-Alpha-Lab/)
 
+**Open a cell** — each link lands on the live map already filtered to that square, listing
+every study in it:
+
+| | Investable | Fragile | Mirage |
+|---|:--:|:--:|:--:|
+| **Real** | [open →](https://guillain-rdcde.github.io/Open-Alpha-Lab/?signal=Real&tradability=Investable) | [open →](https://guillain-rdcde.github.io/Open-Alpha-Lab/?signal=Real&tradability=Fragile) | [open →](https://guillain-rdcde.github.io/Open-Alpha-Lab/?signal=Real&tradability=Mirage) |
+| **Weak** | — | [open →](https://guillain-rdcde.github.io/Open-Alpha-Lab/?signal=Weak&tradability=Fragile) | [open →](https://guillain-rdcde.github.io/Open-Alpha-Lab/?signal=Weak&tradability=Mirage) |
+| **None** | — | [open →](https://guillain-rdcde.github.io/Open-Alpha-Lab/?signal=None&tradability=Fragile) | [open →](https://guillain-rdcde.github.io/Open-Alpha-Lab/?signal=None&tradability=Mirage) |
+
 > **▶ [Explore the live map](https://guillain-rdcde.github.io/Open-Alpha-Lab/)** — the same grid, but zoomable:
 > **click any chip to open its study**, search by name or claim, and filter the whole bench by verdict.
-> (The static image above never gets less readable; the interactive page is where it scales.)
+> (GitHub can't make one image clickable square by square, which is what the table above is for.)
 
 ---
 

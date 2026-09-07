@@ -9,7 +9,10 @@ every verdict below links back to the study that earned it.*
 ![The bench map — every study on a Signal × Tradability grid](bench_map.png)
 
 *(Regenerate with `python tools/make_bench_figures.py` — it parses the
-[ledger](REFERENCE.md), so it's always in sync.)*
+[ledger](REFERENCE.md), so it's always in sync. A cell shows its studies by number while
+they still fit and just counts them when they don't; the
+**[live map](https://guillain-rdcde.github.io/Open-Alpha-Lab/)** is where you click into
+one and read what's inside.)*
 
 > **Counting happens in one place.** This page describes shape, not totals. The
 > [ledger](REFERENCE.md) is the only complete list, the map above is redrawn from it, and

@@ -342,6 +342,21 @@ function makeCell(sig,trad,members){
   return cell;
 }
 
+// Deep link into one cell: index.html?signal=Real&tradability=Mirage
+// The static map on the README cannot be clicked cell by cell — GitHub strips image maps
+// and will not run links inside an SVG — so the README links each cell here instead, and
+// this is what makes those links land on the right filter instead of the whole bench.
+function applyDeepLink(){
+  const p=new URLSearchParams(location.search);
+  const sig=p.get("signal"), trad=p.get("tradability");
+  if(!sig && !trad) return;
+  if(sig && DATA.signals.includes(sig)) state.signal=new Set([sig]);
+  if(trad && DATA.tradabilities.includes(trad)) state.tradability=new Set([trad]);
+  syncPills();
+  const cell=document.querySelector(`.cell[data-sig="${sig}"][data-trad="${trad}"]`);
+  if(cell) cell.scrollIntoView({block:"center"});
+}
+
 function focusCell(sig,trad){
   // toggle: clicking the same cell again clears it
   const same = state.signal.size===1 && state.signal.has(sig)
@@ -550,15 +565,17 @@ fetch("previews/manifest.json")
 
 fetch("bench.json").then(r=>r.json()).then(d=>{
   DATA=d; REPO=d.repo;
-  document.title=`Open-Alpha-Lab — ${d.total} trading ideas, one protocol`;
-  document.getElementById("title").textContent=`${d.total} famous trading ideas, one protocol`;
+  // No corpus total in the title. The cells carry the counts, and a total in the heading
+  // is one more place that has to be kept in step with everything else.
+  document.title="Open-Alpha-Lab — the bench, live";
+  document.getElementById("title").textContent="famous trading ideas, one protocol";
   document.getElementById("repolink").href=d.repo;
   const sp=(d.special||[]).map(s=>`${String(s.num).padStart(2,"0")} ${s.name} (${s.signal}/${s.tradability})`).join(", ");
   document.getElementById("footer").innerHTML =
     (sp?`Not on the grid: ${sp}. · `:"") +
-    "Study 03's “Mixed” signal counts with Weak (same amber bucket). · " +
-    "Generated from the README table by <code>tools/make_bench_figures.py</code> — always in sync.";
-  buildGrid(); wire(); apply();
+    "A “Mixed” signal counts with Weak (same amber bucket). · " +
+    "Generated from the ledger by <code>tools/make_bench_figures.py</code> — always in sync.";
+  buildGrid(); wire(); applyDeepLink(); apply();
 }).catch(e=>{
   document.getElementById("grid").innerHTML =
     "<p style='color:#c0392b'>Could not load <code>bench.json</code>. "+

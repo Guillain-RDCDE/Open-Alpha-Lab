@@ -173,6 +173,12 @@ def cell_color(sig: str, trad: str):
     return _lerp(GREEN, AMBER, s) if s <= 1 else _lerp(AMBER, RED, s - 1)
 
 
+# Most chips a cell can show and still be read. Above this the chip radius falls below
+# the size its own two-digit label needs, so the labels collide and the cell becomes a
+# smear. 24 keeps a 5x5-ish block at a radius the numbers still fit inside.
+CHIP_CAP = 24
+
+
 def _chip_layout(n: int):
     """(n_cols, n_rows) for n chips in one cell — at most 6 per row."""
     cols = min(6, max(1, math.ceil(math.sqrt(1.8 * n))))
@@ -207,31 +213,53 @@ def draw(grid, special, total: int, out: Path = OUT) -> None:
             )
             ax.add_patch(box)
 
-            # count, top-right corner of the cell
-            ax.text(x0 + w - 0.055, y0 + h - 0.058, str(len(members)),
-                    ha="right", va="top", fontsize=21, fontweight="bold",
-                    color=col if not empty else GREY, alpha=0.92)
-
             if empty:
+                ax.text(x0 + w - 0.055, y0 + h - 0.058, "0",
+                        ha="right", va="top", fontsize=21, fontweight="bold",
+                        color=GREY, alpha=0.92)
                 ax.text(x0 + w / 2, y0 + h / 2, "—", ha="center", va="center",
                         fontsize=16, color=GREY, alpha=0.55)
                 continue
 
-            # numbered chips, centred in the cell (leaving the count corner room)
-            ncols, nrows = _chip_layout(len(members))
-            r = min(0.072, 0.40 / max(ncols, nrows))   # chip radius
-            step_x = min(2.55 * r, (w - 0.16) / max(ncols - 1, 1)) if ncols > 1 else 0
-            step_y = min(2.55 * r, (h - 0.30) / max(nrows - 1, 1)) if nrows > 1 else 0
-            cx0 = x0 + w / 2 - step_x * (ncols - 1) / 2
-            cy0 = y0 + (h - 0.10) / 2 + step_y * (nrows - 1) / 2
-            for k, st in enumerate(sorted(members, key=lambda s: s["num"])):
-                cx = cx0 + (k % ncols) * step_x
-                cy = cy0 - (k // ncols) * step_y
-                ax.add_patch(Circle((cx, cy), r, facecolor=col,
-                                    edgecolor="white", linewidth=1.1, zorder=3))
-                ax.text(cx, cy, f"{st['num']:02d}", ha="center", va="center",
-                        fontsize=max(7.5, 118 * r), fontweight="bold",
-                        color="white", zorder=4)
+            # How a cell is drawn depends on whether its chips can still be read.
+            #
+            # Every cell used to print every chip. That works while a cell holds a dozen
+            # studies and fails completely past a hundred: the chips shrink below their own
+            # labels, overlap, and the cell turns into a white smear that says less than a
+            # bare number would. Four cells on this bench were unreadable that way.
+            #
+            # So: draw the chips only while they fit, and otherwise make the count itself
+            # the content. The detail has a better home anyway -- the live page, where the
+            # cell is clickable and the studies are listed.
+            legible = len(members) <= CHIP_CAP
+            if legible:
+                ax.text(x0 + w - 0.055, y0 + h - 0.058, str(len(members)),
+                        ha="right", va="top", fontsize=21, fontweight="bold",
+                        color=col, alpha=0.92)
+                ncols, nrows = _chip_layout(len(members))
+                r = min(0.072, 0.40 / max(ncols, nrows))   # chip radius
+                step_x = min(2.55 * r, (w - 0.16) / max(ncols - 1, 1)) if ncols > 1 else 0
+                step_y = min(2.55 * r, (h - 0.30) / max(nrows - 1, 1)) if nrows > 1 else 0
+                cx0 = x0 + w / 2 - step_x * (ncols - 1) / 2
+                cy0 = y0 + (h - 0.10) / 2 + step_y * (nrows - 1) / 2
+                for k, st in enumerate(sorted(members, key=lambda s: s["num"])):
+                    cx = cx0 + (k % ncols) * step_x
+                    cy = cy0 - (k // ncols) * step_y
+                    ax.add_patch(Circle((cx, cy), r, facecolor=col,
+                                        edgecolor="white", linewidth=1.1, zorder=3))
+                    label = f"{st['num']:02d}"
+                    # A four-digit study number needs a smaller face than a two-digit one
+                    # or it runs out over the edge of its own chip.
+                    shrink = {2: 1.0, 3: 0.80, 4: 0.62}.get(len(label), 0.62)
+                    ax.text(cx, cy, label, ha="center", va="center",
+                            fontsize=max(6.5, 118 * r * shrink), fontweight="bold",
+                            color="white", zorder=4)
+            else:
+                ax.text(x0 + w / 2, y0 + h / 2 + 0.045, str(len(members)),
+                        ha="center", va="center", fontsize=46, fontweight="bold",
+                        color=col, alpha=0.95)
+                ax.text(x0 + w / 2, y0 + h / 2 - 0.115, "studies",
+                        ha="center", va="center", fontsize=12, color=col, alpha=0.75)
 
     # ----- axis headers -------------------------------------------------
     for j, trad in enumerate(TRADABILITIES):
@@ -255,9 +283,10 @@ def draw(grid, special, total: int, out: Path = OUT) -> None:
     # totals at once. The chips themselves show the size; the ledger is where you count.
     ax.text(1.5, 4.07, "Famous trading ideas, one protocol",
             ha="center", va="top", fontsize=20, fontweight="bold", color=INK)
-    ax.text(1.5, 3.88, "Each chip is a study — its number in the ledger. "
-                       "Same test bench, two stamps each.",
-            ha="center", va="top", fontsize=11.5, color="#57606a")
+    ax.text(1.5, 3.88, "Same test bench, two stamps each. Small cells name their studies; "
+                       "crowded ones just count them —\nopen the live map to click into any "
+                       "cell and see what's in it.",
+            ha="center", va="top", fontsize=11.5, color="#57606a", linespacing=1.45)
 
     notes = []
     if special:
