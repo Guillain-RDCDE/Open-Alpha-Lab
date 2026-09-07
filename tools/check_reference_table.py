@@ -13,7 +13,7 @@ wholesale, so it drifts silently, and it has drifted twice already:
 Both failures are invisible: the page renders, the tools exit 0, the numbers are just
 wrong. This script makes them loud.
 
-Three checks, all derived from the studies themselves rather than from another copy of
+Four checks, all derived from the studies themselves rather than from another copy of
 the table:
 
   1. **Every published study has exactly one ledger row.** Missing rows mean a study is
@@ -22,6 +22,12 @@ the table:
      the verdict its build produced; the ledger row must say the same thing.
   3. **The highlights list matches the ledger's green set.** Whatever the page advertises
      as the bench's greens must be exactly the studies stamped Investable.
+  4. **Each badge's two halves agree.** A shields badge states its value twice -- in the
+     alt text every parser reads, and in the URL the reader actually sees rendered. When
+     those diverge the divergence is invisible from either side alone: two audits of this
+     corpus, one reading alt text and one reading URLs, returned different counts and
+     neither could see the other's evidence. Read both, and fail when they name different
+     stamps.
 
 Exit code 0 if the ledger agrees with the studies, 1 otherwise. Pure stdlib.
 
@@ -82,6 +88,61 @@ def head_word(value: str) -> str:
 
 AXIS_RE = re.compile(r"\**\s*(Signal|Tradability)\b")
 ALT_RE = re.compile(r"!\[([^\]]+)\]\(https://img\.shields\.io/badge/")
+# Both halves of a badge: the alt text a parser reads, and the URL a reader sees rendered.
+BADGE_PAIR_RE = re.compile(
+    r"!\[([^\]]+)\]\(https://img\.shields\.io/badge/([^)?]*)")
+
+
+def url_value(url_path: str) -> str:
+    """The stamp a shields URL actually renders, from its path.
+
+    ``Mirage-c0392b`` -> ``Mirage`` and ``Signal-WEAK-dab617`` -> ``WEAK``: drop the
+    trailing colour, then the axis label if the labelled form is in use.
+    """
+    parts = url_path.split("-")
+    if len(parts) >= 2 and re.fullmatch(r"[0-9a-fA-F]{6}|[a-z]+", parts[-1]):
+        parts = parts[:-1]
+    if len(parts) >= 2 and parts[0] in ("Signal", "Tradability"):
+        parts = parts[1:]
+    return head_word("-".join(parts))
+
+
+def badge_halves(slug: str) -> tuple[list[tuple[str, str, str]], list[tuple[str, str, str]]]:
+    """(genuine disagreements, case-only differences) between each badge's alt text and URL.
+
+    A shields badge says the same thing twice: the alt text, which every parser in this
+    repo reads, and the URL path, which is what a reader actually sees rendered. Nothing
+    keeps them in step, and when they diverge the divergence is invisible from either side
+    alone -- which is not hypothetical. Studies 139 and 218 carry ``![Weak](…/Signal-WEAK-…)``:
+    a gate reading alt text sees ``Weak`` and passes, a gate reading the URL sees ``WEAK``
+    and reports a deviation, and each is confidently right about the half it read. Two
+    sessions auditing this corpus with opposite conventions produced two different counts
+    and neither could see the other's evidence.
+
+    So read both and compare. A different *word* is a defect: the page renders a stamp the
+    tooling does not know about. A difference of *case* alone is the open question of
+    whether METHODOLOGY's uppercase palette table names the values or shows the literal
+    badge text -- reported separately, and not a failure, because that is a call for the
+    desk and not something a gate should decide by turning red.
+    """
+    path = os.path.join(STUDIES, slug, "README.md")
+    if not os.path.exists(path):
+        return [], []
+    differ: list[tuple[str, str, str]] = []
+    case_only: list[tuple[str, str, str]] = []
+    with open(path, encoding="utf-8") as fh:
+        for line in fh:
+            if not line.startswith("|"):
+                continue
+            cells = line.split("|")
+            if len(cells) < 3 or not AXIS_RE.match(cells[1].strip()):
+                continue  # verdict rows only; the grey qualifier row carries no stamp
+            for alt, url in BADGE_PAIR_RE.findall(cells[2]):
+                a, u = head_word(alt), url_value(url)
+                if a == u:
+                    continue
+                (case_only if a.lower() == u.lower() else differ).append((slug, a, u))
+    return differ, case_only
 
 
 def study_verdict(slug: str) -> tuple[str, str] | None:
@@ -261,6 +322,8 @@ def main() -> int:
     off_palette: list[tuple[str, str, str]] = []
     no_readme: list[str] = []
     shouted: list[str] = []
+    halves_differ: list[tuple[str, str, str]] = []
+    halves_case: list[tuple[str, str, str]] = []
     for slug in sorted(rows):
         if not os.path.exists(os.path.join(STUDIES, slug, "README.md")):
             # A published study with no front card at all. Distinct from an unparseable
@@ -269,6 +332,9 @@ def main() -> int:
             no_readme.append(slug)
             problems += 1
             continue
+        d_bad, d_case = badge_halves(slug)
+        halves_differ.extend(d_bad)
+        halves_case.extend(d_case)
         got = study_verdict(slug)
         if got is None:
             print(f"  {slug}: README carries no readable verdict badges")
@@ -310,8 +376,26 @@ def main() -> int:
         print(f"\n  NOTE: {len(shouted)} study(ies) write their stamp in a different case "
               f"than the ledger ({', '.join(shouted[:5])}"
               f"{', ...' if len(shouted) > 5 else ''}).")
-        print("  Same verdict, so not drift -- but the shouted form is what puts a study "
-              "outside the map's grid, so the study README is the thing to normalise.")
+        print("  Same verdict, so not drift, and nothing moves off the map either: the "
+              "grid is built from the ledger, whose rows are all title case. Cosmetic, "
+              "and part of the same open question as the alt-vs-URL note below.")
+
+    if halves_differ:
+        print(f"\n  {len(halves_differ)} badge(s) whose alt text and URL name different "
+              f"stamps -- the page renders one thing and every parser reads another:")
+        for slug, a, u in halves_differ[:6]:
+            print(f"    {slug}: alt says {a!r}, the badge renders {u!r}")
+        problems += 1
+
+    if halves_case:
+        studies = sorted({s for s, _, _ in halves_case},
+                         key=lambda s: int(s.split("-")[0]))
+        print(f"\n  NOTE: {len(halves_case)} badge(s) across {len(studies)} study(ies) "
+              f"agree on the stamp but not its case ({', '.join(studies[:6])}"
+              f"{', ...' if len(studies) > 6 else ''}).")
+        print("  Not a failure: METHODOLOGY.md's palette table writes every value in caps "
+              "while the corpus does not, and whether that table names the values or shows "
+              "the literal badge text is a call for the desk, not for this gate.")
 
     if no_readme:
         print(f"  {len(no_readme)} published study(ies) have NO README.md at all -- the "
