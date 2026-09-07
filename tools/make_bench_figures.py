@@ -249,9 +249,13 @@ def draw(grid, special, total: int, out: Path = OUT) -> None:
             style="italic", rotation=90)
 
     # ----- title & footnotes --------------------------------------------
-    ax.text(1.5, 4.07, f"{total} famous trading ideas, one protocol",
+    # No corpus total in the title. It used to read "{total} famous trading ideas", which
+    # meant every prose mention of the count elsewhere had to be kept in step with a
+    # regenerated image -- and they were not, so the repo advertised several different
+    # totals at once. The chips themselves show the size; the ledger is where you count.
+    ax.text(1.5, 4.07, "Famous trading ideas, one protocol",
             ha="center", va="top", fontsize=20, fontweight="bold", color=INK)
-    ax.text(1.5, 3.88, "Each chip is a study — its number in the README table. "
+    ax.text(1.5, 3.88, "Each chip is a study — its number in the ledger. "
                        "Same test bench, two stamps each.",
             ha="center", va="top", fontsize=11.5, color="#57606a")
 
@@ -266,7 +270,7 @@ def draw(grid, special, total: int, out: Path = OUT) -> None:
             notes.append(f"Not on the grid: {det}.")
         else:
             kinds = sorted({_pretty(s) for s in special})
-            notes.append(f"Not on the grid: {len(special)} studies carrying off-palette "
+            notes.append(f"Not on the grid: studies carrying off-palette "
                          f"stamps ({', '.join(kinds[:4])}"
                          f"{', …' if len(kinds) > 4 else ''}).")
             print(f"WARNING: {len(special)} of {total} studies use stamps outside the "
@@ -279,10 +283,11 @@ def draw(grid, special, total: int, out: Path = OUT) -> None:
     # them reads as a footnote about an oddity rather than a fact about the corpus.
     n_mixed = sum(1 for v in grid.values() for st in v if st["signal"] == "Mixed")
     if n_mixed:
-        notes.append(f"{n_mixed} studies carry a Mixed signal (verdict splits by regime "
-                     f"or leg); they count with Weak, the same amber bucket.")
-    notes.append(f"Grid shows {total - len(special)} of {total} studies; "
-                 f"{len(special)} sit outside the documented axes.")
+        notes.append("A Mixed signal (the verdict splits by regime or leg) counts with "
+                     "Weak, in the same amber bucket.")
+    if special:
+        notes.append("Studies carrying a stamp outside the documented axes are not on "
+                     "the grid; the ledger lists them either way.")
     for k, note in enumerate(notes):
         ax.text(-0.80, -0.26 - 0.155 * k, note, ha="left", va="top",
                 fontsize=9.5, color=GREY)

@@ -258,52 +258,45 @@ def replace_badges(line: str, sig: str, trad: str) -> str | None:
     return line
 
 
-README = os.path.join(ROOT, "README.md")
-SCOREBOARD_RE = re.compile(
-    r"^`(\d+) tested` · `(\d+) survive` · `(\d+) real signals` · `(\d+) mirages`$", re.M)
+DOCS = os.path.join(ROOT, "docs")
+# Any bare count of studies in the prose. The desk's rule is that the corpus is counted in
+# exactly one place -- the ledger -- and never quoted into a sentence, because a quoted
+# count is only correct until the next study lands. It was not a hypothetical: the landing
+# page, the bench page and the map each advertised a different total at the same time.
+CORPUS_COUNT_RE = re.compile(
+    r"(?<![\w./#-])(\d{3,4})(?=\s+(?:studies|teardowns|tested|famous|verdicts|of the))"
+    r"|(?:of|out of|all|the other)\s+(\d{3,4})(?![\w.-])",
+    re.I)
 
 
-def check_scoreboard(rows: dict[str, re.Match], fix: bool) -> int:
-    """The landing page's four headline numbers, re-derived from the ledger.
+def check_no_quoted_counts() -> int:
+    """No prose anywhere may quote a corpus-sized count of studies.
 
-    Nothing generated this line -- it was maintained by hand, and by the time anyone
-    looked it claimed 799 mirages against a ledger holding 795, and 116 real signals
-    against 127. A hand-kept summary of a 1012-row table is a summary that is wrong;
-    the only question is when someone notices. So: derive, compare, and offer to rewrite.
-
-    Case is folded because a handful of early rows shout their verdict (``MIRAGE``);
-    that is a palette question, reported separately, not a reason to miscount here.
+    Study *numbers* are identifiers and stay -- ``[981](../studies/981-...)``, and ranges
+    like ``963-1012`` that name a lot. What is banned is a sentence that says how many
+    studies there are, because nothing keeps such a sentence in step with the corpus and
+    several of them drifted apart into visibly different totals.
     """
-    if not os.path.exists(README):
-        return 0
-    with open(README, encoding="utf-8") as fh:
-        text = fh.read()
-    m = SCOREBOARD_RE.search(text)
-    if not m:
-        print("  README scoreboard line not found -- cannot verify the headline numbers")
+    bad: list[tuple[str, int, str]] = []
+    targets = [os.path.join(ROOT, "README.md")]
+    targets += [os.path.join(DOCS, f) for f in ("bench.md", "REFERENCE.md")
+                if os.path.exists(os.path.join(DOCS, f))]
+    for path in targets:
+        with open(path, encoding="utf-8") as fh:
+            for n, line in enumerate(fh, 1):
+                # Ledger rows and family rows are lists of study links, not prose.
+                if line.startswith("| **[") or "](../studies/" in line:
+                    continue
+                for m in CORPUS_COUNT_RE.finditer(line):
+                    bad.append((os.path.relpath(path, ROOT), n,
+                                (m.group(1) or m.group(2))))
+    if bad:
+        print(f"\n  {len(bad)} quoted study count(s) in prose -- the corpus is counted in "
+              f"the ledger, never in a sentence:")
+        for f, n, v in bad[:8]:
+            print(f"    {f}:{n}  '{v}'")
         return 1
-
-    sigs = [r.group("signal").lower() for r in rows.values()]
-    trads = [r.group("trad").lower() for r in rows.values()]
-    want = (len(rows), trads.count("investable"),
-            sigs.count("real"), trads.count("mirage"))
-    got = tuple(int(g) for g in m.groups())
-    if want == got:
-        return 0
-
-    labels = ("tested", "survive", "real signals", "mirages")
-    for lab, g, w in zip(labels, got, want):
-        if g != w:
-            print(f"  SCOREBOARD {lab}: README says {g}, the ledger holds {w}")
-    if fix:
-        line = (f"`{want[0]} tested` · `{want[1]} survive` · "
-                f"`{want[2]} real signals` · `{want[3]} mirages`")
-        text = text[:m.start()] + line + text[m.end():]
-        with open(README, "w", encoding="utf-8", newline="\n") as fh:
-            fh.write(text)
-        print("  --fix rewrote the README scoreboard line")
-        return 0
-    return 1
+    return 0
 
 
 def main() -> int:
@@ -438,7 +431,7 @@ def main() -> int:
             print(f"    {b}")
         problems += 1
 
-    problems += check_scoreboard(rows, fix)
+    problems += check_no_quoted_counts()
 
     if fix and drifted:
         rewritten = skipped = 0

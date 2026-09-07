@@ -1,17 +1,15 @@
 <div align="center">
 
-<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — out of 1012 famous trading edges, ten survive">
+<img src="docs/social-preview.png" width="100%" alt="Open-Alpha-Lab — famous trading edges, taken apart one protocol at a time">
 
 # Open-Alpha-Lab
 
-### Out of 1012 famous trading edges, ten survive — and not one of them is a crystal ball.
+### Almost every famous trading edge is a mirage. Here is the graveyard, and the handful that survived.
 
-That's not a typo. I put every market anomaly, folk strategy and named factor
+I put every market anomaly, folk strategy and named factor
 people swear by through the **same brutal protocol**, and publish the verdict: **edge or mirage.**
 
-`1012 tested` · `10 survive` · `126 real signals` · `799 mirages`
-
-***Most are mirages. The honest write-up of why is the point. The ten survivors don't forecast anything — three manage risk, three harvest a premium or a mechanical identity, three are simply costs you stop paying, and one is a discipline that pays for itself.***
+***Most are mirages. The honest write-up of why is the point. The survivors don't forecast anything — they manage risk, harvest a premium or a mechanical identity, stop a cost you were paying, or impose a discipline that pays for itself.***
 
 [![tests](https://github.com/Guillain-RDCDE/Open-Alpha-Lab/actions/workflows/tests.yml/badge.svg)](https://github.com/Guillain-RDCDE/Open-Alpha-Lab/actions/workflows/tests.yml)
 [![python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
@@ -44,10 +42,10 @@ style is written up in **[METHODOLOGY.md](METHODOLOGY.md)**.
 ## The graveyard
 
 The bench on one grid — each study a numbered chip, sorted by its two stamps.
-Almost everything ends up bottom-right; ten chips are green — and not one of them is a forecaster.
-A **Mixed** signal — the verdict splits by regime or leg — counts with Weak, in the same amber
-bucket. The map's caption states its own denominator, and names anything still carrying a stamp
-outside the two axes; the [ledger](docs/REFERENCE.md) lists every study either way.
+Almost everything ends up bottom-right; the green corner is nearly empty — and not one chip in it
+is a forecaster. A **Mixed** signal — the verdict splits by regime or leg — counts with Weak, in
+the same amber bucket. The map is regenerated from the [ledger](docs/REFERENCE.md), which lists
+every study and is the only place worth counting.
 
 [![The bench map — every study placed on a Signal × Tradability grid](docs/bench_map.png)](https://guillain-rdcde.github.io/Open-Alpha-Lab/)
 
@@ -61,8 +59,8 @@ outside the two axes; the [ledger](docs/REFERENCE.md) lists every study either w
 
 | | |
 |---|---|
-| **[The full ledger →](docs/REFERENCE.md)** | Every one of the 1012 studies, two stamps each, with the ten greens called out first. This is the single source of truth the map and the live page are built from. |
-| **[What the teardowns taught us →](docs/bench.md)** | The view from above: mortality by family of idea, and the lessons the bench keeps repeating. All 1012 folded in. |
+| **[The full ledger →](docs/REFERENCE.md)** | Every study, two stamps each, with the greens called out first. This is the single source of truth the map and the live page are built from. |
+| **[What the teardowns taught us →](docs/bench.md)** | The view from above: mortality by family of idea, and the lessons the bench keeps repeating. |
 | **[The method →](METHODOLOGY.md)** | How a claim earns its two stamps — inference, the alpha-vs-beta split, the capacity test. |
 | **[Reproduce the numbers →](docs/reproducibility.md)** | Data caches, fingerprints and the release bundle, to verify the published figures byte-for-byte. |
 
@@ -84,7 +82,7 @@ python studies/01-overnight-anomaly/examples/run_synthetic_demo.py   # offline, 
 ```
 
 Then open **[studies/01-overnight-anomaly/](studies/01-overnight-anomaly/)**, or any of the
-other 1011 — every study folder has the same shape.
+others — every study folder has the same shape.
 
 <details>
 <summary><b>The engine — <code>quantlab/</code></b> (a small, tested, reusable toolkit that powers every study)</summary>
