@@ -17,6 +17,14 @@ people swear by through the **same brutal protocol**, and publish the verdict: *
 
 </div>
 
+<!-- opening -->
+> Hundreds of famous stock-market “winning formulas”, tested the same way, by someone who ran a fund. Almost none survive.
+>
+> One reproducible, cost-aware protocol per idea, graded for the reality of the signal and for survival at scale; every verdict published, the failures included.
+>
+> Honest measurement, and the discipline to publish what didn’t work. Part of the work of [Guillain d’Erceville](https://github.com/Guillain-RDCDE), forward deployed engineer.
+<!-- opening -->
+
 ---
 
 > Built by someone who ran the real thing — a fully systematic global-macro book scaled
