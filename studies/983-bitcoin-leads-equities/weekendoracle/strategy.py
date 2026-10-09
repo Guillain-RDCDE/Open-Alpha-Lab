@@ -264,7 +264,9 @@ def synthetic_world(n_weeks: int = 600, weekend_information: float = 0.0,
     equity_noise = rng.normal(0, 0.009, n_weeks)
     crypto = common_beta * news + c_noise
     equity = weekend_information * news + equity_noise
-    idx = pd.bdate_range("2015-01-05", periods=n_weeks, freq="W-MON")
+    # Second resolution: a long planted world (the slope test draws 40,000 weeks, i.e. past
+    # the year 2262) would overflow the default nanosecond calendar.
+    idx = pd.date_range("2015-01-05", periods=n_weeks, freq="W-MON", unit="s")
     return pd.DataFrame({"crypto_return": crypto, "equity_return": equity,
                          "gap_days": 3}, index=idx)
 

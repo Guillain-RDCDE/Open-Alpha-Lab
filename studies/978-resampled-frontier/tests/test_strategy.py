@@ -179,15 +179,27 @@ def test_but_the_SAMPLE_version_diverges_wildly_from_it():
     maximum-Sharpe optimiser fitted to a sample chases the noise in it and lands a long way
     from the minimum-variance portfolio that the true parameters imply. Resampling and
     shrinkage both exist to close that distance — and both do.
+
+    The closeness is measured as tracking error against the target. Share-of-book distance is
+    blind here: plain and shrunk both sit on the same two-asset corner, so their book distances
+    to the target are identical by construction, and a strict ``<`` between them is decided by
+    the last bit of floating-point noise.
     """
     mu, cov = _world(n=8, mu_spread=0.0)
     X = _sample(mu, cov, n_obs=500)
     target = st.optimise(mu, cov, "min_var")
-    d_plain = st.weight_distance(st.plain_weights(X, "max_sharpe"), target)
-    d_res = st.weight_distance(st.resampled_weights(X, "max_sharpe", n_resamples=40), target)
-    d_shr = st.weight_distance(st.shrunk_weights(X, "max_sharpe"), target)
+    w_plain = st.plain_weights(X, "max_sharpe")
+    w_res = st.resampled_weights(X, "max_sharpe", n_resamples=40)
+    w_shr = st.shrunk_weights(X, "max_sharpe")
+
+    def te(w):
+        return float(np.sqrt((w - target) @ cov @ (w - target)))
+
+    d_plain = st.weight_distance(w_plain, target)
     assert d_plain > 0.2
-    assert d_res < d_plain and d_shr < d_plain
+    assert st.weight_distance(w_res, target) < d_plain
+    assert st.weight_distance(w_shr, target) <= d_plain + 1e-9
+    assert te(w_res) < 0.95 * te(w_plain) and te(w_shr) < 0.95 * te(w_plain)
 
 
 # --------------------------------------------------------------------------- #

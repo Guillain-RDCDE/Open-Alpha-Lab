@@ -117,12 +117,29 @@ def test_views_further_from_the_prior_move_more_of_the_book():
     assert moved[0] < 1e-8
 
 
-def test_higher_tau_means_the_prior_is_held_less_tightly():
+def test_under_the_he_litterman_omega_tau_cancels_out():
+    """With Omega = diag(P tau Sigma P'), view uncertainty scales with tau, so tau drops out.
+
+    Prior and view are then held equally tightly whatever tau is: the posterior, and therefore
+    the share of the book that moves, is the same for every tau (the flat rows of the
+    view-strength table in docs/results.md).
+    """
     cov = _cov(n=8)
     wp = st.prior_weights(cov, "equal")
     curve = st.view_strength_curve(cov, wp, asset=4, sizes=(0.05,), taus=(0.01, 0.05, 0.5))
     moved = curve.sort_values("tau")["book_moved"].to_numpy()
-    assert moved[-1] >= moved[0]
+    assert moved[0] > 1e-3
+    assert np.allclose(moved, moved[0], rtol=1e-9, atol=1e-12)
+
+
+def test_with_a_fixed_omega_higher_tau_means_the_prior_is_held_less_tightly():
+    cov = _cov(n=8)
+    wp = st.prior_weights(cov, "equal")
+    P, q = st.single_view(8, asset=4, size_ann=0.05)
+    omega = np.diag(np.diag(P @ (st.DEFAULT_TAU * cov) @ P.T))
+    moved = [float(np.abs(st.posterior_weights(cov, wp, P, q, omega=omega, tau=t) - wp).sum() / 2)
+             for t in (0.01, 0.05, 0.5)]
+    assert moved[0] < moved[1] < moved[2]
 
 
 def test_a_relative_view_is_funded_from_the_benchmark():
