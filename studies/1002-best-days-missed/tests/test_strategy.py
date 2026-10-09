@@ -12,6 +12,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from bestdays import data, strategy as st  # noqa: E402
 
+# Tests below marked ``@needs_cache`` read the real price cache, which is not in the
+# repository: they run on a desk with ``data.fetch()`` done and skip on a clean checkout
+# (offline / CI), where the synthetic tests carry the logic.
+needs_cache = pytest.mark.skipif(
+    not data.have_real(),
+    reason="no shared _cache present (offline / CI) — synthetic tests cover the logic")
+
 
 # --------------------------------------------------------------------------- #
 # Arithmetic
@@ -78,6 +85,7 @@ def test_cash_rate_softens_the_penalty():
 # --------------------------------------------------------------------------- #
 # The omitted half
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_the_best_days_are_bigger_in_percent_but_smaller_in_logs():
     """The mechanism, and it is not the obvious one.
 
@@ -107,6 +115,7 @@ def test_the_log_scale_is_what_compounding_actually_uses():
     assert (without_down - base) > (base - without_up)
 
 
+@needs_cache
 def test_missing_the_worst_days_helps_more_than_missing_the_best_hurts():
     px = data.load_prices()
     r = px[data.EQUITY].dropna().pct_change().dropna()
@@ -115,6 +124,7 @@ def test_missing_the_worst_days_helps_more_than_missing_the_best_hurts():
     assert a["ratio"] > 1.0
 
 
+@needs_cache
 def test_the_asymmetry_holds_across_markets():
     px = data.load_prices()
     ratios = []
@@ -143,6 +153,7 @@ def test_extreme_days_returns_both_kinds():
     assert ex["date"].is_monotonic_increasing
 
 
+@needs_cache
 def test_the_best_and_worst_days_are_neighbours_on_the_real_tape():
     """The finding that makes the brochure's counterfactual impossible."""
     px = data.load_prices()
@@ -152,6 +163,7 @@ def test_the_best_and_worst_days_are_neighbours_on_the_real_tape():
     assert c["p_value"] < 0.05
 
 
+@needs_cache
 def test_shuffling_destroys_the_clustering_but_keeps_the_statistic():
     """The control: the fat tail survives the shuffle, the clustering does not."""
     px = data.load_prices()
@@ -176,6 +188,7 @@ def test_iid_returns_show_no_clustering_against_their_own_shuffle():
     assert c["p_value"] > 0.01
 
 
+@needs_cache
 def test_extreme_days_arrive_in_high_volatility():
     px = data.load_prices()
     r = px[data.EQUITY].dropna().pct_change().dropna()
@@ -184,6 +197,7 @@ def test_extreme_days_arrive_in_high_volatility():
     assert v["worst_vol_ratio"] > 1.5
 
 
+@needs_cache
 def test_the_best_days_happen_inside_drawdowns():
     px = data.load_prices()
     r = px[data.EQUITY].dropna().pct_change().dropna()
@@ -195,6 +209,7 @@ def test_the_best_days_happen_inside_drawdowns():
 # --------------------------------------------------------------------------- #
 # What a real timer would need
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_missing_random_days_costs_almost_nothing():
     """The correct null, and the whole point."""
     px = data.load_prices()
@@ -210,6 +225,7 @@ def test_the_random_cost_grows_with_the_fraction_missed():
     assert t["random_cost"].is_monotonic_increasing
 
 
+@needs_cache
 def test_the_timing_frontier_rises_with_accuracy():
     px = data.load_prices()
     r = px[data.EQUITY].dropna().pct_change().dropna()
@@ -217,6 +233,7 @@ def test_the_timing_frontier_rises_with_accuracy():
     assert f["median_cagr"].is_monotonic_increasing
 
 
+@needs_cache
 def test_a_perfect_timer_beats_buy_and_hold():
     """A sanity check on the machinery: perfect accuracy must win."""
     px = data.load_prices()
@@ -225,6 +242,7 @@ def test_a_perfect_timer_beats_buy_and_hold():
     assert f.loc[1.0, "median_cagr"] > f.loc[1.0, "buy_and_hold"]
 
 
+@needs_cache
 def test_a_random_timer_loses_the_premium_it_sits_out():
     """No skill means no reason to be out — and the cost is the premium forgone."""
     px = data.load_prices()
@@ -234,6 +252,7 @@ def test_a_random_timer_loses_the_premium_it_sits_out():
     assert f.iloc[0]["median_cagr"] < f.iloc[0]["buy_and_hold"]
 
 
+@needs_cache
 def test_the_coin_flip_benchmark_is_the_down_day_share_not_one_half():
     """The definitional point the first version of this study got wrong."""
     px = data.load_prices()
@@ -243,6 +262,7 @@ def test_the_coin_flip_benchmark_is_the_down_day_share_not_one_half():
     assert abs(rate - 0.5) > 0.02
 
 
+@needs_cache
 def test_the_breakeven_sits_just_above_random_selection():
     px = data.load_prices()
     r = px[data.EQUITY].dropna().pct_change().dropna()
@@ -252,6 +272,7 @@ def test_the_breakeven_sits_just_above_random_selection():
     assert be - rate < 0.15
 
 
+@needs_cache
 def test_the_breakeven_is_stable_across_how_much_the_timer_trades():
     """A good sign: the required EDGE is a property of the market, not of the trading rate."""
     px = data.load_prices()
@@ -260,6 +281,7 @@ def test_the_breakeven_is_stable_across_how_much_the_timer_trades():
     assert max(bes) - min(bes) < 0.05
 
 
+@needs_cache
 def test_being_below_random_is_costlier_than_being_equally_above_is_profitable():
     """The steepness that makes a small required edge unforgiving."""
     px = data.load_prices()

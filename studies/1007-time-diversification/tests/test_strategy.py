@@ -12,6 +12,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from timediv import data, strategy as st  # noqa: E402
 
+# Tests below marked ``@needs_cache`` read the real price cache, which is not in the
+# repository: they run on a desk with ``data.fetch()`` done and skip on a clean checkout
+# (offline / CI), where the synthetic tests carry the logic.
+needs_cache = pytest.mark.skipif(
+    not data.have_real(),
+    reason="no shared _cache present (offline / CI) — synthetic tests cover the logic")
+
 
 # --------------------------------------------------------------------------- #
 # Windows
@@ -83,6 +90,7 @@ def test_short_samples_make_log_dispersion_appear_to_shrink():
     assert m.loc[30, "log_sd"] < m.loc[10, "log_sd"]
 
 
+@needs_cache
 def test_both_directions_hold_on_the_real_tape_too():
     px = data.load_prices()
     r, c = _pair(px)
@@ -91,6 +99,7 @@ def test_both_directions_hold_on_the_real_tape_too():
     assert m["log_sd"].iloc[-1] > m["log_sd"].iloc[0]
 
 
+@needs_cache
 def test_shortfall_probability_falls_with_horizon():
     px = data.load_prices()
     r, c = _pair(px)
@@ -98,6 +107,7 @@ def test_shortfall_probability_falls_with_horizon():
     assert m["shortfall_vs_cash"].iloc[-1] < m["shortfall_vs_cash"].iloc[0]
 
 
+@needs_cache
 def test_the_worst_outcome_gets_worse_even_as_shortfall_falls():
     """The trade the glide-path argument leaves out: less likely, more costly."""
     px = data.load_prices()
@@ -311,6 +321,7 @@ def test_log_utility_is_handled_at_gamma_one():
         float(np.exp(np.mean(np.log(w)))), rel=1e-9)
 
 
+@needs_cache
 def test_more_risk_aversion_means_less_equity():
     px = data.load_prices()
     r, c = _pair(px)
@@ -320,6 +331,7 @@ def test_more_risk_aversion_means_less_equity():
     assert hi <= lo
 
 
+@needs_cache
 def test_the_optimal_weight_is_roughly_flat_in_horizon():
     """Samuelson (1969), checked numerically rather than assumed."""
     px = data.load_prices()
@@ -330,6 +342,7 @@ def test_the_optimal_weight_is_roughly_flat_in_horizon():
     assert s["max_range"] <= 0.35
 
 
+@needs_cache
 def test_weight_stability_reports_every_gamma():
     px = data.load_prices()
     r, c = _pair(px)

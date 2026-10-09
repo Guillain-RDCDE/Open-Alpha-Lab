@@ -12,6 +12,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from onepercent import data, strategy as st  # noqa: E402
 
+# Tests below marked ``@needs_cache`` read the real price cache, which is not in the
+# repository: they run on a desk with ``data.fetch()`` done and skip on a clean checkout
+# (offline / CI), where the synthetic tests carry the logic.
+needs_cache = pytest.mark.skipif(
+    not data.have_real(),
+    reason="no shared _cache present (offline / CI) — synthetic tests cover the logic")
+
 
 # --------------------------------------------------------------------------- #
 # Construction
@@ -64,6 +71,7 @@ def test_the_weight_sweep_covers_every_weight():
 # --------------------------------------------------------------------------- #
 # The calendar, which is not a detail
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_the_raw_panel_really_does_mix_two_calendars():
     """The problem exists — asserted, so the fix below is not solving an imaginary one."""
     px = data.load_prices()
@@ -76,6 +84,7 @@ def test_the_raw_panel_really_does_mix_two_calendars():
     assert len(btc) > 1.25 * len(spy)
 
 
+@needs_cache
 def test_alignment_puts_every_series_on_the_equity_calendar():
     px = st.align_to_equity_calendar(data.load_prices(), data.EQUITY)
     btc = px[data.BTC].dropna()
@@ -84,6 +93,7 @@ def test_alignment_puts_every_series_on_the_equity_calendar():
     assert px.index.equals(data.load_prices()[data.EQUITY].dropna().index)
 
 
+@needs_cache
 def test_alignment_folds_weekend_moves_into_the_next_session_not_away():
     """Forward-filling must preserve the cumulative move, not discard the weekend."""
     px = data.load_prices()
@@ -96,6 +106,7 @@ def test_alignment_folds_weekend_moves_into_the_next_session_not_away():
     assert total_aligned == pytest.approx(total_raw, rel=1e-6)
 
 
+@needs_cache
 def test_the_calendar_choice_changes_the_annualised_volatility():
     """Documented because getting it wrong flatters bitcoin, and it is a common error."""
     px = data.load_prices()
@@ -105,6 +116,7 @@ def test_the_calendar_choice_changes_the_annualised_volatility():
     assert vol_365 > vol_252 * 1.15
 
 
+@needs_cache
 def test_alignment_leaves_a_series_that_never_trades_weekends_untouched():
     px = data.load_prices()
     aligned = st.align_to_equity_calendar(px, data.EQUITY)
@@ -150,6 +162,7 @@ def test_the_optimiser_respects_its_cap():
     assert st.optimal_weight(base, great, 0.20) == pytest.approx(0.20, abs=1e-9)
 
 
+@needs_cache
 def test_the_objective_curve_is_a_plateau_not_a_peak():
     """Why the argmax is not worth arguing about."""
     px = data.load_prices()
@@ -167,6 +180,7 @@ def test_flatness_handles_a_degenerate_curve():
 # --------------------------------------------------------------------------- #
 # Estimability
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_the_bootstrap_interval_is_very_wide():
     px = data.load_prices()
     rets = st.align_to_equity_calendar(px, data.EQUITY).pct_change()
@@ -188,6 +202,7 @@ def test_sample_needed_scales_with_the_square_of_volatility():
     assert b["years_needed"] == pytest.approx(4 * a["years_needed"], rel=1e-9)
 
 
+@needs_cache
 def test_bitcoin_needs_an_implausible_amount_of_history():
     px = data.load_prices()
     r = px[data.BTC].dropna().pct_change().dropna()
@@ -196,6 +211,7 @@ def test_bitcoin_needs_an_implausible_amount_of_history():
     assert s["years_needed"] > 200
 
 
+@needs_cache
 def test_conditioned_on_its_history_the_sample_prefers_five_to_one():
     """Not the result this study expected, and the reason it changed shape.
 
@@ -213,6 +229,7 @@ def test_conditioned_on_its_history_the_sample_prefers_five_to_one():
     assert p["distinguishable"]
 
 
+@needs_cache
 def test_power_to_distinguish_finds_no_difference_where_the_curve_is_flat():
     """The machinery can also report 'no' — checked, so the test above means something.
 
@@ -230,6 +247,7 @@ def test_power_to_distinguish_finds_no_difference_where_the_curve_is_flat():
 # --------------------------------------------------------------------------- #
 # The inversion — what each recommendation assumes
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_the_optimiser_wants_far_more_than_anyone_recommends():
     """The finding the study is built on."""
     px = data.load_prices()
@@ -239,6 +257,7 @@ def test_the_optimiser_wants_far_more_than_anyone_recommends():
     assert st.optimal_weight(base, btc, 0.50) > 0.10
 
 
+@needs_cache
 def test_the_optimal_weight_rises_with_the_assumed_mean():
     px = data.load_prices()
     rets = st.align_to_equity_calendar(px, data.EQUITY).pct_change()
@@ -248,6 +267,7 @@ def test_the_optimal_weight_rises_with_the_assumed_mean():
     assert c["optimal_weight"].is_monotonic_increasing
 
 
+@needs_cache
 def test_recentring_preserves_volatility_and_changes_only_the_drift():
     """The mechanism must be a pure drift shift, or the inversion measures the wrong thing."""
     px = data.load_prices()
@@ -261,6 +281,7 @@ def test_recentring_preserves_volatility_and_changes_only_the_drift():
     assert got == pytest.approx(0.05, rel=1e-6)
 
 
+@needs_cache
 def test_a_two_percent_sleeve_implies_roughly_no_expected_return():
     """The headline inversion: the industry number is the zero-expected-return answer."""
     px = data.load_prices()
@@ -273,6 +294,7 @@ def test_a_two_percent_sleeve_implies_roughly_no_expected_return():
     assert imp.loc[0.05, "implied_mean"] > imp.loc[0.02, "implied_mean"]
 
 
+@needs_cache
 def test_the_implied_means_are_far_below_the_realised_one():
     px = data.load_prices()
     rets = st.align_to_equity_calendar(px, data.EQUITY).pct_change()
@@ -289,6 +311,7 @@ def test_implied_mean_declines_on_a_short_sample():
     assert st.weight_vs_assumed_mean(w["base"], w["asset"]).empty
 
 
+@needs_cache
 def test_mean_uncertainty_is_wide_enough_to_matter():
     px = data.load_prices()
     rets = st.align_to_equity_calendar(px, data.EQUITY).pct_change()
@@ -312,6 +335,7 @@ def test_power_to_distinguish_declines_on_a_short_sample():
 # --------------------------------------------------------------------------- #
 # Out of sample and implementation
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_the_walk_forward_allocator_changes_its_mind():
     px = data.load_prices()
     rets = st.align_to_equity_calendar(px, data.EQUITY).pct_change()
@@ -322,6 +346,7 @@ def test_the_walk_forward_allocator_changes_its_mind():
     assert wf["weight"].max() - wf["weight"].min() > 0.05
 
 
+@needs_cache
 def test_the_walk_forward_allocator_pays_for_its_turnover():
     px = data.load_prices()
     rets = st.align_to_equity_calendar(px, data.EQUITY).pct_change()
@@ -338,6 +363,7 @@ def test_walk_forward_declines_when_there_is_no_room():
     assert st.walk_forward_series(w["base"], w["asset"], 3.0).empty
 
 
+@needs_cache
 def test_never_rebalancing_lets_the_sleeve_take_over():
     """The '2% allocation' whose track record is quoted may never have been 2%."""
     px = data.load_prices()
@@ -349,6 +375,7 @@ def test_never_rebalancing_lets_the_sleeve_take_over():
     assert rb.loc[10_000, "max_weight_reached"] > 2 * rb.loc[21, "max_weight_reached"]
 
 
+@needs_cache
 def test_rebalancing_frequency_changes_the_realised_risk():
     px = data.load_prices()
     rets = st.align_to_equity_calendar(px, data.EQUITY).pct_change()

@@ -12,6 +12,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from corrnoise import data, strategy as st  # noqa: E402
 
+# Tests below marked ``@needs_cache`` read the real price cache, which is not in the
+# repository: they run on a desk with ``data.fetch()`` done and skip on a clean checkout
+# (offline / CI), where the synthetic tests carry the logic.
+needs_cache = pytest.mark.skipif(
+    not data.have_real(),
+    reason="no shared _cache present (offline / CI) — synthetic tests cover the logic")
+
 
 # --------------------------------------------------------------------------- #
 # The arithmetic
@@ -97,6 +104,7 @@ def test_spectrum_declines_when_there_is_not_enough_data():
 # --------------------------------------------------------------------------- #
 # The real matrix
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_most_of_the_real_spectrum_is_indistinguishable_from_noise():
     px = data.load_prices()
     R = _panel(px)
@@ -105,6 +113,7 @@ def test_most_of_the_real_spectrum_is_indistinguishable_from_noise():
     assert s["variance_inside"] > 0.35
 
 
+@needs_cache
 def test_only_a_handful_of_eigenvalues_carry_information():
     """The statistic that actually matters, and it is tiny."""
     px = data.load_prices()
@@ -114,6 +123,7 @@ def test_only_a_handful_of_eigenvalues_carry_information():
     assert s["n_above"] / s["n_assets"] < 0.2
 
 
+@needs_cache
 def test_the_informative_count_barely_moves_with_the_window():
     """A longer window does NOT buy more factors — a result worth stating plainly.
 
@@ -130,6 +140,7 @@ def test_the_informative_count_barely_moves_with_the_window():
     assert d["n_above"].max() <= 10
 
 
+@needs_cache
 def test_the_largest_eigenvalue_is_the_market_and_escapes():
     px = data.load_prices()
     R = _panel(px)
@@ -142,6 +153,7 @@ def test_the_largest_eigenvalue_is_the_market_and_escapes():
     assert s["second"] > s["lambda_plus"]
 
 
+@needs_cache
 def test_a_longer_window_narrows_the_band_and_frees_more_eigenvalues():
     px = data.load_prices()
     R = _panel(px)
@@ -150,6 +162,7 @@ def test_a_longer_window_narrows_the_band_and_frees_more_eigenvalues():
     assert d.loc[1260, "share_inside"] < d.loc[126, "share_inside"]
 
 
+@needs_cache
 def test_the_matrix_is_badly_conditioned_at_short_windows():
     px = data.load_prices()
     R = _panel(px)
@@ -160,6 +173,7 @@ def test_the_matrix_is_badly_conditioned_at_short_windows():
 # --------------------------------------------------------------------------- #
 # Persistence
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_pairwise_correlations_look_persistent():
     px = data.load_prices()
     R = _panel(px)
@@ -167,6 +181,7 @@ def test_pairwise_correlations_look_persistent():
     assert p["pairwise"] > 0.3
 
 
+@needs_cache
 def test_but_the_persistence_collapses_once_the_market_is_removed():
     """The finding: most apparent stability is 'stocks move together' and nothing more."""
     px = data.load_prices()
@@ -175,6 +190,7 @@ def test_but_the_persistence_collapses_once_the_market_is_removed():
     assert p["residual"] < p["pairwise"]
 
 
+@needs_cache
 def test_the_top_eigenvector_is_stable_even_when_the_rest_is_not():
     px = data.load_prices()
     R = _panel(px)
@@ -182,6 +198,7 @@ def test_the_top_eigenvector_is_stable_even_when_the_rest_is_not():
     assert p["top_overlap"] > 0.85
 
 
+@needs_cache
 def test_persistence_is_empty_without_two_full_windows():
     px = data.load_prices()
     R = _panel(px)
@@ -320,6 +337,7 @@ def test_min_variance_survives_a_singular_matrix():
     assert np.isfinite(w).all()
 
 
+@needs_cache
 def test_the_raw_matrix_makes_the_optimiser_underestimate_its_own_risk():
     """The mechanism: the optimiser picks the directions where noise flattered the variance."""
     px = data.load_prices()
@@ -329,6 +347,7 @@ def test_the_raw_matrix_makes_the_optimiser_underestimate_its_own_risk():
     assert s.loc["sample", "calibration"] > 1.0
 
 
+@needs_cache
 def test_cleaning_improves_the_calibration():
     px = data.load_prices()
     R = _panel(px)
@@ -337,6 +356,7 @@ def test_cleaning_improves_the_calibration():
     assert abs(s.loc[best, "calibration"] - 1) < abs(s.loc["sample", "calibration"] - 1)
 
 
+@needs_cache
 def test_the_raw_matrix_produces_wild_leverage():
     px = data.load_prices()
     R = _panel(px)
@@ -344,6 +364,7 @@ def test_the_raw_matrix_produces_wild_leverage():
     assert s.loc["sample", "gross_leverage"] > s.loc["diagonal", "gross_leverage"]
 
 
+@needs_cache
 def test_a_long_only_constraint_removes_the_leverage_by_itself():
     """Much of what 'cleaning' buys is free to anyone who cannot short."""
     px = data.load_prices()
@@ -354,6 +375,7 @@ def test_a_long_only_constraint_removes_the_leverage_by_itself():
     assert cons.loc["sample", "gross_leverage"] == pytest.approx(1.0, abs=1e-6)
 
 
+@needs_cache
 def test_the_race_covers_every_method():
     px = data.load_prices()
     R = _panel(px)
@@ -362,6 +384,7 @@ def test_the_race_covers_every_method():
                             "constant_corr"}
 
 
+@needs_cache
 def test_the_race_is_empty_without_enough_data():
     px = data.load_prices()
     R = _panel(px)

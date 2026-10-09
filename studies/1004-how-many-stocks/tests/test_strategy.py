@@ -12,6 +12,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from howmany import data, strategy as st  # noqa: E402
 
+# Tests below marked ``@needs_cache`` read the real price cache, which is not in the
+# repository: they run on a desk with ``data.fetch()`` done and skip on a clean checkout
+# (offline / CI), where the synthetic tests carry the logic.
+needs_cache = pytest.mark.skipif(
+    not data.have_real(),
+    reason="no shared _cache present (offline / CI) — synthetic tests cover the logic")
+
 
 # --------------------------------------------------------------------------- #
 # Drawing portfolios
@@ -83,6 +90,7 @@ def test_higher_correlation_means_a_higher_floor_and_earlier_flattening():
         st.stocks_for_share(cl, "mean_vol", 0.90)
 
 
+@needs_cache
 def test_the_textbook_number_is_reproduced_on_real_data():
     """The claim being criticised must first be shown to be true."""
     px = data.load_prices()
@@ -100,6 +108,7 @@ def test_terminal_wealth_dispersion_also_falls():
     assert c["log_sd"].is_monotonic_decreasing
 
 
+@needs_cache
 def test_terminal_wealth_needs_more_stocks_than_volatility_does():
     """The headline. Both curves on the same data, same draws, different answers."""
     px = data.load_prices()
@@ -142,6 +151,7 @@ def test_holding_the_whole_basket_leaves_no_dispersion_to_measure():
     assert partial.loc[20, "log_sd"] > 0.01
 
 
+@needs_cache
 def test_the_spread_of_outcomes_at_twenty_stocks_is_large():
     px = data.load_prices()
     R = st.usable_panel(px, data.NAMES)
@@ -152,6 +162,7 @@ def test_the_spread_of_outcomes_at_twenty_stocks_is_large():
 # --------------------------------------------------------------------------- #
 # Tracking error
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_tracking_error_falls_with_holdings():
     px = data.load_prices()
     R = st.usable_panel(px, data.NAMES)
@@ -160,6 +171,7 @@ def test_tracking_error_falls_with_holdings():
     assert c["mean_te"].is_monotonic_decreasing
 
 
+@needs_cache
 def test_tracking_error_does_not_reach_zero_on_a_subset_of_the_index():
     """Forty names is not the S&P 500, so a floor remains — stated rather than hidden."""
     px = data.load_prices()
@@ -198,6 +210,7 @@ def test_marginal_benefit_handles_a_degenerate_curve():
 # --------------------------------------------------------------------------- #
 # The mechanism: skew
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_the_median_portfolio_lags_the_mean_and_catches_up_slowly():
     px = data.load_prices()
     R = st.usable_panel(px, data.NAMES)
@@ -206,6 +219,7 @@ def test_the_median_portfolio_lags_the_mean_and_catches_up_slowly():
     assert s["shortfall"].is_monotonic_decreasing
 
 
+@needs_cache
 def test_returns_are_concentrated_in_a_few_names():
     px = data.load_prices()
     R = st.usable_panel(px, data.NAMES)
@@ -221,6 +235,7 @@ def test_a_symmetric_cross_section_has_no_median_shortfall():
     assert abs(s.loc[5, "shortfall"]) < 0.10
 
 
+@needs_cache
 def test_buy_and_hold_disperses_more_than_rebalancing():
     px = data.load_prices()
     R = st.usable_panel(px, data.NAMES)

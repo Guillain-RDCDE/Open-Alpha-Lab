@@ -12,6 +12,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from betahalflife import data, strategy as st  # noqa: E402
 
+# Tests below marked ``@needs_cache`` read the real price cache, which is not in the
+# repository: they run on a desk with ``data.fetch()`` done and skip on a clean checkout
+# (offline / CI), where the synthetic tests carry the logic.
+needs_cache = pytest.mark.skipif(
+    not data.have_real(),
+    reason="no shared _cache present (offline / CI) — synthetic tests cover the logic")
+
 
 # --------------------------------------------------------------------------- #
 # The estimator
@@ -92,6 +99,7 @@ def test_long_form_keeps_every_estimate():
 # --------------------------------------------------------------------------- #
 # 1. Persistence
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_persistence_is_below_one_on_real_data():
     """Blume (1971), reproduced."""
     px = data.load_prices()
@@ -100,6 +108,7 @@ def test_persistence_is_below_one_on_real_data():
     assert 0.0 < p["slope"] < 1.0
 
 
+@needs_cache
 def test_persistence_is_positive_and_significant():
     px = data.load_prices()
     R = _panel(px)
@@ -210,6 +219,7 @@ def test_the_noise_share_rises_as_estimates_get_noisier():
     assert hi["noise_share"] > lo["noise_share"]
 
 
+@needs_cache
 def test_most_of_the_real_instability_is_noise():
     """The study's central empirical claim."""
     px = data.load_prices()
@@ -219,6 +229,7 @@ def test_most_of_the_real_instability_is_noise():
     assert nf["true_sd"] < nf["observed_sd"]
 
 
+@needs_cache
 def test_the_decomposition_adds_up():
     px = data.load_prices()
     R = _panel(px)
@@ -231,6 +242,7 @@ def test_noise_floor_declines_on_a_tiny_panel():
     assert st.noise_floor(st.rolling_betas(R, "MKT")) == {}
 
 
+@needs_cache
 def test_reliability_is_between_zero_and_one():
     px = data.load_prices()
     R = _panel(px)
@@ -242,6 +254,7 @@ def test_reliability_is_between_zero_and_one():
 # --------------------------------------------------------------------------- #
 # Portfolios versus single names
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_portfolio_betas_are_measured_more_precisely():
     px = data.load_prices()
     R = _panel(px)
@@ -250,6 +263,7 @@ def test_portfolio_betas_are_measured_more_precisely():
     assert port < single / 1.5
 
 
+@needs_cache
 def test_portfolio_betas_carry_a_lower_noise_share():
     """The confirmation, on the diagnostic that is actually interpretable.
 
@@ -266,6 +280,7 @@ def test_portfolio_betas_carry_a_lower_noise_share():
     assert b["noise_sd"] < a["noise_sd"]
 
 
+@needs_cache
 def test_the_blume_slope_does_not_separate_the_two_cases():
     """Pinned, because it is the study's methodological point.
 
@@ -308,6 +323,7 @@ def test_vasicek_declines_gracefully_on_a_tiny_cross_section():
     assert np.allclose(st.vasicek_shrink(b, np.array([0.1, 0.1])), b)
 
 
+@needs_cache
 def test_shrinkage_beats_the_raw_estimate_out_of_sample():
     px = data.load_prices()
     R = _panel(px)
@@ -315,6 +331,7 @@ def test_shrinkage_beats_the_raw_estimate_out_of_sample():
     assert f.loc["blume", "rmse"] < f.loc["raw", "rmse"]
 
 
+@needs_cache
 def test_the_fitted_shrinkage_weight_is_close_to_the_persistence_slope():
     """Theory says these coincide; that they do is a check on the whole framework."""
     px = data.load_prices()
@@ -325,6 +342,7 @@ def test_the_fitted_shrinkage_weight_is_close_to_the_persistence_slope():
     assert abs(o["best_w"] - p["slope"]) < 0.20
 
 
+@needs_cache
 def test_the_shrinkage_curve_is_a_curve():
     px = data.load_prices()
     R = _panel(px)
@@ -336,6 +354,7 @@ def test_the_shrinkage_curve_is_a_curve():
     assert 0 <= o["best_w"] <= 1.2
 
 
+@needs_cache
 def test_forecast_comparison_covers_every_method():
     px = data.load_prices()
     R = _panel(px)

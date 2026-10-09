@@ -12,6 +12,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from moststocks import data, strategy as st  # noqa: E402
 
+# Tests below marked ``@needs_cache`` read the real price cache, which is not in the
+# repository: they run on a desk with ``data.fetch()`` done and skip on a clean checkout
+# (offline / CI), where the synthetic tests carry the logic.
+needs_cache = pytest.mark.skipif(
+    not data.have_real(),
+    reason="no shared _cache present (offline / CI) — synthetic tests cover the logic")
+
 
 # --------------------------------------------------------------------------- #
 # The engine
@@ -71,6 +78,7 @@ def test_at_the_breakeven_volatility_the_median_stops_winning():
         assert bool(finals.median() > cash_total) is expect_win
 
 
+@needs_cache
 def test_these_large_caps_sit_well_below_their_threshold():
     """Which is exactly why the headline fails on them."""
     px = data.load_prices()
@@ -89,6 +97,7 @@ def test_the_measured_drag_matches_the_formula():
     assert err.median() < 0.01
 
 
+@needs_cache
 def test_the_drag_formula_holds_on_real_stocks_too():
     px = data.load_prices()
     R = _panel(px)
@@ -161,6 +170,7 @@ def test_higher_volatility_means_fewer_winners_at_the_same_drift():
     assert b.loc[10, "share_beat_cash"] < a.loc[10, "share_beat_cash"]
 
 
+@needs_cache
 def test_the_headline_FAILS_on_surviving_large_caps():
     """Pre-registered as a confirmation; the data said the opposite, decisively.
 
@@ -179,6 +189,7 @@ def test_the_headline_FAILS_on_surviving_large_caps():
 # --------------------------------------------------------------------------- #
 # Concentration
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_wealth_creation_is_concentrated_even_where_the_headline_fails():
     """The half of Bessembinder's result that DOES survive on this basket."""
     px = data.load_prices()
@@ -190,6 +201,7 @@ def test_wealth_creation_is_concentrated_even_where_the_headline_fails():
     assert c["share_beat_cash"] > 0.80
 
 
+@needs_cache
 def test_the_concentration_shares_are_ordered():
     px = data.load_prices()
     R = _panel(px)
@@ -219,6 +231,7 @@ def test_wealth_concentration_declines_on_an_empty_panel():
 # --------------------------------------------------------------------------- #
 # The reconciliation
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_the_rebalanced_basket_beats_its_own_median_member():
     """The paradox, resolved and asserted."""
     px = data.load_prices()
@@ -227,6 +240,7 @@ def test_the_rebalanced_basket_beats_its_own_median_member():
     assert rec["rebalanced_equal_weight"] > rec["median_single"]
 
 
+@needs_cache
 def test_a_portfolio_is_far_less_volatile_than_its_members():
     px = data.load_prices()
     R = _panel(px)
@@ -235,6 +249,7 @@ def test_a_portfolio_is_far_less_volatile_than_its_members():
     assert rec["drag_saved"] > 0.01
 
 
+@needs_cache
 def test_the_drag_saved_is_what_explains_the_gap():
     """Quantitative, not just directional: the saving should be material over the sample."""
     px = data.load_prices()
@@ -245,6 +260,7 @@ def test_the_drag_saved_is_what_explains_the_gap():
     assert implied > 0.20                       # worth more than 20% cumulatively
 
 
+@needs_cache
 def test_buy_and_hold_becomes_concentrated():
     px = data.load_prices()
     R = _panel(px)
@@ -253,6 +269,7 @@ def test_buy_and_hold_becomes_concentrated():
     assert bh["effective_n"].iloc[-1] < bh["effective_n"].iloc[0]
 
 
+@needs_cache
 def test_buy_and_hold_starts_equally_weighted():
     px = data.load_prices()
     R = _panel(px)
@@ -267,6 +284,7 @@ def test_buy_and_hold_index_handles_an_empty_frame():
 # --------------------------------------------------------------------------- #
 # What it means for a concentrated book
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_concentrated_portfolios_beat_the_index_less_often():
     px = data.load_prices()
     R = _panel(px)
@@ -275,6 +293,7 @@ def test_concentrated_portfolios_beat_the_index_less_often():
     assert o.loc[1, "share_beat_index"] < o.loc[20, "share_beat_index"]
 
 
+@needs_cache
 def test_a_concentrated_portfolio_has_a_wider_spread_of_outcomes():
     px = data.load_prices()
     R = _panel(px)
@@ -283,6 +302,7 @@ def test_a_concentrated_portfolio_has_a_wider_spread_of_outcomes():
     assert (o.loc[1, "p90"] - o.loc[1, "p10"]) > (o.loc[20, "p90"] - o.loc[20, "p10"])
 
 
+@needs_cache
 def test_concentration_odds_decline_when_the_horizon_exceeds_the_data():
     px = data.load_prices()
     R = _panel(px)

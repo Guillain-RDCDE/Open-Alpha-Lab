@@ -12,6 +12,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from startdate import data, strategy as st  # noqa: E402
 
+# Tests below marked ``@needs_cache`` read the real price cache, which is not in the
+# repository: they run on a desk with ``data.fetch()`` done and skip on a clean checkout
+# (offline / CI), where the synthetic tests carry the logic.
+needs_cache = pytest.mark.skipif(
+    not data.have_real(),
+    reason="no shared _cache present (offline / CI) — synthetic tests cover the logic")
+
 
 # --------------------------------------------------------------------------- #
 # The engine
@@ -108,6 +115,7 @@ def test_a_constant_return_path_has_no_sequence_risk():
 # --------------------------------------------------------------------------- #
 # Real paths
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_accumulation_paths_cover_every_start_date():
     px = data.load_prices()
     r = _eq(px)
@@ -117,6 +125,7 @@ def test_accumulation_paths_cover_every_start_date():
     assert (p["terminal"] > 0).all()
 
 
+@needs_cache
 def test_the_start_date_matters_a_great_deal():
     px = data.load_prices()
     r = _eq(px)
@@ -124,6 +133,7 @@ def test_the_start_date_matters_a_great_deal():
     assert d["ratio_max_min"] > 1.5
 
 
+@needs_cache
 def test_the_effective_sample_is_reported_and_small():
     px = data.load_prices()
     r = _eq(px)
@@ -132,12 +142,14 @@ def test_the_effective_sample_is_reported_and_small():
     assert d["effective_n"] < 3.0
 
 
+@needs_cache
 def test_accumulation_is_empty_when_the_horizon_exceeds_the_data():
     px = data.load_prices()
     assert st.accumulation_paths(_eq(px), years=200).empty
     assert st.path_dispersion(pd.DataFrame()) == {}
 
 
+@needs_cache
 def test_decumulation_paths_report_ruin():
     px = data.load_prices()
     r = _eq(px)
@@ -146,6 +158,7 @@ def test_decumulation_paths_report_ruin():
     assert set(p.columns) >= {"terminal", "ruined", "ruined_at", "first_5y_cagr"}
 
 
+@needs_cache
 def test_a_higher_withdrawal_rate_ruins_more_often():
     px = data.load_prices()
     r = _eq(px)
@@ -154,6 +167,7 @@ def test_a_higher_withdrawal_rate_ruins_more_often():
     assert hi > lo
 
 
+@needs_cache
 def test_a_bad_first_five_years_predicts_a_worse_retirement():
     """Sequence risk for retirees, on the real tape."""
     px = data.load_prices()
@@ -165,6 +179,7 @@ def test_a_bad_first_five_years_predicts_a_worse_retirement():
 # --------------------------------------------------------------------------- #
 # Where the risk lives
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_a_lump_sum_weights_every_period_equally():
     """Which is what makes the contributor's profile meaningful by comparison."""
     px = data.load_prices()
@@ -174,6 +189,7 @@ def test_a_lump_sum_weights_every_period_equally():
     assert spread < 0.45
 
 
+@needs_cache
 def test_a_contributor_is_dominated_by_the_final_years():
     px = data.load_prices()
     r = _eq(px)
@@ -181,6 +197,7 @@ def test_a_contributor_is_dominated_by_the_final_years():
     assert m["corr_contributor"].iloc[-1] > m["corr_contributor"].iloc[0]
 
 
+@needs_cache
 def test_the_contributor_profile_is_more_tilted_than_the_lump_sum_profile():
     px = data.load_prices()
     r = _eq(px)
@@ -190,6 +207,7 @@ def test_the_contributor_profile_is_more_tilted_than_the_lump_sum_profile():
     assert c > l
 
 
+@needs_cache
 def test_sequence_metrics_decline_on_too_few_paths():
     px = data.load_prices()
     assert st.sequence_risk_metrics(_eq(px), years=200).empty
@@ -222,6 +240,7 @@ def test_an_unknown_glide_shape_is_rejected():
         st.glide_path(100, 1.0, 0.3, "sigmoid")
 
 
+@needs_cache
 def test_glided_accumulation_matches_pure_equity_when_the_weight_is_one():
     px = data.load_prices()
     e, b = _pair(px)
@@ -233,6 +252,7 @@ def test_glided_accumulation_matches_pure_equity_when_the_weight_is_one():
     assert g["terminal"].iloc[0] == pytest.approx(direct["terminal"].iloc[0], rel=1e-9)
 
 
+@needs_cache
 def test_de_risking_reduces_dispersion():
     px = data.load_prices()
     e, b = _pair(px)
@@ -243,6 +263,7 @@ def test_de_risking_reduces_dispersion():
     assert glided["cv"] < full["cv"]
 
 
+@needs_cache
 def test_de_risking_also_costs_expected_wealth():
     """A remedy has two columns, and studies that print only one are selling something."""
     px = data.load_prices()
@@ -254,6 +275,7 @@ def test_de_risking_also_costs_expected_wealth():
     assert glided["median"] < full["median"]
 
 
+@needs_cache
 def test_glided_accumulation_is_empty_when_the_horizon_exceeds_the_data():
     px = data.load_prices()
     e, b = _pair(px)
@@ -263,6 +285,7 @@ def test_glided_accumulation_is_empty_when_the_horizon_exceeds_the_data():
 # --------------------------------------------------------------------------- #
 # The remedy table
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_the_remedy_table_scores_every_variant():
     px = data.load_prices()
     e, b = _pair(px)
@@ -272,6 +295,7 @@ def test_the_remedy_table_scores_every_variant():
     assert t.loc["100% equity throughout", "cv_reduction"] == 0.0
 
 
+@needs_cache
 def test_every_remedy_reduces_dispersion_and_costs_something():
     px = data.load_prices()
     e, b = _pair(px)
@@ -279,6 +303,7 @@ def test_every_remedy_reduces_dispersion_and_costs_something():
     assert (t["cv_reduction"] > 0).all()
 
 
+@needs_cache
 def test_late_de_risking_is_more_efficient_than_early():
     """The study's practical claim, on the real tape."""
     px = data.load_prices()
@@ -288,6 +313,7 @@ def test_late_de_risking_is_more_efficient_than_early():
         t.loc["early glide to 30%", "efficiency"]
 
 
+@needs_cache
 def test_remedy_comparison_is_empty_without_enough_data():
     px = data.load_prices()
     e, b = _pair(px)

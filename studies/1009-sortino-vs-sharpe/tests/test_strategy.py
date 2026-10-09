@@ -12,6 +12,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from sortino import data, strategy as st  # noqa: E402
 
+# Tests below marked ``@needs_cache`` read the real price cache, which is not in the
+# repository: they run on a desk with ``data.fetch()`` done and skip on a clean checkout
+# (offline / CI), where the synthetic tests carry the logic.
+needs_cache = pytest.mark.skipif(
+    not data.have_real(),
+    reason="no shared _cache present (offline / CI) — synthetic tests cover the logic")
+
 
 # --------------------------------------------------------------------------- #
 # Definitions
@@ -123,6 +130,7 @@ def test_symmetric_identity_declines_on_a_tiny_sample():
 # --------------------------------------------------------------------------- #
 # Real data
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_the_ratio_table_covers_the_panel():
     px = data.load_prices()
     R = _panel(px)
@@ -132,6 +140,7 @@ def test_the_ratio_table_covers_the_panel():
     assert t["sortino"].notna().all()
 
 
+@needs_cache
 def test_the_two_rankings_mostly_agree():
     px = data.load_prices()
     R = _panel(px)
@@ -139,6 +148,7 @@ def test_the_two_rankings_mostly_agree():
     assert a["spearman"] > 0.85
 
 
+@needs_cache
 def test_the_rankings_are_in_fact_IDENTICAL_on_this_panel():
     """Pre-registered expecting a difference to measure. There is none at all.
 
@@ -155,6 +165,7 @@ def test_the_rankings_are_in_fact_IDENTICAL_on_this_panel():
     assert a["n_unchanged"] == a["n"]
 
 
+@needs_cache
 def test_the_ratio_band_is_too_narrow_for_ranks_to_cross():
     """The mechanism behind the identical ranking, measured rather than asserted."""
     px = data.load_prices()
@@ -170,6 +181,7 @@ def test_rank_agreement_declines_on_a_tiny_panel():
     assert st.rank_agreement(t) == {}
 
 
+@needs_cache
 def test_the_disagreement_tracks_skewness_on_real_assets():
     """The mechanism, confirmed rather than assumed."""
     px = data.load_prices()
@@ -178,6 +190,7 @@ def test_the_disagreement_tracks_skewness_on_real_assets():
     assert d.attrs["corr_skew_excess"] < -0.3 or d.attrs["corr_skew_excess"] > 0.3
 
 
+@needs_cache
 def test_real_assets_sit_near_the_symmetric_value():
     """Bounding how much room there is for the two ratios to differ at all."""
     px = data.load_prices()
@@ -189,6 +202,7 @@ def test_real_assets_sit_near_the_symmetric_value():
 # --------------------------------------------------------------------------- #
 # The cost: precision
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_downside_deviation_uses_only_part_of_the_sample():
     px = data.load_prices()
     r = px[data.EQUITY].dropna().pct_change().dropna().to_numpy()
@@ -196,6 +210,7 @@ def test_downside_deviation_uses_only_part_of_the_sample():
     assert 0.35 < p["below_share"] < 0.55
 
 
+@needs_cache
 def test_sortino_is_noisier_than_sharpe_on_identical_resamples():
     """The trade-off that never appears beside the ratio."""
     px = data.load_prices()
@@ -204,6 +219,7 @@ def test_sortino_is_noisier_than_sharpe_on_identical_resamples():
     assert p["noise_ratio"] > 1.0
 
 
+@needs_cache
 def test_the_noise_penalty_holds_across_the_panel():
     px = data.load_prices()
     R = _panel(px)
@@ -219,6 +235,7 @@ def test_estimation_precision_declines_on_a_short_series():
     assert st.estimation_precision(np.random.default_rng(0).normal(0, 0.01, 100)) == {}
 
 
+@needs_cache
 def test_skewness_is_badly_estimated():
     """The quantity Sortino's whole case rests on."""
     px = data.load_prices()
@@ -227,6 +244,7 @@ def test_skewness_is_badly_estimated():
     assert s["se"] > 0.1
 
 
+@needs_cache
 def test_skewness_intervals_span_zero_for_many_assets():
     px = data.load_prices()
     R = _panel(px)
@@ -253,6 +271,7 @@ def test_a_strongly_skewed_series_is_detected_as_skewed():
 # --------------------------------------------------------------------------- #
 # The horse race
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_the_horse_race_produces_splits():
     px = data.load_prices()
     R = _panel(px)
@@ -262,6 +281,7 @@ def test_the_horse_race_produces_splits():
                                 "sharpe_predicts_sortino", "sortino_predicts_sharpe"}
 
 
+@needs_cache
 def test_each_metric_is_graded_on_both_scoreboards():
     """Neither ratio gets to mark its own examination paper alone."""
     px = data.load_prices()
@@ -272,6 +292,7 @@ def test_each_metric_is_graded_on_both_scoreboards():
         assert -1.0 <= s[k] <= 1.0
 
 
+@needs_cache
 def test_past_rankings_carry_some_information():
     """A sanity check: if nothing predicted anything the race would be meaningless."""
     px = data.load_prices()
@@ -280,6 +301,7 @@ def test_past_rankings_carry_some_information():
     assert max(s["sharpe_predicts_sharpe"], s["sortino_predicts_sortino"]) > 0.0
 
 
+@needs_cache
 def test_the_horse_race_declines_without_enough_data():
     px = data.load_prices()
     R = _panel(px)

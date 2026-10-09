@@ -12,6 +12,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from halflife import data, strategy as st  # noqa: E402
 
+# Tests below marked ``@needs_cache`` read the real price cache, which is not in the
+# repository: they run on a desk with ``data.fetch()`` done and skip on a clean checkout
+# (offline / CI), where the synthetic tests carry the logic.
+needs_cache = pytest.mark.skipif(
+    not data.have_real(),
+    reason="no shared _cache present (offline / CI) — synthetic tests cover the logic")
+
 
 # --------------------------------------------------------------------------- #
 # Signals
@@ -52,6 +59,7 @@ def test_low_vol_prefers_the_calm_name():
     assert s["CALM"].iloc[-1] > s["WILD"].iloc[-1]
 
 
+@needs_cache
 def test_make_signals_spans_the_decay_spectrum():
     px = data.load_prices()
     R = _panel(px)
@@ -194,6 +202,7 @@ def test_fit_declines_on_too_few_points():
     assert st.marginal_ic(pd.DataFrame({"ic": [0.05]}, index=[1])).empty
 
 
+@needs_cache
 def test_real_signals_have_different_half_lives():
     px = data.load_prices()
     R = _panel(px)
@@ -207,6 +216,7 @@ def test_real_signals_have_different_half_lives():
     assert max(hls.values()) / min(hls.values()) > 1.5
 
 
+@needs_cache
 def test_the_half_life_is_estimated_with_real_uncertainty():
     """The study's own contribution — and the reason not to over-tune the trading rate."""
     px = data.load_prices()
@@ -253,6 +263,7 @@ def test_grinold_ir_matches_its_formula():
     assert st.grinold_ir(0.05, 400, transfer=0.5) == pytest.approx(0.5)
 
 
+@needs_cache
 def test_residual_correlation_is_much_lower_than_raw_correlation():
     px = data.load_prices()
     R = _panel(px)
@@ -265,6 +276,7 @@ def test_residual_correlation_declines_gracefully():
     assert st._residual_correlation(pd.DataFrame({"A": [0.01, 0.02]})) == 0.0
 
 
+@needs_cache
 def test_grinold_predicts_the_right_order_of_magnitude():
     """An approximation, checked as one — the gap is the finding, not a failure."""
     px = data.load_prices()
@@ -278,6 +290,7 @@ def test_grinold_predicts_the_right_order_of_magnitude():
 # --------------------------------------------------------------------------- #
 # Trading rate
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_the_backtest_is_dollar_neutral_and_unit_gross():
     px = data.load_prices()
     R = _panel(px)
@@ -287,6 +300,7 @@ def test_the_backtest_is_dollar_neutral_and_unit_gross():
     assert np.isfinite(b["ir"])
 
 
+@needs_cache
 def test_costs_reduce_the_information_ratio():
     px = data.load_prices()
     R = _panel(px)
@@ -297,6 +311,7 @@ def test_costs_reduce_the_information_ratio():
     assert paid["cost_drag"] > 0
 
 
+@needs_cache
 def test_partial_trading_reduces_turnover():
     px = data.load_prices()
     R = _panel(px)
@@ -306,6 +321,7 @@ def test_partial_trading_reduces_turnover():
     assert part["turnover_pa"] < full["turnover_pa"]
 
 
+@needs_cache
 def test_faster_rebalancing_costs_more():
     px = data.load_prices()
     R = _panel(px)
@@ -334,6 +350,7 @@ def test_the_gp_rate_stays_a_fraction():
             assert 0.0 <= st.gp_trade_rate(hl, c) <= 1.0
 
 
+@needs_cache
 def test_the_trade_rate_sweep_covers_the_range():
     px = data.load_prices()
     R = _panel(px)
@@ -343,6 +360,7 @@ def test_the_trade_rate_sweep_covers_the_range():
     assert d["turnover_pa"].is_monotonic_increasing
 
 
+@needs_cache
 def test_the_rebalance_sweep_reports_against_the_half_life():
     px = data.load_prices()
     R = _panel(px)
@@ -352,6 +370,7 @@ def test_the_rebalance_sweep_reports_against_the_half_life():
     assert d.loc[5, "vs_half_life"] == pytest.approx(1.0)
 
 
+@needs_cache
 def test_holding_far_longer_than_the_half_life_wastes_the_signal():
     """The framework's central practical prediction, on a fast signal."""
     px = data.load_prices()
@@ -361,6 +380,7 @@ def test_holding_far_longer_than_the_half_life_wastes_the_signal():
     assert d.loc[5, "ir"] > d.loc[126, "ir"]
 
 
+@needs_cache
 def test_the_backtest_declines_on_a_degenerate_signal():
     px = data.load_prices()
     R = _panel(px)

@@ -12,6 +12,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from benchmark import data, strategy as st  # noqa: E402
 
+# Tests below marked ``@needs_cache`` read the real price cache, which is not in the
+# repository: they run on a desk with ``data.fetch()`` done and skip on a clean checkout
+# (offline / CI), where the synthetic tests carry the logic.
+needs_cache = pytest.mark.skipif(
+    not data.have_real(),
+    reason="no shared _cache present (offline / CI) — synthetic tests cover the logic")
+
 
 # --------------------------------------------------------------------------- #
 # The regression
@@ -50,6 +57,7 @@ def test_ols_declines_on_too_little_data():
     assert st.ols_with_hac(np.arange(10.0), np.arange(10.0).reshape(-1, 1)) == {}
 
 
+@needs_cache
 def test_single_factor_alpha_reports_beta_and_tracking_error():
     px = data.load_prices()
     R = px.pct_change()
@@ -59,6 +67,7 @@ def test_single_factor_alpha_reports_beta_and_tracking_error():
     assert np.isfinite(d["information_ratio"])
 
 
+@needs_cache
 def test_a_fund_benchmarked_against_itself_has_zero_alpha():
     px = data.load_prices()
     R = px.pct_change()
@@ -68,6 +77,7 @@ def test_a_fund_benchmarked_against_itself_has_zero_alpha():
     assert d["r2"] == pytest.approx(1.0)
 
 
+@needs_cache
 def test_multi_factor_alpha_names_its_loadings():
     px = data.load_prices()
     R = px.pct_change()
@@ -78,6 +88,7 @@ def test_multi_factor_alpha_names_its_loadings():
 # --------------------------------------------------------------------------- #
 # The grid
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_the_grid_covers_the_panel():
     px = data.load_prices()
     funds, benches, rf = _panel(px)
@@ -86,6 +97,7 @@ def test_the_grid_covers_the_panel():
     assert set(g.columns) >= {"fund", "benchmark", "alpha", "alpha_t", "r2"}
 
 
+@needs_cache
 def test_a_fund_is_never_benchmarked_against_itself():
     px = data.load_prices()
     funds, benches, rf = _panel(px)
@@ -93,6 +105,7 @@ def test_a_fund_is_never_benchmarked_against_itself():
     assert (g["fund"] != g["benchmark"]).all()
 
 
+@needs_cache
 def test_alpha_moves_a_lot_across_benchmarks():
     """The headline."""
     px = data.load_prices()
@@ -101,6 +114,7 @@ def test_alpha_moves_a_lot_across_benchmarks():
     assert r["alpha_spread"].median() > 0.02
 
 
+@needs_cache
 def test_the_spread_exceeds_the_standard_error_for_most_funds():
     """Specification uncertainty dominates sampling uncertainty. Nobody reports the first."""
     px = data.load_prices()
@@ -109,6 +123,7 @@ def test_the_spread_exceeds_the_standard_error_for_most_funds():
     assert (r["spread_over_se"] > 1.0).mean() > 0.5
 
 
+@needs_cache
 def test_some_funds_flip_the_sign_of_their_alpha():
     px = data.load_prices()
     funds, benches, rf = _panel(px)
@@ -126,6 +141,7 @@ def test_alpha_range_declines_on_a_thin_grid():
 # --------------------------------------------------------------------------- #
 # Choosing a benchmark
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_best_fit_reports_how_many_candidates_were_searched():
     px = data.load_prices()
     funds, benches, rf = _panel(px)
@@ -134,6 +150,7 @@ def test_best_fit_reports_how_many_candidates_were_searched():
     assert b["best_r2"] > 0.3
 
 
+@needs_cache
 def test_the_best_fitting_benchmark_is_not_the_most_flattering_one():
     """Which is precisely why 'we used the best-fitting index' is not a defence."""
     px = data.load_prices()
@@ -148,12 +165,14 @@ def test_the_best_fitting_benchmark_is_not_the_most_flattering_one():
     assert max(gains) > 0.0
 
 
+@needs_cache
 def test_best_fit_declines_on_an_empty_candidate_set():
     px = data.load_prices()
     funds, _, rf = _panel(px)
     assert st.best_fit_benchmark(funds["XLK"], pd.DataFrame(), rf) == {}
 
 
+@needs_cache
 def test_the_ladder_shrinks_alpha_as_factors_are_added():
     """Each factor absorbs something previously called skill."""
     px = data.load_prices()
@@ -163,6 +182,7 @@ def test_the_ladder_shrinks_alpha_as_factors_are_added():
     assert abs(L["alpha"].iloc[-1]) <= abs(L["alpha"].iloc[0]) + 0.05
 
 
+@needs_cache
 def test_the_ladder_always_improves_r2():
     px = data.load_prices()
     funds, benches, rf = _panel(px)
@@ -173,6 +193,7 @@ def test_the_ladder_always_improves_r2():
         assert L["r2"].is_monotonic_increasing
 
 
+@needs_cache
 def test_the_ladder_handles_missing_benchmarks():
     px = data.load_prices()
     funds, benches, rf = _panel(px)
@@ -183,6 +204,7 @@ def test_the_ladder_handles_missing_benchmarks():
 # --------------------------------------------------------------------------- #
 # Can the data choose?
 # --------------------------------------------------------------------------- #
+@needs_cache
 def test_the_bootstrap_reports_a_win_share_per_benchmark():
     px = data.load_prices()
     funds, benches, rf = _panel(px)
@@ -192,6 +214,7 @@ def test_the_bootstrap_reports_a_win_share_per_benchmark():
     assert 0 <= c["modal_share"] <= 1
 
 
+@needs_cache
 def test_a_fund_that_IS_a_benchmark_is_identified_decisively():
     """The calibration: when the answer is obvious the method must say so."""
     px = data.load_prices()
@@ -200,12 +223,14 @@ def test_a_fund_that_IS_a_benchmark_is_identified_decisively():
     assert c["modal_benchmark"] == "IWM" or c["modal_share"] > 0.8
 
 
+@needs_cache
 def test_can_the_data_choose_declines_on_a_short_series():
     px = data.load_prices()
     funds, benches, rf = _panel(px)
     assert st.can_the_data_choose(funds["XLK"].iloc[:100], benches, rf) == {}
 
 
+@needs_cache
 def test_the_encompassing_test_detects_a_redundant_benchmark():
     px = data.load_prices()
     R = px.pct_change()
@@ -214,6 +239,7 @@ def test_the_encompassing_test_detects_a_redundant_benchmark():
     assert e["a_encompasses_b"] or e["beta_a"] > e["beta_b"]
 
 
+@needs_cache
 def test_the_encompassing_test_can_say_both_are_needed():
     px = data.load_prices()
     R = px.pct_change()
@@ -222,6 +248,7 @@ def test_the_encompassing_test_can_say_both_are_needed():
     assert e["both_needed"] or e["a_encompasses_b"] or e["b_encompasses_a"]
 
 
+@needs_cache
 def test_the_encompassing_test_declines_on_too_little_data():
     px = data.load_prices()
     R = px.pct_change().iloc[:50]
