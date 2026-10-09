@@ -327,7 +327,9 @@ def synthetic_returns(n: int = 8000, df_t: float = 4.0, clustering: float = 0.0,
         z = rng.normal(0, 1, n)
     else:
         z = rng.standard_t(df_t, n) * np.sqrt((df_t - 2) / df_t)
-    idx = pd.bdate_range("1993-02-01", periods=n)
+    # Second resolution: the closed-form tests draw 200,000 days, past the year 2262 that
+    # bounds the default nanosecond calendar.
+    idx = pd.bdate_range("1993-02-01", periods=n, unit="s")
     return pd.Series(np.expm1(z * vol), index=idx, name="ret")
 
 

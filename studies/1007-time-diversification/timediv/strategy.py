@@ -398,7 +398,9 @@ def synthetic_slow_reversion(n_days: int = 8400, drift: float = 0.08, vol: float
     perm_var = max(dv ** 2 - float(np.var(dz)), (0.2 * dv) ** 2)
     perm = rng.normal(0, np.sqrt(perm_var), n_days)
     log_ret = mu + perm + dz
-    idx = pd.bdate_range("1993-02-01", periods=n_days)
+    # Second resolution: long synthetic draws (the convergence tests use 120,000 days) run
+    # past the year 2262 that bounds the default nanosecond calendar.
+    idx = pd.bdate_range("1993-02-01", periods=n_days, unit="s")
     return pd.Series(np.expm1(log_ret), index=idx, name="slow_mr")
 
 
@@ -413,7 +415,7 @@ def synthetic_iid(n_days: int = 8400, drift: float = 0.08, vol: float = 0.16,
     rng = np.random.default_rng(seed)
     dv = vol / np.sqrt(TRADING_DAYS)
     mu = np.log1p(drift) / TRADING_DAYS - dv ** 2 / 2
-    idx = pd.bdate_range("1993-02-01", periods=n_days)
+    idx = pd.bdate_range("1993-02-01", periods=n_days, unit="s")
     return pd.Series(np.expm1(rng.normal(mu, dv, n_days)), index=idx, name="iid")
 
 
@@ -434,7 +436,7 @@ def synthetic_mean_reverting(n_days: int = 8400, drift: float = 0.08, vol: float
     for t in range(n_days):
         r[t] = mu + e[t] + phi * prev
         prev = r[t] - mu
-    idx = pd.bdate_range("1993-02-01", periods=n_days)
+    idx = pd.bdate_range("1993-02-01", periods=n_days, unit="s")
     return pd.Series(np.expm1(r), index=idx, name="mr")
 
 
