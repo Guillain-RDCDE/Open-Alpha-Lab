@@ -67,6 +67,9 @@ def _write(tab: pd.DataFrame):
     size_view = tab[["n_trades", "size_alpha", "size_V", "size_p", "size_winner"]]
     dist_view = tab[["dist_alpha", "dist_V", "dist_p", "dist_winner"]]
     prov_view = tab[["n_trades", "fingerprint"]]
+    # Built outside the f-string: before Python 3.12 an expression in one cannot hold a backslash.
+    size_block = "```\n" + size_view.to_string() + "\n```"
+    dist_block = "```\n" + dist_view.to_string() + "\n```"
     with open(OUT, "w", encoding="utf-8") as fh:
         fh.write(f"""# Real-data leg — Study 09 (Phantom-Kernel): the kernel on real order books
 
@@ -89,14 +92,14 @@ We test two quantities — **order size** (what drives how far an order reaches 
 Gabaix et al. 2003) and **|price - mid|** (the literal price distance the AS kernel lives on).
 
 ## Order size — the driver of reach
-{ "```\n" + size_view.to_string() + "\n```" }
+{size_block}
 
 **Power-law on {n_size_pl} of {n} markets** (Vuong `V` = {tab['size_V'].min()}–{tab['size_V'].max()},
 all `p < 0.01`). Order size is unambiguously heavy-tailed on every book — the root reason the
 survival function that *is* the AS arrival kernel cannot be exponential.
 
 ## |price - mid| — the literal AS kernel distance
-{ "```\n" + dist_view.to_string() + "\n```" }
+{dist_block}
 
 Power-law on {n_dist_pl} of {n} markets; the remainder is *inconclusive*, never a clean
 exponential. The price-distance tail is noisier than the size tail — exactly as expected, since

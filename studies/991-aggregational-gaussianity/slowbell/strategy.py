@@ -350,6 +350,9 @@ def verdict(h: dict) -> dict:
                  and h["actual_horizon"] <= 3 * 252)
     tails_ok = h["ratio_3sig_longest"] < 2.0
     trad = "Fragile" if (reachable or tails_ok) else "Mirage"
+    kurtosis_note = ("kurtosis itself may not exist and every kurtosis number above is an "
+                     "unstable statistic rather than an estimate" if h["hill_alpha"] < 4
+                     else "kurtosis is a well-defined quantity")
     return {
         "signal": signal,
         "signal_why": (
@@ -365,9 +368,7 @@ def verdict(h: dict) -> dict:
             f"**{h['decay_t_vs_one']:+.2f}**. The Hill tail index is "
             f"**{h['hill_alpha']:.2f}** — above 2, so the variance exists and the theorem does "
             f"apply, but {'below' if h['hill_alpha'] < 4 else 'above'} 4, meaning the "
-            f"{'kurtosis itself may not exist and every kurtosis number above is an unstable '
-               'statistic rather than an estimate' if h['hill_alpha'] < 4 else
-               'kurtosis is a well-defined quantity'}."),
+            f"{kurtosis_note}."),
         "trad": trad,
         "trad_why": (
             f"The practical question is when normal arithmetic becomes safe. Excess kurtosis "
