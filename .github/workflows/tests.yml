@@ -33,6 +33,12 @@ jobs:
           # cache-gated and skip when the cache is absent.
           pip install -r requirements.txt
 
+      - name: Cache the frozen skfolio tapes (pinned wheel, SHA-256 verified)
+        # Studies 1013-1027 read real tapes that ship inside packages (quantlab/bundled.py).
+        # arch and statsmodels carry theirs; skfolio's three tapes come from one pinned wheel.
+        # Best-effort: if PyPI is unreachable the skfolio-gated tests skip, nothing else changes.
+        run: python -c "from quantlab import bundled; bundled.fetch_skfolio()" || echo "skfolio tapes not cached; gated tests will skip"
+
       - name: Study-construction gate (every published study, same construction)
         run: python tools/check_study_completeness.py
 

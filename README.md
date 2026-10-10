@@ -119,6 +119,7 @@ others — every study folder has the same shape.
 | [`bayes.py`](quantlab/bayes.py) | Bayesian hypothesis posteriors + White (2000) Reality Check. |
 | [`plots.py`](quantlab/plots.py) | Decomposition / grid plots. |
 | [`repro.py`](quantlab/repro.py) | Reproducibility stamp: pin an as-of date + content fingerprint so headline numbers reproduce. |
+| [`bundled.py`](quantlab/bundled.py) | Frozen real tapes shipped inside `arch` / `statsmodels` / `skfolio`, SHA-256 pinned — reproducible with no vendor cache. |
 | [`brokers/`](quantlab/brokers/) | Swappable `BrokerBase` + MT5 template (`dry_run=True`). |
 
 ```text
