@@ -1,0 +1,7 @@
+numpy
+pandas
+arch
+matplotlib
+nbformat
+jupyter
+pytest
