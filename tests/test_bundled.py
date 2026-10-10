@@ -91,3 +91,8 @@ def test_skfolio_tapes():
     assert idx.index[0] == pd.Timestamp("1990-01-02") and len(idx) == 8313
     assert stocks.shape == (8313, 20) and stocks.index.equals(idx.index)
     assert b.load_skfolio("factors_dataset").shape[1] == 5
+
+
+@pytest.mark.parametrize("name", sorted(b.STATSMODELS_FILES))
+def test_statsmodels_pins_hold(name):
+    b._check_statsmodels_pin(name)  # raises TapeMismatch if the shipped bytes moved

@@ -119,9 +119,13 @@ def parse_readme(path: Path | None = None) -> list[dict]:
 
 
 # A family row in docs/bench.md looks like:
-#   | Calendar & seasonal — [01](../studies/01-...) [41](...) ... | 34 | 4 | 3 | 0 |
+#   | Calendar & seasonal — [01](../studies/01-...) [41](...) ... | 9% | 8% | none |
 # The first cell holds the family name, an em-dash, then the member links.
-FAMILY_ROW_RE = re.compile(r"^\|\s*(?P<fam>.+?)\s+—\s+(?P<rest>\[\d+\].+?)\s*\|\s*\d+\s*\|")
+# The second cell is a share ("21%") or a dash; it was once a bare count, and a pattern that
+# still demanded digits-then-pipe matched no row at all, so every study in bench.json read
+# "Unclassified" while the script exited 0.
+FAMILY_ROW_RE = re.compile(
+    r"^\|\s*(?P<fam>.+?)\s+—\s+(?P<rest>\[\d+\].+?)\s*\|\s*(?:\d+%?|—)\s*\|")
 
 
 def parse_families(path: Path = BENCH_MD) -> dict[int, str]:

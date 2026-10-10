@@ -14,7 +14,7 @@ market and macro series *inside the wheel*, frozen at the package's release:
     ``frenchdata``           monthly Fama-French Mkt-RF / SMB / HML / RF (percent), 1926-07 → 2018-11
     ``core_cpi``             monthly US core CPI (``CPILFESL``), 1957-01 → 2018-11
 
-``statsmodels`` (already a desk dependency)
+``statsmodels`` (already a desk dependency; files pinned the same way)
     ``macrodata``            quarterly US macro (real GDP, CPI, T-bill, unemployment…), 1959Q1 → 2009Q3
     ``interest_inflation``   quarterly German ``Dp`` (quarterly change in the log GDP deflator)
                              and ``R`` (nominal long-term rate, annual decimal), 1972Q2 → 1998Q4
@@ -169,6 +169,26 @@ def load_arch(name: str) -> pd.DataFrame:
 # --------------------------------------------------------------------------- #
 # statsmodels
 # --------------------------------------------------------------------------- #
+STATSMODELS_FILES = {
+    "macrodata": ("macrodata", "macrodata.csv",
+                  "d93c0d3a7a77ef83c3af14e46032bb1d02ae3a512b22ab94159a8ca226fcf708"),
+    "interest_inflation": ("interest_inflation", "E6.csv",
+                           "458edec09a9f6b91fcc96a1b31f0b889f5f152089c1393d146b82e0ec0b41f3f"),
+}
+
+
+def _check_statsmodels_pin(name: str) -> None:
+    """Refuse a statsmodels tape whose bytes differ from the pin (same rule as arch)."""
+    import statsmodels.datasets as smd
+    sub, fname, sha = STATSMODELS_FILES[name]
+    path = os.path.join(os.path.dirname(smd.__file__), sub, fname)
+    with open(path, "rb") as fh:
+        got = _sha256(fh.read())
+    if got != sha:
+        raise TapeMismatch(
+            f"statsmodels/{name}: SHA-256 {got[:12]} does not match the pinned {sha[:12]}.")
+
+
 def load_macrodata() -> pd.DataFrame:
     """US quarterly macro 1959Q1-2009Q3, indexed by quarter-end date.
 
@@ -176,6 +196,7 @@ def load_macrodata() -> pd.DataFrame:
     study that times anything on them must say so, and lag every release.
     """
     from statsmodels.datasets import macrodata
+    _check_statsmodels_pin("macrodata")
     df = macrodata.load_pandas().data.copy()
     q = pd.PeriodIndex.from_fields(year=df["year"].astype(int),
                                    quarter=df["quarter"].astype(int), freq="Q")
@@ -188,6 +209,7 @@ def load_interest_inflation() -> pd.DataFrame:
     """German quarterly ``Dp`` (quarterly change in the log GDP deflator — multiply by 4
     for an annual rate) and ``R`` (nominal long-term rate, annual decimal), 1972Q2-1998Q4."""
     from statsmodels.datasets import interest_inflation
+    _check_statsmodels_pin("interest_inflation")
     df = interest_inflation.load_pandas().data.copy()
     q = pd.PeriodIndex.from_fields(year=df["year"].astype(int),
                                    quarter=df["quarter"].astype(int), freq="Q")

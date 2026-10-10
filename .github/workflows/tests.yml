@@ -1818,6 +1818,51 @@ jobs:
       - name: Study 1011 — The Half-Life of an Edge test-suite
         run: pytest -q studies/1011-turnover-and-alpha-half-life/tests
 
+      - name: Study 1013 — It's Official test-suite
+        run: pytest -q studies/1013-recession-announcement/tests
+
+      - name: Study 1014 — The Perfect Macro Forecaster test-suite
+        run: pytest -q studies/1014-macro-clairvoyance/tests
+
+      - name: Study 1015 — The 1929 Overlay test-suite
+        run: pytest -q studies/1015-analogue-overlay/tests
+
+      - name: Study 1016 — Stairs Up, Elevator Down test-suite
+        run: pytest -q studies/1016-stairs-up-elevator-down/tests
+
+      - name: Study 1017 — Do Bull Markets Die of Old Age? test-suite
+        run: pytest -q studies/1017-bull-markets-old-age/tests
+
+      - name: Study 1018 — Correlations Go to One test-suite
+        run: pytest -q studies/1018-correlations-go-to-one/tests
+
+      - name: Study 1019 — The Market Runs on Volume Time test-suite
+        run: pytest -q studies/1019-volume-clock/tests
+
+      - name: Study 1020 — More Volatile Than Ever? test-suite
+        run: pytest -q studies/1020-more-volatile-than-ever/tests
+
+      - name: Study 1021 — Stability Breeds Instability test-suite
+        run: pytest -q studies/1021-calm-before-the-storm/tests
+
+      - name: Study 1022 — Behind the Curve test-suite
+        run: pytest -q studies/1022-taylor-rule-gap/tests
+
+      - name: Study 1023 — The Cushing Glut test-suite
+        run: pytest -q studies/1023-brent-wti-spread/tests
+
+      - name: Study 1024 — The Drawdown You Were Promised test-suite
+        run: pytest -q studies/1024-expected-max-drawdown/tests
+
+      - name: Study 1025 — Don't Look test-suite
+        run: pytest -q studies/1025-myopic-loss-aversion/tests
+
+      - name: Study 1026 — Gibson's Paradox test-suite
+        run: pytest -q studies/1026-gibsons-paradox/tests
+
+      - name: Study 1027 — Oil Is Equity in a Mirror test-suite
+        run: pytest -q studies/1027-oil-inverse-leverage/tests
+
       - name: Smoke-run the offline demos
         run: |
           python studies/01-overnight-anomaly/examples/run_synthetic_demo.py
