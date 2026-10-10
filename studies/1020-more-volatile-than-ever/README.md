@@ -17,7 +17,7 @@
 ## What we tested
 
 "Markets are more volatile than ever." The claim gets blamed on whatever is newest: program trading in 1987, high-frequency
-algorithms after the [2010 flash crash](https://www.sec.gov/news/studies/2010/marketevents-report.pdf),
+algorithms after the [2010 flash crash](https://www.sec.gov/files/marketevents-report.pdf),
 ETFs, and social-media stampedes. Its sharper form says crash days are getting more frequent. The strong version deserves
 a hearing, because each of those innovations plausibly amplifies moves.
 
