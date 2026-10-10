@@ -1,0 +1,47 @@
+# Study 1020 — More Volatile Than Ever? 🎢
+
+[![tests](https://github.com/Guillain-RDCDE/Open-Alpha-Lab/actions/workflows/tests.yml/badge.svg)](https://github.com/Guillain-RDCDE/Open-Alpha-Lab/actions/workflows/tests.yml)
+
+> *Part of [Open-Alpha-Lab](../../README.md) — see the [desk](../../README.md) and its [house style](../../METHODOLOGY.md).*
+
+## Verdict
+
+| Axis | Stamp | Why |
+|---|---|---|
+| **Signal** — is US market volatility, or the frequency of extreme days, trending up? | ![None](https://img.shields.io/badge/None-c0392b?style=flat-square) | Over 91 complete years (1927-2017, total return) log realised volatility trends **−5.6% per decade**, which is slightly *down*, and the fixed-b test that accounts for persistence won't certify a trend either way (KVB p = 0.26). The daily S&P 500 for 1990-2021 shows +6.5% per decade (NW *t* = +0.70). No start year from 1927 to 1998 gives a significant rise. Days beyond 3σ come in two bursts, 2008-09 and 2020, and any trend in their count goes away once crisis clustering is respected (block-permutation p = 0.58). |
+| **Tradability** — should a risk manager extrapolate the rise? | ![Fragile](https://img.shields.io/badge/Fragile-dab617?style=flat-square) | The rule only passes on paper. Out of sample (QLIKE), the trend-extrapolated forecast beats the long-run average on the century tape without significance (DM *t* = −1.51). It ties a 20-year average that has no slope (DM *t* = −0.24) and is the worst forecast month to month. The winning forecast in both races mixes recent and long-run volatility (DM *t* = −4.39 and −2.30 against the long-run average). |
+| **More volatile than ever?** | ![Busted](https://img.shields.io/badge/Busted-8b949e?style=flat-square) | The 1930s were **2.2×** as volatile as 2008-2017 (block-bootstrap p = 0.0003). The headline "record crashes" are point records: daily point moves grow **+95% per decade** while percent moves grow +4%, and 95% of the 20 largest point drops fall in the tape's last ten years, against 25% of the 20 largest percent drops. |
+
+> **In one sentence:** A century of US market volatility shows no upward trend (−5.6% per decade, KVB p = 0.26), the 1930s were 2.2× as volatile as 2008-2017, and the record crashes in the headlines are point moves that grow with the index (+95% per decade in points vs +4% in percent). A risk manager should mix recent and long-run volatility rather than extrapolate a rise.
+
+## What we tested
+
+"Markets are more volatile than ever." The claim gets blamed on whatever is newest: program trading in 1987, high-frequency
+algorithms after the [2010 flash crash](https://www.sec.gov/news/studies/2010/marketevents-report.pdf),
+ETFs, and social-media stampedes. Its sharper form says crash days are getting more frequent. The strong version deserves
+a hearing, because each of those innovations plausibly amplifies moves.
+
+We test it on three frozen tapes. The first is ninety-one years of Fama-French monthly total returns. The second is 32 years of daily S&P 500
+closes. The third is 20 years of S&P 500 intraday ranges, which give a second estimator. The trend tests on log realised volatility account for its persistence
+(Newey-West, Kiefer-Vogelsang-Bunzel fixed-b, block bootstrap), and we also split the century into four eras. Extreme days are counted
+against both a fixed σ and a trailing σ, with exact Poisson intervals. We isolate the points-versus-percent mechanism and
+compare the remembered decade with the 1930s. Finally, a risk manager's out-of-sample race puts long-run, recent and
+trend-extrapolated volatility forecasts against each other, with the rule fixed before the run. A synthetic stochastic-volatility world with a planted
+trend shows that the detector fires when a rise is really there and stays quiet when it isn't.
+**Dedup:** this is not **817-realized-volatility-trend**, which trades the cross-section of
+stock-level vol *changes*. Nor is it **992-vol-clustering-halflife**, which asks how long a storm lasts, or
+**988-bitcoin-volatility-decay** (the same trend question, asked of Bitcoin, in the opposite direction).
+**1002-best-days-missed** studies extreme days as a return story, while this study asks whether they are becoming *more frequent*.
+
+## The full teardown lives in the notebooks
+
+| | For whom | Inside |
+|---|---|---|
+| **[01_for_the_curious](notebooks/01_for_the_curious.ipynb)** | the curious | a century of volatility in one chart, the 1930s against the decade you remember, why "biggest point drop ever" is a statement about the index level, and what a risk manager should do instead |
+| **[02_for_the_quants](notebooks/02_for_the_quants.ipynb)** | quants | NW / fixed-b / bootstrap trend tests on three tapes, start-year sensitivity, eras, fixed- vs trailing-σ tail counts with a block-permutation test, the points-percent identity, a synthetic power curve, and the QLIKE / Diebold-Mariano forecast race |
+
+Reproducible headline run: [docs/results.md](docs/results.md). It is regenerated by [examples/verify.py](examples/verify.py).
+
+---
+
+*Sources & literature map: [docs/references.md](docs/references.md). Engine: [`quantlab/`](../../quantlab/) + [`volhistory/`](volhistory/). **Not investment advice**. This is research & education. See [LICENSE](../../LICENSE).*
