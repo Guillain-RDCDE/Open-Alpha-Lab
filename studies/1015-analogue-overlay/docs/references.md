@@ -54,7 +54,7 @@
 - **Campbell, J. Y. & Thompson, S. B. (2008), "Predicting Excess Stock Returns Out of Sample: Can
   Anything Beat the Historical Average?", *Review of Financial Studies* 21(4).** The
   out-of-sample R² against the historical mean used here.
-- **Goyal, A. & Welch, I. (2008), "A Comprehensive Look at the Empirical Performance of Equity
+- **Welch, I. & Goyal, A. (2008), "A Comprehensive Look at the Empirical Performance of Equity
   Premium Prediction", *Review of Financial Studies* 21(4).** Most return predictors fail out of
   sample against the historical mean; the analogue forecaster joins them.
 

@@ -8,7 +8,7 @@
 - **Danielsson, J., Valenzuela, M. & Zer, I. (2018), "Learning from History: Volatility and
   Financial Crises", *Review of Financial Studies* 31.** The empirical version this study
   steelmans. Across many countries and two centuries, long periods of stock-market volatility
-  *below* its slow-moving trend predict banking crises, and high volatility does not. Two
+  *below* its slow-moving trend predict banking crises, while volatility itself does not. Two
   differences: they predict **crises** across countries, while we test the practitioner's
   translation (US equity **drawdowns**), and our trend is a trailing mean so the signal is
   strictly past-only.

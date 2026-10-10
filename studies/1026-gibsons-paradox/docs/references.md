@@ -12,8 +12,8 @@
   inflation expectations formed over a long distributed lag of past inflation. §5 of this study is
   that idea, tested.
 - **Sargent, T. J. (1973), "Interest Rates and Prices in the Long Run: A Study of the Gibson
-  Paradox", *Journal of Money, Credit and Banking* 5(1).** Rational-expectations treatment; why a
-  Gibson correlation need not contradict Fisher.
+  Paradox", *Journal of Money, Credit and Banking* 5(1), Part 2, 385-449.** A rational-expectations
+  analysis of the Gibson correlation and of Fisher's distributed-lag explanation of it.
 - **Shiller, R. J. & Siegel, J. J. (1977), "The Gibson Paradox and Historical Movements in Real
   Interest Rates", *Journal of Political Economy* 85(5).**
 - **Barsky, R. B. & Summers, L. H. (1988), "Gibson's Paradox and the Gold Standard", *Journal of

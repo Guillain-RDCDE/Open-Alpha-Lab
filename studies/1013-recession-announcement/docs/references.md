@@ -21,7 +21,7 @@
   prices. This study's turning-point rule is deliberately simpler (a fixed window around each
   NBER date) and its bias is measured, not assumed away: see `lead_rotation_test`.
 - **Siegel, J. J. (1991), "Does It Pay Stock Investors to Forecast the Business Cycle?",
-  *Journal of Portfolio Management*.** The direct antecedent: stock peaks and troughs lead the
+  *Journal of Portfolio Management* 18(1), 27-34.** The direct antecedent: stock peaks and troughs lead the
   NBER's, and the gain from timing them requires knowing the turning point in real time — which
   the official announcement, by construction, does not provide.
 - **Fama, E. F. & French, K. R. (1989), "Business Conditions and Expected Returns on Stocks and
