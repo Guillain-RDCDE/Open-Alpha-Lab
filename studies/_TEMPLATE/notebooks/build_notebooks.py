@@ -5,7 +5,17 @@ then rebuild + execute to embed figures/outputs:
 
     python notebooks/build_notebooks.py
     jupyter nbconvert --to notebook --execute --inplace \
+        --ExecutePreprocessor.record_timing=False \
         notebooks/01_for_the_curious.ipynb notebooks/02_for_the_quants.ipynb
+    python notebooks/build_notebooks.py --strip     # belt and braces, see below
+
+NOTEBOOK HYGIENE: an executed notebook should change only when its content does.
+``record_timing=False`` stops nbconvert stamping every cell with wall-clock
+``metadata.execution`` times (pure diff noise: a re-run that changes nothing would
+still rewrite every cell); ``--strip`` removes any such stamps left by a run made
+without the flag, and touches nothing else. Figures are rendered at a fixed
+``figure.dpi`` (set in BOOT) so the embedded PNGs -- most of a notebook's bytes --
+do not depend on whichever backend default the executing machine has.
 
 Both notebooks follow the SAME seven desk beats (see ../../../METHODOLOGY.md):
   0 Verdict · 1 The Claim · 2 So What? · 3 How We'd Know · 4 The Teardown ·
@@ -44,6 +54,7 @@ sys.path.insert(0, os.path.abspath("../../.."))  # repo root (quantlab/ lives th
 %matplotlib inline
 import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (10, 5.5)
+plt.rcParams["figure.dpi"] = 100  # fixed: embedded PNG size must not depend on the backend
 import numpy as np, pandas as pd
 pd.set_option("display.float_format", lambda v: f"{v:,.3f}")
 """
@@ -164,6 +175,37 @@ def _write(nb, name):
     print("wrote", path)
 
 
+NOTEBOOKS = ("01_for_the_curious.ipynb", "02_for_the_quants.ipynb")
+
+
+def strip_execution_metadata(paths=None):
+    """Drop nbconvert's per-cell ``metadata.execution`` timestamps; nothing else changes.
+
+    Outputs, execution counts and every other metadata key are kept, so the notebook
+    still passes the completeness gate (executed, with outputs). A file with no stamps
+    is left byte-for-byte untouched.
+    """
+    for name in paths or NOTEBOOKS:
+        path = name if os.path.isabs(name) else os.path.join(HERE, name)
+        if not os.path.exists(path):
+            continue
+        nb = nbf.read(path, as_version=4)
+        n = 0
+        for cell in nb.cells:
+            if "execution" in cell.get("metadata", {}):
+                del cell.metadata["execution"]
+                n += 1
+        if n:
+            with open(path, "w", encoding="utf-8") as f:
+                nbf.write(nb, f)
+        print(f"stripped {n} execution stamp(s) from {path}")
+
+
 if __name__ == "__main__":
-    build_curious()
-    build_quants()
+    import sys
+
+    if "--strip" in sys.argv[1:]:
+        strip_execution_metadata()
+    else:
+        build_curious()
+        build_quants()
