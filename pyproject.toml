@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "open-alpha-lab"
-version = "0.2.0"
+version = "0.3.0"
 description = "Open-Alpha-Lab: an open quant research desk. A reusable engine (quantlab) plus rigorous, reproducible audits of trading ideas — edge or mirage."
 readme = "README.md"
 license = { text = "MIT" }

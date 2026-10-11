@@ -26,4 +26,4 @@ __all__ = [
     "decompose", "data", "plots", "diagnostics", "backtest",
     "stats", "analytics", "simulate", "bayes", "universe",
 ]
-__version__ = "0.1.0"
+__version__ = "0.3.0"  # keep in step with pyproject.toml and CITATION.cff (tests/test_version.py)
