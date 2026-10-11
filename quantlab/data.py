@@ -66,6 +66,24 @@ _MODES = ("split_only", "total_return", "raw")
 SUSPICIOUS_RETURN_THRESHOLD = 0.40
 
 
+def write_parquet_atomic(df: pd.DataFrame, path) -> None:
+    """Write ``df`` to ``path`` so that a reader never sees a half-written cache file.
+
+    The frame goes to a unique temporary file in the same directory, which then replaces
+    ``path`` in one ``os.replace``. Several processes sharing ``_cache/`` (parallel test
+    workers, two notebooks) each see either no file or a complete one: a plain
+    ``to_parquet`` let a concurrent ``read_parquet`` hit "Unexpected end of stream".
+    """
+    path = Path(path)
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.{id(df):x}.tmp")
+    try:
+        df.to_parquet(tmp)
+        os.replace(tmp, path)
+    finally:
+        if tmp.exists():
+            tmp.unlink()
+
+
 def fetch(
     ticker: str,
     start: str = "1993-01-01",
@@ -97,7 +115,7 @@ def fetch(
     else:
         df = _download(ticker, mode)
         if use_cache:
-            df.to_parquet(cache_path)
+            write_parquet_atomic(df, cache_path)
 
     out = df.loc[start:end].copy()
     _warn_if_suspicious(out, ticker)

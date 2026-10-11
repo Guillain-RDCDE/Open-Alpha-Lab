@@ -49,6 +49,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from .data import write_parquet_atomic
+
 HF_DATASET = "paperswithbacktest/Stocks-Daily-Price"
 _PARQUET_API = f"https://huggingface.co/api/datasets/{HF_DATASET}/parquet/default/train"
 _CACHE = Path(os.environ.get("OVERNIGHT_CACHE", "_cache")) / "hf"
@@ -128,7 +130,7 @@ def load_symbol(symbol: str, mode: str = "total_return", use_cache: bool = True)
         return pd.read_parquet(cache_path)
     out = _apply_mode(_fetch_symbol_raw(symbol), mode)
     if use_cache:
-        out.to_parquet(cache_path)
+        write_parquet_atomic(out, cache_path)
     return out
 
 

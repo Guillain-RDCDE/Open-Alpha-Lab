@@ -30,6 +30,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from .data import write_parquet_atomic
 from .decompose import decompose, summary
 from .hf_data import SurvivorshipBiasError  # one guard class for the whole desk
 
@@ -147,7 +148,7 @@ def download_panel(
             group_by="ticker", threads=True,
         )
         if use_cache:
-            raw.to_parquet(cache)
+            write_parquet_atomic(raw, cache)
 
     panel = {}
     for s in symbols:

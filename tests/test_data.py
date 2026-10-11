@@ -188,6 +188,17 @@ def test_fetch_rejects_unknown_mode():
         data.fetch("SPY", mode="adjusted")  # not a mode; fails before any IO
 
 
+def test_cache_write_is_atomic(tmp_path):
+    """The cache file appears complete in one step and no temporary file is left behind,
+    so a parallel reader never meets a half-written parquet."""
+    df = pd.DataFrame({"Close": [1.0, 2.0]}, index=pd.bdate_range("2020-01-01", periods=2))
+    target = tmp_path / "X_total_return.parquet"
+    data.write_parquet_atomic(df, target)
+    data.write_parquet_atomic(df * 2, target)  # replacing an existing file works too
+    pd.testing.assert_frame_equal(pd.read_parquet(target), df * 2, check_freq=False)
+    assert [p.name for p in tmp_path.iterdir()] == [target.name]
+
+
 # ---------------------------------------------------------------------------
 # Network: pin Yahoo's convention on a real split (QQQ 2:1 on 2000-03-20)
 # ---------------------------------------------------------------------------
