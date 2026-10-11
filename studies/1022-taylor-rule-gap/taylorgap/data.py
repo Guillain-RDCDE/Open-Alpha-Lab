@@ -276,7 +276,9 @@ def synthetic_quarterly(n_quarters: int = 200, signal_strength: float = 1.0,
         eq[t] = eq_mu + s * beta_eq * g[t - 1] + u[t]
         dy[t] = s * beta_bond * g[t - 1] - 0.03 * (aaa[t - 1] - 6.0) + w[t]
         aaa[t] = aaa[t - 1] + dy[t]
-    idx = pd.date_range(start=start, periods=n, freq="QE-DEC")
+    # Second resolution: the persistence test draws 4,000 quarters (to the year 2959), past
+    # the year 2262 that bounds the default nanosecond calendar of pandas 2.x.
+    idx = pd.date_range(start=start, periods=n, freq="QE-DEC", unit="s")
     panel = pd.DataFrame({"tgap": g, "eq_xs": eq, "rf": rf_q, "aaa": aaa}, index=idx)
     panel["mkt"] = panel["eq_xs"] + panel["rf"]
     panel["d_aaa"] = panel["aaa"].diff()
