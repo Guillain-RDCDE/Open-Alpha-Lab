@@ -202,7 +202,7 @@ def build_curious():
             "    ax.legend(); plt.tight_layout(); plt.show()\n"
             "else:\n"
             "    print('Need real data for per-inauguration chart')\n"
-            f"    print(f'Frozen: HM mean={{hm_m:+.2f}}%, Ctrl mean={{ctrl_m:+.2f}}%, Diff={{diff_m:+.2f}}pp, t={{diff_t:+.2f}}')"
+            f"    print(f'Frozen: HM mean={{hm_mean:+.2f}}%, Ctrl mean={{ctrl_mean:+.2f}}%, Diff={{diff_mean:+.2f}}pp, t={{diff_t:+.2f}}')"
         ),
         md(
             f"The first thing to notice: FDR 1933 (+78.3%) dominates the chart. That is not a "

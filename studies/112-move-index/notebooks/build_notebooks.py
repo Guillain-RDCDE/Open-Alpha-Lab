@@ -440,7 +440,7 @@ def build_quants():
             "\n"
             "# Print the spread table\n"
             "if HAVE_REAL:\n"
-            "    print(f'{'h':>5} | {'Q5 mean':>9} {'Q1 mean':>9} | {'spread':>9} {'t_spread':>10}')\n"
+            "    print(f\"{'h':>5} | {'Q5 mean':>9} {'Q1 mean':>9} | {'spread':>9} {'t_spread':>10}\")\n"
             "    print('-' * 50)\n"
             "    for h in [1, 5, 21]:\n"
             "        res = st.top_minus_bottom(df, horizon=h)\n"
