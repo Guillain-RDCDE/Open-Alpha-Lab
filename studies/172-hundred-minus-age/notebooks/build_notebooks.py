@@ -17,6 +17,7 @@ repo's intro-restyle tooling can monkeypatch it.
 from __future__ import annotations
 
 import os
+import pprint
 
 import nbformat as nbf
 from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
@@ -83,6 +84,11 @@ def _have_real():
 HAVE_REAL = _have_real()
 print("Shiller real data available:", HAVE_REAL)
 """
+
+# Every real-tape cell falls back to ``R`` when the cache is absent, so the notebook
+# must define it: without this the offline branch of each cell raised NameError.
+BOOT += ('# Frozen headline numbers (mirror of docs/results.md), quoted when the cache is absent.\n'
+         + "R = " + pprint.pformat(R, width=88, sort_dicts=False) + "\n")
 
 LOAD_REAL = """\
 if HAVE_REAL:

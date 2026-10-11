@@ -16,6 +16,7 @@ intro-restyle tooling can monkeypatch it.
 from __future__ import annotations
 
 import os
+import pprint
 
 import nbformat as nbf
 from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
@@ -93,6 +94,11 @@ def pool_rn(use_placebo=False, cost=0.0, fwd_bars=5):
 
 print("real daily cache present:", HAVE_REAL)
 """
+
+# Every real-tape cell falls back to ``R`` when the cache is absent, so the notebook
+# must define it: without this the offline branch of each cell raised NameError.
+BOOT += ('# Frozen headline numbers (mirror of docs/results.md), quoted when the cache is absent.\n'
+         + "R = " + pprint.pformat(R, width=88, sort_dicts=False) + "\n")
 
 
 # ===========================================================================

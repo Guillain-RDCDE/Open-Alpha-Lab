@@ -13,6 +13,7 @@ frozen headline numbers in ``R`` (the single dict mirroring docs/results.md, as-
 from __future__ import annotations
 
 import os
+import pprint
 
 import nbformat as nbf
 from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
@@ -70,6 +71,11 @@ if HAVE_REAL:
     print(f"N years: {s_cop['n']} | cash-OP hedge: {s_cop['mean']*100:+.2f}%/yr"
           f" | one-sample t: {s_cop['tstat']:+.3f}")
 """
+
+# Every real-tape cell falls back to ``R`` when the cache is absent, so the notebook
+# must define it: without this the offline branch of each cell raised NameError.
+BOOT += ('# Frozen headline numbers (mirror of docs/results.md), quoted when the cache is absent.\n'
+         + "R = " + pprint.pformat(R, width=88, sort_dicts=False) + "\n")
 
 
 # ===========================================================================

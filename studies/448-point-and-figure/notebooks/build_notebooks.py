@@ -13,6 +13,7 @@ numbers in ``R`` (mirroring docs/results.md), so the notebook re-runs for any re
 from __future__ import annotations
 
 import os
+import pprint
 
 import nbformat as nbf
 from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
@@ -98,6 +99,11 @@ def pooled(side="buy", n_draws=2000):
 
 print("real daily cache present:", HAVE_REAL)
 """
+
+# Every real-tape cell falls back to ``R`` when the cache is absent, so the notebook
+# must define it: without this the offline branch of each cell raised NameError.
+BOOT += ('# Frozen headline numbers (mirror of docs/results.md), quoted when the cache is absent.\n'
+         + "R = " + pprint.pformat(R, width=88, sort_dicts=False) + "\n")
 
 
 # ===========================================================================

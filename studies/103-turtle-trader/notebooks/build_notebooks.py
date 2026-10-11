@@ -16,6 +16,7 @@ intro-restyle tooling can monkeypatch it.
 from __future__ import annotations
 
 import os
+import pprint
 
 import nbformat as nbf
 from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
@@ -35,7 +36,7 @@ def code(text):
 R = dict(
     # System 1 — both directions
     s1_n=12159, s1_mean=327.7, s1_win=57.7, s1_t=6.97,
-    s1_rand_mean=28.7, s1_rand_t=1.37,
+    s1_rand_mean=28.7, s1_rand_t=1.37, s1_rand_win=50.0,
     s1_delta=299.0,
     # System 2 — both directions
     s2_n=7763, s2_mean=601.0, s2_win=61.4, s2_t=7.10,
@@ -73,6 +74,9 @@ def _have_cache():
 
 HAVE_REAL = _have_cache()
 
+# Frozen headline numbers (mirror of docs/results.md), quoted when the cache is absent.
+R = __R__
+
 def pooled(entry_n, exit_n, cost, direction="both", random_seed=None,
            start_date=None, end_date=None, max_hold=252):
     \"\"\"Pool barrier trades across the basket (cached real tapes).\"\"\"
@@ -100,6 +104,9 @@ def pooled(entry_n, exit_n, cost, direction="both", random_seed=None,
 
 print("real daily cache present:", HAVE_REAL)
 """
+# Every real-tape cell falls back to ``R`` when the cache is absent, so the notebook must
+# define it: without this the offline branch of each cell raised NameError.
+BOOT = BOOT.replace("__R__", pprint.pformat(R, width=88, sort_dicts=False))
 
 
 # ===========================================================================

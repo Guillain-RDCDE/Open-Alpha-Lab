@@ -11,6 +11,7 @@ docs/results.md exactly).
 from __future__ import annotations
 
 import os
+import pprint
 
 import nbformat as nbf
 from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
@@ -77,6 +78,11 @@ if HAVE_REAL:
     s_ls = st.summary(ls["ls"]); s_hi = st.summary(ls["high"]); s_lo = st.summary(ls["low"])
     print(f"N months: {s_ls['n']} | LS: {s_ls['mean']*100:+.2f}%/yr | HAC t: {s_ls['tstat']:+.3f}")
 """
+
+# Every real-tape cell falls back to ``R`` when the cache is absent, so the notebook
+# must define it: without this the offline branch of each cell raised NameError.
+BOOT += ('# Frozen headline numbers (mirror of docs/results.md), quoted when the cache is absent.\n'
+         + "R = " + pprint.pformat(R, width=88, sort_dicts=False) + "\n")
 
 
 def build_curious():
