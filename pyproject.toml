@@ -52,6 +52,15 @@ Repository = "https://github.com/Guillain-RDCDE/Open-Alpha-Lab"
 [tool.setuptools]
 packages = ["quantlab", "quantlab.brokers"]
 
+[tool.ruff]
+# Syntax-level gate only (CI pins the ruff version): code that cannot parse on the
+# oldest supported Python, names that do not exist, broken comparisons and
+# statements. Style is not policed here.
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E9", "F63", "F7", "F82"]
+
 [tool.pytest.ini_options]
 # Make the repo root importable so `import quantlab` works whether tests are
 # run via `pytest` (console script) or `python -m pytest`.
