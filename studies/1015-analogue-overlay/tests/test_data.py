@@ -72,7 +72,12 @@ def test_synthetic_frame_columns_and_horizon():
 
 
 def test_tape_moments():
-    df, _ = data.synthetic_tape(n_periods=5000, signal_strength=0.0, mu=0.01, sigma=0.05)
+    # 5000 draws are needed for the tolerances below, but 5000 MONTHS from 1926 end in
+    # 2343 -- past the nanosecond calendar limit of pandas 2.x (2262-04-11). The moments
+    # are per period and do not depend on the calendar, so lay the same draws on a
+    # business-day index, which stays inside the limit on every supported pandas.
+    df, _ = data.synthetic_tape(n_periods=5000, signal_strength=0.0, mu=0.01, sigma=0.05,
+                                freq="D")
     mo = data.tape_moments(df["lr"], 12)
     assert mo["mu"] == pytest.approx(0.01, abs=0.003)
     assert mo["sigma"] == pytest.approx(0.05, rel=0.05)

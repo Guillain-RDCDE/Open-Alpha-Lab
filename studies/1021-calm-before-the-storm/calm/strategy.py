@@ -65,6 +65,11 @@ VOL_WINDOW = _data.VOL_WINDOW
 TREND_WINDOW = _data.TREND_WINDOW
 CALM_WINDOW = _data.CALM_WINDOW
 CRASH_THRESHOLD = 0.20
+# The drawdown is rebuilt from log wealth (log1p, cumsum, exp), so a fall of exactly 20%
+# comes back as 0.19999999999999996 or 0.20000000000000007 depending on the numpy/libm
+# build. "MDD >= 20%" must not depend on that last bit: compare with a tolerance far
+# below any drawdown a real tape can produce.
+CRASH_TOL = 1e-12
 HORIZONS = (1, 3, 12, 24, 36)
 PRIMARY_H = 24
 OUTCOMES = ("mdd", "crash", "vol", "ret")
@@ -123,7 +128,7 @@ def _forward_np(ret: np.ndarray, rf: np.ndarray, H: int) -> dict:
         lex = lr - np.log1p(f)
         E = sliding_window_view(lex, H, axis=0)[1:]
         exr[: n - H] = E.sum(axis=2)
-    out = {"mdd": mdd, "crash": np.where(np.isfinite(mdd), (mdd >= CRASH_THRESHOLD)
+    out = {"mdd": mdd, "crash": np.where(np.isfinite(mdd), (mdd >= CRASH_THRESHOLD - CRASH_TOL)
                                          .astype(float), np.nan),
            "vol": vol, "ret": exr}
     if one:
