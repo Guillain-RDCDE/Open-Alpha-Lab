@@ -177,8 +177,12 @@ kind of number every time:
    `analytics.py`, `simulate.py`)*
 6. **Verdict** — the two stamps, with the numbers behind them.
 
-Everything is deterministic (fixed seeds), tested (`pytest`, CI on Python
-3.10–3.12), and reproducible from cached or freshly-fetched data.
+Everything is deterministic (fixed seeds) and reproducible from cached or
+freshly-fetched data. The engine and most studies carry their own `pytest`
+suite; a study without one is still covered by a smoke test that imports every
+module and builds its synthetic world
+([`tests/test_study_imports.py`](tests/test_study_imports.py)) — a floor, not a
+substitute for a suite. CI runs all of it on Python 3.10–3.13.
 
 ### The inference bar — what each stamp must show
 
@@ -275,13 +279,14 @@ they are no longer a matter of discipline: they are a **gate**, [`tools/check_st
 that runs first in CI and **fails the build** if a published study is missing any of them.
 
 A study is **"published" — and held to this standard — the moment it is linked in the
-[root README](README.md) studies table.** That is the desk's done-signal; until a study is in
+studies table of [`docs/REFERENCE.md`](docs/REFERENCE.md)** (the ledger; the root README
+links to it). That is the desk's done-signal; until a study is in
 that table it counts as work-in-progress and the gate skips it, so scaffolding commits never
 turn CI red. When you add the row, the study must pass:
 
 - [ ] **README front-card** — the ~30-line synthetic card (verdict box with shields badges, the
   *what-we-tested* paragraph, links to the two notebooks). Not a 7-beat document.
-- [ ] **Studies-table row is one hook question** — in the [root README](README.md) table the middle
+- [ ] **Studies-table row is one hook question** — in the [ledger](docs/REFERENCE.md) table the middle
   *"The claim"* cell is a single one-line question that makes a reader want to click — never a
   verdict paragraph stuffed with numbers (Sharpe, *t*, %/yr, drawdown). The two stamps already
   carry the verdict and the numbers live in the teardown, so the table reads top-to-bottom as a
@@ -294,8 +299,16 @@ turn CI red. When you add the row, the study must pass:
   cells or with all outputs stripped:
   `jupyter nbconvert --to notebook --execute --inplace 01_*.ipynb 02_*.ipynb` (from the
   `notebooks/` dir — cwd matters for any `_cache/`).
-- [ ] **Tests wired into CI** — if the study has a `tests/test_*.py` suite, add its step to
-  [`.github/workflows/tests.yml`](.github/workflows/tests.yml). A test nobody runs guards nothing.
+- [ ] **Tests discovered by CI** — put the suite in `tests/test_*.py` inside the study and
+  that is all: CI runs `pytest` over the `testpaths` in [`pyproject.toml`](pyproject.toml)
+  (`tests` and `studies`), so a suite is picked up without touching
+  [`.github/workflows/tests.yml`](.github/workflows/tests.yml). The gate fails if discovery
+  is ever narrowed (a `testpaths` without `studies`, an `--ignore`, a `norecursedirs` that hides
+  a study, a lost `--import-mode=importlib`), and in CI it re-checks the run's report: every
+  study with a suite must have had at least one test collected. A test nobody runs guards
+  nothing. A study shipped without a suite still gets the import-and-synthetic-world smoke
+  test of [`tests/test_study_imports.py`](tests/test_study_imports.py) — it should not stay
+  there.
 - [ ] **`docs/references.md`** — the literature map. `docs/` is never empty.
 - [ ] **A fingerprinted results doc** — `docs/results.md` (or `docs/results_*.md`), the
   reproducible headline run with an **explicit as-of date** + content fingerprint
@@ -304,7 +317,9 @@ turn CI red. When you add the row, the study must pass:
   yours will too). The doc is the single source of truth the notebooks quote from.
 - [ ] **The bench map is regenerated** — if your row changes the README table, run
   `python tools/make_bench_figures.py` so [`docs/bench_map.png`](docs/bench_map.png) and
-  the counts in [`docs/bench.md`](docs/bench.md) stay in sync with the table they parse.
+  the counts in [`docs/bench.md`](docs/bench.md) stay in sync with the table they parse,
+  then `python tools/make_studies_index.py` so [`studies/README.md`](studies/README.md)
+  lists the study (GitHub stops listing `studies/` at 1,000 entries; CI fails on a stale index).
 - [ ] **Caches for the pinned run exist locally** — `_cache/` is gitignored, so third-party
   fingerprint verification goes through the release bundle
   (`tools/make_repro_bundle.py`, policy in [`docs/reproducibility.md`](docs/reproducibility.md)).
@@ -312,7 +327,10 @@ turn CI red. When you add the row, the study must pass:
 - [ ] **Dual-track asides** — `02_for_the_quants` carries `> 💡 In plain words` asides; the
   curious notebook may carry `> 🔬 For the quants` asides.
 
-Run the gate locally before you publish: `python tools/check_study_completeness.py`.
+Run the gates locally before you publish: `python tools/check_study_completeness.py`,
+`python tools/check_reference_table.py`, `ruff check .` (the version CI pins, in
+[`.github/workflows/tests.yml`](.github/workflows/tests.yml)) and
+`pytest -n auto studies/NN-your-idea/tests`.
 
 ---
 

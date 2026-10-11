@@ -1,13 +1,13 @@
 # Study checklist — Definition of Done
 
 Copy this with the template. A study is **published** (and held to the standard) the moment its
-row is added to the [root README](../../README.md) studies table. Before you add that row, tick
+row is added to the studies table of the ledger, [`docs/REFERENCE.md`](../../docs/REFERENCE.md). Before you add that row, tick
 every box — the CI gate [`tools/check_study_completeness.py`](../../tools/check_study_completeness.py)
 enforces the **bold** ones and will fail the build otherwise.
 
 - [ ] **README front-card** — ~30 lines: verdict box (shields badges), *what-we-tested*
   paragraph, links to the two notebooks. Not a 7-beat document (the beats live in the notebooks).
-- [ ] **Studies-table row is one hook question** — in the [root README](../../README.md) table, the
+- [ ] **Studies-table row is one hook question** — in the [ledger](../../docs/REFERENCE.md) table, the
   middle *"The claim"* cell is a single one-line question that makes a reader want to click (the
   studies 01–08 style), **never** a verdict paragraph stuffed with numbers (Sharpe, *t*, %/yr,
   drawdown). The two stamps carry the verdict; the numbers live in the teardown. A figurative
@@ -20,8 +20,10 @@ enforces the **bold** ones and will fail the build otherwise.
   python build_notebooks.py
   jupyter nbconvert --to notebook --execute --inplace 01_for_the_curious.ipynb 02_for_the_quants.ipynb
   ```
-- [ ] **Tests wired into CI** — add `pytest -q studies/NN-your-idea/tests` to
-  [`.github/workflows/tests.yml`](../../.github/workflows/tests.yml).
+- [ ] **Tests discovered by CI** — a `tests/test_*.py` suite in the study is picked up by
+  `pytest` automatically (`testpaths` in [`pyproject.toml`](../../pyproject.toml)); nothing to
+  add to [`.github/workflows/tests.yml`](../../.github/workflows/tests.yml). Check it locally:
+  `pytest -n auto studies/NN-your-idea/tests`.
 - [ ] **`docs/references.md`** — the literature map (the claim's source + the relevant papers +
   the shared method citations). `docs/` is never empty.
 - [ ] **`docs/results.md`** — the fingerprinted, as-of'd reproducible headline run

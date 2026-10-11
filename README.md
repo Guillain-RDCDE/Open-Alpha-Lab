@@ -94,7 +94,8 @@ python -m venv .venv
 # Windows:  .venv\Scripts\Activate.ps1   |   *nix:  source .venv/bin/activate
 pip install -r requirements.txt
 
-pytest -q                                                            # the engine's test-suite
+pytest -q tests                                                      # the engine's test-suite
+pytest -n auto                                                       # everything CI runs (engine + every study)
 python studies/01-overnight-anomaly/examples/run_synthetic_demo.py   # offline, no network
 ```
 
@@ -125,8 +126,8 @@ others — every study folder has the same shape.
 ```text
 Open-Alpha-Lab/
 ├── quantlab/        # the reusable research engine
-├── tests/           # deterministic test-suite (CI on 3.10–3.12)
-├── studies/         # one folder per study: notebooks, code, data, docs
+├── tests/           # deterministic test-suite (CI on 3.10–3.13)
+├── studies/         # one folder per study: notebooks, code, data, docs (index: studies/README.md)
 └── pyproject.toml · CITATION.cff · LICENSE
 ```
 

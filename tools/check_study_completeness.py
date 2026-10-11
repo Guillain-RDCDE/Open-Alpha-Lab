@@ -12,9 +12,15 @@ into a hard check, so they cannot regress:
      a FAIL. (This is exactly how studies 04 and 14 shipped dead before the gate existed.)
   2. **Notebooks ship clean.** No code cell may carry an ``error`` output: a notebook built
      with ``nbconvert --execute --allow-errors`` that swallowed a traceback is a FAIL.
-  3. **Tests run in CI.** If a study has a ``tests/test_*.py`` suite, that suite must be wired
-     into ``.github/workflows/tests.yml`` -- otherwise regressions in it go undetected.
-     Commented-out workflow lines do not count as wired.
+  3. **Tests run in CI.** If a study has a ``tests/test_*.py`` suite, pytest must *discover*
+     it: CI runs ``pytest`` over the configured ``testpaths``, so ``pyproject.toml`` must list
+     ``studies`` there and exclude nothing (no ``--ignore``/``--deselect`` in ``addopts``, no
+     ``norecursedirs`` pattern that hides a study or its ``tests/`` dir, no ``collect_ignore``
+     in a conftest). With ``--collected FILE`` (a ``pytest --collect-only -q`` listing or a
+     JUnit XML report) the gate also checks that every study with a suite really had at
+     least one test collected -- the proof that discovery worked, not just that it should.
+     (This used to mean "has a step in ``.github/workflows/tests.yml``"; 673 hand-written
+     steps were replaced by discovery, so a new suite can no longer be forgotten.)
   4. **The front card exists.** A published study must carry a ``README.md`` with verdict
      badges: the ledger advertises two stamps on the study's behalf, and with no front card
      nothing in the study backs them up. 17 studies were published without one while this
@@ -38,21 +44,32 @@ scaffolding commits don't turn CI red. The discipline lands exactly when you pub
 
 Recommended-but-not-blocking items (a results doc, requirements files) print as warnings.
 
-Exit code 0 if every published study passes the hard checks; 1 otherwise. Pure stdlib.
+Exit code 0 if every published study passes the hard checks; 1 otherwise. Pure stdlib
+(``tomllib``; on Python 3.10 the ``tomli`` backport that pytest itself depends on).
 
     python tools/check_study_completeness.py
+    python tools/check_study_completeness.py --collected junit.xml
+    python tools/check_study_completeness.py --collected ids.txt --only 1015-analogue-overlay
 """
 
 from __future__ import annotations
 
+import argparse
+import fnmatch
 import json
 import os
 import re
 import sys
+import xml.etree.ElementTree as ET
+
+try:
+    import tomllib
+except ImportError:  # Python 3.10
+    import tomli as tomllib
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STUDIES = os.path.join(ROOT, "studies")
-CI_FILE = os.path.join(ROOT, ".github", "workflows", "tests.yml")
+PYPROJECT = os.path.join(ROOT, "pyproject.toml")
 README = os.path.join(ROOT, "README.md")
 REFERENCE = os.path.join(ROOT, "docs", "REFERENCE.md")
 # The studies table used to live in the root README and now lives in docs/REFERENCE.md.
@@ -102,10 +119,75 @@ def _notebook_problems(path: str) -> list[str] | None:
     return problems
 
 
-def _ci_active_text(ci_text: str) -> str:
-    """The workflow file with fully-commented lines dropped, so a commented-out
-    ``pytest -q studies/NN-x/tests`` line no longer counts as CI wiring."""
-    return "\n".join(ln for ln in ci_text.splitlines() if not ln.lstrip().startswith("#"))
+def pytest_config() -> dict:
+    """``[tool.pytest.ini_options]`` from pyproject.toml ({} if absent)."""
+    if not os.path.exists(PYPROJECT):
+        return {}
+    with open(PYPROJECT, "rb") as fh:
+        return tomllib.load(fh).get("tool", {}).get("pytest", {}).get("ini_options", {})
+
+
+# addopts flags that silently shrink what a plain `pytest` run collects.
+_EXCLUDING_OPTS = ("--ignore", "--ignore-glob", "--deselect", "-k", "-m", "--co",
+                   "--collect-only", "--lf", "--last-failed", "--sw", "--stepwise")
+
+
+def discovery_problems(cfg: dict) -> list[str]:
+    """Repo-wide reasons a study suite could be missed by a plain ``pytest`` run."""
+    problems: list[str] = []
+    testpaths = cfg.get("testpaths", [])
+    if isinstance(testpaths, str):
+        testpaths = testpaths.split()
+    if "studies" not in [t.rstrip("/") for t in testpaths]:
+        problems.append("pyproject.toml [tool.pytest.ini_options] testpaths does not include "
+                        "'studies' -- study suites would not be discovered")
+    addopts = cfg.get("addopts", "")
+    tokens = addopts.split() if isinstance(addopts, str) else list(addopts)
+    for tok in tokens:
+        if tok.split("=")[0] in _EXCLUDING_OPTS:
+            problems.append(f"pyproject.toml addopts carries {tok!r}, which excludes tests "
+                            "from discovery")
+    if "--import-mode=importlib" not in tokens:
+        problems.append("pyproject.toml addopts lost --import-mode=importlib; the study "
+                        "suites share module names (tests/test_strategy.py) and only that "
+                        "mode collects them side by side")
+    for conftest in (os.path.join(ROOT, "conftest.py"), os.path.join(STUDIES, "conftest.py")):
+        if os.path.exists(conftest):
+            text = open(conftest, encoding="utf-8").read()
+            if re.search(r"^\s*collect_ignore(_glob)?\s*=", text, re.M):
+                problems.append(f"{os.path.relpath(conftest, ROOT)} sets collect_ignore")
+    return problems
+
+
+def _hidden_by_norecurse(name: str, cfg: dict) -> str | None:
+    """The norecursedirs pattern hiding ``studies/<name>/tests``, if any."""
+    patterns = cfg.get("norecursedirs", [])
+    if isinstance(patterns, str):
+        patterns = patterns.split()
+    for part in (name, "tests"):
+        for pat in patterns:
+            if fnmatch.fnmatch(part, pat):
+                return pat
+    return None
+
+
+def collected_studies(path: str) -> set[str]:
+    """Study dir names with at least one collected test in a node-id listing or JUnit XML."""
+    found: set[str] = set()
+    if path.endswith(".xml"):
+        # A collection error is reported with an empty classname, so it never counts.
+        for case in ET.parse(path).getroot().iter("testcase"):
+            ref = case.get("file") or case.get("classname", "").replace(".", "/")
+            m = re.match(r"studies/(\d+-[a-z0-9-]+)/", ref)
+            if m:
+                found.add(m.group(1))
+    else:
+        with open(path, encoding="utf-8") as fh:
+            for ln in fh:
+                m = re.match(r"studies/(\d+-[a-z0-9-]+)/tests/\S+::", ln.strip())
+                if m:
+                    found.add(m.group(1))
+    return found
 
 
 def _references_useful_lines(path: str) -> int:
@@ -116,7 +198,14 @@ def _references_useful_lines(path: str) -> int:
         return sum(1 for ln in fh if ln.strip())
 
 
-def check_study(name: str, ci_text: str) -> tuple[list[str], list[str]]:
+def has_test_suite(name: str) -> bool:
+    tests_dir = os.path.join(STUDIES, name, "tests")
+    return os.path.isdir(tests_dir) and any(
+        f.startswith("test_") and f.endswith(".py") for f in os.listdir(tests_dir))
+
+
+def check_study(name: str, cfg: dict,
+                collected: set[str] | None = None) -> tuple[list[str], list[str]]:
     """Return (hard_failures, warnings) for one published study."""
     p = os.path.join(STUDIES, name)
     fails: list[str] = []
@@ -141,14 +230,15 @@ def check_study(name: str, ci_text: str) -> tuple[list[str], list[str]]:
     elif "img.shields.io/badge/" not in open(readme, encoding="utf-8").read():
         fails.append("README.md carries no verdict badges -- nothing backs its ledger row")
 
-    # 4) A test-suite, if present, must be wired into CI (commented lines don't count).
-    tests_dir = os.path.join(p, "tests")
-    has_tests = os.path.isdir(tests_dir) and any(
-        f.startswith("test_") and f.endswith(".py") for f in os.listdir(tests_dir)
-    )
-    if has_tests and f"studies/{name}/tests" not in _ci_active_text(ci_text):
-        fails.append("has a test-suite not run in .github/workflows/tests.yml "
-                     f"(add: pytest -q studies/{name}/tests)")
+    # 4) A test-suite, if present, must be discovered by the plain `pytest` run CI makes
+    #    (and, given a collection report, must actually have been collected).
+    if has_test_suite(name):
+        pat = _hidden_by_norecurse(name, cfg)
+        if pat:
+            fails.append(f"its test-suite is hidden from discovery by norecursedirs {pat!r}")
+        if collected is not None and name not in collected:
+            fails.append("has a test-suite but no test of it was collected "
+                         f"(run: pytest --collect-only -q studies/{name}/tests)")
 
     # 5) A literature map must exist and carry real content (no empty docs/).
     refs = os.path.join(p, "docs", "references.md")
@@ -172,20 +262,36 @@ def check_study(name: str, ci_text: str) -> tuple[list[str], list[str]]:
     return fails, warns
 
 
-def main() -> int:
-    ci_text = open(CI_FILE, encoding="utf-8").read() if os.path.exists(CI_FILE) else ""
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("--collected", metavar="FILE",
+                    help="pytest --collect-only -q listing or JUnit XML of the run: every "
+                         "study with a suite must have >= 1 collected test in it")
+    ap.add_argument("--only", nargs="*", metavar="STUDY",
+                    help="restrict the --collected check to these study dirs (a CI run "
+                         "that tested only the changed studies)")
+    args = ap.parse_args(argv)
+
+    cfg = pytest_config()
     published = published_studies()
     studies = sorted(d for d in os.listdir(STUDIES)
                      if re.match(r"\d+-", d) and os.path.isdir(os.path.join(STUDIES, d)))
+    collected = collected_studies(args.collected) if args.collected else None
+    only = set(args.only) if args.only is not None else None
+
+    failed = False
+    for prob in discovery_problems(cfg):
+        print(f"  X  discovery: {prob}")
+        failed = True
 
     n_ok = n_wip = n_fail = 0
-    failed = False
     for s in studies:
         if s not in published:
             print(f"  ~  {s:24s} not in README yet -- WIP, skipped")
             n_wip += 1
             continue
-        fails, warns = check_study(s, ci_text)
+        in_scope = only is None or s in only
+        fails, warns = check_study(s, cfg, collected if in_scope else None)
         if fails:
             print(f"  X  {s:24s} {len(fails)} problem(s)")
             for f in fails:
@@ -199,6 +305,10 @@ def main() -> int:
             print(f"       warn: {w}")
 
     print(f"\n{n_ok} complete | {n_wip} WIP (skipped) | {n_fail} with hard failures.")
+    if collected is not None:
+        scope = [s for s in studies if has_test_suite(s) and (only is None or s in only)]
+        print(f"Collection check: {sum(s in collected for s in scope)}/{len(scope)} "
+              f"studies with a suite had tests collected ({args.collected}).")
     if failed:
         print("\nStudy-construction gate FAILED. Fix the items above (see METHODOLOGY.md, "
               "section 'Definition of Done'). Studies not yet listed in the README are exempt.")
