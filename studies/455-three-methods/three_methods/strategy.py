@@ -56,7 +56,7 @@ def three_methods_signals(
     avg_body_win: int = 20,
     long_mult: float = 1.0,
     small_frac: float = 0.7,
-    tol: float = 0.10,  # noqa: ARG  charitable wick tolerance; 0 = strict containment
+    tol: float = 0.10,  # charitable wick tolerance; 0 = strict containment
 ) -> pd.Series:
     """Signed three-methods signal on the close of each bar (+1 rising, -1 falling, 0 none).
 
