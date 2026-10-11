@@ -222,6 +222,23 @@ def provenance() -> list[dict]:
 # --------------------------------------------------------------------------- #
 # Synthetic worlds — the deterministic offline core
 # --------------------------------------------------------------------------- #
+def _month_ends(start: str, n: int) -> pd.DatetimeIndex:
+    """``n`` month-ends from ``start``, for synthetic tapes of any length.
+
+    The synthetic controls draw 6,000 to 200,000 months -- far past the year 2262 that
+    bounds pandas 2's default nanosecond calendar, and the 200,000-month draw past the
+    year 9999 that its offset arithmetic can reach at all. A seconds-resolution
+    ``date_range`` (same dates, same ``ME`` frequency) covers everything up to 9999; only
+    beyond that are the same month-ends built directly in numpy, without a ``freq``.
+    """
+    try:
+        return pd.date_range(start=start, periods=n, freq="ME", unit="s")
+    except (OverflowError, ValueError):
+        months = np.datetime64(pd.Timestamp(start).strftime("%Y-%m"), "M") + np.arange(n)
+        ends = (months + 1).astype("datetime64[D]") - np.timedelta64(1, "D")
+        return pd.DatetimeIndex(ends.astype("datetime64[s]"))
+
+
 def synthetic_monthly(n_months: int = 1104, signal_strength: float = 1.0,
                       seed: int = 1025, bill_rate: float = 0.0030,
                       equity_premium: float = 0.0055, stock_vol: float = 0.054,
@@ -245,7 +262,7 @@ def synthetic_monthly(n_months: int = 1104, signal_strength: float = 1.0,
     z = rng.standard_normal((n_months, 2))
     stock = np.exp(ms + stock_vol * z[:, 0]) - 1.0
     bond = np.exp(mb + bond_vol * z[:, 1]) - 1.0
-    idx = pd.date_range(start=start, periods=n_months, freq="ME")
+    idx = _month_ends(start, n_months)
     df = pd.DataFrame({"stock": stock, "bond": bond,
                        "bill": np.full(n_months, bill_rate)}, index=idx)
     df.index.name = "date"
