@@ -24,6 +24,7 @@ AS_OF_END = "2026-05-31"  # drop the partial June 2026 month
 def main(fetch: bool) -> None:
     if fetch:
         frame = data.load_real(("KRBN", "BIL"), use_cache=False)
+        os.makedirs(data.DEFAULT_CACHE, exist_ok=True)
         for tk in ("KRBN", "BIL"):
             sub = frame[[tk]].rename(columns={tk: "Close"})
             sub.to_parquet(data._cache_path(tk, data.DEFAULT_CACHE))
