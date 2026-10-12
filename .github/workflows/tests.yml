@@ -40,7 +40,7 @@ jobs:
       studies: ${{ steps.plan.outputs.studies }}
       demos: ${{ steps.plan.outputs.demos }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Decide what this run tests
@@ -56,8 +56,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Ruff (pinned; py310 syntax, undefined names -- config in pyproject.toml)
@@ -83,10 +83,10 @@ jobs:
       DEMOS: ${{ needs.plan.outputs.demos }}
       JUNIT: junit-${{ matrix.python-version }}.xml
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
