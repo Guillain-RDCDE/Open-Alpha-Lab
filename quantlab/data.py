@@ -90,11 +90,16 @@ def fetch(
     end: str | None = None,
     mode: str = "split_only",
     use_cache: bool = True,
+    download: bool = True,
 ) -> pd.DataFrame:
     """Fetch daily OHLC for ``ticker`` and return a clean DataFrame.
 
     Caches to ``_cache/<ticker>_<mode>.parquet``. Requires network on a cache
     miss (yfinance). Columns returned: Open, High, Low, Close (and Volume).
+
+    ``download=False`` makes the call cache-only: a miss raises
+    ``FileNotFoundError`` instead of going to the network. Study loaders pass it
+    on their ``fetch=False`` path, so an offline test run never downloads.
 
     Caching decision: ``start``/``end`` are deliberately NOT part of the cache
     key. A cache miss downloads the ticker's FULL history (``period='max'``)
@@ -112,6 +117,11 @@ def fetch(
 
     if use_cache and cache_path.exists():
         df = pd.read_parquet(cache_path)
+    elif not download:
+        raise FileNotFoundError(
+            f"{ticker} ({mode}) is not cached at {cache_path} and download=False; "
+            "fetch it once with network to populate the cache."
+        )
     else:
         df = _download(ticker, mode)
         if use_cache:

@@ -115,12 +115,15 @@ def _apply_mode(df: pd.DataFrame, mode: str) -> pd.DataFrame:
     return res.dropna(how="all")
 
 
-def load_symbol(symbol: str, mode: str = "total_return", use_cache: bool = True) -> pd.DataFrame:
+def load_symbol(
+    symbol: str, mode: str = "total_return", use_cache: bool = True, download: bool = True
+) -> pd.DataFrame:
     """Daily OHLCV for one US stock from the free HF table, cached to ``_cache/hf/``.
 
     Unbiased by construction (you picked the ticker). Columns match
     ``quantlab.data.fetch`` so it is a drop-in for single-name studies — its edge is
     *depth* (history back to the 1960s-80s). ETFs/indices/FX are NOT here (gated).
+    ``download=False`` is cache-only: a miss raises ``FileNotFoundError``.
     """
     if mode not in _MODES:
         raise ValueError(f"mode must be one of {_MODES}, got {mode!r}")
@@ -128,6 +131,8 @@ def load_symbol(symbol: str, mode: str = "total_return", use_cache: bool = True)
     cache_path = _CACHE / f"{symbol}_{mode}.parquet"
     if use_cache and cache_path.exists():
         return pd.read_parquet(cache_path)
+    if not download:
+        raise FileNotFoundError(f"{symbol} ({mode}) is not cached at {cache_path} and download=False.")
     out = _apply_mode(_fetch_symbol_raw(symbol), mode)
     if use_cache:
         write_parquet_atomic(out, cache_path)
