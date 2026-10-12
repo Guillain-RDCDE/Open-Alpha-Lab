@@ -52,13 +52,17 @@ def load_real(ticker: str = "SPY", period: str = "max",
     """Real daily OHLC for ``ticker``, sliced to ``asof``; cache-first.
 
     Returns a tz-naive daily OHLC frame (open/high/low/close) indexed by date. The cache is a
-    parquet under ``_cache/``; once present, every re-run is offline. On a cache miss (or
-    ``fetch=True``) it pulls from yfinance with a small retry/backoff and writes the parquet.
+    parquet under ``_cache/``; once present, every re-run is offline. A miss raises
+    ``FileNotFoundError`` unless ``fetch=True``, which pulls from yfinance with a small retry/backoff and writes the parquet.
     """
     path = _cache_path(ticker, cache_dir)
     if os.path.exists(path) and not fetch:
         bars = pd.read_parquet(path)
     else:
+        if not fetch:  # cache-only by default: the network is opt-in
+            raise FileNotFoundError(
+                f"not cached: {path}; call with fetch=True to download it"
+            )
         import yfinance as yf  # lazy: only when we actually go to the network
 
         raw = None

@@ -120,9 +120,9 @@ def load_real(
     cache_dir: str = DEFAULT_CACHE,
     retries: int = 3,
 ) -> pd.DataFrame:
-    """Real daily OHLCV for ``ticker``; cache-first, network only on miss or ``fetch=True``.
+    """Real daily OHLCV for ``ticker``; cache-first, network only with ``fetch=True``.
 
-    On a cache miss (or ``fetch=True``) we hit Yahoo via ``yfinance`` with a small backoff,
+    Without ``fetch`` a cache miss raises ``FileNotFoundError``; with it we hit Yahoo via ``yfinance`` with a small backoff,
     then cache the parquet so re-runs are offline.  ``auto_adjust=True`` → total-return
     (dividends reinvested), which we label explicitly downstream.
     """
@@ -130,6 +130,10 @@ def load_real(
     if os.path.exists(path) and not fetch:
         bars = pd.read_parquet(path)
     else:
+        if not fetch:  # cache-only by default: the network is opt-in
+            raise FileNotFoundError(
+                f"not cached: {path}; call with fetch=True to download it"
+            )
         import yfinance as yf  # lazy: only when we actually go to the network
 
         raw = None

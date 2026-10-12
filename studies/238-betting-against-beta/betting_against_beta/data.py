@@ -121,13 +121,16 @@ def fetch_panel(
     cache_dir: str = DEFAULT_CACHE,
     start: str = "2010-01-01",
     end: str = "2025-12-31",
+    fetch: bool = True,
 ) -> tuple[pd.DataFrame, pd.Series]:
     """Daily adjusted-close prices for the large-cap universe + SPY.
 
     Cache-first: reads ``<cache_dir>/bab_prices.parquet`` and
     ``<cache_dir>/bab_spy.parquet`` if present. On cache miss, fetches from
-    yfinance and writes the parquets. Returns ``(prices, spy_prices)`` or
-    ``(pd.DataFrame(), pd.Series())`` if both cache and network fail.
+    yfinance and writes the parquets -- only when ``fetch`` is true: ``fetch=False``
+    is cache-only and returns the empty pair on a miss (the tests use it). Returns
+    ``(prices, spy_prices)`` or ``(pd.DataFrame(), pd.Series())`` if both cache and
+    network fail.
 
     Prices are adjusted-close (yfinance auto_adjust=True). The caller computes
     returns via ``prices.pct_change().dropna()``.
@@ -140,6 +143,9 @@ def fetch_panel(
         spy = pd.read_parquet(spy_path).squeeze()
         spy.name = "SPY"
         return prices, spy
+
+    if not fetch:
+        return pd.DataFrame(), pd.Series(dtype=float, name="SPY")
 
     # Try fetching from yfinance
     try:

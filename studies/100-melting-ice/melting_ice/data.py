@@ -107,11 +107,13 @@ def load_real(
     end: str | None = None,
     mode: str = "total_return",
     use_cache: bool = True,
+    fetch: bool = True,
 ) -> pd.DataFrame:
     """Real daily close for ``ticker`` as a one-column ``close`` frame.
 
     Delegates to :func:`quantlab.data.fetch` (cache-first parquet under the repo
-    ``_cache/``). ``mode="total_return"`` folds dividends back in so a levered ETF and
+    ``_cache/``), which downloads on a miss only when ``fetch`` is true; ``fetch=False`` is
+    cache-only and raises ``FileNotFoundError`` (the tests use it). ``mode="total_return"`` folds dividends back in so a levered ETF and
     its underlying are compared on the same footing. Returns a frame with a single
     lower-case ``close`` column, indexed by date.
     """
@@ -120,7 +122,8 @@ def load_real(
     sys.path.insert(0, os.path.abspath(os.path.join(HERE, "..", "..", "..")))
     from quantlab import data as qdata
 
-    raw = qdata.fetch(ticker, start=start, end=end, mode=mode, use_cache=use_cache)
+    raw = qdata.fetch(ticker, start=start, end=end, mode=mode, use_cache=use_cache,
+                      download=fetch)
     close = raw["Close"].rename("close")
     return close.to_frame()
 
@@ -130,6 +133,7 @@ def load_pair(
     end: str | None = None,
     mode: str = "total_return",
     use_cache: bool = True,
+    fetch: bool = True,
 ) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
     """Load a (underlying, real-levered-ETF) pair aligned on common dates.
 
@@ -142,8 +146,8 @@ def load_pair(
     if name not in PAIRS:
         raise ValueError(f"unknown pair {name!r}; known: {list(PAIRS)}")
     spec = PAIRS[name]
-    under = load_real(spec["underlying"], mode=mode, use_cache=use_cache)
-    letf = load_real(name, mode=mode, use_cache=use_cache)
+    under = load_real(spec["underlying"], mode=mode, use_cache=use_cache, fetch=fetch)
+    letf = load_real(name, mode=mode, use_cache=use_cache, fetch=fetch)
     common = under.index.intersection(letf.index)
     common = common[common >= pd.Timestamp(spec["start"])]
     if end is not None:

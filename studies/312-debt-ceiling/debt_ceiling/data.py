@@ -246,7 +246,7 @@ def load_real(
             from quantlab import data as qdata
 
             mode = "raw" if ticker.upper() in ("^VIX", "VIX") else "total_return"
-            raw = qdata.fetch(ticker, start=start, end=end, mode=mode, use_cache=use_cache)
+            raw = qdata.fetch(ticker, start=start, end=end, mode=mode, use_cache=use_cache, download=False)
             bars = raw.rename(columns=str.lower)
         except Exception as exc:  # graceful offline fallback
             raise FileNotFoundError(

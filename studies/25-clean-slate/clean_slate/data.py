@@ -82,7 +82,12 @@ def fetch_panel(start: str = "2010-01-01", min_days: int = 2500, fetch: bool = F
     if cache_dir is not None:
         os.environ["OVERNIGHT_CACHE"] = cache_dir
     from quantlab import universe
-    symbols = universe.sp500_symbols(use_cache=True, allow_survivorship_bias=True)
+    try:  # cache-only unless fetch=True: no list, no panel
+        symbols = universe.sp500_symbols(
+            use_cache=True, allow_survivorship_bias=True, download=fetch
+        )
+    except FileNotFoundError:
+        return pd.DataFrame()
     cache_file = universe.panel_cache_path(symbols, start)
     legacy = cache_file.with_name(f"panel_{len(symbols)}_{start}.parquet")
     if not cache_file.exists() and not legacy.exists() and not fetch:

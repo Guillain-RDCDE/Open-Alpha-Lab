@@ -8,16 +8,17 @@ guard makes such an attempt a failure instead of a race:
 - every outbound attempt is recorded -- a socket connection or DNS lookup to a non-loopback
   host, ``yfinance`` (which talks through curl_cffi, below the socket module), curl_cffi
   itself, and the engine's own download entry points in ``quantlab``;
-- ``OAL_NETWORK_GUARD=block`` refuses the attempt and fails the test, or the collection of
-  the module, that made it -- even when the code swallowed the error and the test went on
-  to skip;
-- ``OAL_NETWORK_GUARD=record`` (the default until every loader is cache-only) lets the
-  attempt through and reports it as a warning; ``off`` disables the guard;
+- ``OAL_NETWORK_GUARD=block`` (the default) refuses the attempt and fails the test, or the
+  collection of the module, that made it -- even when the code swallowed the error and the
+  test went on to skip;
+- ``OAL_NETWORK_GUARD=record`` lets the attempt through and reports it as a warning;
+  ``off`` disables the guard;
 - tests marked ``@pytest.mark.network`` are exempt: they exist to touch the network.
 """
 
 from __future__ import annotations
 
+import contextlib
 import os
 import socket
 import traceback
@@ -25,7 +26,7 @@ import warnings
 
 import pytest
 
-MODE = os.environ.get("OAL_NETWORK_GUARD", "record").strip().lower()
+MODE = os.environ.get("OAL_NETWORK_GUARD", "block").strip().lower()
 _LOOPBACK = {"localhost", "127.0.0.1", "::1", "0.0.0.0", ""}
 
 
@@ -43,6 +44,8 @@ class _Guard:
         self.exempt = False
         self.depth = 0
         self.attempts: list[tuple[str, str]] = []
+        self.mode = MODE
+        self.blocked = NetworkAccessBlocked
 
     def hit(self, what: str) -> None:
         if self.exempt:
@@ -59,8 +62,31 @@ class _Guard:
             return
         raise NetworkAccessBlocked(f"the test suite is offline; blocked {detail}")
 
+    @contextlib.contextmanager
+    def capture(self):
+        """Collect the attempts made inside the block and take them off the failure ledger.
+
+        For tests of the guard itself: the attempts land in the yielded list (the caller
+        asserts on them) instead of failing the test.
+        """
+        start = len(self.attempts)
+        seen: list[str] = []
+        try:
+            yield seen
+        finally:
+            seen.extend(d for _, d in self.attempts[start:])
+            del self.attempts[start:]
+
 
 GUARD = _Guard()
+
+
+@pytest.fixture
+def network_guard() -> _Guard:
+    """The live guard, for tests that assert what reaches (or not) for the network."""
+    if MODE == "off":
+        pytest.skip("network guard disabled (OAL_NETWORK_GUARD=off)")
+    return GUARD
 
 
 def _short(path: str) -> str:

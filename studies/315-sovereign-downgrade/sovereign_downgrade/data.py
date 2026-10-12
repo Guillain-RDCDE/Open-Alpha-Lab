@@ -215,7 +215,7 @@ def load_real(
             from quantlab import data as qdata
 
             raw = qdata.fetch(ticker, start=start, end=end, mode="total_return",
-                              use_cache=use_cache)
+                              use_cache=use_cache, download=False)
             bars = raw.rename(columns=str.lower)
         except Exception as exc:  # graceful offline fallback
             raise FileNotFoundError(

@@ -121,6 +121,10 @@ def fetch_spy(fetch: bool = False, path: str = SPY_CSV) -> pd.Series:
     if not fetch and os.path.exists(path):
         s = pd.read_csv(path, parse_dates=["date"]).set_index("date")["spy"]
         return s.astype(float).sort_index()
+    if not fetch:  # cache-only by default: the network is opt-in
+        raise FileNotFoundError(
+            f"not cached: {path}; call with fetch=True to download it"
+        )
 
     import yfinance as yf  # lazy: network only on fetch
 
@@ -132,7 +136,12 @@ def fetch_spy(fetch: bool = False, path: str = SPY_CSV) -> pd.Series:
     if isinstance(close, pd.DataFrame):
         close = close.iloc[:, 0]
     close.index = pd.to_datetime(close.index)
-    return close.astype(float).dropna().sort_index()
+    close = close.astype(float).dropna().sort_index()
+    # Write the cache the default (cache-only) path reads, so one fetch serves every
+    # later offline run.
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    close.rename("spy").rename_axis("date").reset_index().to_csv(path, index=False)
+    return close
 
 
 def _spy_on_or_before(daily: pd.Series, when: pd.Timestamp) -> float:

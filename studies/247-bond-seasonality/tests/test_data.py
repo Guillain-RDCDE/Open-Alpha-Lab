@@ -83,7 +83,7 @@ def test_tom_mask_aligns_to_index(planted_tape):
 @pytest.mark.skipif(not os.path.exists(_CACHE_TLT), reason="real-tape cache absent offline/CI")
 def test_load_real_shape():
     """Real tape returns a single 'close' column with positive values."""
-    frame = data.load_real("TLT", start="2002-07-30")
+    frame = data.load_real("TLT", start="2002-07-30", fetch=False)
     assert "close" in frame.columns
     assert len(frame) > 5000
     assert (frame["close"] > 0).all()

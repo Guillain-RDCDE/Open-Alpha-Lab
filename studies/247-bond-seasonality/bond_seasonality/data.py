@@ -123,11 +123,14 @@ def load_real(
     start: str = "2002-07-30",
     end: str | None = None,
     use_cache: bool = True,
+    fetch: bool = True,
 ) -> pd.DataFrame:
     """Real daily close for ``ticker`` as a one-column ``close`` frame (total-return).
 
     Caches to the study-local ``_cache/`` directory (gitignored) to avoid clashes in
-    parallel batch runs.  Both TLT and IEF are intended callers:
+    parallel batch runs. A miss downloads through :func:`quantlab.data.fetch` only when
+    ``fetch`` is true; ``fetch=False`` is cache-only and raises ``FileNotFoundError``
+    (the tests use it). Both TLT and IEF are intended callers:
 
     - ``load_real("TLT")`` - 20+ yr Treasury ETF, from 2002-07-30.
     - ``load_real("IEF")`` - 7-10 yr Treasury ETF, from 2002-07-30.
@@ -146,7 +149,8 @@ def load_real(
     if use_cache and os.path.exists(cache_path):
         raw_close = pd.read_parquet(cache_path)
     else:
-        raw = qdata.fetch(ticker, start=start, end=end, mode="total_return", use_cache=True)
+        raw = qdata.fetch(ticker, start=start, end=end, mode="total_return", use_cache=True,
+                          download=fetch)
         raw_close = raw[["Close"]].rename(columns={"Close": "close"})
         raw_close.to_parquet(cache_path)
 

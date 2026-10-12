@@ -134,17 +134,21 @@ def load_real(
     cache_dir: str = DEFAULT_CACHE,
     retries: int = 3,
 ) -> pd.DataFrame:
-    """Real daily OHLCV for ``ticker``; cache-first, network only on a miss or ``fetch``.
+    """Real daily OHLCV for ``ticker``; cache-first, network only with ``fetch=True``.
 
-    If a cached parquet exists it is read offline. Otherwise (or with ``fetch=True``) we
+    If a cached parquet exists it is read offline. With ``fetch=True`` we
     pull from Yahoo, retrying a couple of times with a small backoff for rate limits, and
-    cache the result. Yahoo's daily history goes back decades (~5,000 bars for a 20-year
+    cache the result; without it a miss raises ``FileNotFoundError``. Yahoo's daily history goes back decades (~5,000 bars for a 20-year
     window), giving the timing race real statistical power.
     """
     path = _cache_path(ticker, cache_dir)
     if os.path.exists(path) and not fetch:
         bars = pd.read_parquet(path)
     else:
+        if not fetch:  # cache-only by default: the network is opt-in
+            raise FileNotFoundError(
+                f"not cached: {path}; call with fetch=True to download it"
+            )
         import yfinance as yf  # lazy: only when we actually go to the network
 
         last_err = None

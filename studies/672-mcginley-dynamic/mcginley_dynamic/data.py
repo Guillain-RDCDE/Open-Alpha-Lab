@@ -62,8 +62,8 @@ def load_real(
 ) -> pd.DataFrame:
     """Real daily OHLCV for ``ticker``, sliced to <= ``asof``; cache-first.
 
-    Cached parquet is read offline unless ``fetch=True`` or the cache is missing, in
-    which case ``yfinance`` is hit once (small back-off retry) and the raw pull is
+    Cached parquet is read offline unless ``fetch=True`` (a miss without it raises
+    ``FileNotFoundError``), in which case ``yfinance`` is hit once (small back-off retry) and the raw pull is
     cached so every later run is offline. ``auto_adjust=True`` folds splits/dividends
     into the close (total-return bars).
     """
@@ -71,6 +71,10 @@ def load_real(
     if os.path.exists(path) and not fetch:
         bars = pd.read_parquet(path)
     else:
+        if not fetch:  # cache-only by default: the network is opt-in
+            raise FileNotFoundError(
+                f"not cached: {path}; call with fetch=True to download it"
+            )
         import yfinance as yf  # lazy: only touched on an actual network pull
 
         last_err: Exception | None = None

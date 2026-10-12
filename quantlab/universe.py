@@ -68,7 +68,9 @@ def _require_optin(flag: bool, what: str, note: str = _MEMBERSHIP_NOTE) -> None:
     )
 
 
-def sp500_symbols(use_cache: bool = True, allow_survivorship_bias: bool = False) -> list[str]:
+def sp500_symbols(
+    use_cache: bool = True, allow_survivorship_bias: bool = False, download: bool = True
+) -> list[str]:
     """Current S&P 500 tickers (Yahoo format). Wikipedia, cached to JSON.
 
     GUARDED: the list is *today's* membership — feeding it to any historical
@@ -76,12 +78,15 @@ def sp500_symbols(use_cache: bool = True, allow_survivorship_bias: bool = False)
     uses it. Requires ``allow_survivorship_bias=True`` (see module docstring).
 
     Class shares use '-' on Yahoo (e.g. BRK-B), so '.' is translated.
+    ``download=False`` is cache-only: a miss raises ``FileNotFoundError``.
     """
     _require_optin(allow_survivorship_bias, "sp500_symbols()")
     _CACHE.mkdir(parents=True, exist_ok=True)
     cache = _CACHE / "sp500_symbols.json"
     if use_cache and cache.exists():
         return json.loads(cache.read_text())
+    if not download:
+        raise FileNotFoundError(f"S&P 500 list not cached at {cache} and download=False.")
     # Wikipedia 403s the default urllib UA; fetch with a browser UA, then parse.
     import io
     import urllib.request
@@ -113,8 +118,11 @@ def download_panel(
     start: str = "2010-01-01",
     use_cache: bool = True,
     allow_survivorship_bias: bool = False,
+    download: bool = True,
 ) -> dict:
     """Batched OHLC download for many tickers (one threaded call), cached.
+
+    ``download=False`` is cache-only: a miss raises ``FileNotFoundError``.
 
     GUARDED: a multi-name panel keyed to today's membership is the textbook
     survivorship trap; requires ``allow_survivorship_bias=True``.
@@ -142,6 +150,8 @@ def download_panel(
         os.replace(legacy, cache)
     if use_cache and cache.exists():
         raw = pd.read_parquet(cache)
+    elif not download:
+        raise FileNotFoundError(f"Panel not cached at {cache} and download=False.")
     else:
         raw = yf.download(
             symbols, start=start, auto_adjust=True, progress=False,

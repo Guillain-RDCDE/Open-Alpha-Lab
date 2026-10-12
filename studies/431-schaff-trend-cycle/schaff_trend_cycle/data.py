@@ -141,8 +141,8 @@ def load_real(
 ) -> pd.DataFrame:
     """Real daily OHLCV for ``ticker``; cache-first.
 
-    Reads the cached parquet under ``_cache/`` if present. On a cache miss (or
-    ``fetch=True``) it pulls from Yahoo with a small retry/backoff, then caches the
+    Reads the cached parquet under ``_cache/`` if present. A miss raises ``FileNotFoundError``
+    unless ``fetch=True``, which pulls from Yahoo with a small retry/backoff, then caches the
     parquet so re-runs are fully offline. ``auto_adjust=True`` → total-return-adjusted
     closes (dividends + splits folded in); we label this explicitly as TR everywhere.
     """
@@ -150,6 +150,10 @@ def load_real(
     if os.path.exists(path) and not fetch:
         bars = pd.read_parquet(path)
     else:
+        if not fetch:  # cache-only by default: the network is opt-in
+            raise FileNotFoundError(
+                f"not cached: {path}; call with fetch=True to download it"
+            )
         bars = _download(ticker, period)
         os.makedirs(cache_dir, exist_ok=True)
         bars.to_parquet(path)

@@ -174,7 +174,12 @@ def fetch_panel(
 
     from quantlab import universe  # lazy; pulls in the shared breadth engine
 
-    symbols = universe.sp500_symbols(use_cache=True, allow_survivorship_bias=True)
+    try:  # cache-only unless fetch=True: no list, no panel
+        symbols = universe.sp500_symbols(
+            use_cache=True, allow_survivorship_bias=True, download=fetch
+        )
+    except FileNotFoundError:
+        return pd.DataFrame()
     cache_file = universe.panel_cache_path(symbols, start)
     legacy = cache_file.with_name(f"panel_{len(symbols)}_{start}.parquet")
     if not cache_file.exists() and not legacy.exists() and not fetch:

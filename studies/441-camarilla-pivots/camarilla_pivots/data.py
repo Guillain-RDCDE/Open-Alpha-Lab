@@ -94,13 +94,17 @@ def fetch_intraday(ticker: str, interval: str = "5m", period: str = "60d",
                    retries: int = 3) -> pd.DataFrame:
     """Real intraday OHLC for ``ticker``; cache-first.
 
-    On a cache miss (or ``fetch=True``) hits yfinance with a small backoff, then caches the
+    A miss raises ``FileNotFoundError`` unless ``fetch=True``, which hits yfinance with a small backoff, then caches the
     parquet so re-runs are offline. ``interval='5m'`` allows ``period`` up to ~60d; ``'1m'`` up
     to ~7d (Yahoo's hard caps). Network is touched only here.
     """
     path = _cache_path(ticker, interval, cache_dir)
     if not fetch and os.path.exists(path):
         return pd.read_parquet(path)
+    if not fetch:  # cache-only by default: the network is opt-in
+        raise FileNotFoundError(
+            f"not cached: {path}; call with fetch=True to download it"
+        )
     if os.path.exists(path) and not fetch:
         return pd.read_parquet(path)
 

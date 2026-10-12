@@ -118,15 +118,17 @@ def load_real(
     start: str = CWB_INCEPTION,
     end: str | None = None,
     use_cache: bool = True,
+    fetch: bool = True,
 ) -> pd.DataFrame:
     """Real daily **total-return** price frame for ``tickers`` (one column each).
 
     Primary source is the shared cross-asset panel (``_cache/cross_asset_etfs.parquet``,
     ``yfinance auto_adjust=True`` ⇒ dividends + splits folded in ⇒ total return). On a cache
     miss for any ticker it falls back to :func:`quantlab.data.fetch` with
-    ``mode="total_return"``. The frame is the inner join across tickers (dropna), so it
-    begins at the latest inception — CWB (2009-04-16) bounds the joint window. Columns are
-    upper-case tickers.
+    ``mode="total_return"``, which downloads only when ``fetch`` is true; ``fetch=False`` is
+    cache-only and raises ``FileNotFoundError`` on a miss (the tests use it). The frame is
+    the inner join across tickers (dropna), so it begins at the latest inception — CWB
+    (2009-04-16) bounds the joint window. Columns are upper-case tickers.
     """
     cols: dict[str, pd.Series] = {}
     panel = None
@@ -144,7 +146,7 @@ def load_real(
             from quantlab import data as qdata
 
             raw = qdata.fetch(tk, start=start, end=end, mode="total_return",
-                              use_cache=use_cache)
+                              use_cache=use_cache, download=fetch)
             cols[tk] = raw["Close"].rename(tk)
 
     frame = pd.concat(cols.values(), axis=1, join="inner").dropna()

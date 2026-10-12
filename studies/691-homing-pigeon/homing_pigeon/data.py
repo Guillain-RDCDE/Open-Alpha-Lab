@@ -67,7 +67,9 @@ def _cache_path(ticker: str, cache_dir: str) -> str:
 
 def fetch_one(ticker: str, period: str = "max", cache_dir: str = DEFAULT_CACHE,
               fetch: bool = False, retries: int = 3) -> pd.DataFrame:
-    """Daily OHLC for one ticker; cache-first, network only on miss (or ``fetch=True``).
+    """Daily OHLC for one ticker; cache-first, network only with ``fetch=True``.
+
+    Without ``fetch`` a cache miss raises ``FileNotFoundError`` (no silent download).
 
     Uses **un-adjusted** OHLC (``auto_adjust=False``) because the candle *shape* (the two
     real bodies, one nested in the other) must come from the price levels actually printed
@@ -80,6 +82,10 @@ def fetch_one(ticker: str, period: str = "max", cache_dir: str = DEFAULT_CACHE,
     if not fetch and os.path.exists(path):
         bars = pd.read_parquet(path)
     else:
+        if not fetch:  # cache-only by default: the network is opt-in
+            raise FileNotFoundError(
+                f"not cached: {path}; call with fetch=True to download it"
+            )
         import yfinance as yf  # lazy: only on a real network call
 
         last_err = None

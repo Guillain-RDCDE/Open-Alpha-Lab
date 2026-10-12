@@ -184,7 +184,7 @@ def test_bab_detects_premium_vs_null():
 @pytest.mark.skipif(not os.path.exists(_CACHE_PATH), reason="real-tape cache absent offline/CI")
 def test_real_panel_pipeline():
     """End-to-end smoke test on the real cached panel."""
-    prices, spy = data.fetch_panel()
+    prices, spy = data.fetch_panel(fetch=False)
     assert not prices.empty
     result = st.bab_portfolio(prices, spy, beta_window=252, min_stocks=20)
     assert not result.empty

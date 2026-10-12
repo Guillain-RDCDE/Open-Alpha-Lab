@@ -57,18 +57,16 @@ def test_live_truth_flag(live_panel):
 
 
 def test_fetch_panel_returns_empty_without_cache(tmp_path):
-    """Absent cache + no network --> graceful empty DataFrames, not a crash."""
-    prices, spy = data.fetch_panel(cache_dir=str(tmp_path))
-    # Either empty (CI / no network) or populated (live run with network).
-    # The point: no exception.
-    assert isinstance(prices, type(prices))  # always true -- just check no crash
-    assert isinstance(spy, type(spy))
+    """Absent cache + fetch=False --> graceful empty frames, no crash and no download."""
+    prices, spy = data.fetch_panel(cache_dir=str(tmp_path), fetch=False)
+    assert prices.empty
+    assert spy.empty
 
 
 @pytest.mark.skipif(not os.path.exists(_CACHE_PATH), reason="real-tape cache absent offline/CI")
 def test_fetch_panel_real_cache():
     """When cache exists, returns non-empty DataFrames."""
-    prices, spy = data.fetch_panel()
+    prices, spy = data.fetch_panel(fetch=False)
     assert not prices.empty
     assert not spy.empty
     assert len(prices) == len(spy)

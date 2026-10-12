@@ -121,15 +121,17 @@ def load_real(
     end: str | None = None,
     use_cache: bool = True,
     cache_dir: str = DEFAULT_CACHE,
+    fetch: bool = True,
 ) -> pd.DataFrame:
     """Real daily **total-return** price frame for ``tickers`` (one column each).
 
     Cache-first: each ticker is read from ``_cache/<ticker>_total_return.parquet`` if it
     exists; on a miss it falls back to :func:`quantlab.data.fetch` with
     ``mode="total_return"`` (``auto_adjust=True`` ⇒ distributions folded in ⇒ the fair
-    series for a buy-and-hold comparison). The frame is the inner join across tickers
-    (dropna), so it begins at the latest inception — KRBN (2020-07-30) bounds the window.
-    Columns are upper-case tickers; index is tz-naive.
+    series for a buy-and-hold comparison), which downloads only when ``fetch`` is true;
+    ``fetch=False`` is cache-only and raises ``FileNotFoundError`` on a miss. The frame is
+    the inner join across tickers (dropna), so it begins at the latest inception — KRBN
+    (2020-07-30) bounds the window. Columns are upper-case tickers; index is tz-naive.
     """
     cols: dict[str, pd.Series] = {}
     for tk in tickers:
@@ -145,7 +147,7 @@ def load_real(
             from quantlab import data as qdata
 
             raw = qdata.fetch(tk, start=start, end=end, mode="total_return",
-                              use_cache=use_cache)
+                              use_cache=use_cache, download=fetch)
             cols[tk] = raw["Close"].rename(tk)
 
     frame = pd.concat(cols.values(), axis=1, join="inner").dropna()

@@ -78,17 +78,17 @@ def test_spine_uptrend_lowvol_compounds(uptrend_lowvol):
 # ---------------------------------------------------------------------------
 def _have_real(name):
     try:
-        data.load_pair(name, end="2026-06-12")
+        data.load_pair(name, end="2026-06-12", fetch=False)
         return True
     except Exception:
         return False
 
 
 @pytest.mark.skipif(not _have_real("TQQQ"),
-                    reason="real TQQQ/QQQ tape unavailable (no cache, no network)")
+                    reason="real TQQQ/QQQ tape not cached")
 def test_simulator_reproduces_real_tqqq():
     """The 3x simulator, fed QQQ, must reproduce the REAL TQQQ fund within tolerance."""
-    under, letf, _ = data.load_pair("TQQQ", end="2026-06-12")
+    under, letf, _ = data.load_pair("TQQQ", end="2026-06-12", fetch=False)
     rep = strategy.reproduction_error(under["close"], letf["close"], k=3.0)
     assert rep["corr"] > 0.99           # daily mechanics match almost exactly
     assert rep["rms_te_bps"] < 40.0     # small daily tracking error
@@ -96,9 +96,9 @@ def test_simulator_reproduces_real_tqqq():
 
 
 @pytest.mark.skipif(not _have_real("UPRO"),
-                    reason="real UPRO/SPY tape unavailable (no cache, no network)")
+                    reason="real UPRO/SPY tape not cached")
 def test_simulator_reproduces_real_upro():
-    under, letf, _ = data.load_pair("UPRO", end="2026-06-12")
+    under, letf, _ = data.load_pair("UPRO", end="2026-06-12", fetch=False)
     rep = strategy.reproduction_error(under["close"], letf["close"], k=3.0)
     assert rep["corr"] > 0.99
     assert rep["rms_te_bps"] < 40.0

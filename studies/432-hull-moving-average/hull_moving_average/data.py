@@ -113,7 +113,8 @@ def load_real(
 ) -> pd.DataFrame:
     """Real daily OHLCV for ``ticker``; cache-first unless ``fetch=True``.
 
-    Network is touched only on an explicit ``fetch=True`` (or an empty cache), then the
+    Network is touched only on an explicit ``fetch=True`` (an empty cache without it raises
+    ``FileNotFoundError``), then the
     result is cached as a parquet under ``_cache/``.  Yahoo's daily history goes back
     decades, giving ample statistical power.  Bars are total-return adjusted
     (``auto_adjust=True`` folds dividends into the close).
@@ -122,6 +123,10 @@ def load_real(
     if not fetch and os.path.exists(path):
         bars = pd.read_parquet(path)
     else:
+        if not fetch:  # cache-only by default: the network is opt-in
+            raise FileNotFoundError(
+                f"not cached: {path}; call with fetch=True to download it"
+            )
         import time
 
         import yfinance as yf  # lazy: only when we actually go to the network

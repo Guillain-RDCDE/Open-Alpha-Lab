@@ -55,11 +55,11 @@ def test_cash_leg_is_near_riskless(null_tape):
 
 
 def test_load_real_cache_only_falls_back_or_loads(tmp_path):
-    """With an empty cache dir and use_cache pointed at it, a miss tries the quantlab
-    fallback — which without network raises; the cache path itself never raises on a hit."""
+    """With an empty cache dir and fetch=False, a miss is a FileNotFoundError from the
+    cache-only quantlab fallback -- never a download."""
     # A non-existent ticker in an empty cache dir must not silently succeed.
-    with pytest.raises(Exception):
-        data.load_real(("NOPE_TICKER",), use_cache=True, cache_dir=str(tmp_path))
+    with pytest.raises(FileNotFoundError):
+        data.load_real(("NOPE_TICKER",), use_cache=True, cache_dir=str(tmp_path), fetch=False)
 
 
 def test_fingerprint_is_stable_and_content_sensitive(null_tape):
@@ -75,7 +75,7 @@ _KRBN_CACHE = data._cache_path("KRBN", data.DEFAULT_CACHE)
 
 @pytest.mark.skipif(not os.path.exists(_KRBN_CACHE), reason="offline CI: no real cache")
 def test_real_tape_loads_from_cache():
-    frame = data.load_real(("KRBN", "BIL"), end="2026-05-31")
+    frame = data.load_real(("KRBN", "BIL"), end="2026-05-31", fetch=False)
     assert list(frame.columns) == ["KRBN", "BIL"]
     assert frame.index.is_monotonic_increasing
     assert (frame > 0).all().all()
